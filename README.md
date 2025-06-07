@@ -2,15 +2,25 @@
 
 A new Flutter project.
 
-## Getting Started
+## ディレクトリ構造
 
-This project is a starting point for a Flutter application.
+`Layer-First` ではなく、`Feature-First` アプローチ
+上位ディレクトリは、DomainやPresentation単位で区切らず、AuthやHomeなど機能ごとにディレクトリを区切る
 
-A few resources to get you started if this is your first Flutter project:
+- data: 外部に依存する処理
+    - domainのInterfaceの実装
+    - リクエスト用ユーザ情報定義
+    - Firebaseで認証
+    - Localキャッシュで認証
+    - API
+    - DB
+- domain: 外部に依存しない中核処理
+    - Interface定義
+    - ユーザ情報
+    - 認証処理定義
+- presentation: UI
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## ファイル命名規則
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+entities配下のファイルはxxxのみでOK、中心概念
+その他model、usecases配下のファイルはxxx_model、xxx_usecasesと命名
