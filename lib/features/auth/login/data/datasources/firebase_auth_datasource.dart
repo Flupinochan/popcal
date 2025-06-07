@@ -86,6 +86,10 @@ class FirebaseAuthDataSource {
         return 'このメールアドレスは既に使用されています';
       case 'account-exists-with-different-credential':
         return 'このメールアドレスは既に他のサービスで使用されています';
+      case 'invalid-credential':
+        return '無効な認証情報です';
+      case 'network-request-failed':
+        return 'ネットワークエラーが発生しました';
       default:
         return '予期しない認証エラーが発生しました: ${error.message}';
     }

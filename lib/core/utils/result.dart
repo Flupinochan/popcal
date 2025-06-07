@@ -30,7 +30,7 @@ final class Success<T> extends Result<T> {
   }) => success(value);
 
   @override
-  String toString() => 'Result<$T>.success($value)';
+  String toString() => '$value';
 }
 
 /// 失敗
@@ -46,7 +46,7 @@ final class Error<T> extends Result<T> {
   }) => failure(this.failure);
 
   @override
-  String toString() => 'Result<$T>.failure($failure)';
+  String toString() => '$failure';
 }
 
 
