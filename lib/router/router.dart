@@ -18,15 +18,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     // refreshListenable: GoRouter,
     redirect: (context, state) {
       return authState.when(
-        data: (userDto) {
-          final isSignIn = userDto.isSuccess;
+        data: (user) {
           final isAuthPage = state.uri.path == Routes.auth;
 
-          if (!isSignIn && !isAuthPage) {
+          if (user.isFailure && !isAuthPage) {
             return Routes.auth;
           }
 
-          if (isSignIn && isAuthPage) {
+          if (user.isSuccess && isAuthPage) {
             return Routes.home;
           }
 

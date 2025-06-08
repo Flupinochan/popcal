@@ -7,12 +7,12 @@ part of 'email_sign_in_use_case.dart';
 // **************************************************************************
 
 String _$emailSignInUseCaseHash() =>
-    r'8e5cc90db3cf5f91fbd2347ecf178f6e1c6bebc3';
+    r'938e07ff73cec654346488e928c71e949d52eec5';
 
 /// See also [EmailSignInUseCase].
 @ProviderFor(EmailSignInUseCase)
 final emailSignInUseCaseProvider =
-    AutoDisposeAsyncNotifierProvider<EmailSignInUseCase, UserDto?>.internal(
+    AutoDisposeAsyncNotifierProvider<EmailSignInUseCase, AppUser?>.internal(
       EmailSignInUseCase.new,
       name: r'emailSignInUseCaseProvider',
       debugGetCreateSourceHash:
@@ -23,6 +23,6 @@ final emailSignInUseCaseProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$EmailSignInUseCase = AutoDisposeAsyncNotifier<UserDto?>;
+typedef _$EmailSignInUseCase = AutoDisposeAsyncNotifier<AppUser?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

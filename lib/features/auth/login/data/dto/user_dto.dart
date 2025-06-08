@@ -23,7 +23,7 @@ class UserDto {
   }
 
   // Dto => Entity へ変換
-  User toEntity() {
-    return User(uid: uid, email: email ?? '');
+  AppUser toEntity() {
+    return AppUser(uid: uid, email: email ?? '');
   }
 }

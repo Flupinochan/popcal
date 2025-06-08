@@ -1,7 +1,7 @@
 /// ユーザ情報 (外部ライブラリに依存しない)
-class User {
+class AppUser {
   final String uid;
   final String email;
 
-  const User({required this.uid, required this.email});
+  const AppUser({required this.uid, required this.email});
 }

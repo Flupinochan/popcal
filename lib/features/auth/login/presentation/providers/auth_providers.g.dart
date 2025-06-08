@@ -61,12 +61,12 @@ final authRepositoryProvider = AutoDisposeProvider<AuthRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthRepositoryRef = AutoDisposeProviderRef<AuthRepository>;
-String _$authStateChangesHash() => r'a36e19428bd1a124dc7a1b105caee699494aa4e8';
+String _$authStateChangesHash() => r'21588219b6116bc68eb8c3facdf887075c745c4c';
 
 /// See also [authStateChanges].
 @ProviderFor(authStateChanges)
 final authStateChangesProvider =
-    AutoDisposeStreamProvider<Result<UserDto?>>.internal(
+    AutoDisposeStreamProvider<Result<AppUser?>>.internal(
       authStateChanges,
       name: r'authStateChangesProvider',
       debugGetCreateSourceHash:
@@ -79,7 +79,7 @@ final authStateChangesProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AuthStateChangesRef = AutoDisposeStreamProviderRef<Result<UserDto?>>;
+typedef AuthStateChangesRef = AutoDisposeStreamProviderRef<Result<AppUser?>>;
 String _$emailSignInValidatorHash() =>
     r'905909050a797c9a00b5bd3451a481d9c31ea7eb';
 

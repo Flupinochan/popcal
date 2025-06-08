@@ -1,6 +1,7 @@
+import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/login/data/datasources/firebase_auth_datasource.dart';
-import 'package:popcal/features/auth/login/data/dto/user_dto.dart';
+import 'package:popcal/features/auth/login/domain/entities/user.dart';
 
 class AuthRepository {
   final FirebaseAuthDataSource firebaseAuthDataSource;
@@ -9,22 +10,45 @@ class AuthRepository {
   AuthRepository(this.firebaseAuthDataSource);
 
   // 認証状態(認証済 or 未認証)を監視
-  // ※ errorがthrowされるため追加の処理が必要
-  Stream<Result<UserDto?>> get authStateChanges {
-    return firebaseAuthDataSource.authStateChanges;
+  Stream<Result<AppUser?>> get authStateChanges {
+    return firebaseAuthDataSource.authStateChanges.map((result) {
+      return result.when(
+        success:
+            (userDto) =>
+                userDto != null
+                    ? Result.success(userDto.toEntity())
+                    : Result.failure(AuthFailure('未認証です')),
+        failure: (error) => Result.failure(error),
+      );
+    });
   }
 
   // ユーザ情報を取得
-  Future<Result<UserDto?>> getUser() async {
-    return firebaseAuthDataSource.getUser();
+  Future<Result<AppUser?>> getUser() async {
+    final result = await firebaseAuthDataSource.getUser();
+    return result.when(
+      success:
+          (userDto) =>
+              userDto != null
+                  ? Result.success(userDto.toEntity())
+                  : Result.failure(AuthFailure('ユーザーが存在しません')),
+      failure: (error) => Result.failure(error),
+    );
   }
 
   // Email + Passwordでサインイン
-  Future<Result<UserDto?>> signInWithEmailAndPassword(
+  Future<Result<AppUser?>> signInWithEmailAndPassword(
     String email,
     String password,
   ) async {
-    return firebaseAuthDataSource.signInWithEmailAndPassword(email, password);
+    final result = await firebaseAuthDataSource.signInWithEmailAndPassword(
+      email,
+      password,
+    );
+    return result.when(
+      success: (userDto) => Result.success(userDto.toEntity()),
+      failure: (error) => Result.failure(error),
+    );
   }
 
   // サインアウト
@@ -33,11 +57,18 @@ class AuthRepository {
   }
 
   // サインアップ (Email + Password)
-  Future<Result<UserDto?>> signUpWithEmailAndPassword(
+  Future<Result<AppUser?>> signUpWithEmailAndPassword(
     String email,
     String password,
   ) async {
-    return firebaseAuthDataSource.signUpWithEmailAndPassword(email, password);
+    final result = await firebaseAuthDataSource.signUpWithEmailAndPassword(
+      email,
+      password,
+    );
+    return result.when(
+      success: (userDto) => Result.success(userDto.toEntity()),
+      failure: (error) => Result.failure(error),
+    );
   }
 
   // // その他の方法でサインイン
