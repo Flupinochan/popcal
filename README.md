@@ -24,3 +24,10 @@ A new Flutter project.
 
 entities配下のファイルはxxxのみでOK、中心概念
 その他model、usecases配下のファイルはxxx_model、xxx_usecasesと命名
+
+## Riverpod Generator
+
+```bash
+dart run custom_lint
+dart run build_runner watch -d
+```

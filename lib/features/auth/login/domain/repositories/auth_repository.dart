@@ -10,7 +10,7 @@ class AuthRepository {
 
   // 認証状態(認証済 or 未認証)を監視
   // ※ errorがthrowされるため追加の処理が必要
-  Stream<UserDto?> get authStateChanges {
+  Stream<Result<UserDto?>> get authStateChanges {
     return firebaseAuthDataSource.authStateChanges;
   }
 
@@ -32,12 +32,19 @@ class AuthRepository {
     return firebaseAuthDataSource.signOut();
   }
 
+  // サインアップ (Email + Password)
+  Future<Result<UserDto?>> signUpWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    return firebaseAuthDataSource.signUpWithEmailAndPassword(email, password);
+  }
+
   // // その他の方法でサインイン
   // Future<User> signInWithGoogle();
   // Future<User> signInWithGitHub();
   // Future<User> signInAnonymously();
-  // // Email + Passwordでユーザを新規作成(サインアップ)
-  // Future<User> signUpWithEmailAndPassword(String email, String password);
+
   // // Passwordリセット
   // Future<void> resetPassword(String email);
 }

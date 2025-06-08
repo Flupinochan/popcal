@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:popcal/features/auth/login/presentation/providers/auth_provider.dart';
-import 'package:popcal/features/auth/login/presentation/screens/login_screen.dart';
+
+import 'package:popcal/features/auth/login/presentation/providers/auth_providers.dart';
+import 'package:popcal/features/auth/login/presentation/screens/auth_screen.dart';
+import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/router/routes.dart';
 
 // Router.neglectでルーティングすれば履歴なしでルーティング
@@ -17,7 +19,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       return authState.when(
         data: (userDto) {
-          final isSignIn = userDto != null;
+          final isSignIn = userDto.isSuccess;
           final isAuthPage = state.uri.path == Routes.auth;
 
           if (!isSignIn && !isAuthPage) {
@@ -44,7 +46,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.home,
         builder: (context, state) {
-          return const Text("homeScreen");
+          return HomeScreen();
         },
         routes: [
           GoRoute(

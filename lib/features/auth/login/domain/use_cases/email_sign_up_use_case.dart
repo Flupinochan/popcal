@@ -4,10 +4,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/features/auth/login/data/dto/email_sign_in/email_sign_in_request_dto.dart';
 import 'package:popcal/features/auth/login/data/dto/user_dto.dart';
 
-part 'email_sign_in_use_case.g.dart';
+part 'email_sign_up_use_case.g.dart';
 
 @riverpod
-class EmailSignInUseCase extends _$EmailSignInUseCase {
+class EmailSignUpUseCase extends _$EmailSignUpUseCase {
   @override
   FutureOr<UserDto?> build() {
     return null;
@@ -20,7 +20,7 @@ class EmailSignInUseCase extends _$EmailSignInUseCase {
     state = const AsyncLoading();
 
     final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.signInWithEmailAndPassword(
+    final result = await authRepository.signUpWithEmailAndPassword(
       emailSignInRequestDto.email,
       emailSignInRequestDto.password,
     );

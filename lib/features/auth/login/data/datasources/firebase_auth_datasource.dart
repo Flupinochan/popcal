@@ -9,20 +9,20 @@ class FirebaseAuthDataSource {
   FirebaseAuthDataSource(this._firebaseAuth);
 
   // 認証状態(認証済 or 未認証)を監視
-  Stream<UserDto?> get authStateChanges {
-    return _firebaseAuth
-        .authStateChanges()
-        .map((firebaseUser) {
-          return firebaseUser != null
-              ? UserDto.fromFirebaseUser(firebaseUser)
-              : null;
-        })
-        .handleError((error) {
-          if (error is firebase_auth.FirebaseAuthException) {
-            throw AuthFailure(_mapFirebaseError(error));
-          }
-          throw AuthFailure('認証状態の監視で、予期しないエラーが発生しました: $error');
-        });
+  Stream<Result<UserDto?>> get authStateChanges {
+    return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
+      try {
+        if (firebaseUser != null) {
+          return Result.success(UserDto.fromFirebaseUser(firebaseUser));
+        } else {
+          return Result.failure(AuthFailure('未認証です'));
+        }
+      } on firebase_auth.FirebaseAuthException catch (error) {
+        return Result.failure(AuthFailure(_mapFirebaseError(error)));
+      } catch (error) {
+        return Result.failure(AuthFailure('認証状態の監視で、予期しないエラーが発生しました: $error'));
+      }
+    });
   }
 
   // ユーザ情報を取得
@@ -72,6 +72,28 @@ class FirebaseAuthDataSource {
       return Result.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Result.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
+    }
+  }
+
+  // サインアップ
+  Future<Result<UserDto>> signUpWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (credential.user == null) {
+        return Result.failure(AuthFailure('サインアップに失敗しました'));
+      }
+      final userDto = UserDto.fromFirebaseUser(credential.user!);
+      return Result.success(userDto);
+    } on firebase_auth.FirebaseAuthException catch (error) {
+      return Result.failure(AuthFailure(_mapFirebaseError(error)));
+    } catch (error) {
+      return Result.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
     }
   }
 

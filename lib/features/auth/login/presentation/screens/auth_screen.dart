@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/features/auth/login/data/dto/email_sign_in/email_sign_in_request_dto.dart';
 import 'package:popcal/features/auth/login/domain/use_cases/email_sign_in_use_case.dart';
-import 'package:popcal/features/auth/login/presentation/providers/auth_provider.dart';
+import 'package:popcal/features/auth/login/domain/use_cases/email_sign_up_use_case.dart';
+import 'package:popcal/features/auth/login/presentation/providers/auth_providers.dart';
 import 'package:popcal/features/auth/login/presentation/validators/email_sign_in_validator.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -14,28 +15,77 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _isPasswordVisible = false;
-  bool _isLoading = false;
+  String _selectedMode = 'Sign In';
 
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _password = '';
 
   late final EmailSignInValidator _emailSignInValidator;
-  late final EmailSignInUseCase _emailSignInUseCase;
 
   @override
   void initState() {
     super.initState();
     _emailSignInValidator = ref.read(emailSignInValidatorProvider);
-    _emailSignInUseCase = ref.read(emailSignInUseCaseProvider);
   }
 
-  void _handleSubmit() async {
+  void _handleSignIn() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      final result = await _emailSignInUseCase.call(
-        EmailSignInRequestDto(email: _email, password: _password),
-      );
+      final result = await ref
+          .read(emailSignInUseCaseProvider.notifier)
+          .call(EmailSignInRequestDto(email: _email, password: _password));
+
+      if (result.isFailure && mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              title: Row(
+                children: [
+                  Icon(
+                    Icons.warning_amber_outlined,
+                    color: Colors.orange,
+                    size: 24,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'エラー',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              content: Text(result.toString(), style: TextStyle(fontSize: 14)),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                      color: Colors.indigo,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
+
+  void _handleSignUp() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final result = await ref
+          .read(emailSignUpUseCaseProvider.notifier)
+          .call(EmailSignInRequestDto(email: _email, password: _password));
 
       if (result.isFailure && mounted) {
         showDialog(
@@ -83,6 +133,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading =
+        _selectedMode == 'Sign In'
+            ? ref.watch(emailSignInUseCaseProvider).isLoading
+            : ref.watch(emailSignUpUseCaseProvider).isLoading;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -153,7 +208,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       style: TextStyle(fontSize: 12, color: Colors.black45),
                     ),
                     SizedBox(height: 16),
-                    // Sign In/Sign Up
+                    // Sign In/Sign Up セグメント
                     SizedBox(
                       width: double.infinity,
                       child: SegmentedButton(
@@ -207,8 +262,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             );
                           }),
                         ),
-                        selected: {'Sign In'},
-                        onSelectionChanged: (Set<String> newSelection) {},
+                        selected: {_selectedMode},
+                        onSelectionChanged: (Set<String> newSelection) {
+                          setState(() {
+                            _selectedMode = newSelection.first;
+                          });
+                        },
                       ),
                     ),
                     SizedBox(height: 20),
@@ -327,26 +386,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     SizedBox(height: 32),
-                    // Sign In ボタン
+                    // Sign In/Sign Up ボタン
                     Container(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: _isLoading ? null : _handleSubmit,
+                        onPressed:
+                            isLoading
+                                ? null
+                                : (_selectedMode == 'Sign In'
+                                    ? _handleSignIn
+                                    : _handleSignUp),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF2C2C2C),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
+                        child:
+                            isLoading
+                                ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                                : Text(
+                                  _selectedMode,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
                       ),
                     ),
                     SizedBox(height: 20),
