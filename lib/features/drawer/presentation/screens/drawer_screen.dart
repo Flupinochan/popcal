@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/features/auth/login/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/login/presentation/providers/auth_providers.dart';
+import 'package:popcal/features/auth/login/presentation/providers/user_provider.dart';
 
 class DrawerScreen extends ConsumerStatefulWidget {
   const DrawerScreen({super.key});
@@ -40,17 +41,97 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Text(
-                  "userName",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "userEmail",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                // RiverPodに応じて部分的に再レンダリング
+                Consumer(
+                  builder: (context, ref, child) {
+                    final userAsync = ref.watch(currentUserProvider);
+
+                    return userAsync.when(
+                      data:
+                          (result) => result.when(
+                            success:
+                                (user) => Column(
+                                  children: [
+                                    Text(
+                                      user?.email.split('@').first ?? "ゲスト",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      user?.email ?? "未ログイン",
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                            failure:
+                                (_) => Column(
+                                  children: [
+                                    Text(
+                                      "ゲスト",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      "未ログイン",
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                          ),
+                      loading:
+                          () => Column(
+                            children: [
+                              Text(
+                                "読み込み中...",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "お待ちください",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                      error:
+                          (_, __) => Column(
+                            children: [
+                              Text(
+                                "エラー",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "読み込みに失敗しました",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                    );
+                  },
                 ),
               ],
             ),
