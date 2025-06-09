@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/features/auth/login/presentation/controllers/auth_controller.dart';
-import 'package:popcal/features/auth/login/presentation/providers/auth_providers.dart';
+import 'package:popcal/features/auth/login/providers/auth_providers.dart';
 import 'package:popcal/features/auth/login/presentation/validators/email_sign_in_validator.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {

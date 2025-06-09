@@ -1,0 +1,211 @@
+@startuml Flutter Clean Architecture Class Diagram
+
+!define DOMAIN_COLOR #E1F5FE
+!define DATA_COLOR #E8F5E8
+!define PRESENTATION_COLOR #FFF3E0
+
+skinparam backgroundColor White
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+
+package "Domain Layer" DOMAIN_COLOR {
+  
+  abstract class Failure {
+    +String message
+    +toString(): String
+  }
+  
+  class ValidationFailure extends Failure {
+    +ValidationFailure(message: String)
+  }
+  
+  class AuthFailure extends Failure {
+    +AuthFailure(message: String)
+  }
+  
+  class NetworkFailure extends Failure {
+    +NetworkFailure(message: String)
+  }
+  
+  abstract class "Result<T>" {
+    +success(value: T): Result<T>
+    +failure(failure: Failure): Result<T>
+    +when<R>(success: Function, failure: Function): R
+    +isSuccess: bool
+    +isFailure: bool
+  }
+  
+  class "Success<T>" extends "Result<T>" {
+    +T value
+    +when<R>(...): R
+  }
+  
+  class "Error<T>" extends "Result<T>" {
+    +Failure failure
+    +when<R>(...): R
+  }
+  
+  class AppUser {
+    +String uid
+    +String email
+    +AppUser(uid: String, email: String)
+  }
+  
+  abstract class AuthRepository {
+    +{abstract} Stream<Result<AppUser?>> authStateChanges
+    +{abstract} Future<Result<AppUser?>> getUser()
+    +{abstract} Future<Result<AppUser?>> signInWithEmailAndPassword(email: String, password: String)
+    +{abstract} Future<Result<void>> signOut()
+    +{abstract} Future<Result<AppUser?>> signUpWithEmailAndPassword(email: String, password: String)
+  }
+}
+
+package "Data Layer" DATA_COLOR {
+  
+  class UserDto {
+    +String uid
+    +String? email
+    +fromFirebaseUser(firebaseUser): UserDto
+    +fromJson(json): UserDto
+    +toJson(): Map<String, dynamic>
+    +toEntity(): AppUser
+  }
+  
+  class EmailSignInRequestDto {
+    +String email
+    +String password
+    +fromJson(json): EmailSignInRequestDto
+    +toJson(): Map<String, dynamic>
+  }
+  
+  class FirebaseAuthDataSource {
+    -FirebaseAuth _firebaseAuth
+    +Stream<Result<UserDto?>> authStateChanges
+    +Future<Result<UserDto?>> getUser()
+    +Future<Result<UserDto>> signInWithEmailAndPassword(email: String, password: String)
+    +Future<Result<void>> signOut()
+    +Future<Result<UserDto>> signUpWithEmailAndPassword(email: String, password: String)
+    -_mapFirebaseError(error): String
+  }
+  
+  class AuthRepositoryFirebase implements AuthRepository {
+    +FirebaseAuthDataSource firebaseAuthDataSource
+    +Stream<Result<AppUser?>> authStateChanges
+    +Future<Result<AppUser?>> getUser()
+    +Future<Result<AppUser?>> signInWithEmailAndPassword(email: String, password: String)
+    +Future<Result<void>> signOut()
+    +Future<Result<AppUser?>> signUpWithEmailAndPassword(email: String, password: String)
+  }
+}
+
+package "Presentation Layer" PRESENTATION_COLOR {
+  
+  class EmailSignInValidator {
+    +validateEmail(value: String): Result<String>
+    +validatePassword(value: String): Result<String>
+  }
+  
+  class AuthController {
+    +FutureOr<AppUser?> build()
+    +Future<Result<AppUser?>> signIn(email: String, password: String)
+    +Future<Result<AppUser?>> signUp(email: String, password: String)
+    +Future<Result<void>> signOut()
+  }
+  
+  class CurrentUser {
+    +Future<Result<AppUser?>> build()
+    -_setupAuthListener()
+  }
+  
+  class LoginScreen {
+    -bool _isPasswordVisible
+    -String _selectedMode
+    -GlobalKey<FormState> _formKey
+    -String _email
+    -String _password
+    -EmailSignInValidator _emailSignInValidator
+    +Widget build(context, ref)
+    -_handleSignIn()
+    -_handleSignUp()
+    -_showErrorDialog(message: String)
+  }
+  
+  class DrawerScreen {
+    -AuthRepository _authRepository
+    +Widget build(context, ref)
+    -_showSignOutDialog(context)
+  }
+  
+  class HomeScreen {
+    +Widget build(context)
+  }
+  
+  class AuthProviders {
+    +firebaseAuth(): FirebaseAuth
+    +firebaseAuthDataSource(): FirebaseAuthDataSource
+    +authRepository(): AuthRepository
+    +authStateChanges(): Stream<Result<AppUser?>>
+    +emailSignInValidator(): EmailSignInValidator
+  }
+  
+  class Router {
+    +GoRouter routerProvider
+    +Routes routes
+  }
+  
+  class Routes {
+    +String home = '/'
+    +String auth = '/auth'
+    +String search = '/search'
+    +homeWithId(id: int): String
+  }
+}
+
+' Domain Layer Internal Dependencies
+ValidationFailure ..> Failure : extends
+AuthFailure ..> Failure : extends
+NetworkFailure ..> Failure : extends
+"Success<T>" ..> "Result<T>" : extends
+"Error<T>" ..> "Result<T>" : extends
+AuthRepository --> "Result<T>"
+AuthRepository --> AppUser
+
+' Data Layer Dependencies
+UserDto --> AppUser : converts to
+FirebaseAuthDataSource --> "Result<T>"
+FirebaseAuthDataSource --> UserDto
+FirebaseAuthDataSource --> AuthFailure
+AuthRepositoryFirebase ..> AuthRepository : implements
+AuthRepositoryFirebase --> FirebaseAuthDataSource
+AuthRepositoryFirebase --> AppUser
+AuthRepositoryFirebase --> "Result<T>"
+
+' Presentation Layer Dependencies
+EmailSignInValidator --> "Result<T>"
+EmailSignInValidator --> ValidationFailure
+AuthController --> AuthRepository
+AuthController --> AppUser
+AuthController --> "Result<T>"
+CurrentUser --> AuthRepository
+CurrentUser --> AppUser
+CurrentUser --> "Result<T>"
+CurrentUser --> AuthFailure
+LoginScreen --> AuthController
+LoginScreen --> EmailSignInValidator
+DrawerScreen --> AuthRepository
+DrawerScreen --> CurrentUser
+AuthProviders --> AuthRepository
+AuthProviders --> FirebaseAuthDataSource
+AuthProviders --> EmailSignInValidator
+Router --> AuthProviders
+
+note top of "Domain Layer" : **Domain Layer**\nビジネスロジック、エンティティ、インターフェース\n共通ユーティリティも含む
+
+note top of "Data Layer" : **Data Layer**\nデータソース、DTOクラス、リポジトリ実装\nDomain Layerのみに依存
+
+note top of "Presentation Layer" : **Presentation Layer**\nUI、状態管理、バリデーション、DI、ルーティング\nDomainとData Layerに依存
+
+@enduml

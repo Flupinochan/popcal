@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/login/domain/entities/user.dart';
-import 'package:popcal/features/auth/login/domain/repositories/auth_repository_firebase.dart';
+import 'package:popcal/features/auth/login/data/repositories/auth_repository_firebase.dart';
 import 'package:popcal/features/auth/login/data/datasources/firebase_auth_datasource.dart';
 import 'package:popcal/features/auth/login/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/login/presentation/validators/email_sign_in_validator.dart';
