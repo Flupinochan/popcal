@@ -43,7 +43,7 @@ final firebaseAuthDataSourceProvider =
 // ignore: unused_element
 typedef FirebaseAuthDataSourceRef =
     AutoDisposeProviderRef<FirebaseAuthDataSource>;
-String _$authRepositoryHash() => r'0106c7ee292ac5f8522c2f734da117edeb06a404';
+String _$authRepositoryHash() => r'69216545fe3cacbf6fae9eff4ea736aaea870eb4';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)

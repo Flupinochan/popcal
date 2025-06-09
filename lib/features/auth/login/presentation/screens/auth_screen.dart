@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:popcal/features/auth/login/data/dto/email_sign_in/email_sign_in_request_dto.dart';
-import 'package:popcal/features/auth/login/domain/use_cases/email_sign_in_use_case.dart';
-import 'package:popcal/features/auth/login/domain/use_cases/email_sign_up_use_case.dart';
+import 'package:popcal/features/auth/login/presentation/controllers/auth_controller.dart';
 import 'package:popcal/features/auth/login/presentation/providers/auth_providers.dart';
 import 'package:popcal/features/auth/login/presentation/validators/email_sign_in_validator.dart';
 
@@ -32,50 +30,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _handleSignIn() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
       final result = await ref
-          .read(emailSignInUseCaseProvider.notifier)
-          .call(EmailSignInRequestDto(email: _email, password: _password));
+          .read(authControllerProvider.notifier)
+          .signIn(_email, _password);
 
       if (result.isFailure && mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.warning_amber_outlined,
-                    color: Colors.orange,
-                    size: 24,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'エラー',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              content: Text(result.toString(), style: TextStyle(fontSize: 14)),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
+        _showErrorDialog(result.toString());
       }
     }
   }
@@ -83,60 +44,62 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _handleSignUp() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
       final result = await ref
-          .read(emailSignUpUseCaseProvider.notifier)
-          .call(EmailSignInRequestDto(email: _email, password: _password));
+          .read(authControllerProvider.notifier)
+          .signUp(_email, _password);
 
       if (result.isFailure && mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              title: Row(
-                children: [
-                  Icon(
-                    Icons.warning_amber_outlined,
-                    color: Colors.orange,
-                    size: 24,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'エラー',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              content: Text(result.toString(), style: TextStyle(fontSize: 14)),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                      color: Colors.indigo,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
+        _showErrorDialog(result.toString());
       }
     }
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.warning_amber_outlined,
+                color: Colors.orange,
+                size: 24,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'エラー',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          content: Text(message, style: TextStyle(fontSize: 14)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: Colors.indigo,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isLoading =
-        _selectedMode == 'Sign In'
-            ? ref.watch(emailSignInUseCaseProvider).isLoading
-            : ref.watch(emailSignUpUseCaseProvider).isLoading;
+    final isLoading = ref.watch(authControllerProvider).isLoading;
 
     return Scaffold(
       body: Container(
