@@ -2,6 +2,12 @@
 
 A new Flutter project.
 
+## PlantUML図
+
+`class_diagram.puml` をvscode拡張機能で出力
+
+![Clean Architecture](out/class_diagram/class_diagram.svg)
+
 ## ディレクトリ構造
 
 `Layer-First` ではなく、`Feature-First` アプローチ
