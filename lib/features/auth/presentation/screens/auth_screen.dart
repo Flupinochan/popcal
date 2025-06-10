@@ -17,8 +17,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String _selectedMode = 'Sign In';
 
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
 
   late final EmailSignInValidator _emailSignInValidator;
 
@@ -32,9 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final result = await ref
-          .read(authViewModelProvider.notifier)
-          .signIn(_email, _password);
+      final result = await ref.read(authViewModelProvider.notifier).signIn();
 
       if (result.isFailure && mounted) {
         _showErrorDialog(result.displayText);
@@ -46,9 +42,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final result = await ref
-          .read(authViewModelProvider.notifier)
-          .signUp(_email, _password);
+      final result = await ref.read(authViewModelProvider.notifier).signUp();
 
       if (result.isFailure && mounted) {
         _showErrorDialog(result.displayText);
@@ -101,6 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authViewModelProvider).isLoading;
+    final authViewModel = ref.read(authViewModelProvider.notifier);
 
     return Scaffold(
       body: Container(
@@ -268,7 +263,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (value) => _email = value ?? '',
+                                  onChanged:
+                                      (value) =>
+                                          authViewModel.updateEmail(value),
                                   decoration: InputDecoration(
                                     hintText: 'Enter your email',
                                     prefixIcon: Icon(
@@ -314,7 +311,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (value) => _password = value ?? '',
+                                  onChanged:
+                                      (value) =>
+                                          authViewModel.updatePassword(value),
                                   obscureText: !_isPasswordVisible,
                                   decoration: InputDecoration(
                                     hintText: 'Enter your password',
