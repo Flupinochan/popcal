@@ -1,131 +1,148 @@
-@startuml
-!theme plain
-skinparam backgroundColor #FAFAFA
-skinparam packageBorderColor #333333
-skinparam packageBackgroundColor #F8F9FA
-skinparam classBorderColor #666666
-skinparam classBackgroundColor #FFFFFF
-skinparam interfaceBackgroundColor #E3F2FD
-skinparam abstractBackgroundColor #FFF3E0
-skinparam linetype splines
-skinparam roundcorner 10
-skinparam shadowing false
+@startuml Flutter_Clean_Architecture_Auth
 
-package "Domain Layer" #E8F5E8 {
-  class AppUser {
-    +String uid
-    +String email
-    +AppUser(uid, email)
-  }
-  
-  interface AuthRepository <<interface>> {
-    +Stream<Result<AppUser?>> authStateChanges
-    +Future<Result<AppUser?>> getUser()
-    +Future<Result<AppUser?>> signInWithEmailAndPassword(email, password)
-    +Future<Result<void>> signOut()
-    +Future<Result<AppUser?>> signUpWithEmailAndPassword(email, password)
-  }
+!define DOMAIN_COLOR #E1F5FE
+!define DATA_COLOR #FFF3E0  
+!define PRESENTATION_COLOR #E8F5E8
+
+skinparam packageStyle rectangle
+skinparam rectangle {
+    roundCorner 15
+    shadowing true
 }
 
-package "Data Layer" #E3F2FD {
-  class UserDto {
-    +String uid
-    +String? email
-    +UserDto(uid, email)
-    +UserDto.fromFirebaseUser(firebaseUser)
-    +UserDto.fromJson(json)
-    +Map<String, dynamic> toJson()
-    +AppUser toEntity()
-  }
-  
-  class EmailSignInRequestDto {
-    +String email
-    +String password
-    +EmailSignInRequestDto(email, password)
-    +EmailSignInRequestDto.fromJson(json)
-    +Map<String, dynamic> toJson()
-  }
-  
-  class FirebaseAuthDataSource {
-    -FirebaseAuth _firebaseAuth
-    +FirebaseAuthDataSource(firebaseAuth)
-    +Stream<Result<UserDto?>> authStateChanges
-    +Future<Result<UserDto?>> getUser()
-    +Future<Result<UserDto>> signInWithEmailAndPassword(email, password)
-    +Future<Result<void>> signOut()
-    +Future<Result<UserDto>> signUpWithEmailAndPassword(email, password)
-    -String _mapFirebaseError(error)
-  }
-  
-  class AuthRepositoryFirebase {
-    +FirebaseAuthDataSource firebaseAuthDataSource
-    +AuthRepositoryFirebase(firebaseAuthDataSource)
-  }
+skinparam arrow {
+    thickness 2
+    color #333333
 }
 
-package "Presentation Layer" #FFF3E0 {
-  class LoginScreen {
-    -bool _isPasswordVisible
-    -String _selectedMode
-    -GlobalKey<FormState> _formKey
-    -String _email
-    -String _password
-    -EmailSignInValidator _emailSignInValidator
-    +void _handleSignIn()
-    +void _handleSignUp()
-    +void _showErrorDialog(message)
-  }
-  
-  class AuthController {
-    +FutureOr<AppUser?> build()
-    +Future<Result<AppUser?>> signIn(email, password)
-    +Future<Result<AppUser?>> signUp(email, password)
-    +Future<Result<void>> signOut()
-  }
-  
-  class EmailSignInValidator {
-    +Result<String> validateEmail(value)
-    +Result<String> validatePassword(value)
-  }
-  
-  class CurrentUser {
-    +Future<Result<AppUser?>> build()
-    +void _setupAuthListener()
-  }
-  
-  class DrawerScreen {
-    +void _showSignOutDialog(context)
-  }
-  
-  class HomeScreen {
-    +Widget build(context)
-  }
+package "Presentation Layer" PRESENTATION_COLOR {
+    rectangle "UI & ViewModels" {
+        class LoginScreen {
+            -bool _isPasswordVisible
+            -String _selectedMode
+            -GlobalKey<FormState> _formKey
+            +_handleSignIn(): void
+            +_handleSignUp(): void
+            +build(): Widget
+        }
+        
+        class AuthViewModel {
+            -String _email
+            -String _password
+            +updateEmail(): void
+            +updatePassword(): void
+            +signIn(): Future<Result<AppUser?>>
+            +signUp(): Future<Result<AppUser?>>
+            +signOut(): Future<Result<void>>
+        }
+        
+        class EmailSignInValidator {
+            +validateEmail(): Result<String>
+            +validatePassword(): Result<String>
+        }
+    }
 }
 
-' === DATA LAYER → DOMAIN LAYER の依存 ===
-AuthRepositoryFirebase .up.|> AuthRepository : implements
-UserDto .up.> AppUser : converts to
-FirebaseAuthDataSource .up.> UserDto : creates
+package "Domain Layer" DOMAIN_COLOR {
+    rectangle "Business Logic" {
+        class AppUser {
+            +String uid
+            +String email
+        }
+        
+        interface AuthRepository {
+            +authStateChanges: Stream<Result<AppUser?>>
+            +getUser(): Future<Result<AppUser?>>
+            +signInWithEmailAndPassword(): Future<Result<AppUser?>>
+            +signOut(): Future<Result<void>>
+            +signUpWithEmailAndPassword(): Future<Result<AppUser?>>
+        }
+    }
+}
 
-' === PRESENTATION LAYER → DOMAIN LAYER の依存 ===
-AuthController .up.> AuthRepository : uses
-CurrentUser .up.> AuthRepository : uses
+package "Data Layer" DATA_COLOR {
+    rectangle "Data Sources & DTOs" {
+        class UserDto {
+            +String uid
+            +String? email
+            +fromFirebaseUser(): UserDto
+            +toEntity(): AppUser
+            +toJson(): Map<String, dynamic>
+        }
+        
+        class EmailSignInRequestDto {
+            +String email
+            +String password
+            +fromJson(): EmailSignInRequestDto
+            +toJson(): Map<String, dynamic>
+        }
+        
+        class FirebaseAuthDataSource {
+            -FirebaseAuth _firebaseAuth
+            +authStateChanges: Stream<Result<UserDto?>>
+            +getUser(): Future<Result<UserDto?>>
+            +signInWithEmailAndPassword(): Future<Result<UserDto>>
+            +signOut(): Future<Result<void>>
+            +signUpWithEmailAndPassword(): Future<Result<UserDto>>
+        }
+        
+        class AuthRepositoryFirebase {
+            +FirebaseAuthDataSource firebaseAuthDataSource
+            +authStateChanges: Stream<Result<AppUser?>>
+            +getUser(): Future<Result<AppUser?>>
+            +signInWithEmailAndPassword(): Future<Result<AppUser?>>
+            +signOut(): Future<Result<void>>
+            +signUpWithEmailAndPassword(): Future<Result<AppUser?>>
+        }
+    }
+}
 
-' === PRESENTATION LAYER 内部の依存（同一レイヤー内） ===
-LoginScreen --> AuthController : uses
+' 依存関係の矢印
+AuthViewModel --> AuthRepository : depends on
+LoginScreen --> AuthViewModel : uses
 LoginScreen --> EmailSignInValidator : uses
-DrawerScreen --> CurrentUser : watches
 
-' === DATA LAYER 内部の依存（同一レイヤー内） ===
+AuthRepositoryFirebase ..|> AuthRepository : implements
 AuthRepositoryFirebase --> FirebaseAuthDataSource : uses
+UserDto --> AppUser : converts to
 
-' 依存の方向を明確にする注釈
-note top of "Domain Layer" : **独立レイヤー**\n他のレイヤーに依存しない
-note left of "Data Layer" : **Domain に依存**\nPresentation には依存しない
-note right of "Presentation Layer" : **Domain に依存**\nData には依存しない
+' 外部依存
+FirebaseAuthDataSource --> "Firebase Auth" : external
 
-' レイヤー間の依存方向を示す矢印
-"Data Layer" .up.> "Domain Layer" : depends on
-"Presentation Layer" .up.> "Domain Layer" : depends on
+note top of "Domain Layer"
+**Domain Layer (最内層)**
+- ビジネスエンティティ
+- リポジトリインターフェース
+- 外部依存なし
+- 純粋なDartコード
+end note
+
+note top of "Data Layer"
+**Data Layer (中間層)**
+- データ取得・保存の実装
+- 外部APIとの通信
+- DTOによるデータ変換
+- Domainレイヤーに依存
+end note
+
+note top of "Presentation Layer"
+**Presentation Layer (外層)**
+- UI表示とユーザー操作
+- 状態管理
+- 入力値検証
+- Domainレイヤーに依存
+end note
+
+note right of AuthViewModel
+ViewModelは具象クラスではなく
+AuthRepositoryインターフェース
+に依存することで疎結合を実現
+end note
+
+note right of UserDto
+DTOはFirebaseの
+User型をAppUser
+エンティティに変換
+end note
 
 @enduml

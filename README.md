@@ -1,43 +1,54 @@
-# popcal
+# PopCal
 
-A new Flutter project.
+記載予定
 
-## PlantUML図
-
-`class_diagram.puml` をvscode拡張機能で出力
+## Architecture Overview
 
 ![Clean Architecture](out/class_diagram/class_diagram.svg)
 
-## ディレクトリ構造
+### Clean Architectureに準拠
+`data` => `domain` <= `presentation`
+- `data`は、`domain`のみに依存、`presentation`に依存しない
+- `presentation`は、`domain`のみに依存、`data`に依存しない
+- `domain`は、どこにも依存しない中核
 
-`Layer-First` ではなく、`Feature-First` アプローチ
-上位ディレクトリは、DomainやPresentation単位で区切らず、AuthやHomeなど機能ごとにディレクトリを区切る
+※[class_diagram.puml](class_diagram.puml) よりPlantUML図をvscode拡張機能でsvg出力
 
-- data: 外部に依存する処理
-    - domainのInterfaceの実装
-    - リクエスト用ユーザ情報定義
-    - Firebaseで認証
-    - Localキャッシュで認証
-    - API
-    - DB
-- domain: 外部に依存しない中核処理
-    - Interface定義
-    - ユーザ情報
-    - 認証処理定義
-- presentation: UI
+## Project Structure
 
-## ファイル命名規則
+- `Layer-First` ではなく、`Feature-First` アプローチ
+- 上位ディレクトリは、domainやpresentation単位で区切らず、authやhomeなど機能ごとにディレクトリを区切る
 
-entities配下のファイルはxxxのみでOK、中心概念
-その他model、usecases配下のファイルはxxx_model、xxx_usecasesと命名
+## File Naming Conventions
 
-## Riverpod Generator
+- domainディレクトリ配下のファイルはxxxのみ
+- data、domainディレクトリを含むその他の配下のファイルはxxx_dto、xxx_view_modelと命名
+
+## Architecture Decisions
+
+- use case
+    - 複数のrepositoryの利用、複雑な処理がないため実装しない
+- mapper
+    - user_dtoがfirebaseに依存しているが、uidとemailのみでシンプルなため実装しない
+
+## Error Handling
+
+- fpdartライブラリ (Resultクラス) を利用
+- エラーはスローせず、`Result<T>.success` または `Result<Failure>.failure` を returnする
+
+## Memo
+
+### Launch Emulator
+
+```bash
+cd C:\Users\metalmental\AppData\Local\Android\Sdk\emulator
+.\emulator -list-avds
+.\emulator -avd Pixel_7a -dns-server 8.8.8.8
+```
+
+### Riverpod Generator
 
 ```bash
 dart run custom_lint
 dart run build_runner watch -d
 ```
-
-## use case
-
-複数のrepositoryの利用、複雑な処理がないため実装しない
