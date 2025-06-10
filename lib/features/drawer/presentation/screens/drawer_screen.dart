@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/login/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/login/providers/auth_providers.dart';
 import 'package:popcal/features/auth/login/providers/user_provider.dart';

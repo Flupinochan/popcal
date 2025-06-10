@@ -13,14 +13,14 @@ class FirebaseAuthDataSource {
     return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
       try {
         if (firebaseUser != null) {
-          return Result.success(UserDto.fromFirebaseUser(firebaseUser));
+          return Results.success(UserDto.fromFirebaseUser(firebaseUser));
         } else {
-          return Result.failure(AuthFailure('未認証です'));
+          return Results.failure(AuthFailure('未認証です'));
         }
       } on firebase_auth.FirebaseAuthException catch (error) {
-        return Result.failure(AuthFailure(_mapFirebaseError(error)));
+        return Results.failure(AuthFailure(_mapFirebaseError(error)));
       } catch (error) {
-        return Result.failure(AuthFailure('認証状態の監視で、予期しないエラーが発生しました: $error'));
+        return Results.failure(AuthFailure('認証状態の監視で、予期しないエラーが発生しました: $error'));
       }
     });
   }
@@ -30,14 +30,14 @@ class FirebaseAuthDataSource {
     try {
       final firebaseUser = _firebaseAuth.currentUser;
       if (firebaseUser == null) {
-        return Result.failure(AuthFailure('未認証または存在しないユーザを取得しようとしました'));
+        return Results.failure(AuthFailure('未認証または存在しないユーザを取得しようとしました'));
       }
       final userDto = UserDto.fromFirebaseUser(firebaseUser);
-      return Result.success(userDto);
+      return Results.success(userDto);
     } on firebase_auth.FirebaseAuthException catch (error) {
-      return Result.failure(AuthFailure(_mapFirebaseError(error)));
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
-      return Result.failure(AuthFailure('ユーザ情報の取得で、予期しないエラーが発生しました: $error'));
+      return Results.failure(AuthFailure('ユーザ情報の取得で、予期しないエラーが発生しました: $error'));
     }
   }
 
@@ -52,14 +52,14 @@ class FirebaseAuthDataSource {
         password: password,
       );
       if (credential.user == null) {
-        return Result.failure(AuthFailure('メールアドレス認証認証に失敗しました'));
+        return Results.failure(AuthFailure('メールアドレス認証認証に失敗しました'));
       }
       final userDto = UserDto.fromFirebaseUser(credential.user!);
-      return Result.success(userDto);
+      return Results.success(userDto);
     } on firebase_auth.FirebaseAuthException catch (error) {
-      return Result.failure(AuthFailure(_mapFirebaseError(error)));
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
-      return Result.failure(AuthFailure('メールアドレス認証で、予期しないエラーが発生しました: $error'));
+      return Results.failure(AuthFailure('メールアドレス認証で、予期しないエラーが発生しました: $error'));
     }
   }
 
@@ -67,11 +67,11 @@ class FirebaseAuthDataSource {
   Future<Result<void>> signOut() async {
     try {
       await _firebaseAuth.signOut();
-      return Result.success(null);
+      return Results.success(null);
     } on firebase_auth.FirebaseAuthException catch (error) {
-      return Result.failure(AuthFailure(_mapFirebaseError(error)));
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
-      return Result.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
+      return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
     }
   }
 
@@ -86,14 +86,14 @@ class FirebaseAuthDataSource {
         password: password,
       );
       if (credential.user == null) {
-        return Result.failure(AuthFailure('サインアップに失敗しました'));
+        return Results.failure(AuthFailure('サインアップに失敗しました'));
       }
       final userDto = UserDto.fromFirebaseUser(credential.user!);
-      return Result.success(userDto);
+      return Results.success(userDto);
     } on firebase_auth.FirebaseAuthException catch (error) {
-      return Result.failure(AuthFailure(_mapFirebaseError(error)));
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
-      return Result.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
+      return Results.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
     }
   }
 

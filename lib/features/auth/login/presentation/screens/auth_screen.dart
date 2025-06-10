@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/login/presentation/controllers/auth_controller.dart';
 import 'package:popcal/features/auth/login/providers/auth_providers.dart';
 import 'package:popcal/features/auth/login/presentation/validators/email_sign_in_validator.dart';
@@ -36,7 +37,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           .signIn(_email, _password);
 
       if (result.isFailure && mounted) {
-        _showErrorDialog(result.toString());
+        _showErrorDialog(result.displayText);
       }
     }
   }
@@ -50,7 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           .signUp(_email, _password);
 
       if (result.isFailure && mounted) {
-        _showErrorDialog(result.toString());
+        _showErrorDialog(result.displayText);
       }
     }
   }
@@ -263,7 +264,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     final result = _emailSignInValidator
                                         .validateEmail(value ?? '');
                                     if (result.isFailure) {
-                                      return result.toString();
+                                      return result.displayText;
                                     }
                                     return null;
                                   },
@@ -309,7 +310,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     final result = _emailSignInValidator
                                         .validatePassword(value ?? '');
                                     if (result.isFailure) {
-                                      return result.toString();
+                                      return result.displayText;
                                     }
                                     return null;
                                   },

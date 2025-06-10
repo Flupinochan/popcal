@@ -16,9 +16,9 @@ class AuthRepositoryFirebase implements AuthRepository {
         success:
             (userDto) =>
                 userDto != null
-                    ? Result.success(userDto.toEntity())
-                    : Result.failure(AuthFailure('未認証です')),
-        failure: (error) => Result.failure(error),
+                    ? Results.success(userDto.toEntity())
+                    : Results.failure(AuthFailure('未認証です')),
+        failure: (error) => Results.failure(error),
       );
     });
   }
@@ -30,9 +30,9 @@ class AuthRepositoryFirebase implements AuthRepository {
       success:
           (userDto) =>
               userDto != null
-                  ? Result.success(userDto.toEntity())
-                  : Result.failure(AuthFailure('ユーザーが存在しません')),
-      failure: (error) => Result.failure(error),
+                  ? Results.success(userDto.toEntity())
+                  : Results.failure(AuthFailure('ユーザーが存在しません')),
+      failure: (error) => Results.failure(error),
     );
   }
 
@@ -46,8 +46,8 @@ class AuthRepositoryFirebase implements AuthRepository {
       password,
     );
     return result.when(
-      success: (userDto) => Result.success(userDto.toEntity()),
-      failure: (error) => Result.failure(error),
+      success: (userDto) => Results.success(userDto.toEntity()),
+      failure: (error) => Results.failure(error),
     );
   }
 
@@ -66,8 +66,8 @@ class AuthRepositoryFirebase implements AuthRepository {
       password,
     );
     return result.when(
-      success: (userDto) => Result.success(userDto.toEntity()),
-      failure: (error) => Result.failure(error),
+      success: (userDto) => Results.success(userDto.toEntity()),
+      failure: (error) => Results.failure(error),
     );
   }
 }

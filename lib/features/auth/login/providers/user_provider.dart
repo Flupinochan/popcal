@@ -22,11 +22,11 @@ class CurrentUser extends _$CurrentUser {
     ref.listen(authStateChangesProvider, (_, next) {
       next.whenData((result) {
         result.when(
-          success: (user) => state = AsyncData(Result.success(user)),
+          success: (user) => state = AsyncData(Results.success(user)),
           failure:
               (_) =>
                   state = AsyncData(
-                    Result.failure(AuthFailure("ユーザ情報の取得に失敗しました")),
+                    Results.failure(AuthFailure("ユーザ情報の取得に失敗しました")),
                   ),
         );
       });
