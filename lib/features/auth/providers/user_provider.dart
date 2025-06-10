@@ -1,8 +1,8 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:popcal/features/auth/login/domain/entities/user.dart';
-import 'package:popcal/features/auth/login/providers/auth_providers.dart';
+import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/providers/auth_providers.dart';
 
 part 'user_provider.g.dart';
 

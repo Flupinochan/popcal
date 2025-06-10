@@ -29,6 +29,7 @@ extension ResultExtensions<T> on Result<T> {
   T? get valueOrNull => fold((_) => null, (value) => value);
   Failure? get failureOrNull => fold((failure) => failure, (_) => null);
 
+  // テキスト表示
   String get displayText {
     return fold((failure) => failure.toString(), (value) => value.toString());
   }

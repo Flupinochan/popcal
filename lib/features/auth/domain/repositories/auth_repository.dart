@@ -1,5 +1,5 @@
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/login/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/entities/user.dart';
 
 abstract class AuthRepository {
   // 認証状態(認証済 or 未認証)を監視

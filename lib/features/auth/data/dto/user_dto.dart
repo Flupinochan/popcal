@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:popcal/features/auth/login/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/entities/user.dart';
 
 class UserDto {
   final String uid;

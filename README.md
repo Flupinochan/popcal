@@ -37,3 +37,7 @@ entities配下のファイルはxxxのみでOK、中心概念
 dart run custom_lint
 dart run build_runner watch -d
 ```
+
+## use case
+
+複数のrepositoryの利用、複雑な処理がないため実装しない
