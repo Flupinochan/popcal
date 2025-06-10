@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:popcal/features/auth/presentation/view_models/auth_view_model.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/auth/presentation/validators/email_sign_in_validator.dart';
 
@@ -33,7 +33,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _formKey.currentState!.save();
 
       final result = await ref
-          .read(authControllerProvider.notifier)
+          .read(authViewModelProvider.notifier)
           .signIn(_email, _password);
 
       if (result.isFailure && mounted) {
@@ -47,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _formKey.currentState!.save();
 
       final result = await ref
-          .read(authControllerProvider.notifier)
+          .read(authViewModelProvider.notifier)
           .signUp(_email, _password);
 
       if (result.isFailure && mounted) {
@@ -100,7 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authControllerProvider).isLoading;
+    final isLoading = ref.watch(authViewModelProvider).isLoading;
 
     return Scaffold(
       body: Container(

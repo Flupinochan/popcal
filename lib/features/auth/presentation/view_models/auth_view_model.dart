@@ -3,10 +3,10 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 
-part 'auth_controller.g.dart';
+part 'auth_view_model.g.dart';
 
 @riverpod
-class AuthController extends _$AuthController {
+class AuthViewModel extends _$AuthViewModel {
   @override
   FutureOr<AppUser?> build() {
     return null;
