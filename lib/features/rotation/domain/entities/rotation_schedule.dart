@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:popcal/features/rotation/domain/entities/day_of_week.dart';
-import 'package:popcal/features/rotation/domain/entities/schedule_type.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/day_of_week.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/schedule_type.dart';
 
 /// ローテーションのスケジュール設定を管理するエンティティ
 class RotationSchedule {

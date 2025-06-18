@@ -1,5 +1,5 @@
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/domain/entities/notification_data.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/notification_data.dart';
 
 /// プッシュ通知機能のリポジトリ
 /// モバイルアプリのプッシュ通知を管理する抽象化レイヤー

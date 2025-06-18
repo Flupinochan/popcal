@@ -1,4 +1,4 @@
-import 'package:popcal/features/rotation/domain/entities/current_assignment.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/current_assignment.dart';
 
 /// ローテーション履歴を保存するエンティティ
 /// カレンダー表示用

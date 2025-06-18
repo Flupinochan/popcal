@@ -1,4 +1,4 @@
-import 'package:popcal/features/rotation/domain/entities/assignment_info.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/assignment_info.dart';
 
 /// プッシュ通知用のデータ構造
 class NotificationData {

@@ -1,4 +1,4 @@
-import 'package:popcal/features/rotation/domain/entities/calendar_day.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/calendar_day.dart';
 
 /// 月カレンダー表示用のデータ構造
 class CalendarMonthData {

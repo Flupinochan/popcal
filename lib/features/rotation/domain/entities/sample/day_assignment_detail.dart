@@ -1,4 +1,4 @@
-import 'package:popcal/features/rotation/domain/entities/current_assignment.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/current_assignment.dart';
 
 /// 日付選択時のポップアップ表示用データ
 class DayAssignmentDetail {

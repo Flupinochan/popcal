@@ -1,13 +1,13 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/entities/skip_record.dart';
-import 'package:popcal/features/rotation/domain/entities/current_assignment.dart';
-import 'package:popcal/features/rotation/domain/entities/skip_request.dart';
-import 'package:popcal/features/rotation/domain/entities/assignment_history.dart';
-import 'package:popcal/features/rotation/domain/entities/calendar_month_data.dart';
-import 'package:popcal/features/rotation/domain/entities/day_assignment_detail.dart';
-import 'package:popcal/features/rotation/domain/entities/skip_option.dart';
-import 'package:popcal/features/rotation/domain/entities/history_retention_config.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/skip_record.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/current_assignment.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/skip_request.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/assignment_history.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/calendar_month_data.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/day_assignment_detail.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/skip_option.dart';
+import 'package:popcal/features/rotation/domain/entities/sample/history_retention_config.dart';
 
 /// ローテーション機能のメインリポジトリ
 /// データの永続化と取得を担当する抽象化レイヤー
