@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
+import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
+import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/router/routes.dart';
+import 'package:popcal/shared/widgets/glass_snackbar_content.dart';
+import 'package:popcal/shared/widgets/glass_snackbar_content_with_action.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +17,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // ハードコーディングしたローテーショングループのリスト
+  List<RotationGroup> rotationGroups = [
+    RotationGroup(
+      rotationGroupId: '1',
+      ownerUserId: 'user123',
+      rotationName: '掃除当番',
+      rotationMembers: ['太郎', '次郎', '三郎'],
+      notificationTime: DateTime.now(),
+      createdAt: DateTime.now().subtract(const Duration(days: 7)),
+      updatedAt: DateTime.now().subtract(const Duration(days: 1)),
+    ),
+    RotationGroup(
+      rotationGroupId: '2',
+      ownerUserId: 'user123',
+      rotationName: '料理担当',
+      rotationMembers: ['田中', '佐藤', '鈴木', '高橋'],
+      notificationTime: DateTime.now(),
+      createdAt: DateTime.now().subtract(const Duration(days: 5)),
+      updatedAt: DateTime.now().subtract(const Duration(hours: 3)),
+    ),
+    RotationGroup(
+      rotationGroupId: '3',
+      ownerUserId: 'user123',
+      rotationName: '洗濯当番',
+      rotationMembers: ['山田', '中村'],
+      notificationTime: DateTime.now(),
+      createdAt: DateTime.now().subtract(const Duration(days: 3)),
+      updatedAt: DateTime.now(),
+    ),
+    RotationGroup(
+      rotationGroupId: '4',
+      ownerUserId: 'user123',
+      rotationName: '会議司会',
+      rotationMembers: ['部長', '課長', '主任', '係長', '一般社員'],
+      notificationTime: DateTime.now(),
+      createdAt: DateTime.now().subtract(const Duration(days: 2)),
+      updatedAt: DateTime.now(),
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,13 +65,30 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
+        title: const Text(
           "PopCal",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const GlassSnackbarContent(message: 'リストを更新しました'),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  behavior: SnackBarBehavior.floating,
+                  margin: const EdgeInsets.all(16),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
+          ),
+        ],
       ),
-      drawer: DrawerScreen(),
+      drawer: const DrawerScreen(),
       floatingActionButton: GlassmorphicContainer(
         width: 56,
         height: 56,
@@ -38,27 +100,25 @@ class _HomeScreenState extends State<HomeScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFFffffff).withOpacity(0.03),
-            Color(0xFFFFFFFF).withOpacity(0.01),
+            const Color(0xFFffffff).withOpacity(0.15),
+            const Color(0xFFffffff).withOpacity(0.05),
           ],
-          stops: [0.1, 1],
+          stops: const [0.1, 1],
         ),
         borderGradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFFffffff).withOpacity(0.2),
-            Color(0xFFFFFFFF).withOpacity(0.1),
+            Colors.white.withOpacity(0.3),
+            Colors.white.withOpacity(0.3),
           ],
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(28),
-            onTap: () {
-              context.push(Routes.rotation);
-            },
-            child: Center(
+            onTap: () => context.push(Routes.rotation),
+            child: const Center(
               child: Icon(Icons.add, color: Colors.white, size: 24),
             ),
           ),
@@ -67,102 +127,85 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [Color(0xFF667eea), Color(0xFF764ba2)],
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GlassmorphicContainer(
-                width: 300,
-                height: 120,
-                borderRadius: 20,
-                blur: 10,
-                alignment: Alignment.center,
-                border: 1,
-                linearGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFffffff).withOpacity(0.03),
-                    Color(0xFFFFFFFF).withOpacity(0.01),
-                  ],
-                  stops: [0.1, 1],
-                ),
-                borderGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFffffff).withOpacity(0.2),
-                    Color(0xFFFFFFFF).withOpacity(0.1),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    "Welcome to Home Screen",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              SizedBox(height: 30),
-              GlassmorphicContainer(
-                width: 200,
-                height: 50,
-                borderRadius: 25,
-                blur: 10,
-                alignment: Alignment.center,
-                border: 1,
-                linearGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFffffff).withOpacity(0.03),
-                    Color(0xFFFFFFFF).withOpacity(0.01),
-                  ],
-                  stops: [0.1, 1],
-                ),
-                borderGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFFffffff).withOpacity(0.2),
-                    Color(0xFFFFFFFF).withOpacity(0.1),
-                  ],
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(25),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Center(
-                      child: Text(
-                        "Go Back",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+        child: SafeArea(child: _buildContent()),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    // 空のリストを表示したい場合は以下をコメントアウト
+    // rotationGroups = [];
+
+    if (rotationGroups.isEmpty) {
+      return EmptyState(
+        title: 'ローテーションがありません',
+        description: '新しいローテーションを作成してみましょう',
+        icon: Icons.group_add,
+        onAction: () => context.push(Routes.rotation),
+        actionText: '作成',
+      );
+    }
+
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final rotationGroup = rotationGroups[index];
+              return RotationListItem(
+                rotationGroup: rotationGroup,
+                onTap: () {
+                  // ログ出力のみ
+                  print('タップされました: ${rotationGroup.rotationName}');
+                },
+                onDelete: () {
+                  final deletedGroup = rotationGroup;
+                  final deletedIndex = index;
+
+                  setState(() {
+                    rotationGroups.removeWhere(
+                      (group) =>
+                          group.rotationGroupId ==
+                          rotationGroup.rotationGroupId,
+                    );
+                  });
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: GlassSnackbarContentWithAction(
+                        message: '${deletedGroup.rotationName}を削除しました',
+                        onAction: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          setState(() {
+                            rotationGroups.insert(deletedIndex, deletedGroup);
+                          });
+                        },
+                      ),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      behavior: SnackBarBehavior.floating,
+                      margin: const EdgeInsets.all(16),
+                      duration: const Duration(seconds: 5),
+                      action: SnackBarAction(
+                        label: '', // 空にして非表示
+                        onPressed: () {}, // 空の処理
                       ),
                     ),
-                  ),
-                ),
-              ),
-            ],
+                  );
+                },
+              );
+            }, childCount: rotationGroups.length),
           ),
         ),
-      ),
+      ],
     );
   }
 }

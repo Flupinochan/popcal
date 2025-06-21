@@ -48,6 +48,9 @@ dependencies:
   liquid_glass_renderer: ^0.1.1-dev.9
   glassmorphism: ^3.0.0
   glass_kit: ^4.0.1
+  freezed: ^3.0.6
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
@@ -60,9 +63,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   riverpod_generator: ^2.6.5
-  build_runner: ^2.4.15
+  build_runner: ^2.5.3
   custom_lint: ^0.7.5
   riverpod_lint: ^2.6.5
+  json_serializable: ^6.9.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
