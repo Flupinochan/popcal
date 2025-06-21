@@ -194,10 +194,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       behavior: SnackBarBehavior.floating,
                       margin: const EdgeInsets.all(16),
                       duration: const Duration(seconds: 5),
-                      action: SnackBarAction(
-                        label: '', // 空にして非表示
-                        onPressed: () {}, // 空の処理
-                      ),
                     ),
                   );
                 },

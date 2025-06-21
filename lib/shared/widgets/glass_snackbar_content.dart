@@ -14,6 +14,7 @@ class GlassSnackbarContent extends StatelessWidget {
       borderRadius: 12,
       blur: 20,
       border: 1,
+      alignment: Alignment.center,
       linearGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
@@ -27,12 +28,9 @@ class GlassSnackbarContent extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Center(
-          // Centerを追加
-          child: Text(
-            message,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
-          ),
+        child: Text(
+          message,
+          style: const TextStyle(color: Colors.white, fontSize: 14),
         ),
       ),
     );

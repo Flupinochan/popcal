@@ -1,4 +1,3 @@
-// lib/features/home/presentation/widgets/glass_snackbar_content_with_action.dart
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
@@ -21,8 +20,8 @@ class GlassSnackbarContentWithAction extends StatelessWidget {
       height: 48,
       borderRadius: 12,
       blur: 20,
-      alignment: Alignment.center,
       border: 1,
+      alignment: Alignment.center,
       linearGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
