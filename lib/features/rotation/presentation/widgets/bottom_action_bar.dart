@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
 class BottomActionBar extends StatelessWidget {
+  final bool isLoading;
   final VoidCallback onCancel;
   final VoidCallback onSubmit;
-  final String submitText;
-  final bool isSubmitting;
 
   const BottomActionBar({
     super.key,
+    this.isLoading = false,
     required this.onCancel,
     required this.onSubmit,
-    this.submitText = 'ローテーションを追加',
-    this.isSubmitting = false,
   });
 
   @override
@@ -50,7 +48,7 @@ class BottomActionBar extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: isSubmitting ? null : onCancel,
+                  onTap: isLoading ? null : onCancel,
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     width: double.infinity,
@@ -94,14 +92,14 @@ class BottomActionBar extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: isSubmitting ? null : onSubmit,
+                  onTap: isLoading ? null : onSubmit,
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     width: double.infinity,
                     height: double.infinity,
                     alignment: Alignment.center,
                     child:
-                        isSubmitting
+                        isLoading
                             ? SizedBox(
                               height: 20,
                               width: 20,
@@ -113,7 +111,7 @@ class BottomActionBar extends StatelessWidget {
                               ),
                             )
                             : Text(
-                              submitText,
+                              "作成",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,

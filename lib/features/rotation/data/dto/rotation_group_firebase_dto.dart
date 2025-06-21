@@ -1,67 +1,80 @@
+// Firebase Cloud Firestore <=> DTO <=> Entity 変換するDTOクラス
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 
 class RotationGroupFirebaseDto {
-  final String id;
-  final String title;
-  final String rotationType;
-  final List<Map<String, dynamic>> roles;
-  final List<Map<String, dynamic>> members;
-  final Map<String, dynamic> schedule;
+  final String? rotationGroupId;
+  final String ownerUserId;
+  final String rotationName;
+  final List<String> rotationMembers;
+  // firestoreに保存する際はTimestampが適切
+  // Widget(UI)はDateTimeが適切
+  final Timestamp notificationTime;
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
   const RotationGroupFirebaseDto({
-    required this.id,
-    required this.title,
-    required this.rotationType,
-    required this.roles,
-    required this.members,
-    required this.schedule,
+    required this.rotationGroupId,
+    required this.ownerUserId,
+    required this.rotationName,
+    required this.rotationMembers,
+    required this.notificationTime,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  // Entity → DTO
+  // Entity => DTO
   factory RotationGroupFirebaseDto.fromEntity(RotationGroup entity) {
     return RotationGroupFirebaseDto(
-      id: entity.id,
-      title: entity.title,
-      rotationType: entity.rotationType.name,
-      roles: entity.roles.map((role) => role.toMap()).toList(),
-      members: entity.members.map((member) => member.toMap()).toList(),
-      schedule: entity.schedule.toMap(),
-      // firestoreはTimestampが推奨、Widgetでは、DateTimeを利用する
+      rotationGroupId:
+          entity.rotationGroupId?.isNotEmpty == true
+              ? entity.rotationGroupId
+              : null,
+      ownerUserId: entity.ownerUserId,
+      rotationName: entity.rotationName,
+      rotationMembers: entity.rotationMembers,
+      notificationTime: Timestamp.fromDate(entity.notificationTime),
       createdAt: Timestamp.fromDate(entity.createdAt),
       updatedAt: Timestamp.fromDate(entity.updatedAt),
     );
   }
 
-  // DTO → Map (Firestore保存用)
-  Map<String, dynamic> toMap() {
+  // DTO => Entity
+  RotationGroup toEntity() {
+    return RotationGroup(
+      rotationGroupId: rotationGroupId,
+      ownerUserId: ownerUserId,
+      rotationName: rotationName,
+      rotationMembers: rotationMembers,
+      notificationTime: notificationTime.toDate(),
+      createdAt: createdAt.toDate(),
+      updatedAt: updatedAt.toDate(),
+    );
+  }
+
+  // Firestore => DTO
+  factory RotationGroupFirebaseDto.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return RotationGroupFirebaseDto(
+      rotationGroupId: doc.id,
+      ownerUserId: data['ownerUserId'],
+      rotationName: data['rotationName'],
+      rotationMembers: List<String>.from(data['rotationMembers']),
+      notificationTime: data['notificationTime'],
+      createdAt: data['createdAt'],
+      updatedAt: data['updatedAt'],
+    );
+  }
+
+  // DTO => Firestore
+  Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
-      'title': title,
-      'rotationType': rotationType,
-      'roles': roles,
-      'members': members,
-      'schedule': schedule,
+      'ownerUserId': ownerUserId,
+      'rotationName': rotationName,
+      'rotationMembers': rotationMembers,
+      'notificationTime': notificationTime,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
-  }
-
-  // Map → DTO (Firestore読込用)
-  factory RotationGroupFirebaseDto.fromMap(Map<String, dynamic> map) {
-    return RotationGroupFirebaseDto(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      rotationType: map['rotationType'] as String,
-      roles: List<Map<String, dynamic>>.from(map['roles']),
-      members: List<Map<String, dynamic>>.from(map['members']),
-      schedule: Map<String, dynamic>.from(map['schedule']),
-      createdAt: map['createdAt'] as Timestamp,
-      updatedAt: map['updatedAt'] as Timestamp,
-    );
   }
 }

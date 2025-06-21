@@ -70,7 +70,7 @@ class FormDate extends StatelessWidget {
           ),
         ),
         child: FormBuilderDateTimePicker(
-          name: 'startDate',
+          name: 'notificationTime',
           initialValue: DateTime.now(),
           inputType: InputType.date,
           decoration: InputDecoration(
