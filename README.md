@@ -46,7 +46,7 @@ cd C:\Users\metalmental\AppData\Local\Android\Sdk\emulator
 .\emulator -avd Pixel_7a -dns-server 8.8.8.8
 ```
 
-### Riverpod Generator
+### Riverpod Generator / Freezed
 
 ```bash
 dart run custom_lint

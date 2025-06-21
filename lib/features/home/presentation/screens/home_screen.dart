@@ -58,6 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void dispose() {
+    // SnackBarがある場合は削除
+    try {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    } catch (e) {
+      // contextが無効な場合は無視
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -170,6 +181,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   final deletedGroup = rotationGroup;
                   final deletedIndex = index;
 
+                  // ScaffoldMessengerの参照を事前に取得
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
+
                   setState(() {
                     rotationGroups.removeWhere(
                       (group) =>
@@ -177,16 +191,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           rotationGroup.rotationGroupId,
                     );
                   });
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
+
+                  scaffoldMessenger.hideCurrentSnackBar();
+                  scaffoldMessenger.showSnackBar(
                     SnackBar(
                       content: GlassSnackbarContentWithAction(
                         message: '${deletedGroup.rotationName}を削除しました',
                         onAction: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          setState(() {
-                            rotationGroups.insert(deletedIndex, deletedGroup);
-                          });
+                          try {
+                            // contextが有効かどうかをチェック
+                            if (mounted) {
+                              scaffoldMessenger.hideCurrentSnackBar();
+                              setState(() {
+                                rotationGroups.insert(
+                                  deletedIndex,
+                                  deletedGroup,
+                                );
+                              });
+                            }
+                          } catch (e) {
+                            // エラーが発生した場合はログに出力（デバッグ時のみ）
+                            debugPrint('SnackBar action error: $e');
+                          }
                         },
                       ),
                       backgroundColor: Colors.transparent,

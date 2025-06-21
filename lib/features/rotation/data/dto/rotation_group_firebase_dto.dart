@@ -1,29 +1,27 @@
 // Firebase Cloud Firestore <=> DTO <=> Entity 変換するDTOクラス
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 
-class RotationGroupFirebaseDto {
-  final String? rotationGroupId;
-  final String ownerUserId;
-  final String rotationName;
-  final List<String> rotationMembers;
-  // firestoreに保存する際はTimestampが適切
-  // Widget(UI)はDateTimeが適切
-  final Timestamp notificationTime;
-  final Timestamp createdAt;
-  final Timestamp updatedAt;
+part 'rotation_group_firebase_dto.freezed.dart';
 
-  const RotationGroupFirebaseDto({
-    required this.rotationGroupId,
-    required this.ownerUserId,
-    required this.rotationName,
-    required this.rotationMembers,
-    required this.notificationTime,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+@freezed
+sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
+  const RotationGroupFirebaseDto._();
 
-  // Entity => DTO
+  const factory RotationGroupFirebaseDto({
+    required String? rotationGroupId,
+    required String ownerUserId,
+    required String rotationName,
+    required List<String> rotationMembers,
+    // firestoreに保存する際はTimestampが適切
+    // Widget(UI)はDateTimeが適切
+    required Timestamp notificationTime,
+    required Timestamp createdAt,
+    required Timestamp updatedAt,
+  }) = _RotationGroupFirebaseDto;
+
+  // Entity => DTO (factory method)
   factory RotationGroupFirebaseDto.fromEntity(RotationGroup entity) {
     return RotationGroupFirebaseDto(
       rotationGroupId:
@@ -39,20 +37,7 @@ class RotationGroupFirebaseDto {
     );
   }
 
-  // DTO => Entity
-  RotationGroup toEntity() {
-    return RotationGroup(
-      rotationGroupId: rotationGroupId,
-      ownerUserId: ownerUserId,
-      rotationName: rotationName,
-      rotationMembers: rotationMembers,
-      notificationTime: notificationTime.toDate(),
-      createdAt: createdAt.toDate(),
-      updatedAt: updatedAt.toDate(),
-    );
-  }
-
-  // Firestore => DTO
+  // Firestore => DTO (factory method)
   factory RotationGroupFirebaseDto.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return RotationGroupFirebaseDto(
@@ -66,7 +51,20 @@ class RotationGroupFirebaseDto {
     );
   }
 
-  // DTO => Firestore
+  // DTO => Entity (instance method)
+  RotationGroup toEntity() {
+    return RotationGroup(
+      rotationGroupId: rotationGroupId,
+      ownerUserId: ownerUserId,
+      rotationName: rotationName,
+      rotationMembers: rotationMembers,
+      notificationTime: notificationTime.toDate(),
+      createdAt: createdAt.toDate(),
+      updatedAt: updatedAt.toDate(),
+    );
+  }
+
+  // DTO => Firestore (instance method)
   Map<String, dynamic> toFirestore() {
     return {
       'ownerUserId': ownerUserId,
