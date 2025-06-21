@@ -14,4 +14,8 @@ class Role {
 
   /// 役割名の表示用文字列
   String get displayName => name;
+
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'name': name, 'sortOrder': sortOrder};
+  }
 }

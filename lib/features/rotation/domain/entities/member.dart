@@ -25,4 +25,8 @@ class Member {
 
   /// 特定の役割に所属しているかチェック
   bool belongsToRole(String targetRoleId) => roleId == targetRoleId;
+
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'name': name, 'roleId': roleId, 'sortOrder': sortOrder};
+  }
 }
