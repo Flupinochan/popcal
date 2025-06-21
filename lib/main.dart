@@ -23,6 +23,10 @@ class MainApp extends ConsumerWidget {
 
     return MaterialApp.router(
       themeMode: ThemeMode.system,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
       routerConfig: router,
     );
   }

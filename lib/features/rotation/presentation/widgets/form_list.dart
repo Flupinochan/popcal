@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:popcal/features/rotation/presentation/widgets/reorder_list.dart';
 
 class FormList extends HookWidget {
@@ -35,38 +36,83 @@ class FormList extends HookWidget {
               children: [
                 // テキスト入力
                 Expanded(
-                  child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                      hintText: hintText,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
+                  child: GlassmorphicContainer(
+                    width: double.infinity,
+                    height: 56,
+                    borderRadius: 12,
+                    blur: 20,
+                    alignment: Alignment.center,
+                    border: 0,
+                    linearGradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        const Color(0xFFffffff).withOpacity(0.1),
+                        const Color(0xFFffffff).withOpacity(0.05),
+                      ],
+                      stops: const [0.1, 1],
                     ),
-                    onSubmitted: (_) => _addItem(controller, items, field),
+                    borderGradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Colors.transparent, Colors.transparent],
+                    ),
+                    child: TextField(
+                      controller: controller,
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      decoration: InputDecoration(
+                        hintText: hintText,
+                        hintStyle: TextStyle(
+                          color: Colors.white.withOpacity(0.7),
+                          fontSize: 16,
+                        ),
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        filled: false,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                      onSubmitted: (_) => _addItem(controller, items, field),
+                    ),
                   ),
                 ),
                 SizedBox(width: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black87,
-                    borderRadius: BorderRadius.circular(8),
+                GlassmorphicContainer(
+                  width: 56,
+                  height: 56,
+                  borderRadius: 12,
+                  blur: 20,
+                  alignment: Alignment.center,
+                  border: 0,
+                  linearGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xFFffffff).withOpacity(0.1),
+                      const Color(0xFFffffff).withOpacity(0.05),
+                    ],
+                    stops: const [0.1, 1],
                   ),
-                  child: IconButton(
-                    onPressed: () => _addItem(controller, items, field),
-                    icon: Icon(Icons.add, color: Colors.white),
-                    padding: EdgeInsets.all(12),
+                  borderGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.transparent, Colors.transparent],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => _addItem(controller, items, field),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        alignment: Alignment.center,
+                        child: Icon(Icons.add, color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -95,7 +141,10 @@ class FormList extends HookWidget {
                 padding: EdgeInsets.only(top: 8),
                 child: Text(
                   field.errorText!,
-                  style: TextStyle(color: Colors.red, fontSize: 12),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 12,
+                  ),
                 ),
               ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/view_models/auth_view_model.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
@@ -54,39 +55,108 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          title: Row(
-            children: [
-              Icon(
-                Icons.warning_amber_outlined,
-                color: Colors.orange,
-                size: 24,
-              ),
-              SizedBox(width: 8),
-              Text(
-                'エラー',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          content: Text(message, style: TextStyle(fontSize: 14)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'OK',
-                style: TextStyle(
-                  color: Colors.indigo,
-                  fontWeight: FontWeight.w600,
-                ),
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: GlassmorphicContainer(
+            width: 300,
+            height: 200,
+            borderRadius: 16,
+            blur: 20,
+            alignment: Alignment.center,
+            border: 1,
+            linearGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xFFffffff).withOpacity(0.15),
+                const Color(0xFFffffff).withOpacity(0.05),
+              ],
+              stops: const [0.1, 1],
+            ),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withOpacity(0.3),
+                Colors.white.withOpacity(0.3),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.warning_amber_outlined,
+                        color: Colors.orange,
+                        size: 24,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'エラー',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    message,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  GlassmorphicContainer(
+                    width: 80,
+                    height: 40,
+                    borderRadius: 8,
+                    blur: 10,
+                    alignment: Alignment.center,
+                    border: 1,
+                    linearGradient: LinearGradient(
+                      colors: [
+                        Colors.white.withOpacity(0.1),
+                        Colors.white.withOpacity(0.05),
+                      ],
+                    ),
+                    borderGradient: LinearGradient(
+                      colors: [
+                        Colors.white.withOpacity(0.3),
+                        Colors.white.withOpacity(0.3),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         );
       },
     );
@@ -103,7 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.indigo[50]!, Colors.indigo],
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
           ),
         ),
         // SafeArea: wifiアイコンやcameraのある領域を避けてレンダリングする
@@ -111,408 +181,589 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           // SingleChildScrollView: keyboardが表示された際にoverflowしないようにスクロール可能にする
           child: SingleChildScrollView(
             child: Center(
-              child: Container(
+              child: GlassmorphicContainer(
                 width: double.infinity,
-                margin: EdgeInsets.symmetric(horizontal: 24),
-                padding: EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
+                height: MediaQuery.of(context).size.height * 0.86,
+                borderRadius: 16,
+                blur: 20,
+                alignment: Alignment.center,
+                border: 1,
+                margin: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                linearGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    const Color(0xFFffffff).withOpacity(0.1),
+                    const Color(0xFFffffff).withOpacity(0.05),
+                  ],
+                  stops: const [0.1, 1],
+                ),
+                borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withOpacity(0.3),
+                    Colors.white.withOpacity(0.3),
                   ],
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Lock Icon
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.indigoAccent,
-                            Color.fromARGB(255, 75, 63, 181),
-                          ],
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Lock Icon
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
                         ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.lock_outline_rounded,
-                        color: Colors.white,
-                        size: 34,
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                    // Welcome Text
-                    Text(
-                      'Welcome to Popcal',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    // Description Text
-                    Text(
-                      'Sign in to your account or create a new one',
-                      style: TextStyle(fontSize: 12, color: Colors.black45),
-                    ),
-                    SizedBox(height: 16),
-                    // Sign In/Sign Up セグメント
-                    SizedBox(
-                      width: double.infinity,
-                      child: SegmentedButton(
-                        segments: [
-                          ButtonSegment(
-                            value: 'Sign In',
-                            label: Text('Sign In'),
-                          ),
-                          ButtonSegment(
-                            value: 'Sign Up',
-                            label: Text('Sign Up'),
-                          ),
-                        ],
-                        style: ButtonStyle(
-                          shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              ),
-                          backgroundColor:
-                              WidgetStateProperty.resolveWith<Color>((
-                                Set<WidgetState> states,
-                              ) {
-                                if (states.contains(WidgetState.selected)) {
-                                  return Colors.indigoAccent;
-                                }
-                                return Colors.white;
-                              }),
-                          foregroundColor:
-                              WidgetStateProperty.resolveWith<Color>((
-                                Set<WidgetState> states,
-                              ) {
-                                if (states.contains(WidgetState.selected)) {
-                                  return Colors.white;
-                                }
-                                return Colors.black54;
-                              }),
-                          side: WidgetStateProperty.resolveWith<BorderSide>((
-                            Set<WidgetState> states,
-                          ) {
-                            if (states.contains(WidgetState.selected)) {
-                              return BorderSide(
-                                color: Colors.indigoAccent,
-                                width: 2,
-                              );
-                            }
-                            return BorderSide(
-                              color: Colors.indigoAccent,
-                              width: 1,
-                            );
-                          }),
+                        child: Icon(
+                          Icons.lock_outline_rounded,
+                          color: Colors.white,
+                          size: 34,
                         ),
-                        selected: {_selectedMode},
-                        onSelectionChanged: (Set<String> newSelection) {
-                          setState(() {
-                            _selectedMode = newSelection.first;
-                          });
-                        },
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    // Form (Email & Password)
-                    Form(
-                      key: _formKey,
-                      child: Column(
+                      SizedBox(height: 24),
+                      // Welcome Text
+                      Text(
+                        'Welcome to Popcal',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      // Description Text
+                      Text(
+                        'Sign in to your account or create a new one',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.7),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      // Sign In/Sign Up セグメント
+                      Row(
                         children: [
-                          // Email フィールド
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Email',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[50],
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.grey[300]!),
-                                ),
-                                child: TextFormField(
-                                  validator: (value) {
-                                    final result = _emailSignInValidator
-                                        .validateEmail(value ?? '');
-                                    if (result.isFailure) {
-                                      return result.displayText;
-                                    }
-                                    return null;
-                                  },
-                                  onChanged:
-                                      (value) =>
-                                          authViewModel.updateEmail(value),
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter your email',
-                                    prefixIcon: Icon(
-                                      Icons.email_outlined,
-                                      color: Colors.grey[500],
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 16,
-                                    ),
+                          Expanded(
+                            child: GlassmorphicContainer(
+                              width: double.infinity,
+                              height: 40,
+                              borderRadius: 8,
+                              blur: 10,
+                              alignment: Alignment.center,
+                              border: _selectedMode == 'Sign In' ? 1 : 0,
+                              linearGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(
+                                    _selectedMode == 'Sign In' ? 0.2 : 0.1,
                                   ),
-                                ),
+                                  Colors.white.withOpacity(
+                                    _selectedMode == 'Sign In' ? 0.1 : 0.05,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          // Password フィールド
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Password',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
+                              borderGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.3),
+                                  Colors.white.withOpacity(0.3),
+                                ],
                               ),
-                              SizedBox(height: 8),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[50],
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: Colors.grey[300]!),
-                                ),
-                                child: TextFormField(
-                                  validator: (value) {
-                                    final result = _emailSignInValidator
-                                        .validatePassword(value ?? '');
-                                    if (result.isFailure) {
-                                      return result.displayText;
-                                    }
-                                    return null;
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedMode = 'Sign In';
+                                    });
                                   },
-                                  onChanged:
-                                      (value) =>
-                                          authViewModel.updatePassword(value),
-                                  obscureText: !_isPasswordVisible,
-                                  decoration: InputDecoration(
-                                    hintText: 'Enter your password',
-                                    prefixIcon: Icon(
-                                      Icons.lock_outline,
-                                      color: Colors.grey[500],
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _isPasswordVisible
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: Colors.grey[500],
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Sign In',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight:
+                                            _selectedMode == 'Sign In'
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
                                       ),
-                                      onPressed:
-                                          () => setState(
-                                            () =>
-                                                _isPasswordVisible =
-                                                    !_isPasswordVisible,
-                                          ),
-                                    ),
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 16,
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: GlassmorphicContainer(
+                              width: double.infinity,
+                              height: 40,
+                              borderRadius: 8,
+                              blur: 10,
+                              alignment: Alignment.center,
+                              border: _selectedMode == 'Sign Up' ? 1 : 0,
+                              linearGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(
+                                    _selectedMode == 'Sign Up' ? 0.2 : 0.1,
+                                  ),
+                                  Colors.white.withOpacity(
+                                    _selectedMode == 'Sign Up' ? 0.1 : 0.05,
+                                  ),
+                                ],
+                              ),
+                              borderGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.3),
+                                  Colors.white.withOpacity(0.3),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedMode = 'Sign Up';
+                                    });
+                                  },
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Sign Up',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight:
+                                            _selectedMode == 'Sign Up'
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: 32),
-                    // Sign In/Sign Up ボタン
-                    Container(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed:
-                            isLoading
-                                ? null
-                                : (_selectedMode == 'Sign In'
-                                    ? _handleSignIn
-                                    : _handleSignUp),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF2C2C2C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child:
-                            isLoading
-                                ? SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
-                                  ),
-                                )
-                                : Text(
-                                  _selectedMode,
+                      SizedBox(height: 20),
+                      // Form (Email & Password)
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            // Email フィールド
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Email',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
                                   ),
                                 ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    // Forgot password リンク
-                    TextButton(
-                      onPressed: () {
-                        // パスワード忘れ処理
-                      },
-                      child: Text(
-                        'Forgot your password?',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                    // OR CONTINUE WITH
-                    Row(
-                      children: [
-                        Expanded(child: Divider(color: Colors.grey[300])),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'OR CONTINUE WITH',
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        Expanded(child: Divider(color: Colors.grey[300])),
-                      ],
-                    ),
-                    SizedBox(height: 24),
-                    // Google & GitHub ボタン
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 50,
-                            child: OutlinedButton(
-                              onPressed: () {
-                                // Google ログイン
-                              },
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: Colors.grey[300]!),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.g_mobiledata,
-                                    color: Colors.black87,
-                                    size: 24,
+                                SizedBox(height: 8),
+                                GlassmorphicContainer(
+                                  width: double.infinity,
+                                  height: 56,
+                                  borderRadius: 12,
+                                  blur: 15,
+                                  alignment: Alignment.center,
+                                  border: 1,
+                                  linearGradient: LinearGradient(
+                                    colors: [
+                                      Colors.white.withOpacity(0.1),
+                                      Colors.white.withOpacity(0.05),
+                                    ],
                                   ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Google',
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w600,
+                                  borderGradient: LinearGradient(
+                                    colors: [
+                                      Colors.white.withOpacity(0.2),
+                                      Colors.white.withOpacity(0.2),
+                                    ],
+                                  ),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      final result = _emailSignInValidator
+                                          .validateEmail(value ?? '');
+                                      if (result.isFailure) {
+                                        return result.displayText;
+                                      }
+                                      return null;
+                                    },
+                                    onChanged:
+                                        (value) =>
+                                            authViewModel.updateEmail(value),
+                                    style: TextStyle(color: Colors.white),
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter your email',
+                                      hintStyle: TextStyle(
+                                        color: Colors.white.withOpacity(0.7),
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.email_outlined,
+                                        color: Colors.white.withOpacity(0.8),
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Container(
-                            height: 50,
-                            child: OutlinedButton(
-                              onPressed: () {
-                                // GitHub ログイン
-                              },
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: Colors.grey[300]!),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.code, color: Colors.black87),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'GitHub',
-                                    style: TextStyle(
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w600,
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            // Password フィールド
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Password',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                GlassmorphicContainer(
+                                  width: double.infinity,
+                                  height: 56,
+                                  borderRadius: 12,
+                                  blur: 15,
+                                  alignment: Alignment.center,
+                                  border: 1,
+                                  linearGradient: LinearGradient(
+                                    colors: [
+                                      Colors.white.withOpacity(0.1),
+                                      Colors.white.withOpacity(0.05),
+                                    ],
+                                  ),
+                                  borderGradient: LinearGradient(
+                                    colors: [
+                                      Colors.white.withOpacity(0.2),
+                                      Colors.white.withOpacity(0.2),
+                                    ],
+                                  ),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      final result = _emailSignInValidator
+                                          .validatePassword(value ?? '');
+                                      if (result.isFailure) {
+                                        return result.displayText;
+                                      }
+                                      return null;
+                                    },
+                                    onChanged:
+                                        (value) =>
+                                            authViewModel.updatePassword(value),
+                                    obscureText: !_isPasswordVisible,
+                                    style: TextStyle(color: Colors.white),
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter your password',
+                                      hintStyle: TextStyle(
+                                        color: Colors.white.withOpacity(0.7),
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.lock_outline,
+                                        color: Colors.white.withOpacity(0.8),
+                                      ),
+                                      suffixIcon: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap:
+                                              () => setState(
+                                                () =>
+                                                    _isPasswordVisible =
+                                                        !_isPasswordVisible,
+                                              ),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(12),
+                                            child: Icon(
+                                              _isPasswordVisible
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                              color: Colors.white.withOpacity(
+                                                0.8,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 32),
+                      // Sign In/Sign Up ボタン
+                      GlassmorphicContainer(
+                        width: double.infinity,
+                        height: 50,
+                        borderRadius: 12,
+                        blur: 15,
+                        alignment: Alignment.center,
+                        border: 1,
+                        linearGradient: LinearGradient(
+                          colors: [
+                            Colors.white.withOpacity(0.2),
+                            Colors.white.withOpacity(0.1),
+                          ],
+                        ),
+                        borderGradient: LinearGradient(
+                          colors: [
+                            Colors.white.withOpacity(0.3),
+                            Colors.white.withOpacity(0.3),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap:
+                                isLoading
+                                    ? null
+                                    : (_selectedMode == 'Sign In'
+                                        ? _handleSignIn
+                                        : _handleSignUp),
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              alignment: Alignment.center,
+                              child:
+                                  isLoading
+                                      ? SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
+                                        ),
+                                      )
+                                      : Text(
+                                        _selectedMode,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 24),
-                    // Contact Support
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Need help? ',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // サポート画面へ
+                      ),
+                      SizedBox(height: 20),
+                      // Forgot password リンク
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            // パスワード忘れ処理
                           },
-                          child: Text(
-                            'Contact Support',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Text(
+                              'Forgot your password?',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      SizedBox(height: 24),
+                      // OR CONTINUE WITH
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              color: Colors.white.withOpacity(0.3),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'OR CONTINUE WITH',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              color: Colors.white.withOpacity(0.3),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 24),
+                      // Google & GitHub ボタン
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GlassmorphicContainer(
+                              width: double.infinity,
+                              height: 50,
+                              borderRadius: 12,
+                              blur: 15,
+                              alignment: Alignment.center,
+                              border: 1,
+                              linearGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.1),
+                                  Colors.white.withOpacity(0.05),
+                                ],
+                              ),
+                              borderGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.2),
+                                  Colors.white.withOpacity(0.2),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    // Google ログイン
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.g_mobiledata,
+                                          color: Colors.white,
+                                          size: 24,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Google',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: GlassmorphicContainer(
+                              width: double.infinity,
+                              height: 50,
+                              borderRadius: 12,
+                              blur: 15,
+                              alignment: Alignment.center,
+                              border: 1,
+                              linearGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.1),
+                                  Colors.white.withOpacity(0.05),
+                                ],
+                              ),
+                              borderGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.2),
+                                  Colors.white.withOpacity(0.2),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    // GitHub ログイン
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.code, color: Colors.white),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'GitHub',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 24),
+                      // Contact Support
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Need help? ',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.8),
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                // サポート画面へ
+                              },
+                              borderRadius: BorderRadius.circular(4),
+                              child: Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Text(
+                                  'Contact Support',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

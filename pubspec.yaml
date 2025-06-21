@@ -44,6 +44,9 @@ dependencies:
   hooks_riverpod: ^2.6.1
   flutter_form_builder: ^10.0.1
   form_builder_validators: ^11.1.2
+  liquid_glass_renderer: ^0.1.1-dev.9
+  glassmorphism: ^3.0.0
+  glass_kit: ^4.0.1
 
 dev_dependencies:
   flutter_test:
