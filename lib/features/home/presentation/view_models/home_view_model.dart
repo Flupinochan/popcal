@@ -12,6 +12,7 @@ class HomeViewModel extends _$HomeViewModel {
     return null;
   }
 
+  // Streamでリアルタイム取得するため未使用
   Future<Result<List<RotationGroup>>> getRotationGroups(
     String ownerUserId,
   ) async {

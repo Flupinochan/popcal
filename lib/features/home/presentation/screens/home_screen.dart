@@ -7,22 +7,18 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
-import 'package:popcal/features/home/presentation/view_models/home_view_model.dart';
 import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
 import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_snackbar_content.dart';
-import 'package:popcal/shared/widgets/glass_snackbar_content_with_action.dart';
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = ref.watch(homeViewModelProvider).isLoading;
-    final homeViewModel = ref.read(homeViewModelProvider.notifier);
     final currentUserState = ref.watch(currentUserProvider);
     final currentUser = currentUserState.when(
       data:
@@ -31,6 +27,7 @@ class HomeScreen extends HookConsumerWidget {
       loading: () => null,
       error: (_, __) => null,
     );
+
     final rotationGroupsStream =
         currentUser != null
             ? ref.watch(rotationGroupsStreamProvider(currentUser.uid))
@@ -38,28 +35,22 @@ class HomeScreen extends HookConsumerWidget {
               Results.failure<List<RotationGroup>>(AuthFailure('未認証です')),
             );
 
-    useEffect(
-      () {
-        // マウント時の処理 (init相当)
+    // ローディング状態はStreamProviderから取得
+    final isLoading = rotationGroupsStream.isLoading;
 
-        // リターンでクリーンアップ関数を返す（dispose相当）
-        return () {
-          // SnackBarがある場合は削除
-          try {
-            if (context.mounted) {
-              // mountedの代わりにcontext.mountedを使用
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            }
-          } catch (e) {
-            // contextが無効な場合は無視
-            debugPrint('SnackBar削除エラー: $e');
+    useEffect(() {
+      return () {
+        try {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
           }
-        };
-      },
-      [], // 空の配列で初回マウント時とアンマウント時のみ実行
-    );
+        } catch (e) {
+          debugPrint('SnackBar削除エラー: $e');
+        }
+      };
+    }, []);
 
-    Future<void> handleManualGetRotationGroups() async {
+    Future<void> handleManualRefresh() async {
       if (currentUser == null) {
         if (context.mounted) {
           ScaffoldMessenger.of(
@@ -69,15 +60,9 @@ class HomeScreen extends HookConsumerWidget {
         return;
       }
 
-      // Stream再実行
+      // 手動リフレッシュ
       ref.invalidate(rotationGroupsStreamProvider(currentUser.uid));
 
-      // final result = await homeViewModel.getRotationGroups(currentUser.uid);
-      // if (result.isSuccess) {
-      //   rotationGroups.value = result.valueOrNull!;
-      // }
-
-      // async非同期関数では、context.mountedをチェックする
       if (context.mounted) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -107,7 +92,7 @@ class HomeScreen extends HookConsumerWidget {
         actions: [
           isLoading
               ? IconButton(
-                onPressed: null, // 無効化
+                onPressed: null,
                 icon: SizedBox(
                   width: 15,
                   height: 15,
@@ -119,9 +104,7 @@ class HomeScreen extends HookConsumerWidget {
               )
               : IconButton(
                 icon: const Icon(Icons.refresh, color: Colors.white),
-                onPressed: () async {
-                  await handleManualGetRotationGroups();
-                },
+                onPressed: handleManualRefresh,
               ),
         ],
       ),
@@ -229,6 +212,7 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
+  // RotationGroups取得成功時のUI
   Widget _buildContent(
     BuildContext context,
     List<RotationGroup> rotationGroups,
@@ -253,49 +237,11 @@ class HomeScreen extends HookConsumerWidget {
               return RotationListItem(
                 rotationGroup: rotationGroup,
                 onTap: () {
-                  // ログ出力のみ
                   print('タップされました: ${rotationGroup.rotationName}');
                 },
                 onDelete: () {
-                  final deletedGroup = rotationGroup;
-                  final deletedIndex = index;
-
-                  // ScaffoldMessengerの参照を事前に取得
-                  final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-                  // setStateの代わりにValueNotifierの値を更新
-                  rotationGroups = List.from(rotationGroups)..removeWhere(
-                    (group) =>
-                        group.rotationGroupId == rotationGroup.rotationGroupId,
-                  );
-
-                  scaffoldMessenger.hideCurrentSnackBar();
-                  scaffoldMessenger.showSnackBar(
-                    SnackBar(
-                      content: GlassSnackbarContentWithAction(
-                        message: '${deletedGroup.rotationName}を削除しました',
-                        onAction: () {
-                          try {
-                            // context.mountedを使用（mountedの代わり）
-                            if (context.mounted) {
-                              scaffoldMessenger.hideCurrentSnackBar();
-                              // 元に戻す処理
-                              rotationGroups = List.from(rotationGroups)
-                                ..insert(deletedIndex, deletedGroup);
-                            }
-                          } catch (e) {
-                            // エラーが発生した場合はログに出力（デバッグ時のみ）
-                            debugPrint('SnackBar action error: $e');
-                          }
-                        },
-                      ),
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      behavior: SnackBarBehavior.floating,
-                      margin: const EdgeInsets.all(16),
-                      duration: const Duration(seconds: 5),
-                    ),
-                  );
+                  // TODO: 削除処理は後で実装
+                  print('削除: ${rotationGroup.rotationName}');
                 },
               );
             }, childCount: rotationGroups.length),

@@ -52,3 +52,10 @@ cd C:\Users\metalmental\AppData\Local\Android\Sdk\emulator
 dart run custom_lint
 dart run build_runner watch -d
 ```
+
+- Repository
+    - firebase instanceをref.read()するため、テスト時はモックして置き換える
+    - 引数でref.read()してinjectionしておけば、Providerのコードのみ変更すればよい
+- ViewModel/Screen
+    - `Interface` のRepositoryをref.read()しているため、モックはしない。コード内で直接ref.read()して使用してよい
+    - 逆にコード内でref.read()してよいのは、Interfaceで定義されている@riverpodのみ

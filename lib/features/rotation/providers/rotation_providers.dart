@@ -16,13 +16,13 @@ FirebaseFirestore firebaseFirestore(Ref ref) {
 
 @riverpod
 FirebaseRotationDatasource firebaseRotationDatasource(Ref ref) {
-  return FirebaseRotationDatasource(ref.watch(firebaseFirestoreProvider));
+  return FirebaseRotationDatasource(ref.read(firebaseFirestoreProvider));
 }
 
 @riverpod
 RotationRepository rotationRepository(Ref ref) {
   return RotationRepositoryFirebase(
-    ref.watch(firebaseRotationDatasourceProvider),
+    ref.read(firebaseRotationDatasourceProvider),
   );
 }
 
@@ -31,6 +31,7 @@ Stream<Result<List<RotationGroup>>> rotationGroupsStream(
   Ref ref,
   String ownerUserId,
 ) {
+  // 依存がInterface RepositoryのみなのでScreenでrotationGroupsStreamを使用してOK
   final rotationRepository = ref.watch(rotationRepositoryProvider);
   return rotationRepository.watchRotationGroups(ownerUserId);
 }
