@@ -12,7 +12,7 @@ class FirebaseRotationDatasource {
     RotationGroupFirebaseDto dto,
   ) async {
     try {
-      // 作成するdocumentへのrefを作成
+      // 作成するdocumentへのrefを作成 ※collectionとdocは交互にしなければならない
       final docRef =
           _firebaseFirestore
               .collection('users')
