@@ -66,7 +66,10 @@ class GlassSnackbarContentWithAction extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: onAction,
+                  onTap: () {
+                    onAction();
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
                   borderRadius: BorderRadius.circular(16),
                   child: Center(
                     child: Text(
