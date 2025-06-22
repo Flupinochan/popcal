@@ -73,7 +73,17 @@ class RotationRepositoryFirebase implements RotationRepository {
 
   // 6. ローテーショングループ削除
   @override
-  Future<Result<void>> deleteRotationGroup(String id) {
-    throw UnimplementedError();
+  Future<Result<void>> deleteRotationGroup(
+    String ownerUserId,
+    String rotationGroupId,
+  ) async {
+    final result = await _firebaseRotationDatasource.deleteRotationGroup(
+      ownerUserId,
+      rotationGroupId,
+    );
+    return result.when(
+      success: (_) => Results.success(null),
+      failure: (error) => Results.failure(error),
+    );
   }
 }

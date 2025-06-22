@@ -7,12 +7,15 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
+import 'package:popcal/features/home/presentation/view_models/home_view_model.dart';
 import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
 import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_snackbar_content.dart';
+import 'package:popcal/shared/widgets/glass_snackbar_content_with_action.dart';
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
@@ -35,7 +38,6 @@ class HomeScreen extends HookConsumerWidget {
               Results.failure<List<RotationGroup>>(AuthFailure('未認証です')),
             );
 
-    // ローディング状態はStreamProviderから取得
     final isLoading = rotationGroupsStream.isLoading;
 
     useEffect(() {
@@ -60,7 +62,6 @@ class HomeScreen extends HookConsumerWidget {
         return;
       }
 
-      // 手動リフレッシュ
       ref.invalidate(rotationGroupsStreamProvider(currentUser.uid));
 
       if (context.mounted) {
@@ -159,8 +160,12 @@ class HomeScreen extends HookConsumerWidget {
             data:
                 (result) => result.when(
                   success:
-                      (rotationGroups) =>
-                          _buildContent(context, rotationGroups),
+                      (rotationGroups) => _buildContent(
+                        context,
+                        ref,
+                        rotationGroups,
+                        currentUser,
+                      ),
                   failure:
                       (error) => Center(
                         child: Column(
@@ -215,7 +220,9 @@ class HomeScreen extends HookConsumerWidget {
   // RotationGroups取得成功時のUI
   Widget _buildContent(
     BuildContext context,
+    WidgetRef ref,
     List<RotationGroup> rotationGroups,
+    currentUser,
   ) {
     if (rotationGroups.isEmpty) {
       return EmptyState(
@@ -239,15 +246,134 @@ class HomeScreen extends HookConsumerWidget {
                 onTap: () {
                   print('タップされました: ${rotationGroup.rotationName}');
                 },
-                onDelete: () {
-                  // TODO: 削除処理は後で実装
-                  print('削除: ${rotationGroup.rotationName}');
-                },
+                onDelete:
+                    () => _handleDeleteRotationGroup(
+                      context,
+                      ref,
+                      rotationGroup,
+                      currentUser,
+                    ),
               );
             }, childCount: rotationGroups.length),
           ),
         ),
       ],
     );
+  }
+
+  // 即座削除 + 元に戻す（再作成）パターン
+  Future<void> _handleDeleteRotationGroup(
+    BuildContext context,
+    WidgetRef ref,
+    RotationGroup rotationGroup,
+    currentUser,
+  ) async {
+    if (currentUser == null || rotationGroup.rotationGroupId == null) {
+      return;
+    }
+
+    // 削除前のデータを保存
+    final deletedItem = rotationGroup;
+
+    // 即座にFirebaseから削除
+    final result = await ref
+        .read(homeViewModelProvider.notifier)
+        .deleteRotationGroup(currentUser.uid, rotationGroup.rotationGroupId!);
+
+    if (context.mounted) {
+      result.when(
+        success: (_) {
+          // 削除成功時に元に戻すボタン付きSnackBarを表示
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: GlassSnackbarContentWithAction(
+                message: '${deletedItem.rotationName}を削除しました',
+                onAction:
+                    () => _restoreRotationGroup(context, ref, deletedItem),
+                actionLabel: '元に戻す',
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        },
+        failure: (error) {
+          // 削除失敗時のエラー表示
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: GlassSnackbarContent(
+                message: '削除に失敗しました: ${error.toString()}',
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  // 削除されたアイテムを再作成して復元
+  Future<void> _restoreRotationGroup(
+    BuildContext context,
+    WidgetRef ref,
+    RotationGroup deletedItem,
+  ) async {
+    // 新しいローテーショングループとして再作成
+    final restoredItem = RotationGroup(
+      rotationGroupId: null,
+      ownerUserId: deletedItem.ownerUserId,
+      rotationName: deletedItem.rotationName,
+      rotationMembers: deletedItem.rotationMembers,
+      notificationTime: deletedItem.notificationTime,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    final result = await ref
+        .read(rotationViewModelProvider.notifier)
+        .createRotationGroup(restoredItem);
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+      result.when(
+        success: (_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: GlassSnackbarContent(
+                message: '${deletedItem.rotationName}を復元しました',
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        },
+        failure: (error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: GlassSnackbarContent(
+                message: '復元に失敗しました: ${error.toString()}',
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        },
+      );
+    }
   }
 }

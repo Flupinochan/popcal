@@ -30,7 +30,10 @@ abstract class RotationRepository {
   );
 
   // 6. ローテーショングループ削除
-  Future<Result<void>> deleteRotationGroup(String id);
+  Future<Result<void>> deleteRotationGroup(
+    String ownerUserId,
+    String rotationGroupId,
+  );
 
   // // ========================================
   // // ローテーション割り当て管理

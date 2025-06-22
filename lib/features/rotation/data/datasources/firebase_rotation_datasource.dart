@@ -88,4 +88,24 @@ class FirebaseRotationDatasource {
       return Results.failure(NetworkFailure('ローテーショングループの作成に失敗しました: $error'));
     }
   }
+
+  // 6. ローテーショングループ削除
+  Future<Result<void>> deleteRotationGroup(
+    String ownerUserId,
+    String rotationGroupId,
+  ) async {
+    try {
+      final docRef = _firebaseFirestore
+          .collection('users')
+          .doc(ownerUserId)
+          .collection('rotationGroups')
+          .doc(rotationGroupId);
+
+      await docRef.delete();
+
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(NetworkFailure('ローテーショングループの削除に失敗しました: $error'));
+    }
+  }
 }
