@@ -1,6 +1,6 @@
 # PopCal
 
-記載予定
+作成中...
 
 ## Architecture Overview
 

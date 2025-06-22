@@ -5,13 +5,13 @@ import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryFirebase implements AuthRepository {
-  final FirebaseAuthDataSource firebaseAuthDataSource;
+  final FirebaseAuthDataSource _firebaseAuthDataSource;
 
-  AuthRepositoryFirebase(this.firebaseAuthDataSource);
+  AuthRepositoryFirebase(this._firebaseAuthDataSource);
 
   @override
   Stream<Result<AppUser?>> get authStateChanges {
-    return firebaseAuthDataSource.authStateChanges.map((result) {
+    return _firebaseAuthDataSource.authStateChanges.map((result) {
       return result.when(
         success:
             (userDto) =>
@@ -25,7 +25,7 @@ class AuthRepositoryFirebase implements AuthRepository {
 
   @override
   Future<Result<AppUser?>> getUser() async {
-    final result = await firebaseAuthDataSource.getUser();
+    final result = await _firebaseAuthDataSource.getUser();
     return result.when(
       success:
           (userDto) =>
@@ -41,7 +41,7 @@ class AuthRepositoryFirebase implements AuthRepository {
     String email,
     String password,
   ) async {
-    final result = await firebaseAuthDataSource.signInWithEmailAndPassword(
+    final result = await _firebaseAuthDataSource.signInWithEmailAndPassword(
       email,
       password,
     );
@@ -53,7 +53,7 @@ class AuthRepositoryFirebase implements AuthRepository {
 
   @override
   Future<Result<void>> signOut() async {
-    return firebaseAuthDataSource.signOut();
+    return _firebaseAuthDataSource.signOut();
   }
 
   @override
@@ -61,7 +61,7 @@ class AuthRepositoryFirebase implements AuthRepository {
     String email,
     String password,
   ) async {
-    final result = await firebaseAuthDataSource.signUpWithEmailAndPassword(
+    final result = await _firebaseAuthDataSource.signUpWithEmailAndPassword(
       email,
       password,
     );

@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/data/dto/user_dto.dart';
 
 class FirebaseAuthDataSource {
-  final firebase_auth.FirebaseAuth _firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
 
   FirebaseAuthDataSource(this._firebaseAuth);
 
@@ -17,7 +17,7 @@ class FirebaseAuthDataSource {
         } else {
           return Results.failure(AuthFailure('未認証です'));
         }
-      } on firebase_auth.FirebaseAuthException catch (error) {
+      } on FirebaseAuthException catch (error) {
         return Results.failure(AuthFailure(_mapFirebaseError(error)));
       } catch (error) {
         return Results.failure(AuthFailure('認証状態の監視で、予期しないエラーが発生しました: $error'));
@@ -34,7 +34,7 @@ class FirebaseAuthDataSource {
       }
       final userDto = UserDto.fromFirebaseUser(firebaseUser);
       return Results.success(userDto);
-    } on firebase_auth.FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Results.failure(AuthFailure('ユーザ情報の取得で、予期しないエラーが発生しました: $error'));
@@ -56,7 +56,7 @@ class FirebaseAuthDataSource {
       }
       final userDto = UserDto.fromFirebaseUser(credential.user!);
       return Results.success(userDto);
-    } on firebase_auth.FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Results.failure(AuthFailure('メールアドレス認証で、予期しないエラーが発生しました: $error'));
@@ -68,7 +68,7 @@ class FirebaseAuthDataSource {
     try {
       await _firebaseAuth.signOut();
       return Results.success(null);
-    } on firebase_auth.FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
@@ -90,7 +90,7 @@ class FirebaseAuthDataSource {
       }
       final userDto = UserDto.fromFirebaseUser(credential.user!);
       return Results.success(userDto);
-    } on firebase_auth.FirebaseAuthException catch (error) {
+    } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Results.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
@@ -98,7 +98,7 @@ class FirebaseAuthDataSource {
   }
 
   // エラーコードに対応する日本語のエラーメッセージを定義
-  String _mapFirebaseError(firebase_auth.FirebaseAuthException error) {
+  String _mapFirebaseError(FirebaseAuthException error) {
     switch (error.code) {
       case 'user-not-found':
         return 'ユーザーが見つかりません';
