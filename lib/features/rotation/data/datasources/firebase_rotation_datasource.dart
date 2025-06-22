@@ -8,6 +8,56 @@ class FirebaseRotationDatasource {
 
   FirebaseRotationDatasource(this._firebaseFirestore);
 
+  // 1. 自動ローテーショングループ一覧取得
+  Stream<Result<List<RotationGroupFirebaseDto>>> watchRotationGroups(
+    String ownerUserId,
+  ) {
+    return _firebaseFirestore
+        .collection('users')
+        .doc(ownerUserId)
+        .collection('rotationGroups')
+        .withConverter(
+          fromFirestore: RotationGroupFirebaseDto.fromFirestore,
+          toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
+        )
+        .snapshots()
+        .map((docSnap) {
+          try {
+            final rotationGroups =
+                docSnap.docs.map((doc) => doc.data()).toList();
+            return Results.success(rotationGroups);
+          } catch (error) {
+            return Results.failure(
+              NetworkFailure('ローテーショングループの監視中にエラーが発生しました: $error'),
+            );
+          }
+        });
+  }
+
+  // 2. 手動ローテーショングループ一覧取得
+  Future<Result<List<RotationGroupFirebaseDto>>> getRotationGroups(
+    String ownerUserId,
+  ) async {
+    try {
+      final ref = _firebaseFirestore
+          .collection('users')
+          .doc(ownerUserId)
+          .collection('rotationGroups')
+          // withConverterで型安全に処理可能
+          .withConverter(
+            fromFirestore: RotationGroupFirebaseDto.fromFirestore,
+            toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
+          );
+      final docSnap = await ref.get();
+      // doc.data()に型変換したデータが格納
+      final rotationGroups = docSnap.docs.map((doc) => doc.data()).toList();
+      return Results.success(rotationGroups);
+    } catch (error) {
+      return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
+    }
+  }
+
+  // 4. ローテーショングループ作成
   Future<Result<RotationGroupFirebaseDto>> createRotationGroup(
     RotationGroupFirebaseDto dto,
   ) async {
@@ -36,28 +86,6 @@ class FirebaseRotationDatasource {
       return Results.success(result);
     } catch (error) {
       return Results.failure(NetworkFailure('ローテーショングループの作成に失敗しました: $error'));
-    }
-  }
-
-  Future<Result<List<RotationGroupFirebaseDto>>> getRotationGroups(
-    String ownerUserId,
-  ) async {
-    try {
-      final ref = _firebaseFirestore
-          .collection('users')
-          .doc(ownerUserId)
-          .collection('rotationGroups')
-          // withConverterで型安全に処理可能
-          .withConverter(
-            fromFirestore: RotationGroupFirebaseDto.fromFirestore,
-            toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
-          );
-      final docSnap = await ref.get();
-      // doc.data()に型変換したデータが格納
-      final rotationGroups = docSnap.docs.map((doc) => doc.data()).toList();
-      return Results.success(rotationGroups);
-    } catch (error) {
-      return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
     }
   }
 }

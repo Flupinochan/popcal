@@ -9,42 +9,27 @@ import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 // import 'package:popcal/features/rotation/domain/entities/sample/skip_option.dart';
 // import 'package:popcal/features/rotation/domain/entities/sample/history_retention_config.dart';
 
-/// ローテーション機能のメインリポジトリ
-/// データの永続化と取得を担当する抽象化レイヤー
 abstract class RotationRepository {
-  // ========================================
-  // ローテーショングループ管理
-  // ========================================
+  // 1. 自動ローテーショングループ一覧取得
+  Stream<Result<List<RotationGroup>>> watchRotationGroups(String ownerUserId);
 
-  /// ローテーショングループ一覧を取得
-  /// Home画面のリスト表示で使用
-  /// @return 全てのローテーショングループのリスト
+  // 2. 手動ローテーショングループ一覧取得
   Future<Result<List<RotationGroup>>> getRotationGroups(String ownerUserId);
 
-  /// 特定のローテーショングループを取得
-  /// @param id ローテーショングループの一意識別子
-  /// @return 指定されたローテーショングループ（存在しない場合はnull）
+  // 3. xx
   Future<Result<RotationGroup?>> getRotationGroup(String id);
 
-  /// ローテーショングループを作成
-  /// Add画面からの新規作成で使用
-  /// @param rotationGroup 作成するローテーショングループ
-  /// @return 作成されたローテーショングループ（IDが付与される）
+  // 4. ローテーショングループ作成
   Future<Result<RotationGroup>> createRotationGroup(
     RotationGroup rotationGroup,
   );
 
-  /// ローテーショングループを更新
-  /// Add画面（編集モード）からの更新で使用
-  /// @param rotationGroup 更新するローテーショングループ
-  /// @return 更新されたローテーショングループ
+  // 5. ローテーショングループ更新
   Future<Result<RotationGroup>> updateRotationGroup(
     RotationGroup rotationGroup,
   );
 
-  /// ローテーショングループを削除
-  /// 関連する履歴・スキップレコードも併せて削除
-  /// @param id 削除対象のローテーショングループID
+  // 6. ローテーショングループ削除
   Future<Result<void>> deleteRotationGroup(String id);
 
   // // ========================================

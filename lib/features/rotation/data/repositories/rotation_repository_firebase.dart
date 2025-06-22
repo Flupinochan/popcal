@@ -9,6 +9,44 @@ class RotationRepositoryFirebase implements RotationRepository {
 
   RotationRepositoryFirebase(this._firebaseRotationDatasource);
 
+  // 1. 自動ローテーショングループ一覧取得
+  @override
+  Stream<Result<List<RotationGroup>>> watchRotationGroups(String ownerUserId) {
+    return _firebaseRotationDatasource.watchRotationGroups(ownerUserId).map((
+      result,
+    ) {
+      return result.when(
+        success:
+            (dtos) =>
+                Results.success(dtos.map((dto) => dto.toEntity()).toList()),
+        failure: (error) => Results.failure(error),
+      );
+    });
+  }
+
+  // 2. 手動ローテーショングループ一覧取得
+  @override
+  Future<Result<List<RotationGroup>>> getRotationGroups(
+    String ownerUserId,
+  ) async {
+    final result = await _firebaseRotationDatasource.getRotationGroups(
+      ownerUserId,
+    );
+    return result.when(
+      success:
+          (dtos) => Results.success(dtos.map((dto) => dto.toEntity()).toList()),
+      failure: (error) => Results.failure(error),
+    );
+  }
+
+  // 3. xx
+  @override
+  Future<Result<RotationGroup?>> getRotationGroup(String id) {
+    // TODO: implement getRotationGroup
+    throw UnimplementedError();
+  }
+
+  // 4. ローテーショングループ作成
   @override
   Future<Result<RotationGroup>> createRotationGroup(
     RotationGroup rotationGroup,
@@ -24,36 +62,18 @@ class RotationRepositoryFirebase implements RotationRepository {
     );
   }
 
-  @override
-  Future<Result<void>> deleteRotationGroup(String id) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Result<RotationGroup?>> getRotationGroup(String id) {
-    // TODO: implement getRotationGroup
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Result<List<RotationGroup>>> getRotationGroups(
-    String ownerUserId,
-  ) async {
-    final result = await _firebaseRotationDatasource.getRotationGroups(
-      ownerUserId,
-    );
-    return result.when(
-      success:
-          (dtos) => Results.success(dtos.map((dto) => dto.toEntity()).toList()),
-      failure: (error) => Results.failure(error),
-    );
-  }
-
+  // 5. ローテーショングループ更新
   @override
   Future<Result<RotationGroup>> updateRotationGroup(
     RotationGroup rotationGroup,
   ) {
     // TODO: implement updateRotationGroup
+    throw UnimplementedError();
+  }
+
+  // 6. ローテーショングループ削除
+  @override
+  Future<Result<void>> deleteRotationGroup(String id) {
     throw UnimplementedError();
   }
 }

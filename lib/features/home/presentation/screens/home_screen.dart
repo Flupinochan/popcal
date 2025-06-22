@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
@@ -10,6 +11,7 @@ import 'package:popcal/features/home/presentation/view_models/home_view_model.da
 import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
 import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_snackbar_content.dart';
 import 'package:popcal/shared/widgets/glass_snackbar_content_with_action.dart';
@@ -29,8 +31,12 @@ class HomeScreen extends HookConsumerWidget {
       loading: () => null,
       error: (_, __) => null,
     );
-    // useStateで状態管理（setStateの代替）
-    final rotationGroups = useState<List<RotationGroup>>([]);
+    final rotationGroupsStream =
+        currentUser != null
+            ? ref.watch(rotationGroupsStreamProvider(currentUser.uid))
+            : AsyncValue<Result<List<RotationGroup>>>.data(
+              Results.failure<List<RotationGroup>>(AuthFailure('未認証です')),
+            );
 
     useEffect(
       () {
@@ -53,7 +59,7 @@ class HomeScreen extends HookConsumerWidget {
       [], // 空の配列で初回マウント時とアンマウント時のみ実行
     );
 
-    Future<void> handleGetRotationGroups() async {
+    Future<void> handleManualGetRotationGroups() async {
       if (currentUser == null) {
         if (context.mounted) {
           ScaffoldMessenger.of(
@@ -63,18 +69,20 @@ class HomeScreen extends HookConsumerWidget {
         return;
       }
 
-      final result = await homeViewModel.getRotationGroups(currentUser.uid);
-      if (result.isSuccess) {
-        rotationGroups.value = result.valueOrNull!;
-      }
+      // Stream再実行
+      ref.invalidate(rotationGroupsStreamProvider(currentUser.uid));
+
+      // final result = await homeViewModel.getRotationGroups(currentUser.uid);
+      // if (result.isSuccess) {
+      //   rotationGroups.value = result.valueOrNull!;
+      // }
 
       // async非同期関数では、context.mountedをチェックする
       if (context.mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: GlassSnackbarContent(
-              message: result.isSuccess ? 'リストを更新しました' : '更新に失敗しました',
-            ),
+            content: GlassSnackbarContent(message: 'リストを更新しました'),
             backgroundColor: Colors.transparent,
             elevation: 0,
             behavior: SnackBarBehavior.floating,
@@ -112,7 +120,7 @@ class HomeScreen extends HookConsumerWidget {
               : IconButton(
                 icon: const Icon(Icons.refresh, color: Colors.white),
                 onPressed: () async {
-                  await handleGetRotationGroups();
+                  await handleManualGetRotationGroups();
                 },
               ),
         ],
@@ -163,16 +171,69 @@ class HomeScreen extends HookConsumerWidget {
             colors: [Color(0xFF667eea), Color(0xFF764ba2)],
           ),
         ),
-        child: SafeArea(child: _buildContent(context, rotationGroups)),
+        child: SafeArea(
+          child: rotationGroupsStream.when(
+            data:
+                (result) => result.when(
+                  success:
+                      (rotationGroups) =>
+                          _buildContent(context, rotationGroups),
+                  failure:
+                      (error) => Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'データの取得に失敗しました',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              error.toString(),
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                ),
+            loading:
+                () => const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+            error:
+                (error, stackTrace) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'エラーが発生しました',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        error.toString(),
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildContent(
     BuildContext context,
-    ValueNotifier<List<RotationGroup>> rotationGroups,
+    List<RotationGroup> rotationGroups,
   ) {
-    if (rotationGroups.value.isEmpty) {
+    if (rotationGroups.isEmpty) {
       return EmptyState(
         title: 'ローテーションがありません',
         description: '新しいローテーションを作成してみましょう',
@@ -188,7 +249,7 @@ class HomeScreen extends HookConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              final rotationGroup = rotationGroups.value[index];
+              final rotationGroup = rotationGroups[index];
               return RotationListItem(
                 rotationGroup: rotationGroup,
                 onTap: () {
@@ -203,9 +264,7 @@ class HomeScreen extends HookConsumerWidget {
                   final scaffoldMessenger = ScaffoldMessenger.of(context);
 
                   // setStateの代わりにValueNotifierの値を更新
-                  rotationGroups.value = List.from(
-                    rotationGroups.value,
-                  )..removeWhere(
+                  rotationGroups = List.from(rotationGroups)..removeWhere(
                     (group) =>
                         group.rotationGroupId == rotationGroup.rotationGroupId,
                   );
@@ -221,9 +280,8 @@ class HomeScreen extends HookConsumerWidget {
                             if (context.mounted) {
                               scaffoldMessenger.hideCurrentSnackBar();
                               // 元に戻す処理
-                              rotationGroups.value = List.from(
-                                rotationGroups.value,
-                              )..insert(deletedIndex, deletedGroup);
+                              rotationGroups = List.from(rotationGroups)
+                                ..insert(deletedIndex, deletedGroup);
                             }
                           } catch (e) {
                             // エラーが発生した場合はログに出力（デバッグ時のみ）
@@ -240,7 +298,7 @@ class HomeScreen extends HookConsumerWidget {
                   );
                 },
               );
-            }, childCount: rotationGroups.value.length),
+            }, childCount: rotationGroups.length),
           ),
         ),
       ],
