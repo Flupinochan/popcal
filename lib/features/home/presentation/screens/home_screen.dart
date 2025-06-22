@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
+import 'package:popcal/features/home/presentation/view_models/home_view_model.dart';
 import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
 import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
@@ -9,67 +14,77 @@ import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_snackbar_content.dart';
 import 'package:popcal/shared/widgets/glass_snackbar_content_with_action.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(homeViewModelProvider).isLoading;
+    final homeViewModel = ref.read(homeViewModelProvider.notifier);
+    final currentUserState = ref.watch(currentUserProvider);
+    final currentUser = currentUserState.when(
+      data:
+          (result) =>
+              result.when(success: (user) => user, failure: (_) => null),
+      loading: () => null,
+      error: (_, __) => null,
+    );
+    // useStateで状態管理（setStateの代替）
+    final rotationGroups = useState<List<RotationGroup>>([]);
 
-class _HomeScreenState extends State<HomeScreen> {
-  // ハードコーディングしたローテーショングループのリスト
-  List<RotationGroup> rotationGroups = [
-    RotationGroup(
-      rotationGroupId: '1',
-      ownerUserId: 'user123',
-      rotationName: '掃除当番',
-      rotationMembers: ['太郎', '次郎', '三郎'],
-      notificationTime: DateTime.now(),
-      createdAt: DateTime.now().subtract(const Duration(days: 7)),
-      updatedAt: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-    RotationGroup(
-      rotationGroupId: '2',
-      ownerUserId: 'user123',
-      rotationName: '料理担当',
-      rotationMembers: ['田中', '佐藤', '鈴木', '高橋'],
-      notificationTime: DateTime.now(),
-      createdAt: DateTime.now().subtract(const Duration(days: 5)),
-      updatedAt: DateTime.now().subtract(const Duration(hours: 3)),
-    ),
-    RotationGroup(
-      rotationGroupId: '3',
-      ownerUserId: 'user123',
-      rotationName: '洗濯当番',
-      rotationMembers: ['山田', '中村'],
-      notificationTime: DateTime.now(),
-      createdAt: DateTime.now().subtract(const Duration(days: 3)),
-      updatedAt: DateTime.now(),
-    ),
-    RotationGroup(
-      rotationGroupId: '4',
-      ownerUserId: 'user123',
-      rotationName: '会議司会',
-      rotationMembers: ['部長', '課長', '主任', '係長', '一般社員'],
-      notificationTime: DateTime.now(),
-      createdAt: DateTime.now().subtract(const Duration(days: 2)),
-      updatedAt: DateTime.now(),
-    ),
-  ];
+    useEffect(
+      () {
+        // マウント時の処理 (init相当)
 
-  @override
-  void dispose() {
-    // SnackBarがある場合は削除
-    try {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    } catch (e) {
-      // contextが無効な場合は無視
+        // リターンでクリーンアップ関数を返す（dispose相当）
+        return () {
+          // SnackBarがある場合は削除
+          try {
+            if (context.mounted) {
+              // mountedの代わりにcontext.mountedを使用
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            }
+          } catch (e) {
+            // contextが無効な場合は無視
+            debugPrint('SnackBar削除エラー: $e');
+          }
+        };
+      },
+      [], // 空の配列で初回マウント時とアンマウント時のみ実行
+    );
+
+    Future<void> handleGetRotationGroups() async {
+      if (currentUser == null) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('ログインが必要です')));
+        }
+        return;
+      }
+
+      final result = await homeViewModel.getRotationGroups(currentUser.uid);
+      if (result.isSuccess) {
+        rotationGroups.value = result.valueOrNull!;
+      }
+
+      // async非同期関数では、context.mountedをチェックする
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: GlassSnackbarContent(
+              message: result.isSuccess ? 'リストを更新しました' : '更新に失敗しました',
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     }
-    super.dispose();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
@@ -82,21 +97,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const GlassSnackbarContent(message: 'リストを更新しました'),
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.all(16),
-                  duration: const Duration(seconds: 2),
+          isLoading
+              ? IconButton(
+                onPressed: null, // 無効化
+                icon: SizedBox(
+                  width: 15,
+                  height: 15,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.0,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
                 ),
-              );
-            },
-          ),
+              )
+              : IconButton(
+                icon: const Icon(Icons.refresh, color: Colors.white),
+                onPressed: () async {
+                  await handleGetRotationGroups();
+                },
+              ),
         ],
       ),
       drawer: const DrawerScreen(),
@@ -145,16 +163,16 @@ class _HomeScreenState extends State<HomeScreen> {
             colors: [Color(0xFF667eea), Color(0xFF764ba2)],
           ),
         ),
-        child: SafeArea(child: _buildContent()),
+        child: SafeArea(child: _buildContent(context, rotationGroups)),
       ),
     );
   }
 
-  Widget _buildContent() {
-    // 空のリストを表示したい場合は以下をコメントアウト
-    // rotationGroups = [];
-
-    if (rotationGroups.isEmpty) {
+  Widget _buildContent(
+    BuildContext context,
+    ValueNotifier<List<RotationGroup>> rotationGroups,
+  ) {
+    if (rotationGroups.value.isEmpty) {
       return EmptyState(
         title: 'ローテーションがありません',
         description: '新しいローテーションを作成してみましょう',
@@ -170,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              final rotationGroup = rotationGroups[index];
+              final rotationGroup = rotationGroups.value[index];
               return RotationListItem(
                 rotationGroup: rotationGroup,
                 onTap: () {
@@ -184,13 +202,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   // ScaffoldMessengerの参照を事前に取得
                   final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                  setState(() {
-                    rotationGroups.removeWhere(
-                      (group) =>
-                          group.rotationGroupId ==
-                          rotationGroup.rotationGroupId,
-                    );
-                  });
+                  // setStateの代わりにValueNotifierの値を更新
+                  rotationGroups.value = List.from(
+                    rotationGroups.value,
+                  )..removeWhere(
+                    (group) =>
+                        group.rotationGroupId == rotationGroup.rotationGroupId,
+                  );
 
                   scaffoldMessenger.hideCurrentSnackBar();
                   scaffoldMessenger.showSnackBar(
@@ -199,15 +217,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         message: '${deletedGroup.rotationName}を削除しました',
                         onAction: () {
                           try {
-                            // contextが有効かどうかをチェック
-                            if (mounted) {
+                            // context.mountedを使用（mountedの代わり）
+                            if (context.mounted) {
                               scaffoldMessenger.hideCurrentSnackBar();
-                              setState(() {
-                                rotationGroups.insert(
-                                  deletedIndex,
-                                  deletedGroup,
-                                );
-                              });
+                              // 元に戻す処理
+                              rotationGroups.value = List.from(
+                                rotationGroups.value,
+                              )..insert(deletedIndex, deletedGroup);
                             }
                           } catch (e) {
                             // エラーが発生した場合はログに出力（デバッグ時のみ）
@@ -224,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               );
-            }, childCount: rotationGroups.length),
+            }, childCount: rotationGroups.value.length),
           ),
         ),
       ],

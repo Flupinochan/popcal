@@ -19,7 +19,7 @@ abstract class RotationRepository {
   /// ローテーショングループ一覧を取得
   /// Home画面のリスト表示で使用
   /// @return 全てのローテーショングループのリスト
-  Future<Result<List<RotationGroup>>> getRotationGroups();
+  Future<Result<List<RotationGroup>>> getRotationGroups(String ownerUserId);
 
   /// 特定のローテーショングループを取得
   /// @param id ローテーショングループの一意識別子

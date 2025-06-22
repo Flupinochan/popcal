@@ -23,13 +23,15 @@ extension ResultExtensions<T> on Result<T> {
     return fold(failure, success);
   }
 
+  // 成功/失敗 boolean取得
   bool get isSuccess => isRight();
   bool get isFailure => isLeft();
 
+  // 成功/失敗 値取得
   T? get valueOrNull => fold((_) => null, (value) => value);
   Failure? get failureOrNull => fold((failure) => failure, (_) => null);
 
-  // テキスト表示
+  // 失敗 テキスト取得
   String get displayText {
     return fold((failure) => failure.toString(), (value) => value.toString());
   }

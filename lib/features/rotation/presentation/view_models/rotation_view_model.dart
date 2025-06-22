@@ -12,7 +12,7 @@ class RotationViewModel extends _$RotationViewModel {
     return null;
   }
 
-  Future<Result<RotationGroup?>> createRotationGroup(
+  Future<Result<RotationGroup>> createRotationGroup(
     RotationGroup rotationGroup,
   ) async {
     state = const AsyncLoading();

@@ -38,10 +38,15 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
   }
 
   // Firestore => DTO (factory method)
-  factory RotationGroupFirebaseDto.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  // ※Firestore カスタムオブジェクトを参照
+  // https://firebase.google.com/docs/firestore/query-data/get-data?hl=ja#dart_4
+  factory RotationGroupFirebaseDto.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data() as Map<String, dynamic>;
     return RotationGroupFirebaseDto(
-      rotationGroupId: doc.id,
+      rotationGroupId: snapshot.id,
       ownerUserId: data['ownerUserId'],
       rotationName: data['rotationName'],
       rotationMembers: List<String>.from(data['rotationMembers']),

@@ -26,7 +26,6 @@ class RotationRepositoryFirebase implements RotationRepository {
 
   @override
   Future<Result<void>> deleteRotationGroup(String id) {
-    // TODO: implement deleteRotationGroup
     throw UnimplementedError();
   }
 
@@ -37,9 +36,17 @@ class RotationRepositoryFirebase implements RotationRepository {
   }
 
   @override
-  Future<Result<List<RotationGroup>>> getRotationGroups() {
-    // TODO: implement getRotationGroups
-    throw UnimplementedError();
+  Future<Result<List<RotationGroup>>> getRotationGroups(
+    String ownerUserId,
+  ) async {
+    final result = await _firebaseRotationDatasource.getRotationGroups(
+      ownerUserId,
+    );
+    return result.when(
+      success:
+          (dtos) => Results.success(dtos.map((dto) => dto.toEntity()).toList()),
+      failure: (error) => Results.failure(error),
+    );
   }
 
   @override

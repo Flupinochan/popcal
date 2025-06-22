@@ -38,4 +38,26 @@ class FirebaseRotationDatasource {
       return Results.failure(NetworkFailure('ローテーショングループの作成に失敗しました: $error'));
     }
   }
+
+  Future<Result<List<RotationGroupFirebaseDto>>> getRotationGroups(
+    String ownerUserId,
+  ) async {
+    try {
+      final ref = _firebaseFirestore
+          .collection('users')
+          .doc(ownerUserId)
+          .collection('rotationGroups')
+          // withConverterで型安全に処理可能
+          .withConverter(
+            fromFirestore: RotationGroupFirebaseDto.fromFirestore,
+            toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
+          );
+      final docSnap = await ref.get();
+      // doc.data()に型変換したデータが格納
+      final rotationGroups = docSnap.docs.map((doc) => doc.data()).toList();
+      return Results.success(rotationGroups);
+    } catch (error) {
+      return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
+    }
+  }
 }

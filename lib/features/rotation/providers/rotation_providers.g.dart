@@ -25,8 +25,29 @@ final firebaseFirestoreProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseFirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
+String _$firebaseRotationDatasourceHash() =>
+    r'bd4e07a084e87a0f66d4776ec322f130ea331bc7';
+
+/// See also [firebaseRotationDatasource].
+@ProviderFor(firebaseRotationDatasource)
+final firebaseRotationDatasourceProvider =
+    AutoDisposeProvider<FirebaseRotationDatasource>.internal(
+      firebaseRotationDatasource,
+      name: r'firebaseRotationDatasourceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$firebaseRotationDatasourceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FirebaseRotationDatasourceRef =
+    AutoDisposeProviderRef<FirebaseRotationDatasource>;
 String _$rotationRepositoryHash() =>
-    r'3631e725eff833b37e49628c1a0a872fc894f32c';
+    r'b8c7a6e1748745a3c542c6cb0016fbe473c9e0da';
 
 /// See also [rotationRepository].
 @ProviderFor(rotationRepository)
