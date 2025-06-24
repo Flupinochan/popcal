@@ -1,5 +1,6 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
@@ -8,12 +9,13 @@ part 'user_provider.g.dart';
 
 @riverpod
 class CurrentUser extends _$CurrentUser {
+  AuthRepository get _authRepository => ref.watch(authRepositoryProvider);
+
   @override
   Future<Result<AppUser?>> build() async {
     _setupAuthListener();
 
-    final authRepo = ref.read(authRepositoryProvider);
-    final result = await authRepo.getUser();
+    final result = await _authRepository.getUser();
 
     return result;
   }

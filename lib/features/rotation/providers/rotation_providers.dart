@@ -16,13 +16,13 @@ FirebaseFirestore firebaseFirestore(Ref ref) {
 
 @riverpod
 FirebaseRotationDatasource firebaseRotationDatasource(Ref ref) {
-  return FirebaseRotationDatasource(ref.read(firebaseFirestoreProvider));
+  return FirebaseRotationDatasource(ref.watch(firebaseFirestoreProvider));
 }
 
 @riverpod
 RotationRepository rotationRepository(Ref ref) {
   return RotationRepositoryFirebase(
-    ref.read(firebaseRotationDatasourceProvider),
+    ref.watch(firebaseRotationDatasourceProvider),
   );
 }
 

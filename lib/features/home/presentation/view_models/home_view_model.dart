@@ -8,13 +8,13 @@ part 'home_view_model.g.dart';
 
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
+  RotationRepository get _rotationRepository =>
+      ref.watch(rotationRepositoryProvider);
+
   @override
   FutureOr<List<RotationGroup>?> build() {
     return null;
   }
-
-  RotationRepository get _rotationRepository =>
-      ref.read(rotationRepositoryProvider);
 
   // Streamでリアルタイム取得するため未使用
   Future<Result<List<RotationGroup>>> getRotationGroups(

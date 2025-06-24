@@ -1,3 +1,4 @@
+import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
@@ -9,6 +10,8 @@ part 'auth_view_model.g.dart';
 class AuthViewModel extends _$AuthViewModel {
   String _email = '';
   String _password = '';
+
+  AuthRepository get _authRepository => ref.watch(authRepositoryProvider);
 
   // 初期値はnull
   @override
@@ -38,8 +41,7 @@ class AuthViewModel extends _$AuthViewModel {
     // AsyncLoadingでローディング状態
     state = const AsyncLoading();
 
-    final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.signInWithEmailAndPassword(
+    final result = await _authRepository.signInWithEmailAndPassword(
       _email,
       _password,
     );
@@ -61,8 +63,7 @@ class AuthViewModel extends _$AuthViewModel {
   Future<Result<AppUser?>> signUp() async {
     state = const AsyncLoading();
 
-    final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.signUpWithEmailAndPassword(
+    final result = await _authRepository.signUpWithEmailAndPassword(
       _email,
       _password,
     );
@@ -80,8 +81,7 @@ class AuthViewModel extends _$AuthViewModel {
 
   /// サインアウト
   Future<Result<void>> signOut() async {
-    final authRepository = ref.read(authRepositoryProvider);
-    final result = await authRepository.signOut();
+    final result = await _authRepository.signOut();
 
     if (result.isSuccess) {
       state = const AsyncData(null);

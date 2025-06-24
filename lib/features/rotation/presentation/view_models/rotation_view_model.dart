@@ -8,14 +8,14 @@ part 'rotation_view_model.g.dart';
 
 @riverpod
 class RotationViewModel extends _$RotationViewModel {
+  // repositoryへのgetterを定義
+  RotationRepository get _rotationRepository =>
+      ref.watch(rotationRepositoryProvider);
+
   @override
   FutureOr<RotationGroup?> build() {
     return null;
   }
-
-  // repositoryへのgetterを定義
-  RotationRepository get _rotationRepository =>
-      ref.read(rotationRepositoryProvider);
 
   // 4. ローテーショングループ作成
   Future<Result<RotationGroup>> createRotationGroup(
