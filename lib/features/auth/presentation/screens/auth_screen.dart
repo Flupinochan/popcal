@@ -52,7 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _showErrorDialog(String message) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return Dialog(

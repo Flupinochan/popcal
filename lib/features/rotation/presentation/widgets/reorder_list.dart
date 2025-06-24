@@ -3,8 +3,8 @@ import 'package:glassmorphism/glassmorphism.dart';
 
 class ReorderList extends StatelessWidget {
   final List<String> items;
-  final Function(int, int) onReorder;
-  final Function(int) onDelete;
+  final void Function(int, int) onReorder;
+  final void Function(int) onDelete;
 
   const ReorderList({
     super.key,

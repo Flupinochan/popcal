@@ -8,6 +8,7 @@ import 'package:glassmorphism/glassmorphism.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
@@ -234,7 +235,7 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     List<RotationGroup> rotationGroups,
-    currentUser,
+    AppUser? currentUser,
     ValueNotifier<Set<String>> pendingDeleteIds,
     ObjectRef<Map<String, Timer>> deleteTimers,
   ) {
@@ -290,7 +291,7 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     RotationGroup rotationGroup,
-    currentUser,
+    AppUser? currentUser,
     ValueNotifier<Set<String>> pendingDeleteIds,
     ObjectRef<Map<String, Timer>> deleteTimers,
   ) {
@@ -331,10 +332,7 @@ class HomeScreen extends HookConsumerWidget {
       // 実際の削除を実行
       try {
         final rotationRepository = ref.read(rotationRepositoryProvider);
-        await rotationRepository.deleteRotationGroup(
-          currentUser.uid as String,
-          itemId,
-        );
+        await rotationRepository.deleteRotationGroup(currentUser.uid, itemId);
 
         // 削除予定リストからも除外
         pendingDeleteIds.value =

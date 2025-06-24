@@ -316,7 +316,7 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
   }
 
   void _showSignOutDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
