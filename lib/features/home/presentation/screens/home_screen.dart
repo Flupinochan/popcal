@@ -331,7 +331,10 @@ class HomeScreen extends HookConsumerWidget {
       // 実際の削除を実行
       try {
         final rotationRepository = ref.read(rotationRepositoryProvider);
-        await rotationRepository.deleteRotationGroup(currentUser.uid, itemId);
+        await rotationRepository.deleteRotationGroup(
+          currentUser.uid as String,
+          itemId,
+        );
 
         // 削除予定リストからも除外
         pendingDeleteIds.value =

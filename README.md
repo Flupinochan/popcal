@@ -59,3 +59,15 @@ dart run build_runner watch -d
 - ViewModel/Screen
     - `Interface` のRepositoryをref.read()しているため、モックはしない。コード内で直接ref.read()して使用してよい
     - 逆にコード内でref.read()してよいのは、Interfaceで定義されている@riverpodのみ
+
+### Formatter/Linter
+
+strict modeを使用
+
+```yaml
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+```

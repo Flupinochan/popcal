@@ -47,12 +47,14 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
     final data = snapshot.data() as Map<String, dynamic>;
     return RotationGroupFirebaseDto(
       rotationGroupId: snapshot.id,
-      ownerUserId: data['ownerUserId'],
-      rotationName: data['rotationName'],
-      rotationMembers: List<String>.from(data['rotationMembers']),
-      notificationTime: data['notificationTime'],
-      createdAt: data['createdAt'],
-      updatedAt: data['updatedAt'],
+      ownerUserId: data['ownerUserId'] as String,
+      rotationName: data['rotationName'] as String,
+      rotationMembers: List<String>.from(
+        data['rotationMembers'] as List<dynamic>,
+      ),
+      notificationTime: data['notificationTime'] as Timestamp,
+      createdAt: data['createdAt'] as Timestamp,
+      updatedAt: data['updatedAt'] as Timestamp,
     );
   }
 

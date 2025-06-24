@@ -7,8 +7,8 @@ class EmailSignInRequestDto {
   // Json => Model へ変換
   factory EmailSignInRequestDto.fromJson(Map<String, dynamic> json) {
     return EmailSignInRequestDto(
-      email: json['email'],
-      password: json['password'],
+      email: json['email'] as String,
+      password: json['password'] as String,
     );
   }
 

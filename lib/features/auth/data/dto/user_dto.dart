@@ -14,7 +14,7 @@ class UserDto {
 
   // Json => Dto へ変換
   factory UserDto.fromJson(Map<String, dynamic> json) {
-    return UserDto(uid: json['uid'], email: json['email']);
+    return UserDto(uid: json['uid'] as String, email: json['email'] as String);
   }
 
   // Dto => Json へ変換
