@@ -10,7 +10,7 @@ part 'rotation_view_model.g.dart';
 class RotationViewModel extends _$RotationViewModel {
   // repositoryへのgetterを定義
   RotationRepository get _rotationRepository =>
-      ref.watch(rotationRepositoryProvider);
+      ref.read(rotationRepositoryProvider);
 
   @override
   FutureOr<RotationGroup?> build() {

@@ -9,7 +9,7 @@ part 'home_view_model.g.dart';
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
   RotationRepository get _rotationRepository =>
-      ref.watch(rotationRepositoryProvider);
+      ref.read(rotationRepositoryProvider);
 
   @override
   FutureOr<List<RotationGroup>?> build() {

@@ -11,7 +11,7 @@ class AuthViewModel extends _$AuthViewModel {
   String _email = '';
   String _password = '';
 
-  AuthRepository get _authRepository => ref.watch(authRepositoryProvider);
+  AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   // 初期値はnull
   @override

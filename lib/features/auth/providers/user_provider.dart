@@ -9,7 +9,7 @@ part 'user_provider.g.dart';
 
 @riverpod
 class CurrentUser extends _$CurrentUser {
-  AuthRepository get _authRepository => ref.watch(authRepositoryProvider);
+  AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   @override
   Future<Result<AppUser?>> build() async {
