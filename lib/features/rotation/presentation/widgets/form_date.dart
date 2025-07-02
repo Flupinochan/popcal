@@ -3,7 +3,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
 class FormDate extends StatelessWidget {
-  const FormDate({super.key});
+  final DateTime? initialValue;
+
+  const FormDate({super.key, this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,7 @@ class FormDate extends StatelessWidget {
         ),
         child: FormBuilderDateTimePicker(
           name: 'notificationTime',
-          initialValue: DateTime.now(),
+          initialValue: initialValue ?? DateTime.now(),
           inputType: InputType.date,
           decoration: InputDecoration(
             hintText: '開始日を選択してください',

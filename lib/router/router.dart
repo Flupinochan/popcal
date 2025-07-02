@@ -49,10 +49,19 @@ final routerProvider = Provider<GoRouter>((ref) {
               return LoginScreen();
             },
           ),
+          // 作成用ルート
           GoRoute(
             path: Routes.rotation,
             builder: (context, state) {
               return RotationScreen();
+            },
+          ),
+          // 編集用ルート (パスパラメータあり)
+          GoRoute(
+            path: Routes.rotationUpdate,
+            builder: (context, state) {
+              final rotationGroupId = state.pathParameters['id']!;
+              return RotationScreen(rotationGroupId: rotationGroupId);
             },
           ),
         ],

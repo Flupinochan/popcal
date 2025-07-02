@@ -13,15 +13,19 @@ import 'package:popcal/features/rotation/presentation/widgets/form_date.dart';
 import 'package:popcal/features/rotation/presentation/widgets/section_label.dart';
 
 class RotationScreen extends HookConsumerWidget {
-  const RotationScreen({super.key});
+  // 編集時は値を代入
+  final String? rotationGroupId;
+
+  const RotationScreen({super.key, this.rotationGroupId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isUpdateMode = rotationGroupId != null;
+    final initialRotationGroup = useState<RotationGroup?>(null);
     final isLoading = ref.watch(rotationViewModelProvider).isLoading;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
     final currentUserState = ref.watch(currentUserProvider);
-
     final currentUser = currentUserState.when(
       data:
           (result) =>
@@ -29,6 +33,15 @@ class RotationScreen extends HookConsumerWidget {
       loading: () => null,
       error: (_, __) => null,
     );
+
+    // 編集時のデータ取得（後で実装）
+    useEffect(() {
+      if (isUpdateMode) {
+        // TODO: 既存データの取得処理
+        // initialRotationGroup.value = xxx;
+      }
+      return null;
+    }, [isUpdateMode]);
 
     Future<void> handleCreateRotationGroup() async {
       if (currentUser == null) {
@@ -44,14 +57,17 @@ class RotationScreen extends HookConsumerWidget {
         final formData = formKey.currentState!.value;
 
         final rotationGroup = RotationGroup(
-          rotationGroupId: null,
+          rotationGroupId: isUpdateMode ? rotationGroupId : null,
           ownerUserId: currentUser.uid,
           rotationName: formData['rotationName'] as String,
           rotationMembers: List<String>.from(
             formData['rotationMembers'] as List,
           ),
           notificationTime: formData['notificationTime'] as DateTime,
-          createdAt: DateTime.now(),
+          createdAt:
+              isUpdateMode
+                  ? (initialRotationGroup.value?.createdAt ?? DateTime.now())
+                  : DateTime.now(),
           updatedAt: DateTime.now(),
         );
 
@@ -101,12 +117,14 @@ class RotationScreen extends HookConsumerWidget {
                   const SizedBox(height: 32),
                   const SectionLabel('ローテーション名'),
                   const SizedBox(height: 8),
-                  const FormRotationName(),
+                  FormRotationName(
+                    initialValue: initialRotationGroup.value?.rotationName,
+                  ),
                   const SizedBox(height: 24),
                   FormList(
                     name: 'rotationMembers',
                     hintText: 'メンバー名を入力',
-                    initialValue: const ['太郎', '次郎', '三郎'],
+                    initialValue: initialRotationGroup.value?.rotationMembers,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'メンバーを1つ以上追加してください';
@@ -117,7 +135,9 @@ class RotationScreen extends HookConsumerWidget {
                   const SizedBox(height: 24),
                   const SectionLabel('ローテーションのスケジュール設定'),
                   const SizedBox(height: 8),
-                  const FormDate(),
+                  FormDate(
+                    initialValue: initialRotationGroup.value?.notificationTime,
+                  ),
                 ],
               ),
             ),

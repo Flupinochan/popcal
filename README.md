@@ -71,3 +71,10 @@ analyzer:
     strict-inference: true
     strict-raw-types: true
 ```
+
+### ライブラリ選定
+
+とりあえずflutter favoriteお墨付きを利用
+flutter gemsで検索
+
+https://pub.dev/packages?q=is%3Aflutter-favorite

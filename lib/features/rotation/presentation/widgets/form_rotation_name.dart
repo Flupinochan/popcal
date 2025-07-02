@@ -4,7 +4,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
 class FormRotationName extends StatelessWidget {
-  const FormRotationName({super.key});
+  final String? initialValue;
+
+  const FormRotationName({super.key, this.initialValue});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class FormRotationName extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: FormBuilderTextField(
           name: 'rotationName',
-          initialValue: "テスト",
+          initialValue: initialValue ?? "テスト",
           decoration: InputDecoration(
             hintText: 'ローテーション名を入力してください',
             hintStyle: TextStyle(

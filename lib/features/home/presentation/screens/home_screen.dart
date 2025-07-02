@@ -268,7 +268,9 @@ class HomeScreen extends HookConsumerWidget {
               return RotationListItem(
                 rotationGroup: rotationGroup,
                 onTap: () {
-                  print('タップされました: ${rotationGroup.rotationName}');
+                  context.push(
+                    Routes.rotationUpdatePath(rotationGroup.rotationGroupId!),
+                  );
                 },
                 onDelete:
                     () => _handleOptimisticDelete(

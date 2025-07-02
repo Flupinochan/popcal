@@ -7,7 +7,7 @@ import 'package:popcal/features/rotation/presentation/widgets/reorder_list.dart'
 class FormList extends HookWidget {
   final String name;
   final String hintText;
-  final List<String> initialValue;
+  final List<String>? initialValue;
   final String? Function(List<String>?)? validator;
 
   const FormList({
@@ -21,12 +21,13 @@ class FormList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useTextEditingController();
-    final items = useState<List<String>>(List.from(initialValue));
+    final defaultValue = initialValue ?? <String>[];
+    final items = useState<List<String>>(List.from(defaultValue));
 
     // Listの場合は、FormBuilderFieldでカスタムFormFieldを作成する必要がある
     return FormBuilderField<List<String>>(
       name: name,
-      initialValue: initialValue,
+      initialValue: initialValue ?? ['太郎', '次郎', '三郎'],
       validator: validator,
       builder: (FormFieldState<List<String>> field) {
         return Column(

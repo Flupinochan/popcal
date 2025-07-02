@@ -3,4 +3,7 @@ abstract final class Routes {
   static const home = '/';
   static const auth = '/auth';
   static const rotation = '/rotation';
+  static const rotationUpdate = '/rotation/:id';
+
+  static String rotationUpdatePath(String id) => '/rotation/$id';
 }
