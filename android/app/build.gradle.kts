@@ -1,5 +1,6 @@
 plugins {
-    id("com.android.application")
+    // flutter local notifications
+    id("com.android.application") version "8.6.0" apply false
     // START: FlutterFire Configuration
     id("com.google.gms.google-services")
     // END: FlutterFire Configuration
@@ -10,10 +11,14 @@ plugins {
 
 android {
     namespace = "com.example.popcal"
-    compileSdk = flutter.compileSdkVersion
+    // flutter local notifications
+    compileSdk = 35
+    // compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // flutter local notifications
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -31,6 +36,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // flutter local notifications
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -40,6 +48,13 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+// flutter local notifications
+dependencies {
+    implementation("androidx.window:window:1.0.0")
+    implementation("androidx.window:window-java:1.0.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 flutter {

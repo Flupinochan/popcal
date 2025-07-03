@@ -16,7 +16,6 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: Routes.home,
     debugLogDiagnostics: true,
-    // refreshListenable: GoRouter,
     redirect: (context, state) {
       return authState.when(
         data: (user) {
@@ -42,29 +41,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           return HomeScreen();
         },
-        routes: [
-          GoRoute(
-            path: Routes.auth,
-            builder: (context, state) {
-              return LoginScreen();
-            },
-          ),
-          // 作成用ルート
-          GoRoute(
-            path: Routes.rotation,
-            builder: (context, state) {
-              return RotationScreen();
-            },
-          ),
-          // 編集用ルート (パスパラメータあり)
-          GoRoute(
-            path: Routes.rotationUpdate,
-            builder: (context, state) {
-              final rotationGroupId = state.pathParameters['id']!;
-              return RotationScreen(rotationGroupId: rotationGroupId);
-            },
-          ),
-        ],
+      ),
+      GoRoute(
+        path: Routes.auth,
+        builder: (context, state) {
+          return LoginScreen();
+        },
+      ),
+      GoRoute(
+        path: Routes.rotation,
+        builder: (context, state) {
+          return RotationScreen();
+        },
+      ),
+      GoRoute(
+        path: Routes.rotationUpdate,
+        builder: (context, state) {
+          final rotationGroupId = state.pathParameters['id']!;
+          return RotationScreen(rotationGroupId: rotationGroupId);
+        },
       ),
     ],
   );

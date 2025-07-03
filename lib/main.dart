@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/features/notifications/local_notifications_service.dart';
 import 'package:popcal/router/router.dart';
 import 'firebase_options.dart';
 
@@ -9,6 +10,9 @@ void main() async {
   // Firebase初期化
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // flutter local notifications初期化
+  await LocalNotificationsService.initialize();
 
   // RiverPod Scope
   runApp(ProviderScope(child: MainApp()));
