@@ -7,11 +7,22 @@ class LocalNotificationsService {
   // 初期化処理
   static Future<void> initialize() async {
     const AndroidInitializationSettings android = AndroidInitializationSettings(
-      'app_icon',
+      // 'app_icon',
+      '@mipmap/ic_launcher',
     );
     const InitializationSettings settings = InitializationSettings(
       android: android,
     );
+
+    // 権限をリクエストして結果を確認
+    final bool hasPermission = await _requestNotificationPermission();
+    if (hasPermission) {
+      print('✅ 通知権限が許可されました');
+      await _showInitializationNotification();
+    } else {
+      print('❌ 通知権限が拒否されました');
+    }
+
     _plugin.initialize(
       settings,
       // onDidReceiveNotificationResponse: selectNotificationStream.add,
@@ -21,6 +32,23 @@ class LocalNotificationsService {
     await _showInitializationNotification();
   }
 
+  // 権限ポップアップ
+  static Future<bool> _requestNotificationPermission() async {
+    final androidImplementation =
+        _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+
+    if (androidImplementation != null) {
+      final bool? granted =
+          await androidImplementation.requestNotificationsPermission();
+      return granted ?? false;
+    }
+    return false; // Android以外のプラットフォームでは常にfalse
+  }
+
+  // 通知テスト用
   static Future<void> _showInitializationNotification() async {
     const AndroidNotificationDetails android = AndroidNotificationDetails(
       'init_channel',
