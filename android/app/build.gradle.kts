@@ -1,6 +1,6 @@
 plugins {
     // flutter local notifications
-    id("com.android.application") version "8.6.0" apply false
+    id("com.android.application")
     // START: FlutterFire Configuration
     id("com.google.gms.google-services")
     // END: FlutterFire Configuration
@@ -14,7 +14,7 @@ android {
     // flutter local notifications
     compileSdk = 35
     // compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         // flutter local notifications
