@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+
 // ローテーション中核
 class RotationGroup {
   // Firestoreに保存した後に付与されるためオプショナル
@@ -18,4 +22,10 @@ class RotationGroup {
     required this.createdAt,
     required this.updatedAt,
   });
+
+  // rotationGroupIdからハッシュ値のnotificationIdを取得
+  int get notificationId {
+    final hash = sha256.convert(utf8.encode(rotationGroupId!));
+    return hash.bytes.take(4).fold(0, (prev, byte) => prev * 256 + byte);
+  }
 }

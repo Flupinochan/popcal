@@ -18,7 +18,6 @@ class LocalNotificationsService {
     final bool hasPermission = await _requestNotificationPermission();
     if (hasPermission) {
       print('✅ 通知権限が許可されました');
-      await _showInitializationNotification();
     } else {
       print('❌ 通知権限が拒否されました');
     }
