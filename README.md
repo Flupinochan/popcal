@@ -12,6 +12,12 @@
 - `presentation`は、`domain`のみに依存、`data`に依存しない
 - `domain`は、どこにも依存しない中核
 
+`View` => `ViewModel` => `Repository` => `Service`
+- `View` と `ViewModel` は1対1で、`ViewModel` に表示するデータやメソッドを定義
+- `ViewModel` では基本的にコンストラクタで `Repository` を受け取るが、RiverPodではInterface経由なため、直接利用も可
+- `Repository` ではコンストラクタで `Service` を利用
+- `Service` は他のオブジェクトに依存しない外部サービス
+
 ※[class_diagram.puml](class_diagram.puml) よりPlantUML図をvscode拡張機能でsvg出力
 
 ## Project Structure
