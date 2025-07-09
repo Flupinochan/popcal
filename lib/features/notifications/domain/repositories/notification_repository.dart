@@ -2,6 +2,9 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 
 abstract class NotificationRepository {
+  /// 0. 初期化
+  Future<Result<void>> initializeNotification();
+
   /// 1. 通知スケジュールを作成
   /// ※複数の情報が必要なのでentity引数
   Future<Result<void>> createNotification(RotationGroup rotationGroup);

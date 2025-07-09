@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -14,30 +15,36 @@ class LocalNotificationsDatasource {
     _router = router;
   }
 
-  /// 初期化処理
+  /// 0. 初期化
   /// 通知アイコンや通知をタップした際の動作を設定
-  static Future<void> initialize() async {
-    const AndroidInitializationSettings android = AndroidInitializationSettings(
-      // 'app_icon',
-      '@mipmap/ic_launcher',
-    );
-    const InitializationSettings settings = InitializationSettings(
-      android: android,
-    );
+  Future<Result<void>> initializeNotification() async {
+    try {
+      const AndroidInitializationSettings android =
+          AndroidInitializationSettings(
+            // 'app_icon',
+            '@mipmap/ic_launcher',
+          );
+      const InitializationSettings settings = InitializationSettings(
+        android: android,
+      );
 
-    // 初期化
-    _flutterLocalNotificationsPlugin.initialize(
-      settings,
-      // 通知をタップした際の動作
-      onDidReceiveNotificationResponse: (response) {
-        final payload = response.payload;
-        if (payload != null && _router != null) {
-          // 画面遷移
-          _router!.push(Routes.rotationUpdatePath(payload));
-        }
-      },
-      // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-    );
+      // 初期化
+      _flutterLocalNotificationsPlugin.initialize(
+        settings,
+        // 通知をタップした際の動作
+        onDidReceiveNotificationResponse: (response) {
+          final payload = response.payload;
+          if (payload != null && _router != null) {
+            // 画面遷移
+            _router!.push(Routes.rotationUpdatePath(payload));
+          }
+        },
+        // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+      );
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(NotificationFailure('初期化に失敗しました: $error'));
+    }
   }
 
   /// 通知許可を求める権限確認ポップアップを表示
@@ -120,5 +127,31 @@ class LocalNotificationsDatasource {
     );
   }
 
-  Future<void> createNotification() async {}
+  /// 1. 通知スケジュールを作成
+  Future<Result<void>> createNotification(RotationGroup rotationGroup) async {
+    try {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        rotationGroup.notificationId,
+        rotationGroup.rotationName,
+        rotationGroup.rotationMembers.join(', '),
+        tz.TZDateTime.from(rotationGroup.notificationTime, tz.local),
+        NotificationDetails(
+          // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
+          android: AndroidNotificationDetails(
+            'rotation_${rotationGroup.rotationGroupId}',
+            rotationGroup.rotationName,
+            channelDescription: '${rotationGroup.rotationName}の通知',
+            priority: Priority.high,
+            importance: Importance.high,
+            showWhen: true,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: rotationGroup.rotationGroupId, // タップ時に渡すデータ
+      );
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知の作成に失敗しました: $error'));
+    }
+  }
 }
