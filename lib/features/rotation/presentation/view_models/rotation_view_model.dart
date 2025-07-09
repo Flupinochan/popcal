@@ -1,16 +1,15 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/rotation/providers/rotation_providers.dart';
+import 'package:popcal/features/rotation/domain/use_cases/create_rotation_group_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'rotation_view_model.g.dart';
 
 @riverpod
 class RotationViewModel extends _$RotationViewModel {
-  // repositoryへのgetterを定義
-  RotationRepository get _rotationRepository =>
-      ref.read(rotationRepositoryProvider);
+  // use caseへのgetterを定義
+  CreateRotationGroupUseCase get _createRotationGroupUseCase =>
+      ref.read(createRotationGroupUseCaseProvider.notifier);
 
   @override
   FutureOr<RotationGroup?> build() {
@@ -23,7 +22,7 @@ class RotationViewModel extends _$RotationViewModel {
   ) async {
     state = const AsyncLoading();
 
-    final result = await _rotationRepository.createRotationGroup(rotationGroup);
+    final result = await _createRotationGroupUseCase.execute(rotationGroup);
 
     result.when(
       success: (rotationGroup) {

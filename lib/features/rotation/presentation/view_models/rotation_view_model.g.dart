@@ -6,7 +6,7 @@ part of 'rotation_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$rotationViewModelHash() => r'8e42a69870c9ea1ea9654187572c81ed6e4e2b70';
+String _$rotationViewModelHash() => r'b10f7ec37808742767dcbabfcff26f74a1bb9e32';
 
 /// See also [RotationViewModel].
 @ProviderFor(RotationViewModel)

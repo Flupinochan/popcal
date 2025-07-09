@@ -7,7 +7,7 @@ part of 'notification_providers.dart';
 // **************************************************************************
 
 String _$localNotificationsDatasourceHash() =>
-    r'270dbd0ae74043fdb1e01032f62533b9765bb577';
+    r'a1f9391392b2617af690abe3552fbdde98669abc';
 
 /// See also [localNotificationsDatasource].
 @ProviderFor(localNotificationsDatasource)

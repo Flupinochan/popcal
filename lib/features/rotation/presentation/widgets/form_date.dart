@@ -61,6 +61,19 @@ class FormDate extends StatelessWidget {
               return Colors.white.withOpacity(0.1);
             }),
           ),
+          // TimePickerThemeを追加
+          timePickerTheme: TimePickerThemeData(
+            backgroundColor: Color(0xFF1A1A2E),
+            hourMinuteTextColor: Colors.white,
+            hourMinuteColor: Colors.white.withOpacity(0.1),
+            dayPeriodTextColor: Colors.white,
+            dayPeriodColor: Colors.white.withOpacity(0.1),
+            dialBackgroundColor: Color(0xFF16213E),
+            dialHandColor: Colors.white,
+            dialTextColor: Colors.white,
+            entryModeIconColor: Colors.white,
+            helpTextStyle: TextStyle(color: Colors.white),
+          ),
           textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(foregroundColor: Colors.white),
           ),
@@ -74,9 +87,9 @@ class FormDate extends StatelessWidget {
         child: FormBuilderDateTimePicker(
           name: 'notificationTime',
           initialValue: initialValue ?? DateTime.now(),
-          inputType: InputType.date,
+          inputType: InputType.both, // 日付と時刻の両方を選択可能に
           decoration: InputDecoration(
-            hintText: '開始日を選択してください',
+            hintText: '開始日時を選択してください', // hintTextを更新
             hintStyle: TextStyle(
               color: Colors.white.withOpacity(0.7),
               fontSize: 16,
@@ -90,7 +103,7 @@ class FormDate extends StatelessWidget {
               vertical: 12,
             ),
             prefixIcon: Icon(
-              Icons.calendar_today,
+              Icons.schedule, // アイコンを日時選択用に変更
               color: Colors.white.withOpacity(0.8),
               size: 20,
             ),
