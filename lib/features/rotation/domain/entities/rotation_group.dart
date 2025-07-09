@@ -25,7 +25,16 @@ class RotationGroup {
 
   // rotationGroupIdからハッシュ値のnotificationIdを取得
   int get notificationId {
+    if (rotationGroupId == null) {
+      throw StateError('ローテーションIDが未初期化です');
+    }
+
     final hash = sha256.convert(utf8.encode(rotationGroupId!));
-    return hash.bytes.take(4).fold(0, (prev, byte) => prev * 256 + byte);
+    final rawValue = hash.bytes
+        .take(4)
+        .fold(0, (prev, byte) => prev * 256 + byte);
+
+    // 32bit符号付き整数の正の範囲内に収める必要がある (0 ～ 2^31 - 1)
+    return rawValue & 0x7FFFFFFF;
   }
 }

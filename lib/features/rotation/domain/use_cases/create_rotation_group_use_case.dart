@@ -42,11 +42,12 @@ class CreateRotationGroupUseCase extends _$CreateRotationGroupUseCase {
                 createdGroup.ownerUserId,
                 createdGroup.rotationGroupId!,
               );
+              print("ロールバックしました: $notificationError");
             } catch (rollbackError) {
               // ロールバックに失敗した場合はログ出力
               print('ロールバックに失敗しました: $rollbackError');
             }
-
+            // 作成失敗時にエラー画面表示が必要
             return Results.failure(notificationError);
           },
         );

@@ -7,7 +7,7 @@ part of 'create_rotation_group_use_case.dart';
 // **************************************************************************
 
 String _$createRotationGroupUseCaseHash() =>
-    r'ec4bc6b20d9697ef066c5bfe6bd509af663996ed';
+    r'234f0e1dd11d715b6beda95f24cf62a813f9ae32';
 
 /// See also [CreateRotationGroupUseCase].
 @ProviderFor(CreateRotationGroupUseCase)
