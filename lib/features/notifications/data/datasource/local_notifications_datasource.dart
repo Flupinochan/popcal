@@ -1,5 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
+import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -12,7 +14,8 @@ class LocalNotificationsDatasource {
     _router = router;
   }
 
-  // 初期化処理
+  /// 初期化処理
+  /// 通知アイコンや通知をタップした際の動作を設定
   static Future<void> initialize() async {
     const AndroidInitializationSettings android = AndroidInitializationSettings(
       // 'app_icon',
@@ -21,16 +24,6 @@ class LocalNotificationsDatasource {
     const InitializationSettings settings = InitializationSettings(
       android: android,
     );
-
-    // 権限をリクエストして結果を確認
-    final bool hasPermission = await _requestNotificationPermission();
-    if (hasPermission) {
-      print('✅ 通知権限が許可されました');
-    } else {
-      print('❌ 通知権限が拒否されました');
-    }
-    // 権限状態の確認
-    await _isAndroidPermissionGranted();
 
     // 初期化
     _flutterLocalNotificationsPlugin.initialize(
@@ -45,37 +38,45 @@ class LocalNotificationsDatasource {
       },
       // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
-
-    // 通知テスト
-    await _showZonedSchedule();
   }
 
-  // 通知許可を求める権限確認ポップアップを表示
-  static Future<bool> _requestNotificationPermission() async {
-    final androidImplementation =
-        _flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin
-            >();
+  /// 通知許可を求める権限確認ポップアップを表示
+  /// Returns: 通知が可能な場合はtrueを返却
+  Future<Result<bool>> _requestNotificationPermission() async {
+    try {
+      final androidImplementation =
+          _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
 
-    if (androidImplementation != null) {
-      final bool? granted =
-          await androidImplementation.requestNotificationsPermission();
-      return granted ?? false;
+      if (androidImplementation != null) {
+        final bool? granted =
+            await androidImplementation.requestNotificationsPermission();
+        return Results.success(granted ?? false);
+      }
+      // Android以外のプラットフォームでは常にfalse
+      return Results.success(false);
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知権限の許可に失敗しました: $error'));
     }
-    return false; // Android以外のプラットフォームでは常にfalse
   }
 
-  // 権限状態の確認
-  static Future<void> _isAndroidPermissionGranted() async {
-    final bool granted =
-        await _flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin
-            >()
-            ?.areNotificationsEnabled() ??
-        false;
-    print('通知権限許可状態: $granted');
+  /// 通知権限状態の確認
+  /// Returns: 通知が可能な場合はtrueを返却
+  Future<Result<bool>> _isAndroidPermissionGranted() async {
+    try {
+      final bool granted =
+          await _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >()
+              ?.areNotificationsEnabled() ??
+          false;
+      return Results.success(granted);
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知権限状態の確認に失敗しました: $error'));
+    }
   }
 
   // 通知テスト1
@@ -118,4 +119,6 @@ class LocalNotificationsDatasource {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
+
+  Future<void> createNotification() async {}
 }
