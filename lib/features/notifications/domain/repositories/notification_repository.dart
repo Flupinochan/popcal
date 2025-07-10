@@ -10,8 +10,8 @@ abstract class NotificationRepository {
   Future<Result<void>> createNotification(RotationGroup rotationGroup);
 
   /// 2. 通知予定のスケジュールを一覧取得
-  /// ※userIdのみで十分
-  Future<Result<List<Map<String, dynamic>>>> getNotifications(String userId);
+  /// rotationGroupIdのListを取得
+  Future<Result<List<String>>> getNotifications();
 
   /// 3. 通知を更新
   /// ※複数の情報が必要なのでentity引数
@@ -22,15 +22,11 @@ abstract class NotificationRepository {
   /// ※rotationGroupIdのみで十分
   Future<Result<void>> deleteNotification(String rotationGroupId);
 
-  /// 5. 指定したユーザの全通知を削除(キャンセル)
-  /// ※userIdのみで十分
-  Future<Result<void>> deleteNotifications(String userId);
+  /// 5. 全通知を削除(キャンセル)
+  Future<Result<void>> deleteNotifications();
 }
 
 // 使用予定メソッド
-// // 1. zonedSchedule - 通知登録
-// await _plugin.zonedSchedule(id, title, body, scheduledDate, details);
-
 // // 2. pendingNotificationRequests - 一覧取得
 // final pending = await _plugin.pendingNotificationRequests();
 

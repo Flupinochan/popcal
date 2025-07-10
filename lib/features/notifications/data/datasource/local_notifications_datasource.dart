@@ -87,6 +87,9 @@ class LocalNotificationsDatasource {
   /// 1. 通知スケジュールを作成
   Future<Result<void>> createNotification(RotationGroup rotationGroup) async {
     try {
+      if (rotationGroup.rotationGroupId == null) {
+        return Results.failure(NotificationFailure('rotationGrpupIdがnullです'));
+      }
       await _flutterLocalNotificationsPlugin.zonedSchedule(
         rotationGroup.notificationId,
         rotationGroup.rotationName,
@@ -95,7 +98,7 @@ class LocalNotificationsDatasource {
         NotificationDetails(
           // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
           android: AndroidNotificationDetails(
-            'rotation_${rotationGroup.rotationGroupId}',
+            rotationGroup.rotationGroupId!,
             rotationGroup.rotationName,
             channelDescription: '${rotationGroup.rotationName}の通知',
             priority: Priority.high,
@@ -109,6 +112,34 @@ class LocalNotificationsDatasource {
       return Results.success(null);
     } catch (error) {
       return Results.failure(NotificationFailure('通知の作成に失敗しました: $error'));
+    }
+  }
+
+  /// 2. 通知予定のスケジュールを一覧取得
+  Future<Result<List<String>>> getNotifications() async {
+    try {
+      final List<PendingNotificationRequest> pendingNotificationRequests =
+          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+      // rotationGroupIdのListを作成
+      final rotationGroupIds =
+          pendingNotificationRequests
+              .map((notification) => notification.payload)
+              .where((payload) => payload != null)
+              .cast<String>()
+              .toList();
+      return Results.success(rotationGroupIds);
+    } catch (error) {
+      return Results.failure(NetworkFailure('通知の取得に失敗しました: $error'));
+    }
+  }
+
+  /// 5. 全通知を削除(キャンセル)
+  Future<Result<void>> deleteNotifications() async {
+    try {
+      await _flutterLocalNotificationsPlugin.cancelAllPendingNotifications();
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
     }
   }
 }
