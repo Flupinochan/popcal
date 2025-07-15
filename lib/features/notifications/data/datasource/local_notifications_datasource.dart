@@ -29,7 +29,7 @@ class LocalNotificationsDatasource {
       // 初期化
       _flutterLocalNotificationsPlugin.initialize(
         settings,
-        // 通知をタップした際の動作
+        // 1.アプリ起動中に通知をタップした際の動作
         onDidReceiveNotificationResponse: (response) {
           final payload = response.payload;
           if (payload != null) {
@@ -37,6 +37,8 @@ class LocalNotificationsDatasource {
             _router!.push(Routes.rotationUpdatePath(payload));
           }
         },
+        // 2.アプリが起動していない場合に通知をタップした際の動作
+        // ※通知をタップしたらデフォルトでアプリが起動するため、アプリ起動時の処理で遷移するため不要
         // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       );
       return Results.success(null);
@@ -81,6 +83,28 @@ class LocalNotificationsDatasource {
       return Results.success(granted);
     } catch (error) {
       return Results.failure(NotificationFailure('通知権限状態の確認に失敗しました: $error'));
+    }
+  }
+
+  /// 通知タップから起動したかどうか判定し、通知タップから起動した場合は画面遷移
+  Future<Result<void>> checkNotificationLaunch() async {
+    try {
+      final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+          await _flutterLocalNotificationsPlugin
+              .getNotificationAppLaunchDetails();
+      if (notificationAppLaunchDetails != null &&
+          notificationAppLaunchDetails.didNotificationLaunchApp) {
+        final payload =
+            notificationAppLaunchDetails.notificationResponse?.payload;
+        if (payload != null) {
+          _router!.push(Routes.rotationUpdatePath(payload));
+        }
+      }
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(
+        NotificationFailure('通知タップから起動の確認に失敗しました: $error'),
+      );
     }
   }
 
