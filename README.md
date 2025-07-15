@@ -66,6 +66,12 @@ dart run build_runner watch -d
     - `Interface` のRepositoryをref.read()しているため、モックはしない。コード内で直接ref.read()して使用してよい
     - 逆にコード内でref.read()してよいのは、Interfaceで定義されている@riverpodのみ
 
+- 関数ベースの@riverpod
+    - 状態を持たない、DI用
+- クラスベースの@riverpod
+    - 状態(非同期状態など)を持つ、ViewModel用
+    - 状態変更するメソッドを定義
+
 ### Formatter/Linter
 
 strict modeを使用

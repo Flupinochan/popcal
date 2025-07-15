@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
@@ -16,7 +15,7 @@ class SyncNotificationsUseCase {
     this._notificationRepository,
   );
 
-  Future<Result<void>> execute(Ref ref, String ownerUserId) async {
+  Future<Result<void>> execute(String ownerUserId) async {
     try {
       // 1. Firebaseからローテーショングループの一覧を取得
       final rotationGroupsResult = await _rotationRepository.getRotationGroups(

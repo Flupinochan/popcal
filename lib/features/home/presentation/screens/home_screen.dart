@@ -11,6 +11,7 @@ import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
 import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
+import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final syncUseCase = ref.watch(syncNotificationsUseCaseProvider);
     final currentUserState = ref.watch(currentUserProvider);
     final currentUser = currentUserState.when(
       data:
@@ -40,10 +42,25 @@ class HomeScreen extends HookConsumerWidget {
 
     // 削除予定のアイテムIDを管理
     final pendingDeleteIds = useState<Set<String>>({});
-    // 削除タイマーを管理
     final deleteTimers = useRef<Map<String, Timer>>({});
 
-    final isLoading = rotationGroupsStream.isLoading;
+    // 🔥 通知同期処理
+    useEffect(() {
+      if (currentUser != null) {
+        () async {
+          final result = await syncUseCase.execute(currentUser.uid);
+          result.when(
+            success: (_) {
+              print('通知同期が完了しました');
+            },
+            failure: (error) {
+              print('通知同期に失敗しました: $error');
+            },
+          );
+        }();
+      }
+      return null;
+    }, [currentUser?.uid]);
 
     useEffect(() {
       return () {
@@ -54,6 +71,8 @@ class HomeScreen extends HookConsumerWidget {
         deleteTimers.value.clear();
       };
     }, []);
+
+    final isLoading = rotationGroupsStream.isLoading;
 
     Future<void> handleManualRefresh() async {
       if (currentUser == null) {
@@ -73,6 +92,18 @@ class HomeScreen extends HookConsumerWidget {
       }
 
       ref.invalidate(rotationGroupsStreamProvider(currentUser.uid));
+
+      () async {
+        final result = await syncUseCase.execute(currentUser.uid);
+        result.when(
+          success: (_) {
+            print('通知同期が完了しました');
+          },
+          failure: (error) {
+            print('通知同期に失敗しました: $error');
+          },
+        );
+      }();
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
