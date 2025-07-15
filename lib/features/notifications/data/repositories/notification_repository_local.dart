@@ -18,6 +18,17 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
+  /// 0-2. 通知タップからアプリを起動した場合は画面遷移
+  @override
+  Future<Result<void>> initializeNotificationLaunch() async {
+    final result =
+        await _localNotificationsDatasource.initializeNotificationLaunch();
+    return result.when(
+      success: (_) => Results.success(null),
+      failure: (error) => Results.failure(error),
+    );
+  }
+
   /// 1. 通知スケジュールを作成
   @override
   Future<Result<void>> createNotification(RotationGroup rotationGroup) async {
@@ -46,6 +57,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
     throw UnimplementedError();
   }
 
+  /// 4. 特定の通知を削除(キャンセル)
   @override
   Future<Result<void>> deleteNotification(int notificationId) async {
     final result = await _localNotificationsDatasource.deleteNotification(

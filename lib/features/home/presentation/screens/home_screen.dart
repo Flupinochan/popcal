@@ -23,6 +23,7 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final notificationProvider = ref.watch(notificationRepositoryProvider);
     final syncUseCase = ref.watch(syncNotificationsUseCaseProvider);
     final currentUserState = ref.watch(currentUserProvider);
     final currentUser = currentUserState.when(
@@ -43,6 +44,14 @@ class HomeScreen extends HookConsumerWidget {
     // 削除予定のアイテムIDを管理
     final pendingDeleteIds = useState<Set<String>>({});
     final deleteTimers = useRef<Map<String, Timer>>({});
+
+    // 通知タップから起動した場合の画面遷移
+    useEffect(() {
+      () async {
+        final result =
+            await notificationProvider.initializeNotificationLaunch();
+      }();
+    }, []);
 
     // 🔥 通知同期処理
     useEffect(() {

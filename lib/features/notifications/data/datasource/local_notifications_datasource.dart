@@ -33,7 +33,7 @@ class LocalNotificationsDatasource {
         onDidReceiveNotificationResponse: (response) {
           final payload = response.payload;
           if (payload != null) {
-            // 画面遷移
+            // 画面遷移 ※すでに通知が削除されている場合の考慮が必要
             _router!.push(Routes.rotationUpdatePath(payload));
           }
         },
@@ -86,12 +86,13 @@ class LocalNotificationsDatasource {
     }
   }
 
-  /// 通知タップから起動したかどうか判定し、通知タップから起動した場合は画面遷移
-  Future<Result<void>> checkNotificationLaunch() async {
+  /// 0-2. 通知タップからアプリを起動した場合は画面遷移
+  Future<Result<void>> initializeNotificationLaunch() async {
     try {
       final NotificationAppLaunchDetails? notificationAppLaunchDetails =
           await _flutterLocalNotificationsPlugin
               .getNotificationAppLaunchDetails();
+      // 通知タップからアプリが起動したかどうか判定
       if (notificationAppLaunchDetails != null &&
           notificationAppLaunchDetails.didNotificationLaunchApp) {
         final payload =

@@ -5,6 +5,9 @@ abstract class NotificationRepository {
   /// 0. 初期化
   Future<Result<void>> initializeNotification();
 
+  /// 0-2. 通知タップからアプリを起動した場合は画面遷移
+  Future<Result<void>> initializeNotificationLaunch();
+
   /// 1. 通知スケジュールを作成
   /// ※複数の情報が必要なのでentity引数
   Future<Result<void>> createNotification(RotationGroup rotationGroup);
