@@ -1,5 +1,3 @@
-// lib/features/home/presentation/screens/home_screen.dart
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

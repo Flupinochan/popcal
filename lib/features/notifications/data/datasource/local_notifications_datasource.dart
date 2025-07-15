@@ -116,20 +116,27 @@ class LocalNotificationsDatasource {
   }
 
   /// 2. 通知予定のスケジュールを一覧取得
-  Future<Result<List<String>>> getNotifications() async {
+  Future<Result<List<int>>> getNotifications() async {
     try {
       final List<PendingNotificationRequest> pendingNotificationRequests =
           await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
-      // rotationGroupIdのListを作成
-      final rotationGroupIds =
+      final notificationIds =
           pendingNotificationRequests
-              .map((notification) => notification.payload)
-              .where((payload) => payload != null)
-              .cast<String>()
+              .map((notification) => notification.id)
               .toList();
-      return Results.success(rotationGroupIds);
+      return Results.success(notificationIds);
     } catch (error) {
       return Results.failure(NetworkFailure('通知の取得に失敗しました: $error'));
+    }
+  }
+
+  /// 4. 特定の通知を削除(キャンセル)
+  Future<Result<void>> deleteNotification(int notificationId) async {
+    try {
+      await _flutterLocalNotificationsPlugin.cancel(notificationId);
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
     }
   }
 

@@ -32,10 +32,10 @@ class NotificationRepositoryLocal implements NotificationRepository {
 
   /// 2. 通知予定のスケジュールを一覧取得
   @override
-  Future<Result<List<String>>> getNotifications() async {
+  Future<Result<List<int>>> getNotifications() async {
     final result = await _localNotificationsDatasource.getNotifications();
     return result.when(
-      success: (rotationGroupIds) => Results.success(rotationGroupIds),
+      success: (notificationIds) => Results.success(notificationIds),
       failure: (error) => Results.failure(error),
     );
   }
@@ -47,9 +47,14 @@ class NotificationRepositoryLocal implements NotificationRepository {
   }
 
   @override
-  Future<Result<void>> deleteNotification(String rotationGroupId) {
-    // TODO: implement deleteNotification
-    throw UnimplementedError();
+  Future<Result<void>> deleteNotification(int notificationId) async {
+    final result = await _localNotificationsDatasource.deleteNotification(
+      notificationId,
+    );
+    return result.when(
+      success: (_) => Results.success(null),
+      failure: (error) => Results.failure(error),
+    );
   }
 
   /// 5. 全通知を削除(キャンセル)

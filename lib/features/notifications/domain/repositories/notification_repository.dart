@@ -11,16 +11,16 @@ abstract class NotificationRepository {
 
   /// 2. 通知予定のスケジュールを一覧取得
   /// rotationGroupIdのListを取得
-  Future<Result<List<String>>> getNotifications();
+  Future<Result<List<int>>> getNotifications();
 
   /// 3. 通知を更新
   /// ※複数の情報が必要なのでentity引数
   /// ※local notificationにupdateは存在しないためdelete + createで実装する
   Future<Result<void>> updateNotification(RotationGroup rotationGroup);
 
-  /// 4. 通知を削除(キャンセル)
+  /// 4. 特定の通知を削除(キャンセル)
   /// ※rotationGroupIdのみで十分
-  Future<Result<void>> deleteNotification(String rotationGroupId);
+  Future<Result<void>> deleteNotification(int notificationId);
 
   /// 5. 全通知を削除(キャンセル)
   Future<Result<void>> deleteNotifications();
