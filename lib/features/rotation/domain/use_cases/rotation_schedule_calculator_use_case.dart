@@ -2,7 +2,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
 
 /// 各通知設定計算用UseCase

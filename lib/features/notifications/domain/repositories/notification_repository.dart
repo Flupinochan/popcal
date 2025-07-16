@@ -1,6 +1,6 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
 
 abstract class NotificationRepository {
   /// 0. 初期化

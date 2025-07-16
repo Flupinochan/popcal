@@ -2,7 +2,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
 
 class NotificationRepositoryLocal implements NotificationRepository {
   final LocalNotificationsDatasource _localNotificationsDatasource;

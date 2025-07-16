@@ -1,4 +1,4 @@
-import 'package:popcal/features/rotation/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
 
 /// 30日分の通知設定作成結果
 class RotationCalculationResult {
