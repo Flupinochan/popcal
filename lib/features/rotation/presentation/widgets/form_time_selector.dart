@@ -9,6 +9,9 @@ class FormTimeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
+
     return GlassmorphicContainer(
       width: double.infinity,
       height: 56,
@@ -59,7 +62,7 @@ class FormTimeSelector extends StatelessWidget {
         ),
         child: FormBuilderField<TimeOfDay>(
           name: 'notificationTime',
-          initialValue: initialValue ?? TimeOfDay.now(),
+          initialValue: initialValue ?? currentTime,
           validator: (value) {
             if (value == null) {
               return '通知時刻を選択してください';

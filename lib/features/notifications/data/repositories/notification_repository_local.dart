@@ -81,4 +81,15 @@ class NotificationRepositoryLocal implements NotificationRepository {
       failure: (error) => Results.failure(error),
     );
   }
+
+  /// 【デバッグ用】通知予定ログ出力
+  @override
+  Future<Result<void>> logPendingNotifications() async {
+    final result =
+        await _localNotificationsDatasource.logPendingNotifications();
+    return result.when(
+      success: (_) => Results.success(null),
+      failure: (error) => Results.failure(error),
+    );
+  }
 }

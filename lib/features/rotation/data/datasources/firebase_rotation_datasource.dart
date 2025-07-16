@@ -92,6 +92,32 @@ class FirebaseRotationDatasource {
     }
   }
 
+  // 5. ローテーショングループ更新
+  Future<Result<RotationGroupFirebaseDto>> updateRotationGroup(
+    RotationGroupFirebaseDto dto,
+  ) async {
+    try {
+      if (dto.rotationGroupId == null) {
+        return Results.failure(ValidationFailure('ローテーションIDが未設定です'));
+      }
+
+      final docRef = _firebaseFirestore
+          .collection('users')
+          .doc(dto.ownerUserId)
+          .collection('rotationGroups')
+          .doc(dto.rotationGroupId);
+
+      // updatedAtを現在時刻に更新
+      final updatedDto = dto.copyWith(updatedAt: Timestamp.now());
+
+      await docRef.update(updatedDto.toFirestore());
+
+      return Results.success(updatedDto);
+    } catch (error) {
+      return Results.failure(NetworkFailure('ローテーショングループの更新に失敗しました: $error'));
+    }
+  }
+
   // 6. ローテーショングループ削除
   Future<Result<void>> deleteRotationGroup(
     String ownerUserId,

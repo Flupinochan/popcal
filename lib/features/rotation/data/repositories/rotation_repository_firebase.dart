@@ -66,9 +66,14 @@ class RotationRepositoryFirebase implements RotationRepository {
   @override
   Future<Result<RotationGroup>> updateRotationGroup(
     RotationGroup rotationGroup,
-  ) {
-    // TODO: implement updateRotationGroup
-    throw UnimplementedError();
+  ) async {
+    final dto = RotationGroupFirebaseDto.fromEntity(rotationGroup);
+
+    final result = await _firebaseRotationDatasource.updateRotationGroup(dto);
+    return result.when(
+      success: (dto) => Results.success(dto.toEntity()),
+      failure: (error) => Results.failure(error),
+    );
   }
 
   // 6. ローテーショングループ削除

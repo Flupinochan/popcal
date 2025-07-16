@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures.dart';
@@ -33,7 +35,6 @@ class LocalNotificationsDatasource {
         onDidReceiveNotificationResponse: (response) {
           final payload = response.payload;
           if (payload != null) {
-            // 画面遷移 ※すでに通知が削除されている場合の考慮が必要
             _router!.push(Routes.rotationUpdatePath(payload));
           }
         },
@@ -171,6 +172,43 @@ class LocalNotificationsDatasource {
       return Results.success(null);
     } catch (error) {
       return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
+    }
+  }
+
+  /// 【デバッグ用】通知予定ログ出力
+  Future<Result<void>> logPendingNotifications() async {
+    try {
+      final List<PendingNotificationRequest> pendingNotifications =
+          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+      print('=== 設定済み通知一覧 (${pendingNotifications.length}件) ===');
+
+      for (final notification in pendingNotifications) {
+        String dateTime = '日時不明';
+
+        if (notification.payload != null) {
+          try {
+            final payload = jsonDecode(notification.payload!);
+            final notificationTime = DateTime.parse(
+              payload['notificationTime'] as String,
+            ); // 🔥 as String でキャスト
+            dateTime =
+                '${notificationTime.month}/${notificationTime.day} ${notificationTime.hour.toString().padLeft(2, '0')}:${notificationTime.minute.toString().padLeft(2, '0')}';
+          } catch (e) {
+            // 古いpayload形式の場合は日時不明のまま
+          }
+        }
+
+        print('$dateTime | ${notification.title} | ${notification.body}');
+      }
+
+      if (pendingNotifications.isEmpty) {
+        print('設定済み通知はありません');
+      }
+
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知一覧の取得に失敗しました: $error'));
     }
   }
 }

@@ -55,6 +55,8 @@ class HomeScreen extends HookConsumerWidget {
 
     // 🔥 通知同期処理
     useEffect(() {
+      // ログ出力
+      notificationProvider.logPendingNotifications();
       if (currentUser != null) {
         () async {
           final result = await syncUseCase.execute(currentUser.uid);

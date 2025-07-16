@@ -28,4 +28,7 @@ abstract class NotificationRepository {
 
   /// 5. 全通知を削除(キャンセル)
   Future<Result<void>> deleteNotifications();
+
+  /// 【デバッグ用】通知予定ログ出力
+  Future<Result<void>> logPendingNotifications();
 }
