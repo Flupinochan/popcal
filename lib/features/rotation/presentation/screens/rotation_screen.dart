@@ -69,9 +69,10 @@ class RotationScreen extends HookConsumerWidget {
           notificationTime: formData['notificationTime'] as TimeOfDay,
           createdAt:
               isUpdateMode
-                  ? (initialRotationGroup.value?.createdAt ?? DateTime.now())
-                  : DateTime.now(),
-          updatedAt: DateTime.now(),
+                  ? (initialRotationGroup.value?.createdAt ??
+                      DateTime.now().toLocal())
+                  : DateTime.now().toLocal(),
+          updatedAt: DateTime.now().toLocal(),
         );
 
         await rotationViewModel.createRotationGroup(rotationGroup);

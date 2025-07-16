@@ -17,7 +17,7 @@ class RotationScheduleCalculatorUseCase {
         return Results.failure(ValidationFailure('ローテーションIDが未初期化です'));
       }
 
-      final now = DateTime.now();
+      final now = DateTime.now().toLocal();
       final endDate = now.add(Duration(days: daysAhead));
 
       final result = _generateNotifications(
@@ -74,7 +74,7 @@ class RotationScheduleCalculatorUseCase {
           rotationName: rotationGroup.rotationName,
           notificationTime: notificationTime,
           memberName: memberName,
-          createdAt: DateTime.now(),
+          createdAt: DateTime.now().toLocal(),
         );
 
         notifications.add(notification);

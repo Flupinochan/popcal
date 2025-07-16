@@ -35,11 +35,11 @@ class RotationNotification {
   );
 
   /// 過去の通知かどうか
-  bool get isPast => notificationTime.isBefore(DateTime.now());
+  bool get isPast => notificationTime.isBefore(DateTime.now().toLocal());
 
   /// 今日の通知かどうか
   bool get isToday {
-    final now = DateTime.now();
+    final now = DateTime.now().toLocal();
     final today = DateTime(now.year, now.month, now.day);
     return notificationDate == today;
   }

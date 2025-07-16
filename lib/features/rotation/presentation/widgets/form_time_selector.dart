@@ -9,7 +9,8 @@ class FormTimeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    // ローカル日時で指定
+    final now = DateTime.now().toLocal();
     final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
 
     return GlassmorphicContainer(
