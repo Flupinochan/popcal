@@ -1,58 +1,67 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/providers/rotation_providers.dart';
-import 'package:popcal/features/notifications/providers/notification_providers.dart';
+import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
+import 'package:popcal/features/rotation/domain/use_cases/rotation_schedule_calculator_use_case.dart';
+import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 
-part 'create_rotation_group_use_case.g.dart';
+class CreateRotationGroupUseCase {
+  final RotationRepository _rotationRepository;
+  final NotificationRepository _notificationRepository;
+  final RotationScheduleCalculatorUseCase _scheduleCalculator;
 
-// 以下2つのRepositoryを利用
-// 1. rotationRepository: ローテーショングループを作成
-// 2. notificationRepository: 通知を作成
-
-@riverpod
-class CreateRotationGroupUseCase extends _$CreateRotationGroupUseCase {
-  @override
-  FutureOr<void> build() => null;
+  CreateRotationGroupUseCase(
+    this._rotationRepository,
+    this._notificationRepository,
+  ) : _scheduleCalculator = RotationScheduleCalculatorUseCase();
 
   Future<Result<RotationGroup>> execute(RotationGroup rotationGroup) async {
-    final rotationRepository = ref.read(rotationRepositoryProvider);
-    final notificationRepository = ref.read(notificationRepositoryProvider);
-
-    // 1. ローテーショングループを作成
-    final rotationResult = await rotationRepository.createRotationGroup(
+    // 1. RotationGroupを作成
+    final rotationResult = await _rotationRepository.createRotationGroup(
       rotationGroup,
     );
 
     return rotationResult.when(
       success: (createdGroup) async {
-        // 2. 通知を作成
-        final notificationResult = await notificationRepository
-            .createNotification(createdGroup);
+        try {
+          // 2. RotationNotificationsを作成
+          final calculationResult = _scheduleCalculator.createNotifications(
+            rotationGroup: createdGroup,
+          );
+          if (calculationResult.isFailure) {
+            throw Exception('通知計算失敗: ${calculationResult.displayText}');
+          }
+          final result = calculationResult.valueOrNull!;
 
-        return notificationResult.when(
-          success: (_) {
-            // 両方成功した場合のみ成功
-            return Results.success(createdGroup);
-          },
-          failure: (notificationError) async {
-            // 通知作成エラー時はローテーショングループを削除（ロールバック）
-            try {
-              await rotationRepository.deleteRotationGroup(
-                createdGroup.ownerUserId,
-                createdGroup.rotationGroupId!,
-              );
-              print("ロールバックしました: $notificationError");
-            } catch (rollbackError) {
-              // ロールバックに失敗した場合はログ出力
-              print('ロールバックに失敗しました: $rollbackError');
+          // 3. 各通知を作成
+          for (final notification in result.notifications) {
+            final createResult = await _notificationRepository
+                .createNotification(notification);
+            if (createResult.isFailure) {
+              throw Exception('通知作成失敗: ${createResult.displayText}');
             }
-            // 作成失敗時にエラー画面表示が必要
-            return Results.failure(notificationError);
-          },
-        );
+          }
+
+          // 4. RotationGroupのcurrentRotationIndexを更新
+          final updatedGroup = createdGroup.copyWith(
+            currentRotationIndex: result.newCurrentRotationIndex,
+            lastScheduledDate:
+                result.hasNotifications
+                    ? result.notifications.last.notificationTime
+                    : createdGroup.lastScheduledDate,
+          );
+
+          await _rotationRepository.updateRotationGroup(updatedGroup);
+          return Results.success(updatedGroup);
+        } catch (e) {
+          // エラー時はロールバック
+          await _rotationRepository.deleteRotationGroup(
+            createdGroup.ownerUserId,
+            createdGroup.rotationGroupId!,
+          );
+          return Results.failure(NotificationFailure('通知作成に失敗しました: $e'));
+        }
       },
-      // ローテーショングループの作成エラー時
       failure: (error) => Results.failure(error),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation_notification.dart';
 
 abstract class NotificationRepository {
   /// 0. 初期化
@@ -10,7 +11,7 @@ abstract class NotificationRepository {
 
   /// 1. 通知スケジュールを作成
   /// ※複数の情報が必要なのでentity引数
-  Future<Result<void>> createNotification(RotationGroup rotationGroup);
+  Future<Result<void>> createNotification(RotationNotification notification);
 
   /// 2. 通知予定のスケジュールを一覧取得
   /// rotationGroupIdのListを取得
@@ -28,16 +29,3 @@ abstract class NotificationRepository {
   /// 5. 全通知を削除(キャンセル)
   Future<Result<void>> deleteNotifications();
 }
-
-// 使用予定メソッド
-// // 2. pendingNotificationRequests - 一覧取得
-// final pending = await _plugin.pendingNotificationRequests();
-
-// // 3. cancel - 特定通知キャンセル
-// await _plugin.cancel(notificationId);
-
-// // 4. cancelAll - 全通知キャンセル
-// await _plugin.cancelAll();
-
-// // 5. initialize - 初期化
-// await _plugin.initialize(settings, onDidReceiveNotificationResponse: callback);

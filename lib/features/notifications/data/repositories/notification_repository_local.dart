@@ -2,6 +2,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation_notification.dart';
 
 class NotificationRepositoryLocal implements NotificationRepository {
   final LocalNotificationsDatasource _localNotificationsDatasource;
@@ -31,9 +32,11 @@ class NotificationRepositoryLocal implements NotificationRepository {
 
   /// 1. 通知スケジュールを作成
   @override
-  Future<Result<void>> createNotification(RotationGroup rotationGroup) async {
+  Future<Result<void>> createNotification(
+    RotationNotification notification,
+  ) async {
     final result = await _localNotificationsDatasource.createNotification(
-      rotationGroup,
+      notification,
     );
     return result.when(
       success: (_) => Results.success(null),

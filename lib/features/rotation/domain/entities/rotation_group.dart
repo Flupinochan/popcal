@@ -1,15 +1,19 @@
-import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 
-import 'package:crypto/crypto.dart';
-
-// ローテーション中核
+// ローテーション設定
 class RotationGroup {
   // Firestoreに保存した後に付与されるためオプショナル
   final String? rotationGroupId;
   final String ownerUserId;
   final String rotationName;
   final List<String> rotationMembers;
-  final DateTime notificationTime;
+  final List<Weekday> rotationDays;
+  final TimeOfDay notificationTime;
+  // ローテーションした回数
+  final int currentRotationIndex;
+  // 最後の通知設定日 => 直近30日分を常に更新して通知設定するため
+  final DateTime lastScheduledDate;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -18,23 +22,38 @@ class RotationGroup {
     required this.ownerUserId,
     required this.rotationName,
     required this.rotationMembers,
+    required this.rotationDays,
     required this.notificationTime,
+    this.currentRotationIndex = 0,
+    DateTime? lastScheduledDate,
     required this.createdAt,
     required this.updatedAt,
-  });
+  }) : lastScheduledDate = lastScheduledDate ?? createdAt;
 
-  // rotationGroupIdからハッシュ値のnotificationIdを取得
-  int get notificationId {
-    if (rotationGroupId == null) {
-      throw StateError('ローテーションIDが未初期化です');
-    }
-
-    final hash = sha256.convert(utf8.encode(rotationGroupId!));
-    final rawValue = hash.bytes
-        .take(4)
-        .fold(0, (prev, byte) => prev * 256 + byte);
-
-    // 32bit符号付き整数の正の範囲内に収める必要がある (0 ～ 2^31 - 1)
-    return rawValue & 0x7FFFFFFF;
+  // 特定の値を更新するために利用
+  RotationGroup copyWith({
+    String? rotationGroupId,
+    String? ownerUserId,
+    String? rotationName,
+    List<String>? rotationMembers,
+    List<Weekday>? rotationDays,
+    TimeOfDay? notificationTime,
+    int? currentRotationIndex,
+    DateTime? lastScheduledDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return RotationGroup(
+      rotationGroupId: rotationGroupId ?? this.rotationGroupId,
+      ownerUserId: ownerUserId ?? this.ownerUserId,
+      rotationName: rotationName ?? this.rotationName,
+      rotationMembers: rotationMembers ?? this.rotationMembers,
+      rotationDays: rotationDays ?? this.rotationDays,
+      notificationTime: notificationTime ?? this.notificationTime,
+      currentRotationIndex: currentRotationIndex ?? this.currentRotationIndex,
+      lastScheduledDate: lastScheduledDate ?? this.lastScheduledDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
   }
 }

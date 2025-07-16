@@ -78,7 +78,10 @@ class FirebaseRotationDatasource {
         ownerUserId: dto.ownerUserId,
         rotationName: dto.rotationName,
         rotationMembers: dto.rotationMembers,
+        rotationDays: dto.rotationDays,
         notificationTime: dto.notificationTime,
+        currentRotationIndex: dto.currentRotationIndex,
+        lastScheduledDate: dto.lastScheduledDate,
         createdAt: dto.createdAt,
         updatedAt: dto.updatedAt,
       );

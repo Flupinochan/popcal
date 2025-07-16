@@ -1,6 +1,7 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/use_cases/create_rotation_group_use_case.dart';
+import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'rotation_view_model.g.dart';
@@ -9,7 +10,7 @@ part 'rotation_view_model.g.dart';
 class RotationViewModel extends _$RotationViewModel {
   // use caseへのgetterを定義
   CreateRotationGroupUseCase get _createRotationGroupUseCase =>
-      ref.read(createRotationGroupUseCaseProvider.notifier);
+      ref.read(createRotationGroupUseCaseProvider);
 
   @override
   FutureOr<RotationGroup?> build() {
@@ -30,6 +31,7 @@ class RotationViewModel extends _$RotationViewModel {
       },
       failure: (error) {
         state = AsyncError(error, StackTrace.current);
+        print(error);
       },
     );
 

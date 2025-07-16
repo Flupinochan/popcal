@@ -1,21 +1,22 @@
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
+import 'package:popcal/features/rotation/domain/use_cases/rotation_schedule_calculator_use_case.dart';
 import 'package:popcal/core/utils/result.dart';
 
-/// home画面表示時に以下の処理を実行し、firestoreの通知設定一覧とlocal notificationの通知設定を同期する
-/// useCaseはInterface定義せずに利用
+/// home画面表示時に通知設定を同期するUseCase
 class SyncNotificationsUseCase {
-  // 2つのrepositoryを使用
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
+  final RotationScheduleCalculatorUseCase _scheduleCalculator;
 
   SyncNotificationsUseCase(
     this._rotationRepository,
     this._notificationRepository,
-  );
+  ) : _scheduleCalculator = RotationScheduleCalculatorUseCase();
 
   Future<Result<void>> execute(String ownerUserId) async {
-    // 1. Firebaseからローテーショングループの一覧を取得
+    // 1. ローテーショングループ一覧を取得
     final rotationGroupsResult = await _rotationRepository.getRotationGroups(
       ownerUserId,
     );
@@ -24,79 +25,98 @@ class SyncNotificationsUseCase {
     }
     final rotationGroups = rotationGroupsResult.valueOrNull!;
 
-    // 2. 現在ローカルに設定されている通知IDリストを取得
+    // 2. 現在のローカル通知IDリストを取得
     final notificationResult = await _notificationRepository.getNotifications();
     if (notificationResult.isFailure) {
       return Results.failure(notificationResult.failureOrNull!);
     }
-    final localNotificationIds = notificationResult.valueOrNull!.toList();
+    final localNotificationIds = notificationResult.valueOrNull!.toSet();
 
-    // 3. Firebaseから削除する過去のローテーショングループの一覧を取得
-    final pastRotationGroups =
-        rotationGroups
-            .where(
-              (rotationGroup) =>
-                  rotationGroup.notificationTime.isBefore(DateTime.now()),
-            )
-            .toList();
+    // 3. 各ローテーショングループを同期
+    for (final group in rotationGroups) {
+      // 3-1. 通知スケジュールを計算
+      final calculationResult = _scheduleCalculator.createNotifications(
+        rotationGroup: group,
+      );
 
-    // 4. 過去のローテーショングループを削除
-    for (final rotationGroup in pastRotationGroups) {
-      if (rotationGroup.rotationGroupId == null) {
+      if (calculationResult.isFailure) {
+        print('通知計算失敗: ${group.rotationName}');
         continue;
       }
-      final deleteResult = await _rotationRepository.deleteRotationGroup(
-        ownerUserId,
-        rotationGroup.rotationGroupId!,
-      );
-      if (deleteResult.isFailure) {
-        return Results.failure(deleteResult.failureOrNull!);
+
+      final result = calculationResult.valueOrNull!;
+
+      // 3-2. 不足分のみフィルタリング
+      final missingNotifications =
+          result.notifications.where((notification) {
+            return !localNotificationIds.contains(notification.notificationId);
+          }).toList();
+
+      // 3-3. 不足分の通知を作成
+      for (final notification in missingNotifications) {
+        final createResult = await _notificationRepository.createNotification(
+          notification,
+        );
+        if (createResult.isFailure) {
+          print(
+            '通知作成失敗: ${notification.memberName} - ${notification.notificationTime}',
+          );
+        } else {
+          print(
+            '通知作成成功: ${notification.memberName} - ${notification.notificationTime}',
+          );
+        }
       }
-      print('firebaseから過去の通知を削除: ${rotationGroup.rotationName}');
+
+      // 3-4. ローテーション状態を更新
+      if (missingNotifications.isNotEmpty) {
+        final updatedGroup = group.copyWith(
+          currentRotationIndex: result.newCurrentRotationIndex,
+          lastScheduledDate:
+              result.hasNotifications
+                  ? result.notifications.last.notificationTime
+                  : group.lastScheduledDate,
+        );
+
+        await _rotationRepository.updateRotationGroup(updatedGroup);
+        print('ローテーション状態更新: ${group.rotationName}');
+      }
     }
 
-    // 5. Firebaseから未来のローテーショングループの一覧を取得
-    final futureRotationGroups =
-        rotationGroups
-            .where(
-              (rotationGroup) =>
-                  rotationGroup.notificationTime.isAfter(DateTime.now()),
-            )
-            .toList();
-
-    // 5. 不足している通知を作成
-    for (final rotationGroup in futureRotationGroups) {
-      if (localNotificationIds.contains(rotationGroup.notificationId)) {
-        continue;
-      }
-      final createResult = await _notificationRepository.createNotification(
-        rotationGroup,
-      );
-      if (createResult.isFailure) {
-        return Results.failure(createResult.failureOrNull!);
-      }
-      print('不足している通知を作成: ${rotationGroup.rotationName}');
-    }
-
-    // 6. Firebaseにないローカル通知を削除
-    final futureNotificationIds =
-        futureRotationGroups
-            .map((rotationGroup) => rotationGroup.notificationId)
-            .toList();
-    final orphanedNotificationIds =
-        localNotificationIds
-            .where((id) => !futureNotificationIds.contains(id))
-            .toList();
-    for (final notificationId in orphanedNotificationIds) {
-      final deleteResult = await _notificationRepository.deleteNotification(
-        notificationId,
-      );
-      if (deleteResult.isFailure) {
-        return Results.failure(deleteResult.failureOrNull!);
-      }
-      print('Firebaseにない通知を削除: $notificationId');
-    }
+    // 4. 不要な通知を削除（オプション）
+    await _cleanupOrphanedNotifications(rotationGroups, localNotificationIds);
 
     return Results.success(null);
+  }
+
+  /// 孤立した通知を削除
+  Future<void> _cleanupOrphanedNotifications(
+    List<RotationGroup> rotationGroups,
+    Set<int> localNotificationIds,
+  ) async {
+    // 現在有効な通知IDを収集
+    final validNotificationIds = <int>{};
+
+    for (final group in rotationGroups) {
+      final calculationResult = _scheduleCalculator.createNotifications(
+        rotationGroup: group,
+      );
+
+      if (calculationResult.isSuccess) {
+        for (final notification
+            in calculationResult.valueOrNull!.notifications) {
+          validNotificationIds.add(notification.notificationId);
+        }
+      }
+    }
+
+    // 不要な通知を削除
+    final orphanedIds = localNotificationIds.where(
+      (id) => !validNotificationIds.contains(id),
+    );
+    for (final id in orphanedIds) {
+      await _notificationRepository.deleteNotification(id);
+      print('孤立した通知を削除: $id');
+    }
   }
 }

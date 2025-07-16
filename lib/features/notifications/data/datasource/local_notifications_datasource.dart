@@ -2,7 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation_notification.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -110,29 +110,28 @@ class LocalNotificationsDatasource {
   }
 
   /// 1. 通知スケジュールを作成
-  Future<Result<void>> createNotification(RotationGroup rotationGroup) async {
+  Future<Result<void>> createNotification(
+    RotationNotification notification,
+  ) async {
     try {
-      if (rotationGroup.rotationGroupId == null) {
-        return Results.failure(NotificationFailure('rotationGrpupIdがnullです'));
-      }
       await _flutterLocalNotificationsPlugin.zonedSchedule(
-        rotationGroup.notificationId,
-        rotationGroup.rotationName,
-        rotationGroup.rotationMembers.join(', '),
-        tz.TZDateTime.from(rotationGroup.notificationTime, tz.local),
+        notification.notificationId,
+        notification.title,
+        notification.message,
+        tz.TZDateTime.from(notification.notificationTime, tz.local),
         NotificationDetails(
           // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
           android: AndroidNotificationDetails(
-            rotationGroup.rotationGroupId!,
-            rotationGroup.rotationName,
-            channelDescription: '${rotationGroup.rotationName}の通知',
+            notification.rotationGroupId,
+            notification.rotationName,
+            channelDescription: '${notification.rotationName}の通知',
             priority: Priority.high,
             importance: Importance.high,
             showWhen: true,
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: rotationGroup.rotationGroupId, // タップ時に渡すデータ
+        payload: notification.rotationGroupId, // タップ時に渡すデータ
       );
       return Results.success(null);
     } catch (error) {

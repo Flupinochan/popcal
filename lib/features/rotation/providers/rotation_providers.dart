@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/features/notifications/providers/notification_providers.dart';
+import 'package:popcal/features/rotation/domain/use_cases/create_rotation_group_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/data/datasources/firebase_rotation_datasource.dart';
@@ -34,4 +36,12 @@ Stream<Result<List<RotationGroup>>> rotationGroupsStream(
   // 依存がInterface RepositoryのみなのでScreenでrotationGroupsStreamを使用してOK
   final rotationRepository = ref.watch(rotationRepositoryProvider);
   return rotationRepository.watchRotationGroups(ownerUserId);
+}
+
+@riverpod
+CreateRotationGroupUseCase createRotationGroupUseCase(Ref ref) {
+  return CreateRotationGroupUseCase(
+    ref.watch(rotationRepositoryProvider),
+    ref.watch(notificationRepositoryProvider),
+  );
 }

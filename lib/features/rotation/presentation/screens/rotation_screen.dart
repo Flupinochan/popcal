@@ -5,11 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
 import 'package:popcal/features/rotation/presentation/widgets/bottom_action_bar.dart';
 import 'package:popcal/features/rotation/presentation/widgets/form_list.dart';
 import 'package:popcal/features/rotation/presentation/widgets/form_rotation_name.dart';
-import 'package:popcal/features/rotation/presentation/widgets/form_date.dart';
+import 'package:popcal/features/rotation/presentation/widgets/form_time_selector.dart';
+import 'package:popcal/features/rotation/presentation/widgets/form_weekday_selector.dart';
 import 'package:popcal/features/rotation/presentation/widgets/section_label.dart';
 
 class RotationScreen extends HookConsumerWidget {
@@ -63,7 +65,8 @@ class RotationScreen extends HookConsumerWidget {
           rotationMembers: List<String>.from(
             formData['rotationMembers'] as List,
           ),
-          notificationTime: formData['notificationTime'] as DateTime,
+          rotationDays: formData['rotationDays'] as List<Weekday>,
+          notificationTime: formData['notificationTime'] as TimeOfDay,
           createdAt:
               isUpdateMode
                   ? (initialRotationGroup.value?.createdAt ?? DateTime.now())
@@ -133,9 +136,15 @@ class RotationScreen extends HookConsumerWidget {
                     },
                   ),
                   const SizedBox(height: 24),
-                  const SectionLabel('ローテーションのスケジュール設定'),
+                  const SectionLabel('ローテーション曜日'),
                   const SizedBox(height: 8),
-                  FormDate(
+                  FormWeekdaySelector(
+                    initialValue: initialRotationGroup.value?.rotationDays,
+                  ),
+                  const SizedBox(height: 24),
+                  const SectionLabel('通知時刻'),
+                  const SizedBox(height: 8),
+                  FormTimeSelector(
                     initialValue: initialRotationGroup.value?.notificationTime,
                   ),
                 ],

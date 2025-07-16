@@ -1,7 +1,9 @@
 // Firebase Cloud Firestore <=> DTO <=> Entity 変換するDTOクラス
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 
 part 'rotation_group_firebase_dto.freezed.dart';
 
@@ -14,9 +16,12 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
     required String ownerUserId,
     required String rotationName,
     required List<String> rotationMembers,
+    required List<int> rotationDays,
+    required Map<String, int> notificationTime,
+    required int currentRotationIndex,
     // firestoreに保存する際はTimestampが適切
     // Widget(UI)はDateTimeが適切
-    required Timestamp notificationTime,
+    required Timestamp lastScheduledDate,
     required Timestamp createdAt,
     required Timestamp updatedAt,
   }) = _RotationGroupFirebaseDto;
@@ -31,7 +36,11 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
       ownerUserId: entity.ownerUserId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,
-      notificationTime: Timestamp.fromDate(entity.notificationTime),
+      rotationDays:
+          entity.rotationDays.map((weekday) => weekday.value).toList(),
+      notificationTime: _timeOfDayToMap(entity.notificationTime),
+      currentRotationIndex: entity.currentRotationIndex,
+      lastScheduledDate: Timestamp.fromDate(entity.lastScheduledDate),
       createdAt: Timestamp.fromDate(entity.createdAt),
       updatedAt: Timestamp.fromDate(entity.updatedAt),
     );
@@ -52,7 +61,12 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
       rotationMembers: List<String>.from(
         data['rotationMembers'] as List<dynamic>,
       ),
-      notificationTime: data['notificationTime'] as Timestamp,
+      rotationDays: List<int>.from(data['rotationDays'] as List<dynamic>),
+      notificationTime: Map<String, int>.from(
+        data['notificationTime'] as Map<String, dynamic>,
+      ),
+      currentRotationIndex: data['currentRotationIndex'] as int,
+      lastScheduledDate: data['lastScheduledDate'] as Timestamp,
       createdAt: data['createdAt'] as Timestamp,
       updatedAt: data['updatedAt'] as Timestamp,
     );
@@ -65,7 +79,11 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
       ownerUserId: ownerUserId,
       rotationName: rotationName,
       rotationMembers: rotationMembers,
-      notificationTime: notificationTime.toDate(),
+      rotationDays:
+          rotationDays.map((value) => Weekday.fromInt(value)).toList(),
+      notificationTime: _mapToTimeOfDay(notificationTime),
+      currentRotationIndex: currentRotationIndex,
+      lastScheduledDate: lastScheduledDate.toDate(),
       createdAt: createdAt.toDate(),
       updatedAt: updatedAt.toDate(),
     );
@@ -77,9 +95,22 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
       'ownerUserId': ownerUserId,
       'rotationName': rotationName,
       'rotationMembers': rotationMembers,
+      'rotationDays': rotationDays,
       'notificationTime': notificationTime,
+      'currentRotationIndex': currentRotationIndex,
+      'lastScheduledDate': lastScheduledDate,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
+  }
+
+  // TimeOfDay => Map 変換 ※FirebaseにはTimeOfDay型がないため
+  static Map<String, int> _timeOfDayToMap(TimeOfDay timeOfDay) {
+    return {'hour': timeOfDay.hour, 'minute': timeOfDay.minute};
+  }
+
+  // Map => TimeOfDay
+  static TimeOfDay _mapToTimeOfDay(Map<String, int> map) {
+    return TimeOfDay(hour: map['hour'] ?? 0, minute: map['minute'] ?? 0);
   }
 }
