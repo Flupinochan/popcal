@@ -90,7 +90,8 @@ class RotationScheduleCalculatorUseCase {
 
   /// 通知ID生成
   int _generateNotificationId(String rotationGroupId, DateTime date) {
-    return Object.hash(rotationGroupId, date.year, date.month, date.day) &
-        0x7FFFFFFF;
+    // 🔥 日時情報をIDに埋め込む（yyyyMMdd形式）
+    final dateInt = date.year * 10000 + date.month * 100 + date.day;
+    return dateInt;
   }
 }
