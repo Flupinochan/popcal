@@ -90,3 +90,25 @@ analyzer:
 flutter gemsで検索
 
 https://pub.dev/packages?q=is%3Aflutter-favorite
+
+### Firebase CLI
+
+firestoreのsecurity ruleは`firestore.rules`で管理
+※firebase.jsonでfirestore.rulesを指定
+
+```bash
+# list projects
+firebase projects:list
+
+# show active project
+firebase use
+
+# activate project
+firebase use --add popcal-e709a
+
+# verify security rules
+firebase deploy --only firestore:rules --dry-run
+
+# deploy security rules
+firebase deploy --only firestore:rules
+```

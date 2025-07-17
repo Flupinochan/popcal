@@ -1,19 +1,17 @@
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/rotation/domain/use_cases/rotation_schedule_calculator_use_case.dart';
 import 'package:popcal/core/utils/result.dart';
 
 /// home画面表示時に通知設定を同期するUseCase
 class SyncNotificationsUseCase {
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
-  final RotationScheduleCalculatorUseCase _scheduleCalculator;
 
   SyncNotificationsUseCase(
     this._rotationRepository,
     this._notificationRepository,
-  ) : _scheduleCalculator = RotationScheduleCalculatorUseCase();
+  );
 
   Future<Result<void>> execute(String ownerUserId) async {
     // 1. ローテーショングループ一覧を取得
@@ -35,9 +33,8 @@ class SyncNotificationsUseCase {
     // 3. 各ローテーショングループを同期
     for (final group in rotationGroups) {
       // 3-1. 通知スケジュールを計算
-      final calculationResult = _scheduleCalculator.createNotifications(
-        rotationGroup: group,
-      );
+      final calculationResult = _notificationRepository
+          .calculateNotificationSchedule(rotationGroup: group);
 
       if (calculationResult.isFailure) {
         print('通知計算失敗: ${group.rotationName}');
@@ -98,9 +95,8 @@ class SyncNotificationsUseCase {
     final validNotificationIds = <int>{};
 
     for (final group in rotationGroups) {
-      final calculationResult = _scheduleCalculator.createNotifications(
-        rotationGroup: group,
-      );
+      final calculationResult = _notificationRepository
+          .calculateNotificationSchedule(rotationGroup: group);
 
       if (calculationResult.isSuccess) {
         for (final notification

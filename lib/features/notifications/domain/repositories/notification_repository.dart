@@ -1,6 +1,7 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
 
 abstract class NotificationRepository {
   /// 0. 初期化
@@ -9,7 +10,7 @@ abstract class NotificationRepository {
   /// 0-2. 通知タップからアプリを起動した場合は画面遷移
   Future<Result<void>> initializeNotificationLaunch();
 
-  /// 1. 通知スケジュールを作成
+  /// 1 通知スケジュールを作成
   /// ※複数の情報が必要なのでentity引数
   Future<Result<void>> createNotification(RotationNotification notification);
 
@@ -31,4 +32,10 @@ abstract class NotificationRepository {
 
   /// 【デバッグ用】通知予定ログ出力
   Future<Result<void>> logPendingNotifications();
+
+  /// RotationGroupから30日分の通知EntityをListで作成
+  Result<RotationCalculationResult> calculateNotificationSchedule({
+    required RotationGroup rotationGroup,
+    int daysAhead = 30,
+  });
 }

@@ -2,18 +2,16 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/rotation/domain/use_cases/rotation_schedule_calculator_use_case.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 
 class CreateRotationGroupUseCase {
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
-  final RotationScheduleCalculatorUseCase _scheduleCalculator;
 
   CreateRotationGroupUseCase(
     this._rotationRepository,
     this._notificationRepository,
-  ) : _scheduleCalculator = RotationScheduleCalculatorUseCase();
+  );
 
   Future<Result<RotationGroup>> execute(RotationGroup rotationGroup) async {
     // 1. RotationGroupを作成
@@ -25,9 +23,8 @@ class CreateRotationGroupUseCase {
       success: (createdGroup) async {
         try {
           // 2. RotationNotificationsを作成
-          final calculationResult = _scheduleCalculator.createNotifications(
-            rotationGroup: createdGroup,
-          );
+          final calculationResult = _notificationRepository
+              .calculateNotificationSchedule(rotationGroup: createdGroup);
           if (calculationResult.isFailure) {
             throw Exception('通知計算失敗: ${calculationResult.displayText}');
           }

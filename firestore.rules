@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 以降にCollection、Documentのパスに対するセキュリティルールを記載
+    // /users/{認証したユーザID}/rotations/{各RotationGroupIdのDocument}/
+    // ※ワイルドカードで再帰的に許可することも可能
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      match /rotationGroups/{rotationId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+    
+    // functionで同じ処理をまとめることが可能
+    // Documentの読み書きを認証したユーザ、ユーザIDが一致する場合のみ許可
+    // read (get, list)
+    // write (create, update, delete)
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // test
+  }
+}
