@@ -8,7 +8,6 @@ part 'rotation_view_model.g.dart';
 
 @riverpod
 class RotationViewModel extends _$RotationViewModel {
-  // use caseへのgetterを定義
   CreateRotationGroupUseCase get _createRotationGroupUseCase =>
       ref.read(createRotationGroupUseCaseProvider);
 
@@ -17,7 +16,6 @@ class RotationViewModel extends _$RotationViewModel {
     return null;
   }
 
-  // 4. ローテーショングループ作成
   Future<Result<RotationGroup>> createRotationGroup(
     RotationGroup rotationGroup,
   ) async {
@@ -31,7 +29,6 @@ class RotationViewModel extends _$RotationViewModel {
       },
       failure: (error) {
         state = AsyncError(error, StackTrace.current);
-        print(error);
       },
     );
 

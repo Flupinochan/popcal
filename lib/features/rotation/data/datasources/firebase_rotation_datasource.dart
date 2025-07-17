@@ -57,6 +57,35 @@ class FirebaseRotationDatasource {
     }
   }
 
+  // 3. 特定のローテーショングループを取得
+  Future<Result<RotationGroupFirebaseDto?>> getRotationGroup(
+    String ownerUserId,
+    String rotationGroupId,
+  ) async {
+    try {
+      final docRef = _firebaseFirestore
+          .collection('users')
+          .doc(ownerUserId)
+          .collection('rotationGroups')
+          .doc(rotationGroupId)
+          .withConverter(
+            fromFirestore: RotationGroupFirebaseDto.fromFirestore,
+            toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
+          );
+
+      final docSnap = await docRef.get();
+
+      if (!docSnap.exists) {
+        return Results.success(null);
+      }
+
+      final rotationGroup = docSnap.data();
+      return Results.success(rotationGroup);
+    } catch (error) {
+      return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
+    }
+  }
+
   // 4. ローテーショングループ作成
   Future<Result<RotationGroupFirebaseDto>> createRotationGroup(
     RotationGroupFirebaseDto dto,

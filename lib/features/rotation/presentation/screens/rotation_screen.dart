@@ -7,6 +7,7 @@ import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
+import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
 import 'package:popcal/features/rotation/presentation/widgets/bottom_action_bar.dart';
 import 'package:popcal/features/rotation/presentation/widgets/form_list.dart';
 import 'package:popcal/features/rotation/presentation/widgets/form_rotation_name.dart';
@@ -15,7 +16,6 @@ import 'package:popcal/features/rotation/presentation/widgets/form_weekday_selec
 import 'package:popcal/features/rotation/presentation/widgets/section_label.dart';
 
 class RotationScreen extends HookConsumerWidget {
-  // 編集時は値を代入
   final String? rotationGroupId;
 
   const RotationScreen({super.key, this.rotationGroupId});
@@ -23,10 +23,10 @@ class RotationScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isUpdateMode = rotationGroupId != null;
-    final initialRotationGroup = useState<RotationGroup?>(null);
-    final isLoading = ref.watch(rotationViewModelProvider).isLoading;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
+    final isLoading = ref.watch(rotationViewModelProvider).isLoading;
+
     final currentUserState = ref.watch(currentUserProvider);
     final currentUser = currentUserState.when(
       data:
@@ -35,15 +35,6 @@ class RotationScreen extends HookConsumerWidget {
       loading: () => null,
       error: (_, __) => null,
     );
-
-    // 編集時のデータ取得（後で実装）
-    useEffect(() {
-      if (isUpdateMode) {
-        // TODO: 既存データの取得処理
-        // initialRotationGroup.value = xxx;
-      }
-      return null;
-    }, [isUpdateMode]);
 
     Future<void> handleCreateRotationGroup() async {
       if (currentUser == null) {
@@ -59,7 +50,7 @@ class RotationScreen extends HookConsumerWidget {
         final formData = formKey.currentState!.value;
 
         final rotationGroup = RotationGroup(
-          rotationGroupId: isUpdateMode ? rotationGroupId : null,
+          rotationGroupId: null,
           ownerUserId: currentUser.uid,
           rotationName: formData['rotationName'] as String,
           rotationMembers: List<String>.from(
@@ -67,18 +58,137 @@ class RotationScreen extends HookConsumerWidget {
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,
           notificationTime: formData['notificationTime'] as TimeOfDay,
-          createdAt:
-              isUpdateMode
-                  ? (initialRotationGroup.value?.createdAt ??
-                      DateTime.now().toLocal())
-                  : DateTime.now().toLocal(),
+          createdAt: DateTime.now().toLocal(),
           updatedAt: DateTime.now().toLocal(),
         );
 
-        await rotationViewModel.createRotationGroup(rotationGroup);
+        final result = await rotationViewModel.createRotationGroup(
+          rotationGroup,
+        );
+
+        result.when(
+          success: (_) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('作成しました')));
+              Navigator.pop(context);
+            }
+          },
+          failure: (error) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('エラーが発生しました: $error')));
+            }
+          },
+        );
       }
     }
 
+    // 新規作成モード
+    if (!isUpdateMode) {
+      return _buildFormScreen(
+        context: context,
+        formKey: formKey,
+        isUpdateMode: false,
+        initialRotationGroup: null,
+        isLoading: isLoading,
+        onSubmit: handleCreateRotationGroup,
+      );
+    }
+
+    // 編集モード - currentUserが必要
+    if (currentUser == null) {
+      return _buildLoadingScreen();
+    }
+
+    // 編集モード - AsyncNotifierProviderを使用
+    final rotationDetailAsync = ref.watch(
+      rotationDetailProvider(currentUser.uid, rotationGroupId!),
+    );
+
+    return rotationDetailAsync.when(
+      data: (rotationGroup) {
+        if (rotationGroup == null) {
+          return _buildErrorScreen(context, 'データが見つかりません');
+        }
+        return _buildFormScreen(
+          context: context,
+          formKey: formKey,
+          isUpdateMode: true,
+          initialRotationGroup: rotationGroup,
+          isLoading: isLoading,
+          onSubmit: handleCreateRotationGroup,
+        );
+      },
+      loading: () => _buildLoadingScreen(),
+      error: (error, stack) => _buildErrorScreen(context, 'エラーが発生しました: $error'),
+    );
+  }
+
+  Widget _buildLoadingScreen() {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          ),
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorScreen(BuildContext context, String message) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                message,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('戻る'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFormScreen({
+    required BuildContext context,
+    required GlobalKey<FormBuilderState> formKey,
+    required bool isUpdateMode,
+    required RotationGroup? initialRotationGroup,
+    required bool isLoading,
+    required VoidCallback onSubmit,
+  }) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
@@ -89,6 +199,10 @@ class RotationScreen extends HookConsumerWidget {
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          isUpdateMode ? 'ローテーション詳細' : 'ローテーション追加',
+          style: const TextStyle(color: Colors.white),
         ),
       ),
       body: Container(
@@ -103,6 +217,7 @@ class RotationScreen extends HookConsumerWidget {
         ),
         child: FormBuilder(
           key: formKey,
+          enabled: !isUpdateMode,
           child: Padding(
             padding: const EdgeInsets.only(top: 100.0, bottom: 90),
             child: SingleChildScrollView(
@@ -110,9 +225,9 @@ class RotationScreen extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'ローテーション追加',
-                    style: TextStyle(
+                  Text(
+                    isUpdateMode ? 'ローテーション詳細' : 'ローテーション追加',
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -122,15 +237,15 @@ class RotationScreen extends HookConsumerWidget {
                   const SectionLabel('ローテーション名'),
                   const SizedBox(height: 8),
                   FormRotationName(
-                    initialValue: initialRotationGroup.value?.rotationName,
+                    initialValue: initialRotationGroup?.rotationName,
                   ),
                   const SizedBox(height: 24),
                   FormList(
                     name: 'rotationMembers',
                     hintText: 'メンバー名を入力',
-                    initialValue: initialRotationGroup.value?.rotationMembers,
+                    initialValue: initialRotationGroup?.rotationMembers,
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (!isUpdateMode && (value == null || value.isEmpty)) {
                         return 'メンバーを1つ以上追加してください';
                       }
                       return null;
@@ -140,13 +255,13 @@ class RotationScreen extends HookConsumerWidget {
                   const SectionLabel('ローテーション曜日'),
                   const SizedBox(height: 8),
                   FormWeekdaySelector(
-                    initialValue: initialRotationGroup.value?.rotationDays,
+                    initialValue: initialRotationGroup?.rotationDays,
                   ),
                   const SizedBox(height: 24),
                   const SectionLabel('通知時刻'),
                   const SizedBox(height: 8),
                   FormTimeSelector(
-                    initialValue: initialRotationGroup.value?.notificationTime,
+                    initialValue: initialRotationGroup?.notificationTime,
                   ),
                 ],
               ),
@@ -154,17 +269,14 @@ class RotationScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomActionBar(
-        isLoading: isLoading,
-        onCancel: () => Navigator.pop(context),
-        onSubmit: () async {
-          await handleCreateRotationGroup();
-          // 成功時のみナビゲーション
-          if (context.mounted && !isLoading) {
-            Navigator.pop(context);
-          }
-        },
-      ),
+      bottomNavigationBar:
+          isUpdateMode
+              ? null
+              : BottomActionBar(
+                isLoading: isLoading,
+                onCancel: () => Navigator.pop(context),
+                onSubmit: onSubmit,
+              ),
     );
   }
 }

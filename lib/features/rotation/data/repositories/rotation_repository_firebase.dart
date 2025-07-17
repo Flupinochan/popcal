@@ -39,11 +39,20 @@ class RotationRepositoryFirebase implements RotationRepository {
     );
   }
 
-  // 3. xx
+  // 3. 特定のローテーショングループを取得
   @override
-  Future<Result<RotationGroup?>> getRotationGroup(String id) {
-    // TODO: implement getRotationGroup
-    throw UnimplementedError();
+  Future<Result<RotationGroup?>> getRotationGroup(
+    String ownerUserId,
+    String rotationGroupId,
+  ) async {
+    final result = await _firebaseRotationDatasource.getRotationGroup(
+      ownerUserId,
+      rotationGroupId,
+    );
+    return result.when(
+      success: (dto) => Results.success(dto?.toEntity()),
+      failure: (error) => Results.failure(error),
+    );
   }
 
   // 4. ローテーショングループ作成

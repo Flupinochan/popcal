@@ -16,8 +16,11 @@ abstract class RotationRepository {
   // 2. 手動ローテーショングループ一覧取得
   Future<Result<List<RotationGroup>>> getRotationGroups(String ownerUserId);
 
-  // 3. xx
-  Future<Result<RotationGroup?>> getRotationGroup(String id);
+  // 3. 特定のローテーショングループを取得
+  Future<Result<RotationGroup?>> getRotationGroup(
+    String ownerUserId,
+    String rotationGroupId,
+  );
 
   // 4. ローテーショングループ作成
   Future<Result<RotationGroup>> createRotationGroup(
