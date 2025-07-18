@@ -12,7 +12,8 @@ class FormWeekdaySelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormBuilderField<List<Weekday>>(
       name: 'rotationDays',
-      initialValue: initialValue ?? [Weekday.monday],
+      initialValue:
+          initialValue ?? [Weekday.fromDateTime(DateTime.now().toLocal())],
       validator: (value) {
         if (value == null || value.isEmpty) {
           return '曜日を1つ以上選択してください';

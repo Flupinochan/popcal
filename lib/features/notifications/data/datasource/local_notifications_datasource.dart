@@ -2,6 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/notifications/data/dto/notification_payload_dto.dart';
 import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -31,18 +32,35 @@ class LocalNotificationsDatasource {
         settings,
         // 1.アプリ起動中に通知をタップした際の動作
         onDidReceiveNotificationResponse: (response) {
-          final payload = response.payload;
-          if (payload != null) {
-            _router!.push(Routes.rotationUpdatePath(payload));
-          }
+          _handleNotificationTap(response.payload);
         },
         // 2.アプリが起動していない場合に通知をタップした際の動作
         // ※通知をタップしたらデフォルトでアプリが起動するため、アプリ起動時の処理で遷移するため不要
         // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       );
+
+      // 権限要求
+      await _requestNotificationPermission();
       return Results.success(null);
     } catch (error) {
       return Results.failure(NotificationFailure('初期化に失敗しました: $error'));
+    }
+  }
+
+  /// 通知タップ時の処理
+  void _handleNotificationTap(String? payload) {
+    if (payload != null) {
+      try {
+        final notificationPayload = NotificationPayloadDtoJsonX.fromJsonString(
+          payload,
+        );
+        _router.push(
+          Routes.rotationUpdatePath(notificationPayload.rotationGroupId),
+        );
+      } catch (e) {
+        // JSON解析に失敗した場合
+        _router.push(Routes.rotationUpdatePath(payload));
+      }
     }
   }
 
@@ -96,9 +114,7 @@ class LocalNotificationsDatasource {
           notificationAppLaunchDetails.didNotificationLaunchApp) {
         final payload =
             notificationAppLaunchDetails.notificationResponse?.payload;
-        if (payload != null) {
-          _router!.push(Routes.rotationUpdatePath(payload));
-        }
+        _handleNotificationTap(payload);
       }
       return Results.success(null);
     } catch (error) {
@@ -113,6 +129,9 @@ class LocalNotificationsDatasource {
     RotationNotification notification,
   ) async {
     try {
+      final payloadDto = NotificationPayloadDto.fromEntity(notification);
+      final payloadJson = payloadDto.toJsonString();
+
       await _flutterLocalNotificationsPlugin.zonedSchedule(
         notification.notificationId,
         notification.title,
@@ -130,7 +149,7 @@ class LocalNotificationsDatasource {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: notification.rotationGroupId, // タップ時に渡すデータ
+        payload: payloadJson, // タップ時に渡すデータ
       );
       // ログ出力
       await logPendingNotifications();
