@@ -16,27 +16,7 @@ class HomeViewModel extends _$HomeViewModel {
     return null;
   }
 
-  // Streamでリアルタイム取得するため未使用
-  Future<Result<List<RotationGroup>>> getRotationGroups(
-    String ownerUserId,
-  ) async {
-    state = const AsyncLoading();
-
-    final result = await _rotationRepository.getRotationGroups(ownerUserId);
-
-    result.when(
-      success: (rotationGroups) {
-        state = AsyncData(rotationGroups);
-      },
-      failure: (error) {
-        state = AsyncError(error, StackTrace.current);
-      },
-    );
-
-    return result;
-  }
-
-  // 6. ローテーショングループ削除
+  /// ローテーショングループを削除
   Future<Result<void>> deleteRotationGroup(
     String ownerUserId,
     String rotationGroupId,
@@ -51,6 +31,35 @@ class HomeViewModel extends _$HomeViewModel {
     result.when(
       success: (_) {
         state = const AsyncData(null);
+      },
+      failure: (error) {
+        state = AsyncError(error, StackTrace.current);
+      },
+    );
+
+    return result;
+  }
+
+  /// ローテーショングループを復元（再作成）
+  Future<Result<RotationGroup>> restoreRotationGroup(
+    RotationGroup rotationGroup,
+  ) async {
+    state = const AsyncLoading();
+
+    final createUseCase = ref.read(createRotationGroupUseCaseProvider);
+
+    // rotationGroupIdをnullにして新規作成として扱う
+    final rotationGroupToCreate = rotationGroup.copyWith(
+      rotationGroupId: null,
+      createdAt: DateTime.now().toLocal(),
+      updatedAt: DateTime.now().toLocal(),
+    );
+
+    final result = await createUseCase.execute(rotationGroupToCreate);
+
+    result.when(
+      success: (rotationGroup) {
+        state = AsyncData([rotationGroup]);
       },
       failure: (error) {
         state = AsyncError(error, StackTrace.current);

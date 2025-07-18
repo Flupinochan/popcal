@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +10,7 @@ import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
 import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
+import 'package:popcal/features/home/presentation/view_models/home_view_model.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
@@ -24,6 +24,7 @@ class HomeScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationProvider = ref.watch(notificationRepositoryProvider);
     final syncUseCase = ref.watch(syncNotificationsUseCaseProvider);
+    final homeViewModel = ref.read(homeViewModelProvider.notifier);
     final currentUserState = ref.watch(currentUserProvider);
     final currentUser = currentUserState.when(
       data:
@@ -46,57 +47,20 @@ class HomeScreen extends HookConsumerWidget {
     // 通知タップから起動した場合の画面遷移
     useEffect(() {
       () async {
-        final result =
-            await notificationProvider.initializeNotificationLaunch();
+        await notificationProvider.initializeNotificationLaunch();
       }();
     }, []);
 
     // 🔥 通知同期処理
     useEffect(() {
-      // ログ出力
       notificationProvider.logPendingNotifications();
       if (currentUser != null) {
         () async {
-          final result = await syncUseCase.execute(currentUser.uid);
-          result.when(
-            success: (_) {
-              print('通知同期が完了しました');
-            },
-            failure: (error) {
-              print('通知同期に失敗しました: $error');
-            },
-          );
+          await syncUseCase.execute(currentUser.uid);
         }();
       }
       return null;
     }, [currentUser?.uid]);
-
-    final isLoading = rotationGroupsStream.isLoading;
-
-    Future<void> handleManualRefresh() async {
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-      if (currentUser == null) {
-        SnackBarUtils.showGlassSnackBar(scaffoldMessenger, 'ログインが必要です');
-        return;
-      }
-
-      ref.invalidate(rotationGroupsStreamProvider(currentUser.uid));
-
-      () async {
-        final result = await syncUseCase.execute(currentUser.uid);
-        result.when(
-          success: (_) {
-            print('通知同期が完了しました');
-          },
-          failure: (error) {
-            print('通知同期に失敗しました: $error');
-          },
-        );
-      }();
-
-      SnackBarUtils.showGlassSnackBar(scaffoldMessenger, 'リストを更新しました');
-    }
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -109,24 +73,6 @@ class HomeScreen extends HookConsumerWidget {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          isLoading
-              ? IconButton(
-                onPressed: null,
-                icon: SizedBox(
-                  width: 15,
-                  height: 15,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.0,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                ),
-              )
-              : IconButton(
-                icon: const Icon(Icons.refresh, color: Colors.white),
-                onPressed: handleManualRefresh,
-              ),
-        ],
       ),
       drawer: const DrawerScreen(),
       floatingActionButton: GlassmorphicContainer(
@@ -185,6 +131,7 @@ class HomeScreen extends HookConsumerWidget {
                         rotationGroups,
                         currentUser,
                         deletedItem,
+                        homeViewModel,
                       ),
                   failure:
                       (error) => Center(
@@ -243,6 +190,7 @@ class HomeScreen extends HookConsumerWidget {
     List<RotationGroup> rotationGroups,
     AppUser? currentUser,
     ValueNotifier<RotationGroup?> deletedItem,
+    HomeViewModel homeViewModel,
   ) {
     if (rotationGroups.isEmpty) {
       return EmptyState(
@@ -271,10 +219,10 @@ class HomeScreen extends HookConsumerWidget {
                 onDelete:
                     () => _handleDelete(
                       context,
-                      ref,
                       rotationGroup,
                       currentUser,
                       deletedItem,
+                      homeViewModel,
                     ),
               );
             }, childCount: rotationGroups.length),
@@ -286,90 +234,63 @@ class HomeScreen extends HookConsumerWidget {
 
   void _handleDelete(
     BuildContext context,
-    WidgetRef ref,
     RotationGroup rotationGroup,
     AppUser? currentUser,
     ValueNotifier<RotationGroup?> deletedItem,
+    HomeViewModel homeViewModel,
   ) async {
     if (currentUser == null || rotationGroup.rotationGroupId == null) {
       return;
     }
 
-    // ScaffoldMessengerを事前に取得
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-    // 削除したアイテムを保持
     deletedItem.value = rotationGroup;
 
-    // 削除処理を実行
-    try {
-      final rotationRepository = ref.read(rotationRepositoryProvider);
-      await rotationRepository.deleteRotationGroup(
-        currentUser.uid,
-        rotationGroup.rotationGroupId!,
-      );
+    final result = await homeViewModel.deleteRotationGroup(
+      currentUser.uid,
+      rotationGroup.rotationGroupId!,
+    );
 
-      // 削除成功時にSnackBar表示
-      SnackBarUtils.showGlassSnackBarWithAction(
-        scaffoldMessenger,
-        '${rotationGroup.rotationName}を削除しました',
-        onAction:
-            () => _handleRestore(
-              scaffoldMessenger,
-              ref,
-              currentUser,
-              deletedItem,
-            ),
-      );
-    } catch (e) {
-      // 削除失敗時
-      deletedItem.value = null;
-      SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '削除に失敗しました: $e');
-    }
+    result.when(
+      success: (_) {
+        SnackBarUtils.showGlassSnackBarWithAction(
+          scaffoldMessenger,
+          '${rotationGroup.rotationName}を削除しました',
+          onAction:
+              () => _handleRestore(
+                scaffoldMessenger,
+                rotationGroup,
+                deletedItem,
+                homeViewModel,
+              ),
+        );
+      },
+      failure: (error) {
+        deletedItem.value = null;
+        SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '削除に失敗しました: $error');
+      },
+    );
   }
 
   void _handleRestore(
     ScaffoldMessengerState scaffoldMessenger,
-    WidgetRef ref,
-    AppUser currentUser,
+    RotationGroup rotationGroup,
     ValueNotifier<RotationGroup?> deletedItem,
+    HomeViewModel homeViewModel,
   ) async {
-    final itemToRestore = deletedItem.value;
-    if (itemToRestore == null) return;
+    final result = await homeViewModel.restoreRotationGroup(rotationGroup);
 
-    try {
-      // 削除したアイテムを再作成
-      final createUseCase = ref.read(createRotationGroupUseCaseProvider);
-
-      // rotationGroupIdをnullにして新規作成として扱う
-      final rotationGroupToCreate = itemToRestore.copyWith(
-        rotationGroupId: null,
-        createdAt: DateTime.now().toLocal(),
-        updatedAt: DateTime.now().toLocal(),
-      );
-
-      final result = await createUseCase.execute(rotationGroupToCreate);
-
-      result.when(
-        success: (_) {
-          // 復元成功
-          deletedItem.value = null;
-          SnackBarUtils.showGlassSnackBar(
-            scaffoldMessenger,
-            '${itemToRestore.rotationName}を復元しました',
-          );
-        },
-        failure: (error) {
-          // 復元失敗
-          SnackBarUtils.showGlassSnackBar(
-            scaffoldMessenger,
-            '復元に失敗しました: $error',
-          );
-        },
-      );
-    } catch (e) {
-      // 復元失敗
-      SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '復元に失敗しました: $e');
-    }
+    result.when(
+      success: (_) {
+        deletedItem.value = null;
+        SnackBarUtils.showGlassSnackBar(
+          scaffoldMessenger,
+          '${rotationGroup.rotationName}を復元しました',
+        );
+      },
+      failure: (error) {
+        SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '復元に失敗しました: $error');
+      },
+    );
   }
 }

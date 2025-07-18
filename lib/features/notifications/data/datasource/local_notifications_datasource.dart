@@ -132,6 +132,8 @@ class LocalNotificationsDatasource {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: notification.rotationGroupId, // タップ時に渡すデータ
       );
+      // ログ出力
+      await logPendingNotifications();
       return Results.success(null);
     } catch (error) {
       return Results.failure(NotificationFailure('通知の作成に失敗しました: $error'));
@@ -178,6 +180,7 @@ class LocalNotificationsDatasource {
     try {
       final List<PendingNotificationRequest> pendingNotifications =
           await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+      pendingNotifications.sort((a, b) => a.id.compareTo(b.id));
 
       print('=== 設定済み通知一覧 (${pendingNotifications.length}件) ===');
 
