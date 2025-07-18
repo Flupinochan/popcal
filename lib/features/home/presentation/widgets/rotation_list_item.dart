@@ -49,8 +49,13 @@ class RotationListItem extends StatelessWidget {
             ),
           ),
         ),
-        onDismissed: (direction) {
+        // onDismissedの代わりにconfirmDismissを使用
+        confirmDismiss: (direction) async {
+          // 削除処理を実行
           onDelete?.call();
+          // 常にfalseを返してDismissibleを削除しない
+          // （実際の削除はFirestoreで行われ、Streamで自動的に更新される）
+          return false;
         },
         child: GlassmorphicContainer(
           width: double.infinity,
