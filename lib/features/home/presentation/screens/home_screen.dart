@@ -1,4 +1,3 @@
-// lib/features/home/presentation/screens/home_screen.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -16,8 +15,7 @@ import 'package:popcal/features/notifications/providers/notification_providers.d
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
-import 'package:popcal/shared/widgets/glass_snackbar_content.dart';
-import 'package:popcal/shared/widgets/glass_snackbar_content_with_action.dart';
+import 'package:popcal/shared/utils/snackbar_utils.dart';
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
@@ -79,17 +77,7 @@ class HomeScreen extends HookConsumerWidget {
       final scaffoldMessenger = ScaffoldMessenger.of(context);
 
       if (currentUser == null) {
-        scaffoldMessenger.clearSnackBars();
-        scaffoldMessenger.showSnackBar(
-          SnackBar(
-            content: GlassSnackbarContent(message: 'ログインが必要です'),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.all(16),
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        SnackBarUtils.showGlassSnackBar(scaffoldMessenger, 'ログインが必要です');
         return;
       }
 
@@ -107,17 +95,7 @@ class HomeScreen extends HookConsumerWidget {
         );
       }();
 
-      scaffoldMessenger.clearSnackBars();
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: GlassSnackbarContent(message: 'リストを更新しました'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      SnackBarUtils.showGlassSnackBar(scaffoldMessenger, 'リストを更新しました');
     }
 
     return Scaffold(
@@ -331,45 +309,27 @@ class HomeScreen extends HookConsumerWidget {
         rotationGroup.rotationGroupId!,
       );
 
-      // 事前に取得したScaffoldMessengerを使用
-      scaffoldMessenger.clearSnackBars();
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: GlassSnackbarContentWithAction(
-            message: '${rotationGroup.rotationName}を削除しました',
-            onAction:
-                () => _handleRestore(
-                  scaffoldMessenger, // ScaffoldMessengerを渡す
-                  ref,
-                  currentUser,
-                  deletedItem,
-                ),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 5),
-        ),
+      // 削除成功時にSnackBar表示
+      SnackBarUtils.showGlassSnackBarWithAction(
+        scaffoldMessenger,
+        '${rotationGroup.rotationName}を削除しました',
+        onAction:
+            () => _handleRestore(
+              scaffoldMessenger,
+              ref,
+              currentUser,
+              deletedItem,
+            ),
       );
     } catch (e) {
+      // 削除失敗時
       deletedItem.value = null;
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: GlassSnackbarContent(message: '削除に失敗しました: $e'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '削除に失敗しました: $e');
     }
   }
 
   void _handleRestore(
-    ScaffoldMessengerState
-    scaffoldMessenger, // contextの代わりにScaffoldMessengerを受け取る
+    ScaffoldMessengerState scaffoldMessenger,
     WidgetRef ref,
     AppUser currentUser,
     ValueNotifier<RotationGroup?> deletedItem,
@@ -394,45 +354,22 @@ class HomeScreen extends HookConsumerWidget {
         success: (_) {
           // 復元成功
           deletedItem.value = null;
-          scaffoldMessenger.showSnackBar(
-            SnackBar(
-              content: GlassSnackbarContent(
-                message: '${itemToRestore.rotationName}を復元しました',
-              ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              behavior: SnackBarBehavior.floating,
-              margin: const EdgeInsets.all(16),
-              duration: const Duration(seconds: 2),
-            ),
+          SnackBarUtils.showGlassSnackBar(
+            scaffoldMessenger,
+            '${itemToRestore.rotationName}を復元しました',
           );
         },
         failure: (error) {
           // 復元失敗
-          scaffoldMessenger.showSnackBar(
-            SnackBar(
-              content: GlassSnackbarContent(message: '復元に失敗しました: $error'),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              behavior: SnackBarBehavior.floating,
-              margin: const EdgeInsets.all(16),
-              duration: const Duration(seconds: 3),
-            ),
+          SnackBarUtils.showGlassSnackBar(
+            scaffoldMessenger,
+            '復元に失敗しました: $error',
           );
         },
       );
     } catch (e) {
       // 復元失敗
-      scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: GlassSnackbarContent(message: '復元に失敗しました: $e'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '復元に失敗しました: $e');
     }
   }
 }
