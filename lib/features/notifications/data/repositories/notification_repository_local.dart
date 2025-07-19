@@ -1,3 +1,6 @@
+// lib/features/notifications/data/repositories/notification_repository_local.dart
+
+import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
@@ -76,6 +79,19 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
+  /// 特定のrotationGroupIdの通知を削除(キャンセル)
+  @override
+  Future<Result<void>> deleteNotificationsByRotationGroupId(
+    String rotationGroupId,
+  ) async {
+    final result = await _localNotificationsDatasource
+        .deleteNotificationsByRotationGroupId(rotationGroupId);
+    return result.when(
+      success: (_) => Results.success(null),
+      failure: (error) => Results.failure(error),
+    );
+  }
+
   /// 5. 全通知を削除(キャンセル)
   @override
   Future<Result<void>> deleteNotifications() async {
@@ -107,7 +123,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
-  /// RotationGroupから30日分の通知EntityをListで作成
+  /// RotationGroupから30日分の通知EntityをListで作成（未来分のみ）
   @override
   Result<RotationCalculationResult> calculateNotificationSchedule({
     required RotationGroup rotationGroup,
@@ -118,14 +134,34 @@ class NotificationRepositoryLocal implements NotificationRepository {
         return Results.failure(ValidationFailure('ローテーションIDが未初期化です'));
       }
 
+      // 常に今日から計算開始
       final now = DateTime.now().toLocal();
+      final startDate = now; // 今日から開始
       final endDate = now.add(Duration(days: daysAhead));
+
+      print('=== 通知スケジュール計算開始 ===');
+      print('ローテーション名: ${rotationGroup.rotationName}');
+      print('計算期間: ${startDate} ～ ${endDate}');
+      print('現在時刻: $now');
+      print('元のcurrentRotationIndex: ${rotationGroup.currentRotationIndex}');
+      print('メンバー: ${rotationGroup.rotationMembers}');
+      print(
+        '対象曜日: ${rotationGroup.rotationDays.map((w) => w.displayName).join(', ')}',
+      );
+      print(
+        '通知時刻: ${rotationGroup.notificationTime.hour}:${rotationGroup.notificationTime.minute}',
+      );
 
       final result = _generateNotifications(
         rotationGroup: rotationGroup,
-        startDate: now,
+        startDate: startDate,
         endDate: endDate,
+        currentTime: now,
       );
+
+      print('生成された通知数: ${result.notifications.length}');
+      print('最終currentRotationIndex: ${result.newCurrentRotationIndex}');
+      print('=== 通知スケジュール計算終了 ===');
 
       return Results.success(result);
     } catch (e) {
@@ -133,8 +169,45 @@ class NotificationRepositoryLocal implements NotificationRepository {
     }
   }
 
+  /// 最初の通知予定日を取得
+  Result<DateTime?> getFirstNotificationDate({
+    required List<Weekday> rotationDays,
+    required TimeOfDay notificationTime,
+    DateTime? fromDate,
+  }) {
+    try {
+      final now = fromDate ?? DateTime.now().toLocal();
+
+      // 最大30日先まで検索
+      for (int i = 0; i < 30; i++) {
+        final checkDate = now.add(Duration(days: i));
+        final weekday = Weekday.fromDateTime(checkDate);
+
+        if (rotationDays.contains(weekday)) {
+          final notificationDateTime = DateTime(
+            checkDate.year,
+            checkDate.month,
+            checkDate.day,
+            notificationTime.hour,
+            notificationTime.minute,
+          );
+
+          // 未来の通知時刻の場合
+          if (notificationDateTime.isAfter(now)) {
+            print('最初の通知予定日: $notificationDateTime');
+            return Results.success(notificationDateTime);
+          }
+        }
+      }
+
+      print('警告: 最初の通知予定日が見つかりませんでした');
+      return Results.success(null);
+    } catch (e) {
+      return Results.failure(ValidationFailure('最初の通知予定日の取得に失敗しました: $e'));
+    }
+  }
+
   /// RotationGroupから1年分の通知情報(Calendar表示用)を作成
-  /// startDate(作成日)からcurrentRotationIndex: 0にして計算
   @override
   Result<List<NotificationDetail>> calculateCalendarDetails({
     required RotationGroup rotationGroup,
@@ -146,16 +219,21 @@ class NotificationRepositoryLocal implements NotificationRepository {
         return Results.failure(ValidationFailure('ローテーションIDが未初期化です'));
       }
 
+      print('=== カレンダー詳細計算開始 ===');
+      print('期間: ${startDate} ～ ${endDate}');
+
       // カレンダー表示用：currentRotationIndexを0にしたコピーを作成
       final rotationGroupForCalendar = rotationGroup.copyWith(
         currentRotationIndex: 0,
       );
 
-      // 既存の_generateNotificationsメソッドを流用
+      // カレンダー表示はrotationStartDate（最初の通知予定日）から開始
+      // 時刻チェックなしで全期間を計算
       final result = _generateNotifications(
         rotationGroup: rotationGroupForCalendar,
         startDate: startDate,
         endDate: endDate,
+        currentTime: null, // 時刻チェックなし
       );
 
       // RotationNotification → NotificationDetail に変換
@@ -170,21 +248,30 @@ class NotificationRepositoryLocal implements NotificationRepository {
             );
           }).toList();
 
+      print('カレンダー詳細生成数: ${details.length}');
+      print('=== カレンダー詳細計算終了 ===');
+
       return Results.success(details);
     } catch (e) {
       return Results.failure(NetworkFailure('カレンダー詳細の計算に失敗しました: $e'));
     }
   }
 
+  /// 通知生成（統一メソッド）
   RotationCalculationResult _generateNotifications({
     required RotationGroup rotationGroup,
     required DateTime startDate,
     required DateTime endDate,
+    DateTime? currentTime, // nullの場合は時刻チェックなし
   }) {
     final notifications = <RotationNotification>[];
-    var currentIndex = rotationGroup.currentRotationIndex;
+    var currentIndex = 0; // 常に0から開始
 
-    // 30日分をループ
+    print('--- 通知生成詳細 ---');
+    print('開始currentIndex: $currentIndex (強制的に0から開始)');
+    print('時刻チェック: ${currentTime != null ? "あり ($currentTime)" : "なし"}');
+
+    // 指定期間をループ
     for (
       var date = startDate; // 開始日
       date.isBefore(endDate.add(const Duration(days: 1))); // 終了日
@@ -195,9 +282,6 @@ class NotificationRepositoryLocal implements NotificationRepository {
 
       // 曜日がローテーション曜日か判定
       if (rotationGroup.rotationDays.contains(weekday)) {
-        final memberIndex = currentIndex % rotationGroup.rotationMembers.length;
-        final memberName = rotationGroup.rotationMembers[memberIndex];
-
         final notificationTime = DateTime(
           date.year,
           date.month,
@@ -206,25 +290,48 @@ class NotificationRepositoryLocal implements NotificationRepository {
           rotationGroup.notificationTime.minute,
         );
 
-        final notificationId = _generateNotificationId(
-          rotationGroup.rotationGroupId!,
-          date,
-        );
+        // 時刻チェック（currentTimeがnullの場合はスキップ）
+        bool shouldInclude = true;
+        if (currentTime != null) {
+          shouldInclude = notificationTime.isAfter(currentTime);
+        }
 
-        final notification = RotationNotification(
-          notificationId: notificationId,
-          rotationGroupId: rotationGroup.rotationGroupId!,
-          ownerUserId: rotationGroup.ownerUserId,
-          rotationName: rotationGroup.rotationName,
-          notificationTime: notificationTime,
-          memberName: memberName,
-          createdAt: DateTime.now().toLocal(),
-        );
+        if (shouldInclude) {
+          final memberIndex =
+              currentIndex % rotationGroup.rotationMembers.length;
+          final memberName = rotationGroup.rotationMembers[memberIndex];
 
-        notifications.add(notification);
-        currentIndex++;
+          final notificationId = _generateNotificationId(
+            rotationGroup.rotationGroupId!,
+            date,
+          );
+
+          final notification = RotationNotification(
+            notificationId: notificationId,
+            rotationGroupId: rotationGroup.rotationGroupId!,
+            ownerUserId: rotationGroup.ownerUserId,
+            rotationName: rotationGroup.rotationName,
+            notificationTime: notificationTime,
+            memberName: memberName,
+            rotationStartDate: DateTime.now().toLocal(),
+          );
+
+          notifications.add(notification);
+          print(
+            '通知追加: ${date.month}/${date.day}(${weekday.displayName}) - $memberName (currentIndex: $currentIndex -> memberIndex: $memberIndex)',
+          );
+          currentIndex++;
+        } else {
+          print(
+            '時刻が過去のためスキップ: ${date.month}/${date.day}(${weekday.displayName}) - 時刻: $notificationTime',
+          );
+        }
       }
     }
+
+    print('最終currentIndex: $currentIndex');
+    print('生成された通知数: ${notifications.length}');
+    print('--- 通知生成詳細終了 ---');
 
     return RotationCalculationResult(
       notifications: notifications,

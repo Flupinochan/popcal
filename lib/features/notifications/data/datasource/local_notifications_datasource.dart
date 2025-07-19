@@ -113,6 +113,13 @@ class LocalNotificationsDatasource {
     RotationNotification notification,
   ) async {
     try {
+      if (notification.notificationTime.isBefore(DateTime.now().toLocal())) {
+        print(
+          '警告: 過去の通知作成が要求されました - ${notification.notificationTime} - ${notification.memberName}',
+        );
+        return Results.success(null);
+      }
+
       final payloadDto = NotificationPayloadDto.fromEntity(notification);
       final payloadJson = payloadDto.toJsonString();
 
@@ -158,13 +165,49 @@ class LocalNotificationsDatasource {
     }
   }
 
-  /// 4. 特定の通知を削除(キャンセル)
+  /// 4-1. 特定の通知を削除(キャンセル)
   Future<Result<void>> deleteNotification(int notificationId) async {
     try {
       await _flutterLocalNotificationsPlugin.cancel(notificationId);
       return Results.success(null);
     } catch (error) {
       return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
+    }
+  }
+
+  /// 4-2. 特定のrotationGroupIdの通知を削除(キャンセル)
+  Future<Result<void>> deleteNotificationsByRotationGroupId(
+    String rotationGroupId,
+  ) async {
+    try {
+      final List<PendingNotificationRequest> pendingNotifications =
+          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+      int deletedCount = 0;
+      for (final notification in pendingNotifications) {
+        if (notification.payload != null) {
+          try {
+            final notificationPayload =
+                NotificationPayloadDtoJsonX.fromJsonString(
+                  notification.payload!,
+                );
+            if (notificationPayload.rotationGroupId == rotationGroupId) {
+              await _flutterLocalNotificationsPlugin.cancel(notification.id);
+              deletedCount++;
+              print('通知削除: ID=${notification.id}, GroupId=$rotationGroupId');
+            }
+          } catch (e) {
+            // JSON解析に失敗した場合はスキップ
+            print('通知payload解析失敗: ${notification.id} - $e');
+            continue;
+          }
+        }
+      }
+
+      print('削除した通知数: $deletedCount (対象GroupId: $rotationGroupId)');
+      return Results.success(null);
+    } catch (error) {
+      return Results.failure(NotificationFailure('特定通知の削除に失敗しました: $error'));
     }
   }
 

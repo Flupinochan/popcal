@@ -1,3 +1,5 @@
+// lib/features/rotation/presentation/screens/rotation_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -58,7 +60,7 @@ class RotationScreen extends HookConsumerWidget {
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,
           notificationTime: formData['notificationTime'] as TimeOfDay,
-          createdAt: DateTime.now().toLocal(),
+          rotationStartDate: DateTime.now().toLocal(),
           updatedAt: DateTime.now().toLocal(),
         );
 
@@ -72,6 +74,55 @@ class RotationScreen extends HookConsumerWidget {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(const SnackBar(content: Text('作成しました')));
+              Navigator.pop(context);
+            }
+          },
+          failure: (error) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('エラーが発生しました: $error')));
+            }
+          },
+        );
+      }
+    }
+
+    Future<void> handleUpdateRotationGroup(
+      RotationGroup originalRotationGroup,
+    ) async {
+      if (currentUser == null) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('ログインが必要です')));
+        }
+        return;
+      }
+
+      if (formKey.currentState!.saveAndValidate()) {
+        final formData = formKey.currentState!.value;
+
+        final updatedRotationGroup = originalRotationGroup.copyWith(
+          rotationName: formData['rotationName'] as String,
+          rotationMembers: List<String>.from(
+            formData['rotationMembers'] as List,
+          ),
+          rotationDays: formData['rotationDays'] as List<Weekday>,
+          notificationTime: formData['notificationTime'] as TimeOfDay,
+          updatedAt: DateTime.now().toLocal(),
+        );
+
+        final result = await rotationViewModel.updateRotationGroup(
+          updatedRotationGroup,
+        );
+
+        result.when(
+          success: (_) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('更新しました')));
               Navigator.pop(context);
             }
           },
@@ -119,7 +170,7 @@ class RotationScreen extends HookConsumerWidget {
           isUpdateMode: true,
           initialRotationGroup: rotationGroup,
           isLoading: isLoading,
-          onSubmit: handleCreateRotationGroup,
+          onSubmit: () => handleUpdateRotationGroup(rotationGroup),
         );
       },
       loading: () => _buildLoadingScreen(),
@@ -201,7 +252,7 @@ class RotationScreen extends HookConsumerWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          isUpdateMode ? 'ローテーション詳細' : 'ローテーション追加',
+          isUpdateMode ? 'ローテーション編集' : 'ローテーション追加',
           style: const TextStyle(color: Colors.white),
         ),
       ),
@@ -217,7 +268,8 @@ class RotationScreen extends HookConsumerWidget {
         ),
         child: FormBuilder(
           key: formKey,
-          enabled: !isUpdateMode,
+          // 編集モードでもフォームを有効にする
+          enabled: true,
           child: Padding(
             padding: const EdgeInsets.only(top: 100.0, bottom: 90),
             child: SingleChildScrollView(
@@ -226,7 +278,7 @@ class RotationScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    isUpdateMode ? 'ローテーション詳細' : 'ローテーション追加',
+                    isUpdateMode ? 'ローテーション編集' : 'ローテーション追加',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -245,7 +297,7 @@ class RotationScreen extends HookConsumerWidget {
                     hintText: 'メンバー名を入力',
                     initialValue: initialRotationGroup?.rotationMembers,
                     validator: (value) {
-                      if (!isUpdateMode && (value == null || value.isEmpty)) {
+                      if (value == null || value.isEmpty) {
                         return 'メンバーを1つ以上追加してください';
                       }
                       return null;
@@ -269,14 +321,13 @@ class RotationScreen extends HookConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar:
-          isUpdateMode
-              ? null
-              : BottomActionBar(
-                isLoading: isLoading,
-                onCancel: () => Navigator.pop(context),
-                onSubmit: onSubmit,
-              ),
+      // 編集モードでもBottomActionBarを表示
+      bottomNavigationBar: BottomActionBar(
+        isLoading: isLoading,
+        isUpdateMode: isUpdateMode,
+        onCancel: () => Navigator.pop(context),
+        onSubmit: onSubmit,
+      ),
     );
   }
 }

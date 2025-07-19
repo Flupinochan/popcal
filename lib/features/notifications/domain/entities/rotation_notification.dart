@@ -9,7 +9,7 @@ class RotationNotification {
   final DateTime notificationTime;
   // 通知メンバー
   final String memberName;
-  final DateTime createdAt;
+  final DateTime rotationStartDate;
 
   const RotationNotification({
     required this.notificationId,
@@ -18,7 +18,7 @@ class RotationNotification {
     required this.rotationName,
     required this.notificationTime,
     required this.memberName,
-    required this.createdAt,
+    required this.rotationStartDate,
   });
 
   /// 通知タイトル

@@ -240,5 +240,26 @@ final createRotationGroupUseCaseProvider =
 // ignore: unused_element
 typedef CreateRotationGroupUseCaseRef =
     AutoDisposeProviderRef<CreateRotationGroupUseCase>;
+String _$updateRotationGroupUseCaseHash() =>
+    r'ac0429c3ef02d6ea9cb5c7b3c576478bc3a5603a';
+
+/// See also [updateRotationGroupUseCase].
+@ProviderFor(updateRotationGroupUseCase)
+final updateRotationGroupUseCaseProvider =
+    AutoDisposeProvider<UpdateRotationGroupUseCase>.internal(
+      updateRotationGroupUseCase,
+      name: r'updateRotationGroupUseCaseProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$updateRotationGroupUseCaseHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UpdateRotationGroupUseCaseRef =
+    AutoDisposeProviderRef<UpdateRotationGroupUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

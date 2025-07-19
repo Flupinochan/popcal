@@ -111,7 +111,7 @@ class FirebaseRotationDatasource {
         notificationTime: dto.notificationTime,
         currentRotationIndex: dto.currentRotationIndex,
         lastScheduledDate: dto.lastScheduledDate,
-        createdAt: dto.createdAt,
+        rotationStartDate: dto.rotationStartDate,
         updatedAt: dto.updatedAt,
       );
 

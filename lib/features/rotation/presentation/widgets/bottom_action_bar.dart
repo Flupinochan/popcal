@@ -1,14 +1,18 @@
+// lib/features/rotation/presentation/widgets/bottom_action_bar.dart
+
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
 class BottomActionBar extends StatelessWidget {
   final bool isLoading;
+  final bool isUpdateMode;
   final VoidCallback onCancel;
   final VoidCallback onSubmit;
 
   const BottomActionBar({
     super.key,
     this.isLoading = false,
+    this.isUpdateMode = false,
     required this.onCancel,
     required this.onSubmit,
   });
@@ -111,7 +115,7 @@ class BottomActionBar extends StatelessWidget {
                               ),
                             )
                             : Text(
-                              "作成",
+                              isUpdateMode ? "更新" : "作成",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,

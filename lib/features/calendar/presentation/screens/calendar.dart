@@ -75,7 +75,7 @@ class CalendarScreen extends HookConsumerWidget {
           );
 
           // ローテーション作成日から1年分の期間を設定
-          final startDate = rotationGroup.createdAt;
+          final startDate = rotationGroup.rotationStartDate;
           final endDate = startDate.add(const Duration(days: 365));
 
           final result = notificationRepository.calculateCalendarDetails(

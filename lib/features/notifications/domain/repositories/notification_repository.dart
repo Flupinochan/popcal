@@ -1,7 +1,11 @@
+// lib/features/notifications/domain/repositories/notification_repository.dart
+
+import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
 
 abstract class NotificationRepository {
@@ -28,6 +32,11 @@ abstract class NotificationRepository {
   /// ※rotationGroupIdのみで十分
   Future<Result<void>> deleteNotification(int notificationId);
 
+  /// 特定のrotationGroupIdの通知を削除(キャンセル)
+  Future<Result<void>> deleteNotificationsByRotationGroupId(
+    String rotationGroupId,
+  );
+
   /// 5. 全通知を削除(キャンセル)
   Future<Result<void>> deleteNotifications();
 
@@ -38,6 +47,13 @@ abstract class NotificationRepository {
   Result<RotationCalculationResult> calculateNotificationSchedule({
     required RotationGroup rotationGroup,
     int daysAhead = 30,
+  });
+
+  /// 最初の通知予定日を取得
+  Result<DateTime?> getFirstNotificationDate({
+    required List<Weekday> rotationDays,
+    required TimeOfDay notificationTime,
+    DateTime? fromDate,
   });
 
   /// RotationGroupから1年分の通知情報(Calendar表示用)を作成

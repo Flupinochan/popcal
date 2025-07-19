@@ -14,7 +14,7 @@ class RotationGroup {
   final int currentRotationIndex;
   // 最後の通知設定日 => 直近30日分を常に更新して通知設定するため
   final DateTime lastScheduledDate;
-  final DateTime createdAt;
+  final DateTime rotationStartDate;
   final DateTime updatedAt;
 
   const RotationGroup({
@@ -26,9 +26,9 @@ class RotationGroup {
     required this.notificationTime,
     this.currentRotationIndex = 0,
     DateTime? lastScheduledDate,
-    required this.createdAt,
+    required this.rotationStartDate,
     required this.updatedAt,
-  }) : lastScheduledDate = lastScheduledDate ?? createdAt;
+  }) : lastScheduledDate = lastScheduledDate ?? rotationStartDate;
 
   // 特定の値を更新するために利用
   RotationGroup copyWith({
@@ -40,7 +40,7 @@ class RotationGroup {
     TimeOfDay? notificationTime,
     int? currentRotationIndex,
     DateTime? lastScheduledDate,
-    DateTime? createdAt,
+    DateTime? rotationStartDate,
     DateTime? updatedAt,
   }) {
     return RotationGroup(
@@ -52,7 +52,7 @@ class RotationGroup {
       notificationTime: notificationTime ?? this.notificationTime,
       currentRotationIndex: currentRotationIndex ?? this.currentRotationIndex,
       lastScheduledDate: lastScheduledDate ?? this.lastScheduledDate,
-      createdAt: createdAt ?? this.createdAt,
+      rotationStartDate: rotationStartDate ?? this.rotationStartDate,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

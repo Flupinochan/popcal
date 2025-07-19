@@ -51,7 +51,7 @@ class HomeViewModel extends _$HomeViewModel {
     // rotationGroupIdをnullにして新規作成として扱う
     final rotationGroupToCreate = rotationGroup.copyWith(
       rotationGroupId: null,
-      createdAt: DateTime.now().toLocal(),
+      rotationStartDate: DateTime.now().toLocal(),
       updatedAt: DateTime.now().toLocal(),
     );
 

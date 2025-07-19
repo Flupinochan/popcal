@@ -25,7 +25,7 @@ service cloud.firestore {
     function hasValidSchema(data) {
       let requiredFields = ['ownerUserId', 'rotationName', 'rotationMembers', 
                            'rotationDays', 'notificationTime', 'currentRotationIndex',
-                           'lastScheduledDate', 'createdAt', 'updatedAt'];
+                           'lastScheduledDate', 'rotationStartDate', 'updatedAt'];
       return data.keys().hasOnly(requiredFields);
     }
 
