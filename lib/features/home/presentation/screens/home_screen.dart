@@ -216,6 +216,11 @@ class HomeScreen extends HookConsumerWidget {
                     Routes.calendarPath(rotationGroup.rotationGroupId!),
                   );
                 },
+                onEdit: () {
+                  context.push(
+                    Routes.rotationUpdatePath(rotationGroup.rotationGroupId!),
+                  );
+                },
                 onDelete:
                     () => _handleDelete(
                       context,
