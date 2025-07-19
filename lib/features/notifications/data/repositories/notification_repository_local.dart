@@ -133,6 +133,43 @@ class NotificationRepositoryLocal implements NotificationRepository {
     }
   }
 
+  /// RotationGroupから1年分の通知情報(Calendar表示用)を作成
+  @override
+  Result<List<NotificationDetail>> calculateCalendarDetails({
+    required RotationGroup rotationGroup,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    try {
+      if (rotationGroup.rotationGroupId == null) {
+        return Results.failure(ValidationFailure('ローテーションIDが未初期化です'));
+      }
+
+      // 既存の_generateNotificationsメソッドを流用
+      final result = _generateNotifications(
+        rotationGroup: rotationGroup,
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      // RotationNotification → NotificationDetail に変換
+      final details =
+          result.notifications.map((notification) {
+            return NotificationDetail(
+              notificationId: notification.notificationId,
+              date: notification.notificationDate, // notificationDateプロパティを使用
+              memberName: notification.memberName,
+              title: notification.title,
+              body: notification.message,
+            );
+          }).toList();
+
+      return Results.success(details);
+    } catch (e) {
+      return Results.failure(NetworkFailure('カレンダー詳細の計算に失敗しました: $e'));
+    }
+  }
+
   RotationCalculationResult _generateNotifications({
     required RotationGroup rotationGroup,
     required DateTime startDate,

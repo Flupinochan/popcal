@@ -67,6 +67,34 @@ class CalendarScreen extends HookConsumerWidget {
         if (rotationGroup == null) {
           return _buildErrorScreen(context, 'ローテーション情報が見つかりません');
         }
+
+        // ローテーション作成日から1年分を計算
+        useEffect(() {
+          final notificationRepository = ref.read(
+            notificationRepositoryProvider,
+          );
+
+          // ローテーション作成日から1年分の期間を設定
+          final startDate = rotationGroup.createdAt;
+          final endDate = startDate.add(const Duration(days: 365));
+
+          final result = notificationRepository.calculateCalendarDetails(
+            rotationGroup: rotationGroup,
+            startDate: startDate,
+            endDate: endDate,
+          );
+
+          result.when(
+            success: (details) {
+              notificationDetails.value = details;
+            },
+            failure: (error) {
+              print('カレンダー詳細の計算に失敗: $error');
+            },
+          );
+          return null;
+        }, [rotationGroup.rotationGroupId]);
+
         return _buildCalendarScreen(
           context,
           rotationGroup,

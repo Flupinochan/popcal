@@ -40,6 +40,13 @@ abstract class NotificationRepository {
     int daysAhead = 30,
   });
 
+  /// RotationGroupから1年分の通知情報(Calendar表示用)を作成
+  Result<List<NotificationDetail>> calculateCalendarDetails({
+    required RotationGroup rotationGroup,
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   /// 2-2. 通知予定のスケジュールを一覧取得 (Calendar表示用)
   Future<Result<List<NotificationDetail>>> getNotificationDetails();
 }
