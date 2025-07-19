@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/dto/notification_payload_dto.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -44,23 +45,6 @@ class LocalNotificationsDatasource {
       return Results.success(null);
     } catch (error) {
       return Results.failure(NotificationFailure('初期化に失敗しました: $error'));
-    }
-  }
-
-  /// 通知タップ時の処理
-  void _handleNotificationTap(String? payload) {
-    if (payload != null) {
-      try {
-        final notificationPayload = NotificationPayloadDtoJsonX.fromJsonString(
-          payload,
-        );
-        _router.push(
-          Routes.rotationUpdatePath(notificationPayload.rotationGroupId),
-        );
-      } catch (e) {
-        // JSON解析に失敗した場合
-        _router.push(Routes.rotationUpdatePath(payload));
-      }
     }
   }
 
@@ -228,6 +212,62 @@ class LocalNotificationsDatasource {
       return Results.success(null);
     } catch (error) {
       return Results.failure(NotificationFailure('通知一覧の取得に失敗しました: $error'));
+    }
+  }
+
+  /// 2-2. 通知予定のスケジュールを一覧取得 (Calendar表示用)
+  Future<Result<List<NotificationDetail>>> getNotificationDetails() async {
+    try {
+      final List<PendingNotificationRequest> pendingNotifications =
+          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+      final List<NotificationDetail> details =
+          pendingNotifications.map((notification) {
+            // 通知IDから日付を復元（yyyyMMdd形式）
+            final dateInt = notification.id;
+            final year = dateInt ~/ 10000;
+            final month = (dateInt % 10000) ~/ 100;
+            final day = dateInt % 100;
+
+            final date = DateTime(year, month, day);
+
+            // bodyから担当者名を抽出「今日は{memberName}の番です」
+            String memberName = '';
+            if (notification.body != null) {
+              final bodyText = notification.body!;
+              final match = RegExp(r'今日は(.+)の番です').firstMatch(bodyText);
+              if (match != null) {
+                memberName = match.group(1) ?? '';
+              }
+            }
+
+            return NotificationDetail(
+              notificationId: notification.id,
+              date: date,
+              memberName: memberName,
+              title: notification.title ?? '',
+              body: notification.body ?? '',
+            );
+          }).toList();
+
+      return Results.success(details);
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知詳細の取得に失敗しました: $error'));
+    }
+  }
+
+  /// 通知タップ時の処理
+  void _handleNotificationTap(String? payload) {
+    if (payload != null) {
+      try {
+        final notificationPayload = NotificationPayloadDtoJsonX.fromJsonString(
+          payload,
+        );
+        _router.push(Routes.calendarPath(notificationPayload.rotationGroupId));
+      } catch (e) {
+        // JSON解析に失敗した場合
+        _router.push(Routes.calendarPath(payload));
+      }
     }
   }
 }

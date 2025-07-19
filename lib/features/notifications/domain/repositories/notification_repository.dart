@@ -1,4 +1,5 @@
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
@@ -38,4 +39,7 @@ abstract class NotificationRepository {
     required RotationGroup rotationGroup,
     int daysAhead = 30,
   });
+
+  /// 2-2. 通知予定のスケジュールを一覧取得 (Calendar表示用)
+  Future<Result<List<NotificationDetail>>> getNotificationDetails();
 }

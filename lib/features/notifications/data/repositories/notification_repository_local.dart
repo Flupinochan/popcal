@@ -1,6 +1,7 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
@@ -92,6 +93,16 @@ class NotificationRepositoryLocal implements NotificationRepository {
         await _localNotificationsDatasource.logPendingNotifications();
     return result.when(
       success: (_) => Results.success(null),
+      failure: (error) => Results.failure(error),
+    );
+  }
+
+  /// 2-2. 通知予定のスケジュールを一覧取得 (Calendar表示用)
+  @override
+  Future<Result<List<NotificationDetail>>> getNotificationDetails() async {
+    final result = await _localNotificationsDatasource.getNotificationDetails();
+    return result.when(
+      success: (details) => Results.success(details),
       failure: (error) => Results.failure(error),
     );
   }
