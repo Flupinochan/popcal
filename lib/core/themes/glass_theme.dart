@@ -9,6 +9,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
   const GlassTheme({
     required this.blur, // ぼかし強度
     required this.borderColor, // 境界線の色
+    required this.borderColorStrong,
     required this.borderWidth, // 境界線の太さ
     required this.borderRadius, // 角の丸み
     required this.backgroundGradient, // 背景グラデーション
@@ -17,6 +18,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
 
   final double blur;
   final Color borderColor;
+  final Color borderColorStrong;
   final double borderWidth;
   final double borderRadius;
   final LinearGradient backgroundGradient;
@@ -27,6 +29,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
   GlassTheme copyWith({
     double? blur,
     Color? borderColor,
+    Color? borderColorStrong,
     double? borderWidth,
     double? borderRadius,
     LinearGradient? backgroundGradient,
@@ -35,6 +38,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     return GlassTheme(
       blur: blur ?? this.blur,
       borderColor: borderColor ?? this.borderColor,
+      borderColorStrong: borderColorStrong ?? this.borderColorStrong,
       borderWidth: borderWidth ?? this.borderWidth,
       borderRadius: borderRadius ?? this.borderRadius,
       backgroundGradient: backgroundGradient ?? this.backgroundGradient,
@@ -51,6 +55,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     return GlassTheme(
       blur: lerpDouble(blur, other.blur, t)!,
       borderColor: Color.lerp(borderColor, other.borderColor, t)!,
+      borderColorStrong:
+          Color.lerp(borderColorStrong, other.borderColorStrong, t)!,
       borderWidth: lerpDouble(borderWidth, other.borderWidth, t)!,
       borderRadius: lerpDouble(borderRadius, other.borderRadius, t)!,
       backgroundGradient:
@@ -68,6 +74,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
   static final defaultTheme = GlassTheme(
     blur: 20.0,
     borderColor: Colors.white.withValues(alpha: 0.2),
+    borderColorStrong: Colors.white.withValues(alpha: 0.4),
     borderWidth: 1.0,
     borderRadius: 12.0,
     backgroundGradient: LinearGradient(

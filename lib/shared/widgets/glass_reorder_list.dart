@@ -22,6 +22,7 @@ class GlassReorderList extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       itemCount: items.length,
       onReorder: onReorder,
+      // 並べ替え時のスタイル
       proxyDecorator: (child, index, animation) {
         return AnimatedBuilder(
           animation: animation,
@@ -100,6 +101,7 @@ class GlassReorderList extends StatelessWidget {
           },
         );
       },
+      // 通常時のスタイル
       itemBuilder: (context, index) {
         return GlassmorphicContainer(
           key: ValueKey(items[index]),

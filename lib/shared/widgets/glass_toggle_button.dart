@@ -29,6 +29,7 @@ class GlassToggleButton extends StatelessWidget {
       height: height,
       showBorder: isSelected,
       gradient: isSelected ? glass.backgroundGradientStrong : null,
+      borderColor: glass.borderColorStrong,
       child: Material(
         color: Colors.transparent,
         child: InkWell(

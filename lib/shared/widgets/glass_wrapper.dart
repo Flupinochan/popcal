@@ -12,6 +12,7 @@ class GlassWrapper extends StatelessWidget {
   final EdgeInsets? margin;
   final AlignmentGeometry alignment;
   final bool showBorder;
+  final Color? borderColor;
   final Gradient? gradient;
 
   const GlassWrapper({
@@ -23,6 +24,7 @@ class GlassWrapper extends StatelessWidget {
     this.margin,
     this.alignment = Alignment.center,
     this.showBorder = true,
+    this.borderColor,
     this.gradient,
   });
 
@@ -50,7 +52,7 @@ class GlassWrapper extends StatelessWidget {
               border:
                   showBorder
                       ? Border.all(
-                        color: glass.borderColor,
+                        color: borderColor ?? glass.borderColor,
                         width: glass.borderWidth,
                       )
                       : null,
