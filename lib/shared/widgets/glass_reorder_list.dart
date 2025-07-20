@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassReorderList extends StatelessWidget {
   final List<String> items;
@@ -27,147 +29,93 @@ class GlassReorderList extends StatelessWidget {
         return AnimatedBuilder(
           animation: animation,
           builder: (context, child) {
-            return Transform.scale(
-              scale: 1.05,
-              child: GlassmorphicContainer(
-                width: double.infinity,
-                height: 64,
-                borderRadius: 12,
-                blur: 20,
-                alignment: Alignment.center,
-                border: 1,
-                linearGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    const Color(0xFFffffff).withOpacity(0.15),
-                    const Color(0xFFffffff).withOpacity(0.1),
-                  ],
-                  stops: const [0.1, 1],
-                ),
-                borderGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white.withOpacity(0.4),
-                    Colors.white.withOpacity(0.4),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${index + 1}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          items[index],
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          color: Colors.white.withOpacity(0.8),
-                          size: 20,
-                        ),
-                        onPressed: () => onDelete(index),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            return _GlassReorderItem(
+              key: ValueKey(items[index]),
+              index: index,
+              item: items[index],
+              onDelete: () => onDelete(index),
+              isDragging: true,
             );
           },
         );
       },
       // 通常時のスタイル
       itemBuilder: (context, index) {
-        return GlassmorphicContainer(
+        return _GlassReorderItem(
           key: ValueKey(items[index]),
-          width: double.infinity,
-          height: 64,
-          borderRadius: 12,
-          blur: 20,
-          alignment: Alignment.center,
-          border: 0,
-          margin: EdgeInsets.only(bottom: 8),
-          linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFFffffff).withOpacity(0.1),
-              const Color(0xFFffffff).withOpacity(0.05),
-            ],
-            stops: const [0.1, 1],
-          ),
-          borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.transparent, Colors.transparent],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${index + 1}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    items[index],
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: Colors.white.withOpacity(0.8),
-                    size: 20,
-                  ),
-                  onPressed: () => onDelete(index),
-                ),
-              ],
-            ),
-          ),
+          index: index,
+          item: items[index],
+          onDelete: () => onDelete(index),
+          isDragging: false,
         );
       },
+    );
+  }
+}
+
+class _GlassReorderItem extends StatelessWidget {
+  final int index;
+  final String item;
+  final VoidCallback onDelete;
+  final bool isDragging;
+
+  const _GlassReorderItem({
+    super.key,
+    required this.index,
+    required this.item,
+    required this.onDelete,
+    required this.isDragging,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+
+    // reorder時はスタイル変更
+    return Transform.scale(
+      // スケール1.05
+      scale: isDragging ? 1.05 : 1.0,
+      child: GlassWrapper(
+        key: ValueKey(item),
+        // border表示
+        showBorder: isDragging,
+        // 背景濃く
+        gradient:
+            isDragging
+                ? glass.backgroundGradientStrong
+                : glass.backgroundGradient,
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            // メンバーIndex (数字)
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(
+                child: Text(
+                  '${index + 1}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+            ),
+            SizedBox(width: 16),
+            // メンバー名
+            Expanded(
+              child: Text(item, style: Theme.of(context).textTheme.bodyLarge),
+            ),
+            // 削除ボタン
+            IconButton(
+              icon: Icon(Icons.close, color: glass.iconColor, size: 20),
+              onPressed: () => onDelete,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

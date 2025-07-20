@@ -55,7 +55,7 @@ class GlassFormList extends HookWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 18),
             // chip Listの表示
             GlassReorderList(
               items: items.value,

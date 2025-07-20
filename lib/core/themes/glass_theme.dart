@@ -12,6 +12,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     required this.borderColorStrong,
     required this.borderWidth, // 境界線の太さ
     required this.borderRadius, // 角の丸み
+    required this.iconColor, // IconColor
     required this.backgroundGradient, // 背景グラデーション
     required this.backgroundGradientStrong,
   });
@@ -21,6 +22,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
   final Color borderColorStrong;
   final double borderWidth;
   final double borderRadius;
+  final Color iconColor;
   final LinearGradient backgroundGradient;
   final LinearGradient backgroundGradientStrong;
 
@@ -32,6 +34,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     Color? borderColorStrong,
     double? borderWidth,
     double? borderRadius,
+    Color? iconColor,
     LinearGradient? backgroundGradient,
     LinearGradient? backgroundGradientStrong,
   }) {
@@ -41,6 +44,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
       borderColorStrong: borderColorStrong ?? this.borderColorStrong,
       borderWidth: borderWidth ?? this.borderWidth,
       borderRadius: borderRadius ?? this.borderRadius,
+      iconColor: iconColor ?? this.iconColor,
       backgroundGradient: backgroundGradient ?? this.backgroundGradient,
       backgroundGradientStrong:
           backgroundGradientStrong ?? this.backgroundGradientStrong,
@@ -59,6 +63,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
           Color.lerp(borderColorStrong, other.borderColorStrong, t)!,
       borderWidth: lerpDouble(borderWidth, other.borderWidth, t)!,
       borderRadius: lerpDouble(borderRadius, other.borderRadius, t)!,
+      iconColor: Color.lerp(iconColor, other.iconColor, t)!,
       backgroundGradient:
           LinearGradient.lerp(backgroundGradient, other.backgroundGradient, t)!,
       backgroundGradientStrong:
@@ -77,6 +82,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     borderColorStrong: Colors.white.withValues(alpha: 0.4),
     borderWidth: 1.0,
     borderRadius: 12.0,
+    iconColor: Colors.white.withValues(alpha: 0.8),
     backgroundGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,

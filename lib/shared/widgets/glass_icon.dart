@@ -7,7 +7,7 @@ class GlassIcon extends StatelessWidget {
   final IconData iconData;
   final double iconSize;
   final double? backgroundSize;
-  final Color iconColor;
+  final Color? iconColor;
   final EdgeInsets? margin;
   final bool showBorder;
 
@@ -15,7 +15,7 @@ class GlassIcon extends StatelessWidget {
     super.key,
     required this.iconData,
     this.iconSize = 24,
-    this.iconColor = Colors.white,
+    this.iconColor,
     this.backgroundSize,
     this.margin,
     this.showBorder = false,
@@ -28,10 +28,13 @@ class GlassIcon extends StatelessWidget {
     final size = backgroundSize ?? (iconSize * 2);
     // 背景色を少し濃い目の白
     final iconTheme = glass.copyWith(
-      backgroundGradient: const LinearGradient(
+      backgroundGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [Color(0x40FFFFFF), Color(0x20FFFFFF)],
+        colors: [
+          Colors.white.withValues(alpha: 0.25),
+          Colors.white.withValues(alpha: 0.125),
+        ],
       ),
     );
 
@@ -55,7 +58,7 @@ class GlassIcon extends StatelessWidget {
                       )
                       : null,
             ),
-            child: Icon(iconData, size: iconSize, color: iconColor),
+            child: Icon(iconData, size: iconSize, color: glass.iconColor),
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 /// ガラス風Button Widget
@@ -19,7 +20,7 @@ class GlassButton extends StatelessWidget {
     this.textStyle,
     this.iconData,
     this.iconSize = 24,
-    this.iconColor = Colors.white,
+    this.iconColor,
     this.backgroundSize,
     required this.onPressed,
     this.width,
@@ -28,6 +29,7 @@ class GlassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<GlassTheme>()!;
     Widget child;
 
     // テキスト・アイコンで分岐
@@ -38,7 +40,7 @@ class GlassButton extends StatelessWidget {
         style: textStyle ?? Theme.of(context).textTheme.bodyLarge,
       );
     } else {
-      child = Icon(iconData!, size: iconSize, color: iconColor);
+      child = Icon(iconData!, size: iconSize, color: glass.iconColor);
     }
 
     return GlassWrapper(
