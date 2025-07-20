@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/logger/logger.dart';
+import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/router/router.dart';
@@ -15,7 +14,7 @@ import 'package:timezone/data/latest_all.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  /// ロガー設定
+  /// ロガー初期化
   setupLogging();
   final Logger logger = Logger("main");
 
@@ -29,7 +28,7 @@ void main() async {
       // debug環境では、エラーの赤い画面を表示
       FlutterError.presentError(details);
       if (details.stack != null) {
-        logger.severe(Trace.from(details.stack!).terse);
+        logger.severe("Widgetで予期せぬエラーが発生", Trace.from(details.stack!).terse);
       }
     }
     // release環境では、エラーを表示せず続行
@@ -41,7 +40,7 @@ void main() async {
   ///   処理が複雑で他のエラー処理と競合しバグが発生しやすいため
   PlatformDispatcher.instance.onError = (error, stack) {
     if (kDebugMode) {
-      logger.severe(Trace.from(stack));
+      logger.severe("非同期処理で予期せぬエラーが発生", Trace.from(stack));
       return false;
     } else {
       // コンソールへエラー出力しない
@@ -57,6 +56,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // RiverPod Scope
+  logger.info("runApp実行");
   runApp(ProviderScope(child: MainApp()));
 }
 
@@ -80,10 +80,7 @@ class MainApp extends ConsumerWidget {
 
         return MaterialApp.router(
           themeMode: ThemeMode.system,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-            useMaterial3: true,
-          ),
+          theme: AppTheme.lightTheme,
           routerConfig: router,
         );
       },

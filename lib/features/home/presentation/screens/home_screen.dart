@@ -49,6 +49,7 @@ class HomeScreen extends HookConsumerWidget {
       () async {
         await notificationProvider.initializeNotificationLaunch();
       }();
+      return null;
     }, []);
 
     // 🔥 通知同期処理
@@ -193,13 +194,7 @@ class HomeScreen extends HookConsumerWidget {
     HomeViewModel homeViewModel,
   ) {
     if (rotationGroups.isEmpty) {
-      return EmptyState(
-        title: 'ローテーションがありません',
-        description: '新しいローテーションを作成してみましょう',
-        icon: Icons.group_add,
-        onAction: () => context.push(Routes.rotation),
-        actionText: '作成',
-      );
+      return EmptyState();
     }
 
     return CustomScrollView(
