@@ -1,5 +1,3 @@
-// lib/features/rotation/presentation/screens/rotation_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,12 +10,10 @@ import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
 import 'package:popcal/features/rotation/presentation/widgets/bottom_action_bar.dart';
-import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_form_list.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
-import 'package:popcal/features/rotation/presentation/widgets/form_time_selector.dart';
-import 'package:popcal/features/rotation/presentation/widgets/form_weekday_selector.dart';
-import 'package:popcal/features/rotation/presentation/widgets/section_label.dart';
+import 'package:popcal/shared/widgets/glass_form_time.dart';
+import 'package:popcal/shared/widgets/glass_form_weekday.dart';
 
 class RotationScreen extends HookConsumerWidget {
   final String? rotationGroupId;
@@ -270,7 +266,6 @@ class RotationScreen extends HookConsumerWidget {
         ),
         child: FormBuilder(
           key: formKey,
-          // 編集モードでもフォームを有効にする
           enabled: true,
           child: Padding(
             padding: const EdgeInsets.only(top: 100.0, bottom: 90),
@@ -279,13 +274,13 @@ class RotationScreen extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
+                  // ローテーション名
                   Text(
                     'ローテーション名',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
-                  // Rotation Name
+                  // ローテーション名を入力
                   GlassFormText(
                     name: 'rotationName',
                     initialValue: initialRotationGroup?.rotationName,
@@ -295,7 +290,7 @@ class RotationScreen extends HookConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Member Input/List
+                  // メンバー名を入力
                   GlassFormList(
                     name: 'rotationMembers',
                     hintText: 'メンバー名を入力',
@@ -308,17 +303,20 @@ class RotationScreen extends HookConsumerWidget {
                     },
                   ),
                   const SizedBox(height: 24),
-                  // Rotation Date
-                  const SectionLabel('ローテーション曜日'),
-                  const SizedBox(height: 8),
-                  FormWeekdaySelector(
+                  // ローテーション曜日
+                  Text(
+                    'ローテーション曜日',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  GlassFormWeekday(
                     initialValue: initialRotationGroup?.rotationDays,
                   ),
                   const SizedBox(height: 24),
-                  // Notification Time
-                  const SectionLabel('通知時刻'),
-                  const SizedBox(height: 8),
-                  FormTimeSelector(
+                  // 通知時刻
+                  Text('通知時刻', style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 16),
+                  GlassFormTime(
                     initialValue: initialRotationGroup?.notificationTime,
                   ),
                 ],

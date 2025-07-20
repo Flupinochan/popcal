@@ -13,6 +13,8 @@ class GlassButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double? width;
   final double? height;
+  final Color? borderColor;
+  final Gradient? gradient;
 
   const GlassButton({
     super.key,
@@ -25,6 +27,8 @@ class GlassButton extends StatelessWidget {
     required this.onPressed,
     this.width,
     this.height,
+    this.borderColor,
+    this.gradient,
   }) : assert(text != null || iconData != null, 'textまたはiconのどちらかを指定してください');
 
   @override
@@ -46,6 +50,8 @@ class GlassButton extends StatelessWidget {
     return GlassWrapper(
       width: text != null ? width : size,
       height: text != null ? height : size,
+      borderColor: borderColor,
+      gradient: gradient,
       child: Material(
         color: Colors.transparent,
         child: InkWell(onTap: onPressed, child: Center(child: child)),
