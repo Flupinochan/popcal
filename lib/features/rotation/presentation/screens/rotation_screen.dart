@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
@@ -11,8 +12,8 @@ import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
 import 'package:popcal/features/rotation/presentation/widgets/bottom_action_bar.dart';
-import 'package:popcal/features/rotation/presentation/widgets/form_list.dart';
-import 'package:popcal/features/rotation/presentation/widgets/form_rotation_name.dart';
+import 'package:popcal/shared/widgets/glass_form_list.dart';
+import 'package:popcal/shared/widgets/glass_form_text.dart';
 import 'package:popcal/features/rotation/presentation/widgets/form_time_selector.dart';
 import 'package:popcal/features/rotation/presentation/widgets/form_weekday_selector.dart';
 import 'package:popcal/features/rotation/presentation/widgets/section_label.dart';
@@ -288,11 +289,16 @@ class RotationScreen extends HookConsumerWidget {
                   const SizedBox(height: 32),
                   const SectionLabel('ローテーション名'),
                   const SizedBox(height: 8),
-                  FormRotationName(
+                  GlassFormText(
+                    name: 'rotationName',
                     initialValue: initialRotationGroup?.rotationName,
+                    hintText: 'ローテーション名を入力',
+                    validator: FormBuilderValidators.required(
+                      errorText: 'ローテーション名を入力してください',
+                    ),
                   ),
                   const SizedBox(height: 24),
-                  FormList(
+                  GlassFormList(
                     name: 'rotationMembers',
                     hintText: 'メンバー名を入力',
                     initialValue: initialRotationGroup?.rotationMembers,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 
-class ReorderList extends StatelessWidget {
+class GlassReorderList extends StatelessWidget {
   final List<String> items;
   final void Function(int, int) onReorder;
   final void Function(int) onDelete;
 
-  const ReorderList({
+  const GlassReorderList({
     super.key,
     required this.items,
     required this.onReorder,

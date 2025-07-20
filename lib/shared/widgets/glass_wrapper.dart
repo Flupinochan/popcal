@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 
-/// Text WidgetなどシンプルなWidgetで使用する共通のガラス風スタイル適用用Wrapper Widget
+/// Text WidgetなどシンプルなWidgetで使用する共通のガラス風スタイル
 class GlassWrapper extends StatelessWidget {
-  // ガラス風スタイルを適用するWidgetを指定
+  // ガラス風スタイルを適用する子Widgetを指定
   final Widget child;
   final double? width;
   final double? height;
@@ -12,6 +12,7 @@ class GlassWrapper extends StatelessWidget {
   final EdgeInsets? margin;
   final AlignmentGeometry alignment;
   final bool showBorder;
+  final Gradient? gradient;
 
   const GlassWrapper({
     super.key,
@@ -22,6 +23,7 @@ class GlassWrapper extends StatelessWidget {
     this.margin,
     this.alignment = Alignment.center,
     this.showBorder = true,
+    this.gradient,
   });
 
   @override
@@ -43,7 +45,7 @@ class GlassWrapper extends StatelessWidget {
             padding: padding,
             // BoxDecoration: 薄白透明背景, 境界線
             decoration: BoxDecoration(
-              gradient: glass.backgroundGradient,
+              gradient: gradient ?? glass.backgroundGradient,
               borderRadius: BorderRadius.circular(glass.borderRadius),
               border:
                   showBorder

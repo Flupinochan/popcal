@@ -8,7 +8,7 @@ class AppTheme {
       textTheme: TextTheme(
         // 大見出し - スクリーンタイトル、Welcomeメッセージ
         headlineLarge: TextStyle(
-          fontSize: 24,
+          fontSize: 28,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
@@ -39,7 +39,7 @@ class AppTheme {
         ),
       ),
       // Glass用スタイル定義
-      extensions: const [GlassTheme.defaultTheme],
+      extensions: [GlassTheme.defaultTheme],
     );
   }
 }

@@ -8,7 +8,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
-import 'package:popcal/features/home/presentation/widgets/empty_state.dart';
+import 'package:popcal/features/home/presentation/widgets/empty_rotation_view.dart';
 import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
 import 'package:popcal/features/home/presentation/view_models/home_view_model.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
@@ -193,8 +193,9 @@ class HomeScreen extends HookConsumerWidget {
     ValueNotifier<RotationGroup?> deletedItem,
     HomeViewModel homeViewModel,
   ) {
+    // ローテーションが1つもない場合
     if (rotationGroups.isEmpty) {
-      return EmptyState();
+      return EmptyRotationView();
     }
 
     return CustomScrollView(

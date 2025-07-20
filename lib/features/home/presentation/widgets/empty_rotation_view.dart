@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:glassmorphism/glassmorphism.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
+import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 /// ローテーションが1つもない場合の画面
-class EmptyState extends StatelessWidget {
-  const EmptyState({super.key});
+class EmptyRotationView extends StatelessWidget {
+  const EmptyRotationView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +20,7 @@ class EmptyState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Icon
-            GlassWrapper(
-              width: 50,
-              height: 50,
-              child: Icon(Icons.group_add, color: Colors.white, size: 30),
-            ),
+            GlassIcon(iconData: Icons.group_add),
             const SizedBox(height: 16),
             // Text1
             Text(
