@@ -10,11 +10,13 @@ class GlassButton extends StatelessWidget {
   final double? iconSize;
   final Color? iconColor;
   final double? backgroundSize;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? width;
   final double? height;
   final Color? borderColor;
   final Gradient? gradient;
+  final bool showBorder;
+  final bool showBackground;
 
   const GlassButton({
     super.key,
@@ -24,11 +26,13 @@ class GlassButton extends StatelessWidget {
     this.iconSize = 24,
     this.iconColor,
     this.backgroundSize,
-    required this.onPressed,
+    this.onPressed,
     this.width,
     this.height,
     this.borderColor,
     this.gradient,
+    this.showBorder = true,
+    this.showBackground = true,
   }) : assert(text != null || iconData != null, 'textまたはiconのどちらかを指定してください');
 
   @override
@@ -51,7 +55,9 @@ class GlassButton extends StatelessWidget {
       width: text != null ? width : size,
       height: text != null ? height : size,
       borderColor: borderColor,
+      showBorder: showBorder,
       gradient: gradient,
+      showBackground: showBackground,
       child: Material(
         color: Colors.transparent,
         child: InkWell(onTap: onPressed, child: Center(child: child)),

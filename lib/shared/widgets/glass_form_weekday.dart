@@ -73,6 +73,7 @@ class GlassFormWeekday extends StatelessWidget {
       width: 44,
       height: 44,
       borderColor: isSelected ? glass.borderColorStrong : glass.borderColor,
+      showBackground: isSelected ? true : false,
       gradient:
           isSelected
               ? glass.backgroundGradientStrong

@@ -3,13 +3,15 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
-import 'package:popcal/features/rotation/presentation/widgets/bottom_action_bar.dart';
+import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
+import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_form_list.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 import 'package:popcal/shared/widgets/glass_form_time.dart';
@@ -22,6 +24,7 @@ class RotationScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final glass = Theme.of(context).extension<GlassTheme>()!;
     final isUpdateMode = rotationGroupId != null;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
@@ -144,6 +147,7 @@ class RotationScreen extends HookConsumerWidget {
         initialRotationGroup: null,
         isLoading: isLoading,
         onSubmit: handleCreateRotationGroup,
+        glass: glass,
       );
     }
 
@@ -169,6 +173,7 @@ class RotationScreen extends HookConsumerWidget {
           initialRotationGroup: rotationGroup,
           isLoading: isLoading,
           onSubmit: () => handleUpdateRotationGroup(rotationGroup),
+          glass: glass,
         );
       },
       loading: () => _buildLoadingScreen(),
@@ -237,38 +242,25 @@ class RotationScreen extends HookConsumerWidget {
     required RotationGroup? initialRotationGroup,
     required bool isLoading,
     required VoidCallback onSubmit,
+    required GlassTheme glass,
   }) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: glass.backgroundColor,
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          isUpdateMode ? 'ローテーションを編集' : 'ローテーションを追加',
-          style: const TextStyle(color: Colors.white),
-        ),
+      appBar: GlassAppBar(
+        title: isUpdateMode ? 'ローテーションを編集' : 'ローテーションを追加',
+        leadingIcon: Icons.close,
+        onLeadingPressed: () => Navigator.pop(context),
       ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
-        child: FormBuilder(
-          key: formKey,
-          enabled: true,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 100.0, bottom: 90),
+        decoration: BoxDecoration(gradient: glass.primaryGradient),
+        child: SafeArea(
+          child: FormBuilder(
+            key: formKey,
+            enabled: true,
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -326,7 +318,7 @@ class RotationScreen extends HookConsumerWidget {
         ),
       ),
       // キャンセル/作成
-      bottomNavigationBar: BottomActionBar(
+      bottomNavigationBar: GlassBottomActionBar(
         isLoading: isLoading,
         isUpdateMode: isUpdateMode,
         onCancel: () => Navigator.pop(context),

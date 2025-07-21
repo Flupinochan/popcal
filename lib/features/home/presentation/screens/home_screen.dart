@@ -3,25 +3,32 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
-import 'package:popcal/features/home/presentation/widgets/empty_rotation_view.dart';
-import 'package:popcal/features/home/presentation/widgets/rotation_list_item.dart';
+import 'package:popcal/features/home/presentation/screens/home_screen_empty.dart';
+import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/home/presentation/view_models/home_view_model.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
+import 'package:popcal/shared/widgets/glass_app_bar.dart';
+import 'package:popcal/shared/widgets/glass_button.dart';
 
 class HomeScreen extends HookConsumerWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final Logger logger = Logger("HomeScreen");
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final glass = Theme.of(context).extension<GlassTheme>()!;
     final notificationProvider = ref.watch(notificationRepositoryProvider);
     final syncUseCase = ref.watch(syncNotificationsUseCaseProvider);
     final homeViewModel = ref.read(homeViewModelProvider.notifier);
@@ -33,18 +40,16 @@ class HomeScreen extends HookConsumerWidget {
       loading: () => null,
       error: (_, __) => null,
     );
-
     final rotationGroupsStream =
         currentUser != null
             ? ref.watch(rotationGroupsStreamProvider(currentUser.uid))
             : AsyncValue<Result<List<RotationGroup>>>.data(
               Results.failure<List<RotationGroup>>(AuthFailure('未認証です')),
             );
-
     // 削除されたアイテムを一時的に保持するstate
     final deletedItem = useState<RotationGroup?>(null);
 
-    // 通知タップから起動した場合の画面遷移
+    // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)
     useEffect(() {
       () async {
         await notificationProvider.initializeNotificationLaunch();
@@ -52,9 +57,11 @@ class HomeScreen extends HookConsumerWidget {
       return null;
     }, []);
 
-    // 🔥 通知同期処理
+    // 通知同期処理
     useEffect(() {
-      notificationProvider.logPendingNotifications();
+      () async {
+        await notificationProvider.logPendingNotifications();
+      }();
       if (currentUser != null) {
         () async {
           await syncUseCase.execute(currentUser.uid);
@@ -64,128 +71,68 @@ class HomeScreen extends HookConsumerWidget {
     }, [currentUser?.uid]);
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: glass.backgroundColor,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          "PopCal",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
+      appBar: GlassAppBar(title: 'PopCal'),
       drawer: const DrawerScreen(),
-      floatingActionButton: GlassmorphicContainer(
+      floatingActionButton: GlassButton(
         width: 56,
         height: 56,
-        borderRadius: 28,
-        blur: 10,
-        alignment: Alignment.center,
-        border: 1,
-        linearGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFFffffff).withOpacity(0.15),
-            const Color(0xFFffffff).withOpacity(0.05),
-          ],
-          stops: const [0.1, 1],
-        ),
-        borderGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white.withOpacity(0.3),
-            Colors.white.withOpacity(0.3),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(28),
-            onTap: () => context.push(Routes.rotation),
-            child: const Center(
-              child: Icon(Icons.add, color: Colors.white, size: 24),
-            ),
-          ),
-        ),
+        iconData: Icons.add,
+        onPressed: () => context.push(Routes.rotation),
       ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: glass.primaryGradient),
         child: SafeArea(
           child: rotationGroupsStream.when(
             data:
                 (result) => result.when(
                   success:
-                      (rotationGroups) => _buildContent(
-                        context,
-                        ref,
-                        rotationGroups,
-                        currentUser,
-                        deletedItem,
-                        homeViewModel,
-                      ),
-                  failure:
-                      (error) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'データの取得に失敗しました',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
+                      (rotationGroups) =>
+                          rotationGroups.isEmpty
+                              ? HomeScreenEmpty()
+                              : _buildHomeScreen(
+                                context,
+                                ref,
+                                rotationGroups,
+                                currentUser,
+                                deletedItem,
+                                homeViewModel,
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              error.toString(),
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  failure: (error) {
+                    logger.severe('データ取得エラー: $error');
+                    return _buildLoadingIndicator(glass, context);
+                  },
                 ),
-            loading:
-                () => const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                ),
-            error:
-                (error, stackTrace) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'エラーが発生しました',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        error.toString(),
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
+            loading: () => _buildLoadingIndicator(glass, context),
+            error: (error, stackTrace) {
+              logger.severe('データ取得エラー: $error, $stackTrace');
+              return _buildLoadingIndicator(glass, context);
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildContent(
+  /// ローディング画面
+  Widget _buildLoadingIndicator(GlassTheme glass, BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(color: glass.surfaceColor, strokeWidth: 3),
+          const SizedBox(height: 16),
+          Text('データを読み込み中...', style: Theme.of(context).textTheme.titleLarge),
+        ],
+      ),
+    );
+  }
+
+  /// ローテーションが1つ以上ある場合の画面
+  Widget _buildHomeScreen(
     BuildContext context,
     WidgetRef ref,
     List<RotationGroup> rotationGroups,
@@ -193,11 +140,6 @@ class HomeScreen extends HookConsumerWidget {
     ValueNotifier<RotationGroup?> deletedItem,
     HomeViewModel homeViewModel,
   ) {
-    // ローテーションが1つもない場合
-    if (rotationGroups.isEmpty) {
-      return EmptyRotationView();
-    }
-
     return CustomScrollView(
       slivers: [
         SliverPadding(
@@ -205,7 +147,7 @@ class HomeScreen extends HookConsumerWidget {
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               final rotationGroup = rotationGroups[index];
-              return RotationListItem(
+              return GlassListItem(
                 rotationGroup: rotationGroup,
                 onTap: () {
                   context.push(

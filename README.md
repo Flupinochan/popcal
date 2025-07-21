@@ -112,3 +112,7 @@ firebase deploy --only firestore:rules --dry-run
 # deploy security rules
 firebase deploy --only firestore:rules
 ```
+
+### コメントアウト
+
+「///」でvscode補完時に説明が表示されるため、「//」は基本的に使用しない

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/shared/widgets/glass_button.dart';
+import 'package:popcal/shared/widgets/glass_icon.dart';
+import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
-class RotationListItem extends StatelessWidget {
+class GlassListItem extends StatelessWidget {
   final RotationGroup rotationGroup;
   final VoidCallback? onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
-  const RotationListItem({
+  const GlassListItem({
     super.key,
     required this.rotationGroup,
     this.onTap,
@@ -18,90 +22,35 @@ class RotationListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Dismissible(
         key: Key(rotationGroup.rotationGroupId ?? ''),
         direction: DismissDirection.horizontal,
-        background: Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          child: GlassmorphicContainer(
-            width: double.infinity,
-            height: 80,
-            borderRadius: 16,
-            blur: 20,
-            alignment: Alignment.centerRight,
-            border: 1,
-            linearGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.red.withOpacity(0.3),
-                Colors.red.withOpacity(0.1),
-              ],
-              stops: const [0.1, 1],
-            ),
-            borderGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.red.withOpacity(0.4),
-                Colors.red.withOpacity(0.4),
-              ],
-            ),
-          ),
+        // Dismissによる削除時の背景色
+        background: GlassWrapper(
+          borderColor: glass.errorBorderColor,
+          gradient: glass.errorGradient,
+          child: const SizedBox.shrink(),
         ),
         confirmDismiss: (direction) async {
           onDelete?.call();
           return false;
         },
-        child: GlassmorphicContainer(
-          width: double.infinity,
-          height: 80,
-          borderRadius: 16,
-          blur: 20,
-          alignment: Alignment.center,
-          border: 1,
-          linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFFffffff).withOpacity(0.15),
-              const Color(0xFFffffff).withOpacity(0.05),
-            ],
-            stops: const [0.1, 1],
-          ),
-          borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withOpacity(0.3),
-              Colors.white.withOpacity(0.3),
-            ],
-          ),
+        // Item
+        child: GlassWrapper(
           child: Material(
-            color: Colors.transparent,
+            color: glass.backgroundColor,
             child: InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(16),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
                     // アイコン
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      child: const Icon(
-                        Icons.group,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
+                    GlassIcon(iconData: Icons.group),
                     const SizedBox(width: 16),
                     // テキスト情報
                     Expanded(
@@ -109,29 +58,28 @@ class RotationListItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          // RotationGroupName
                           Text(
                             rotationGroup.rotationName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium,
+                            // 1行に制限
                             maxLines: 1,
+                            // はみ出し部分を...で表示
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
+                          // MemberNameList
                           Text(
-                            '${rotationGroup.rotationMembers.length}人のメンバー',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 12,
-                            ),
+                            rotationGroup.rotationMembers.join(', '),
+                            style: Theme.of(context).textTheme.bodySmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
                     ),
-                    // カスタム PopupMenu ボタン
-                    _buildCustomPopupMenu(context),
+                    // ポップアップボタン (編集/削除)
+                    _buildPopupButton(context),
                   ],
                 ),
               ),
@@ -142,23 +90,12 @@ class RotationListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomPopupMenu(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => _showCustomMenu(context),
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          child: Icon(
-            Icons.more_vert,
-            color: Colors.white.withOpacity(0.8),
-            size: 20,
-          ),
-        ),
-      ),
+  Widget _buildPopupButton(BuildContext context) {
+    return GlassButton(
+      showBorder: false,
+      showBackground: false,
+      iconData: Icons.more_vert,
+      onPressed: () => _showCustomMenu(context),
     );
   }
 

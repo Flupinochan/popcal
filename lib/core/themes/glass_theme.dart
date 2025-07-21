@@ -15,6 +15,14 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     required this.iconColor, // IconColor
     required this.backgroundGradient, // 背景グラデーション
     required this.backgroundGradientStrong,
+    required this.transparentGradient,
+    required this.primaryColor,
+    required this.secondaryColor,
+    required this.primaryGradient,
+    required this.surfaceColor,
+    required this.backgroundColor,
+    required this.errorBorderColor,
+    required this.errorGradient,
   });
 
   final double blur;
@@ -25,6 +33,21 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
   final Color iconColor;
   final LinearGradient backgroundGradient;
   final LinearGradient backgroundGradientStrong;
+  final LinearGradient transparentGradient;
+  final Color primaryColor;
+  final Color secondaryColor;
+
+  /// 青紫背景色
+  final LinearGradient primaryGradient;
+
+  /// 白
+  final Color surfaceColor;
+
+  /// 透明
+  final Color backgroundColor;
+
+  final Color errorBorderColor;
+  final LinearGradient errorGradient;
 
   /// デフォルトのテーマのプロパティをオーバーライドしてスタイルを適用するためのメソッド
   @override
@@ -37,6 +60,14 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     Color? iconColor,
     LinearGradient? backgroundGradient,
     LinearGradient? backgroundGradientStrong,
+    LinearGradient? transparentGradient,
+    Color? primaryColor,
+    Color? secondaryColor,
+    LinearGradient? primaryGradient,
+    Color? surfaceColor,
+    Color? backgroundColor,
+    Color? errorBorderColor,
+    LinearGradient? errorGradient,
   }) {
     return GlassTheme(
       blur: blur ?? this.blur,
@@ -48,6 +79,14 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
       backgroundGradient: backgroundGradient ?? this.backgroundGradient,
       backgroundGradientStrong:
           backgroundGradientStrong ?? this.backgroundGradientStrong,
+      transparentGradient: transparentGradient ?? this.transparentGradient,
+      primaryColor: primaryColor ?? this.primaryColor,
+      secondaryColor: secondaryColor ?? this.secondaryColor,
+      primaryGradient: primaryGradient ?? this.primaryGradient,
+      surfaceColor: surfaceColor ?? this.surfaceColor,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      errorBorderColor: errorBorderColor ?? this.borderColor,
+      errorGradient: errorGradient ?? this.errorGradient,
     );
   }
 
@@ -72,6 +111,22 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
             other.backgroundGradientStrong,
             t,
           )!,
+      transparentGradient:
+          LinearGradient.lerp(
+            transparentGradient,
+            other.transparentGradient,
+            t,
+          )!,
+      primaryColor: Color.lerp(primaryColor, other.primaryColor, t)!,
+      secondaryColor: Color.lerp(secondaryColor, other.secondaryColor, t)!,
+      primaryGradient:
+          LinearGradient.lerp(primaryGradient, other.primaryGradient, t)!,
+      surfaceColor: Color.lerp(surfaceColor, other.surfaceColor, t)!,
+      backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
+      errorBorderColor:
+          Color.lerp(errorBorderColor, other.errorBorderColor, t)!,
+      errorGradient:
+          LinearGradient.lerp(errorGradient, other.errorGradient, t)!,
     );
   }
 
@@ -97,6 +152,27 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
       colors: [
         Colors.white.withValues(alpha: 0.3),
         Colors.white.withValues(alpha: 0.15),
+      ],
+    ),
+    transparentGradient: LinearGradient(
+      colors: [Colors.transparent, Colors.transparent],
+    ),
+    primaryColor: Color(0xFF667eea),
+    secondaryColor: Color(0xFF764ba2),
+    primaryGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+    ),
+    surfaceColor: Colors.white,
+    backgroundColor: Colors.transparent,
+    errorBorderColor: Colors.redAccent.withValues(alpha: 0.4),
+    errorGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.redAccent.withValues(alpha: 0.4),
+        Colors.redAccent.withValues(alpha: 0.2),
       ],
     ),
   );

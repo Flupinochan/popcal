@@ -14,6 +14,7 @@ class GlassWrapper extends StatelessWidget {
   final bool showBorder;
   final Color? borderColor;
   final Gradient? gradient;
+  final bool showBackground;
 
   const GlassWrapper({
     super.key,
@@ -26,6 +27,7 @@ class GlassWrapper extends StatelessWidget {
     this.showBorder = true,
     this.borderColor,
     this.gradient,
+    this.showBackground = true,
   });
 
   @override
@@ -47,7 +49,10 @@ class GlassWrapper extends StatelessWidget {
             padding: padding,
             // BoxDecoration: 薄白透明背景, 境界線
             decoration: BoxDecoration(
-              gradient: gradient ?? glass.backgroundGradient,
+              gradient:
+                  showBackground
+                      ? (gradient ?? glass.backgroundGradient)
+                      : glass.transparentGradient,
               borderRadius: BorderRadius.circular(glass.borderRadius),
               border:
                   showBorder

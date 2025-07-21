@@ -6,8 +6,8 @@ import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 /// ローテーションが1つもない場合の画面
-class EmptyRotationView extends StatelessWidget {
-  const EmptyRotationView({super.key});
+class HomeScreenEmpty extends StatelessWidget {
+  const HomeScreenEmpty({super.key});
 
   @override
   Widget build(BuildContext context) {
