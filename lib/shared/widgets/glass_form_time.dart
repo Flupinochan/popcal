@@ -80,7 +80,16 @@ class GlassFormTime extends StatelessWidget {
                         ),
                       ),
                     ),
-                    child: child!,
+                    // 24時間表記
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: MediaQuery(
+                        data: MediaQuery.of(
+                          context,
+                        ).copyWith(alwaysUse24HourFormat: true),
+                        child: child!,
+                      ),
+                    ),
                   );
                 },
               );
