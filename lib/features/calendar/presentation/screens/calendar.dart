@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:glassmorphism/glassmorphism.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/shared/widgets/glass_app_bar.dart';
+import 'package:popcal/shared/widgets/glass_chip.dart';
+import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
@@ -18,6 +21,8 @@ class CalendarScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+
     final currentUserState = ref.watch(currentUserProvider);
     final focusedDay = useState(DateTime.now().toLocal());
     final selectedDay = useState<DateTime?>(DateTime.now().toLocal());
@@ -55,7 +60,7 @@ class CalendarScreen extends HookConsumerWidget {
     }, []);
 
     if (currentUser == null) {
-      return _buildLoadingScreen();
+      return _buildLoadingScreen(glass);
     }
 
     final rotationDetailAsync = ref.watch(
@@ -65,7 +70,7 @@ class CalendarScreen extends HookConsumerWidget {
     return rotationDetailAsync.when(
       data: (rotationGroup) {
         if (rotationGroup == null) {
-          return _buildErrorScreen(context, 'ローテーション情報が見つかりません');
+          return _buildErrorScreen(context, 'ローテーション情報が見つかりません', glass);
         }
 
         // ローテーション作成日から1年分を計算
@@ -103,51 +108,48 @@ class CalendarScreen extends HookConsumerWidget {
           notificationDetails.value,
         );
       },
-      loading: () => _buildLoadingScreen(),
-      error: (error, stack) => _buildErrorScreen(context, 'エラーが発生しました: $error'),
+      loading: () => _buildLoadingScreen(glass),
+      error:
+          (error, stack) =>
+              _buildErrorScreen(context, 'エラーが発生しました: $error', glass),
     );
   }
 
-  Widget _buildLoadingScreen() {
+  // ローディング画面
+  Widget _buildLoadingScreen(GlassTheme glass) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: glass.backgroundColor,
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
-        child: const Center(
-          child: CircularProgressIndicator(color: Colors.white),
+        decoration: BoxDecoration(gradient: glass.primaryGradient),
+        child: Center(
+          child: CircularProgressIndicator(color: glass.surfaceColor),
         ),
       ),
     );
   }
 
-  Widget _buildErrorScreen(BuildContext context, String message) {
+  // エラー画面
+  Widget _buildErrorScreen(
+    BuildContext context,
+    String message,
+    GlassTheme glass,
+  ) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: glass.backgroundColor,
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: glass.primaryGradient),
+
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 message,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -162,6 +164,7 @@ class CalendarScreen extends HookConsumerWidget {
     );
   }
 
+  // カレンダー画面
   Widget _buildCalendarScreen(
     BuildContext context,
     RotationGroup rotationGroup,
@@ -169,34 +172,21 @@ class CalendarScreen extends HookConsumerWidget {
     ValueNotifier<DateTime?> selectedDay,
     List<NotificationDetail> notificationDetails,
   ) {
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: glass.backgroundColor,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          rotationGroup.rotationName,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: GlassAppBar(
+        title: rotationGroup.rotationName,
+        leadingIcon: Icons.arrow_back_ios_new,
+        onLeadingPressed: () => Navigator.pop(context),
       ),
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: glass.primaryGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -206,6 +196,7 @@ class CalendarScreen extends HookConsumerWidget {
                   child: Column(
                     children: [
                       _buildCalendarContainer(
+                        context,
                         rotationGroup,
                         focusedDay,
                         selectedDay,
@@ -216,10 +207,12 @@ class CalendarScreen extends HookConsumerWidget {
                         rotationGroup,
                         selectedDay.value,
                         notificationDetails,
+                        glass,
+                        textTheme,
                       ),
                       const SizedBox(height: 16),
-                      _buildRotationInfo(rotationGroup),
-                      const SizedBox(height: 20), // 下部余白を追加
+                      _buildRotationInfo(context, rotationGroup),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -231,128 +224,103 @@ class CalendarScreen extends HookConsumerWidget {
     );
   }
 
+  // 1. カレンダー
   Widget _buildCalendarContainer(
+    BuildContext context,
     RotationGroup rotationGroup,
     ValueNotifier<DateTime> focusedDay,
     ValueNotifier<DateTime?> selectedDay,
     List<NotificationDetail> notificationDetails,
   ) {
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: 435,
-      borderRadius: 16,
-      blur: 20,
-      alignment: Alignment.center,
-      border: 1,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          const Color(0xFFffffff).withOpacity(0.1),
-          const Color(0xFFffffff).withOpacity(0.05),
-        ],
-        stops: const [0.1, 1],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.white.withOpacity(0.3), Colors.white.withOpacity(0.3)],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: TableCalendar<String>(
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: focusedDay.value,
-            selectedDayPredicate: (day) => isSameDay(selectedDay.value, day),
-            calendarFormat: CalendarFormat.month,
-            startingDayOfWeek: StartingDayOfWeek.sunday,
-            sixWeekMonthsEnforced: true, // 6週間表示を強制
-            daysOfWeekHeight: 20,
-            onDaySelected: (selected, focused) {
-              selectedDay.value = selected;
-              focusedDay.value = focused;
-            },
-            onPageChanged: (focused) {
-              focusedDay.value = focused;
-            },
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
-              titleCentered: true,
-              headerPadding: const EdgeInsets.symmetric(vertical: 8),
-              titleTextStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              leftChevronIcon: const Icon(
-                Icons.chevron_left,
-                color: Colors.white,
-              ),
-              rightChevronIcon: const Icon(
-                Icons.chevron_right,
-                color: Colors.white,
-              ),
-            ),
-            daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-              weekendStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
-            ),
-            calendarStyle: CalendarStyle(
-              cellMargin: const EdgeInsets.all(2),
-              defaultTextStyle: const TextStyle(color: Colors.white),
-              weekendTextStyle: const TextStyle(color: Colors.white),
-              outsideDaysVisible: false,
-              selectedDecoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                shape: BoxShape.circle,
-              ),
-              rowDecoration: const BoxDecoration(), // 行の装飾をリセット
-            ),
-            calendarBuilders: CalendarBuilders(
-              defaultBuilder: (context, day, focusedDay) {
-                return _buildCalendarCell(
-                  notificationDetails,
-                  day,
-                  false,
-                  false,
-                );
-              },
-              todayBuilder: (context, day, focusedDay) {
-                return _buildCalendarCell(
-                  notificationDetails,
-                  day,
-                  true,
-                  false,
-                );
-              },
-              selectedBuilder: (context, day, focusedDay) {
-                return _buildCalendarCell(
-                  notificationDetails,
-                  day,
-                  false,
-                  true,
-                );
-              },
-            ),
+    final textTheme = Theme.of(context).textTheme;
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+
+    return GlassWrapper(
+      child: TableCalendar<String>(
+        firstDay: DateTime.now().subtract(const Duration(days: 365)),
+        lastDay: DateTime.now().add(const Duration(days: 365)),
+        focusedDay: focusedDay.value,
+        selectedDayPredicate: (day) => isSameDay(selectedDay.value, day),
+        calendarFormat: CalendarFormat.month,
+        startingDayOfWeek: StartingDayOfWeek.monday,
+        sixWeekMonthsEnforced: true,
+        onDaySelected: (selected, focused) {
+          selectedDay.value = selected;
+          focusedDay.value = focused;
+        },
+        onPageChanged: (focused) {
+          focusedDay.value = focused;
+        },
+        // <     July 2025     > のスタイル
+        headerStyle: HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+          titleTextStyle: textTheme.titleLarge!,
+          leftChevronIcon: Icon(Icons.chevron_left, color: glass.surfaceColor),
+          rightChevronIcon: Icon(
+            Icons.chevron_right,
+            color: glass.surfaceColor,
           ),
+          headerPadding: EdgeInsets.only(left: 0, right: 0, top: 16, bottom: 6),
+        ),
+        // 月火水木金土日の高さ および スタイル
+        daysOfWeekHeight: 40,
+        daysOfWeekStyle: DaysOfWeekStyle(
+          weekdayStyle: textTheme.labelLarge!,
+          weekendStyle: textTheme.labelLarge!,
+          dowTextFormatter: (date, locale) {
+            const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
+            return weekdays[(date.weekday - 1) % 7];
+          },
+        ),
+        // 各日付のスタイル
+        calendarStyle: CalendarStyle(outsideDaysVisible: false),
+        calendarBuilders: CalendarBuilders(
+          // 通常の日付
+          defaultBuilder: (context, day, focusedDay) {
+            return _buildCalendarCell(
+              context,
+              notificationDetails,
+              day,
+              false,
+              false,
+            );
+          },
+          // 今日の日付
+          todayBuilder: (context, day, focusedDay) {
+            return _buildCalendarCell(
+              context,
+              notificationDetails,
+              day,
+              true,
+              false,
+            );
+          },
+          // 選択された日付
+          selectedBuilder: (context, day, focusedDay) {
+            return _buildCalendarCell(
+              context,
+              notificationDetails,
+              day,
+              false,
+              true,
+            );
+          },
         ),
       ),
     );
   }
 
   Widget _buildCalendarCell(
+    BuildContext context,
     List<NotificationDetail> notificationDetails,
     DateTime day,
     bool isToday,
     bool isSelected,
   ) {
+    final textTheme = Theme.of(context).textTheme;
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+
     // 通知詳細から該当日の担当者を取得
     final notification = notificationDetails.firstWhere(
       (detail) => isSameDay(detail.date, day),
@@ -365,65 +333,53 @@ class CalendarScreen extends HookConsumerWidget {
             body: '',
           ),
     );
-
     final memberName = notification.memberName;
     final isRotationDay = memberName.isNotEmpty;
 
     return Container(
-      margin: const EdgeInsets.all(1),
-      width: 45, // セル幅を少し拡大
-      height: 45, // セル高を少し拡大
+      width: double.infinity,
+      height: double.infinity,
       decoration: BoxDecoration(
         color:
             isSelected
-                ? Colors.white.withOpacity(0.3)
+                // 選択日
+                ? Colors.blue.withValues(alpha: 0.4)
                 : isToday
-                ? Colors.white.withOpacity(0.2)
+                // 今日
+                ? Colors.amber.withValues(alpha: 0.3)
                 : isRotationDay
-                ? Colors.white.withOpacity(0.1)
-                : null,
-        shape: BoxShape.circle,
-        border:
-            isRotationDay
-                ? Border.all(color: Colors.white.withOpacity(0.5), width: 1)
-                : null,
+                // ローテーション日
+                ? Colors.white.withValues(alpha: 0.15)
+                // その他
+                : Colors.transparent,
+        border: Border.all(color: glass.borderColor, width: 0.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            '${day.day}',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 11, // 日付のフォントサイズも少し小さく
-              fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
+          // 日付
+          Text('${day.day}', style: textTheme.labelMedium),
+          // メンバー名
           if (isRotationDay)
-            Container(
-              width: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Text(
-                memberName,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 9, // メンバー名のフォントサイズを大きく
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
+            Text(
+              memberName,
+              style: textTheme.labelSmall,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
         ],
       ),
     );
   }
 
+  // 2. 選択した曜日のローテーションメンバー名表示
   Widget _buildSelectedDayInfo(
     RotationGroup rotationGroup,
     DateTime? selectedDay,
     List<NotificationDetail> notificationDetails,
+    GlassTheme glass,
+    TextTheme textTheme,
   ) {
     if (selectedDay == null) {
       return const SizedBox.shrink();
@@ -445,52 +401,25 @@ class CalendarScreen extends HookConsumerWidget {
     final memberName = notification.memberName;
     final isRotationDay = memberName.isNotEmpty;
 
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: 100,
-      borderRadius: 12,
-      blur: 20,
-      alignment: Alignment.center,
-      border: 1,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          const Color(0xFFffffff).withOpacity(0.1),
-          const Color(0xFFffffff).withOpacity(0.05),
-        ],
-        stops: const [0.1, 1],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.white.withOpacity(0.3), Colors.white.withOpacity(0.3)],
-      ),
+    return GlassWrapper(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
             // 日付アイコン
-            Container(
+            GlassWrapper(
               width: 60,
               height: 60,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              showBorder: false,
+              gradient: glass.backgroundGradientStrong,
               child: Center(
                 child: Text(
                   '${selectedDay.month}/${selectedDay.day}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: textTheme.titleMedium,
                 ),
               ),
             ),
             const SizedBox(width: 16),
-            // 詳細情報
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -498,77 +427,57 @@ class CalendarScreen extends HookConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        _getWeekdayName(selectedDay),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      // 曜日
+                      Container(
+                        width: 24,
+                        height: 24,
+                        alignment: Alignment.center,
+                        child: Text(
+                          Weekday.fromDateTime(selectedDay).displayName,
+                          style: textTheme.titleMedium,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color:
-                              isRotationDay
-                                  ? Colors.green.withOpacity(0.3)
-                                  : Colors.grey.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          isRotationDay ? '担当日' : '対象外',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                      // 担当日/対象外
+                      GlassChip(
+                        text: isRotationDay ? "担当日" : "対象外",
+                        gradient:
+                            isRotationDay
+                                ? glass.successGradient
+                                : glass.backgroundGradientStrong,
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  if (isRotationDay)
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          color: Colors.white.withOpacity(0.8),
+                  Row(
+                    children: [
+                      // Icon
+                      Container(
+                        width: 24,
+                        height: 24,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          isRotationDay ? Icons.person : Icons.person_off,
+                          color:
+                              isRotationDay
+                                  ? glass.surfaceColor
+                                  : glass.surfaceColor.withValues(alpha: 0.6),
                           size: 20,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          memberName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      const SizedBox(width: 10),
+                      // メンバー名
+                      Text(
+                        isRotationDay ? memberName : 'ローテーション対象外',
+                        style: textTheme.titleMedium!.copyWith(
+                          color:
+                              isRotationDay
+                                  ? glass.surfaceColor
+                                  : glass.surfaceColor.withValues(alpha: 0.6),
                         ),
-                      ],
-                    )
-                  else
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person_off,
-                          color: Colors.white.withOpacity(0.6),
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'ローテーション対象外',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -578,135 +487,49 @@ class CalendarScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildRotationInfo(RotationGroup rotationGroup) {
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: 170,
-      borderRadius: 12,
-      blur: 20,
-      alignment: Alignment.topLeft,
-      border: 1,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          const Color(0xFFffffff).withOpacity(0.1),
-          const Color(0xFFffffff).withOpacity(0.05),
-        ],
-        stops: const [0.1, 1],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.white.withOpacity(0.3), Colors.white.withOpacity(0.3)],
-      ),
+  // 3. ローテーション情報
+  Widget _buildRotationInfo(BuildContext context, RotationGroup rotationGroup) {
+    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+    final textTheme = Theme.of(context).textTheme;
+
+    return GlassWrapper(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(Icons.info_outline, color: Colors.white, size: 20),
-                const SizedBox(width: 8),
-                const Text(
-                  'ローテーション情報',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+            // ローテーション情報
+            _rotationInfoItem(
+              textTheme,
+              glassTheme,
+              'ローテーション情報',
+              Icons.info_outline,
+              iconSize: 20,
+              textStyle: textTheme.titleMedium,
             ),
-            const SizedBox(height: 16),
-            // メンバー情報
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.group,
-                  color: Colors.white.withOpacity(0.8),
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'メンバー: ',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    rotationGroup.rotationMembers.join(', '),
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
+            const SizedBox(height: 14),
+            // メンバー
+            _rotationInfoItem(
+              textTheme,
+              glassTheme,
+              'メンバー: ${rotationGroup.rotationMembers.join(', ')}',
+              Icons.group,
             ),
             const SizedBox(height: 12),
-            // 対象曜日
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_today,
-                  color: Colors.white.withOpacity(0.8),
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '対象曜日: ',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  rotationGroup.rotationDays
-                      .map((w) => w.displayName)
-                      .join(', '),
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            // 曜日
+            _rotationInfoItem(
+              textTheme,
+              glassTheme,
+              '曜日: ${rotationGroup.rotationDays.map((w) => w.displayName).join(', ')}',
+              Icons.calendar_today,
             ),
             const SizedBox(height: 12),
             // 通知時刻
-            Row(
-              children: [
-                Icon(
-                  Icons.access_time,
-                  color: Colors.white.withOpacity(0.8),
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '通知時刻: ',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  '${rotationGroup.notificationTime.hour.toString().padLeft(2, '0')}:${rotationGroup.notificationTime.minute.toString().padLeft(2, '0')}',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            _rotationInfoItem(
+              textTheme,
+              glassTheme,
+              '時刻: ${rotationGroup.notificationTime.hour.toString().padLeft(2, '0')}:${rotationGroup.notificationTime.minute.toString().padLeft(2, '0')}',
+              Icons.access_time,
             ),
           ],
         ),
@@ -714,8 +537,28 @@ class CalendarScreen extends HookConsumerWidget {
     );
   }
 
-  String _getWeekdayName(DateTime date) {
-    final weekday = Weekday.fromDateTime(date);
-    return weekday.displayName;
+  Widget _rotationInfoItem(
+    TextTheme textTheme,
+    GlassTheme glassTheme,
+    String infoText,
+    IconData iconData, {
+    double iconSize = 18,
+    TextStyle? textStyle,
+  }) {
+    final effectiveTextStyle = textStyle ?? textTheme.titleSmall;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(iconData, color: glassTheme.surfaceColor, size: iconSize),
+        const SizedBox(width: 8),
+        Text(
+          infoText,
+          style: effectiveTextStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
   }
 }

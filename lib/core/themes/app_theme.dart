@@ -24,6 +24,11 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
+        titleSmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Colors.white.withValues(alpha: 0.9),
+        ),
         // 本文 - 通常のテキスト
         bodyLarge: TextStyle(fontSize: 16, color: Colors.white),
         // 説明文 - 詳細説明、ボタンテキスト
@@ -36,6 +41,21 @@ class AppTheme {
         bodySmall: TextStyle(
           fontSize: 12,
           color: Colors.white.withValues(alpha: 0.8),
+        ),
+        labelLarge: TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        labelMedium: TextStyle(
+          color: Colors.white,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+        labelSmall: TextStyle(
+          color: Colors.white.withValues(alpha: 0.9),
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
         ),
       ),
       // Glass用スタイル定義
