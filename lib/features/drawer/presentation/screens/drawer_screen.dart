@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:glassmorphism/glassmorphism.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/auth/providers/user_provider.dart';
+import 'package:popcal/shared/widgets/glass_button.dart';
+import 'package:popcal/shared/widgets/glass_icon.dart';
+import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class DrawerScreen extends ConsumerStatefulWidget {
   const DrawerScreen({super.key});
@@ -24,58 +27,32 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final statusBarHeight = MediaQuery.of(context).padding.top;
-    final availableHeight = screenHeight - statusBarHeight;
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final textTheme = Theme.of(context).textTheme;
 
     return Drawer(
-      backgroundColor: Colors.transparent,
-      child: GlassmorphicContainer(
-        width: double.infinity,
-        height: double.infinity,
-        borderRadius: 0,
-        blur: 20,
-        alignment: Alignment.center,
-        border: 0,
-        linearGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFFffffff).withOpacity(0.1),
-            const Color(0xFFffffff).withOpacity(0.05),
-          ],
-          stops: const [0.1, 1],
-        ),
-        borderGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Colors.transparent, Colors.transparent],
-        ),
+      backgroundColor: glass.backgroundColor,
+      child: GlassWrapper(
         child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Container(
-                height: availableHeight * 0.25,
-                padding: EdgeInsets.all(16),
-                child: Column(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Icon(Icons.person, size: 40, color: Colors.white),
+                    // Icon
+                    GlassIcon(
+                      iconData: Icons.person,
+                      iconSize: 40,
+                      backgroundSize: 60,
                     ),
                     SizedBox(height: 8),
-                    // RiverPodに応じて部分的に再レンダリング
+                    // Consumerで部分再レンダリング
+                    // name & email
                     Consumer(
                       builder: (context, ref, child) {
                         final userAsync = ref.watch(currentUserProvider);
-
                         return userAsync.when(
                           data:
                               (result) => result.when(
@@ -84,20 +61,11 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                                       children: [
                                         Text(
                                           user?.email.split('@').first ?? "ゲスト",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: textTheme.titleMedium,
                                         ),
                                         Text(
                                           user?.email ?? "未ログイン",
-                                          style: TextStyle(
-                                            color: Colors.white.withOpacity(
-                                              0.7,
-                                            ),
-                                            fontSize: 12,
-                                          ),
+                                          style: textTheme.bodySmall,
                                         ),
                                       ],
                                     ),
@@ -106,20 +74,11 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                                       children: [
                                         Text(
                                           "ゲスト",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          style: textTheme.titleMedium,
                                         ),
                                         Text(
                                           "未ログイン",
-                                          style: TextStyle(
-                                            color: Colors.white.withOpacity(
-                                              0.7,
-                                            ),
-                                            fontSize: 12,
-                                          ),
+                                          style: textTheme.bodySmall,
                                         ),
                                       ],
                                     ),
@@ -167,14 +126,12 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                         );
                       },
                     ),
+                    SizedBox(height: 16),
                   ],
                 ),
-              ),
 
-              // Menu
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                // Menu
+                Expanded(
                   child: ListView(
                     children: [
                       _buildGlassMenuItem(
@@ -197,67 +154,17 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                     ],
                   ),
                 ),
-              ),
 
-              // Sign Out
-              Container(
-                padding: EdgeInsets.all(12),
-                child: GlassmorphicContainer(
-                  width: double.infinity,
-                  height: 48,
-                  borderRadius: 12,
-                  blur: 15,
-                  alignment: Alignment.center,
-                  border: 1,
-                  linearGradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.red.withOpacity(0.3),
-                      Colors.red.withOpacity(0.1),
-                    ],
-                    stops: const [0.1, 1],
-                  ),
-                  borderGradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.red.withOpacity(0.4),
-                      Colors.red.withOpacity(0.4),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        _showSignOutDialog(context);
-                      },
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.logout, color: Colors.white, size: 20),
-                            SizedBox(width: 8),
-                            Text(
-                              'サインアウト',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                // Sign Out
+                GlassButton(
+                  text: "サインアウト",
+                  height: 50,
+                  borderColor: glass.errorBorderColor,
+                  gradient: glass.errorGradient,
+                  onPressed: () => _showSignOutDialog(context),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -269,182 +176,61 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
     required String title,
     required VoidCallback onTap,
   }) {
-    return GlassmorphicContainer(
-      width: double.infinity,
-      height: 52,
-      borderRadius: 12,
-      blur: 15,
-      alignment: Alignment.center,
-      border: 1,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          const Color(0xFFffffff).withOpacity(0.1),
-          const Color(0xFFffffff).withOpacity(0.05),
-        ],
-        stops: const [0.1, 1],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Colors.white.withOpacity(0.2), Colors.white.withOpacity(0.2)],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Icon(icon, color: Colors.white, size: 20),
-                SizedBox(width: 16),
-                Text(
-                  title,
-                  style: TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return GlassButton(
+      height: 50,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      iconData: icon,
+      text: title,
+      onPressed: onTap,
+      alignment: Alignment.centerLeft,
     );
   }
 
   void _showSignOutDialog(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          child: GlassmorphicContainer(
-            width: 300,
+          child: GlassWrapper(
             height: 200,
-            borderRadius: 16,
-            blur: 20,
-            alignment: Alignment.center,
-            border: 1,
-            linearGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color(0xFFffffff).withOpacity(0.15),
-                const Color(0xFFffffff).withOpacity(0.05),
-              ],
-              stops: const [0.1, 1],
-            ),
-            borderGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withOpacity(0.3),
-                Colors.white.withOpacity(0.3),
-              ],
-            ),
             child: Padding(
               padding: EdgeInsets.all(20),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'サインアウト',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text('サインアウト', style: textTheme.titleLarge),
                   SizedBox(height: 16),
-                  Text(
-                    '本当にサインアウトしますか？',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                      fontSize: 16,
-                    ),
-                  ),
+                  Text('本当にサインアウトしますか？', style: textTheme.bodyMedium),
                   SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
-                        child: GlassmorphicContainer(
-                          width: double.infinity,
+                        child: GlassButton(
                           height: 40,
-                          borderRadius: 8,
-                          blur: 10,
-                          alignment: Alignment.center,
-                          border: 1,
-                          linearGradient: LinearGradient(
-                            colors: [
-                              Colors.white.withOpacity(0.1),
-                              Colors.white.withOpacity(0.05),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            colors: [
-                              Colors.white.withOpacity(0.3),
-                              Colors.white.withOpacity(0.3),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              borderRadius: BorderRadius.circular(8),
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'キャンセル',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
+                          text: 'いいえ',
+                          onPressed: () => Navigator.of(context).pop(),
                         ),
                       ),
                       SizedBox(width: 12),
                       Expanded(
-                        child: GlassmorphicContainer(
-                          width: double.infinity,
+                        child: GlassButton(
                           height: 40,
-                          borderRadius: 8,
-                          blur: 10,
-                          alignment: Alignment.center,
-                          border: 1,
-                          linearGradient: LinearGradient(
-                            colors: [
-                              Colors.red.withOpacity(0.3),
-                              Colors.red.withOpacity(0.1),
-                            ],
-                          ),
-                          borderGradient: LinearGradient(
-                            colors: [
-                              Colors.red.withOpacity(0.4),
-                              Colors.red.withOpacity(0.4),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).pop();
-                                _authRepository.signOut();
-                              },
-                              borderRadius: BorderRadius.circular(8),
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'はい',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
+                          text: 'はい',
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            _authRepository.signOut();
+                          },
+                          borderColor:
+                              Theme.of(
+                                context,
+                              ).extension<GlassTheme>()!.errorBorderColor,
+                          gradient:
+                              Theme.of(
+                                context,
+                              ).extension<GlassTheme>()!.errorGradient,
                         ),
                       ),
                     ],

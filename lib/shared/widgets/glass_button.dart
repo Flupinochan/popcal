@@ -17,6 +17,9 @@ class GlassButton extends StatelessWidget {
   final Gradient? gradient;
   final bool showBorder;
   final bool showBackground;
+  final double iconTextSpacing;
+  final Alignment alignment;
+  final EdgeInsets? padding;
 
   const GlassButton({
     super.key,
@@ -33,34 +36,59 @@ class GlassButton extends StatelessWidget {
     this.gradient,
     this.showBorder = true,
     this.showBackground = true,
+    this.iconTextSpacing = 8,
+    this.alignment = Alignment.center,
+    this.padding,
   }) : assert(text != null || iconData != null, 'textまたはiconのどちらかを指定してください');
 
   @override
   Widget build(BuildContext context) {
     final glass = Theme.of(context).extension<GlassTheme>()!;
+    final effectiveIconColor = iconColor ?? glass.iconColor;
+    final effectiveTextStyle =
+        textStyle ?? Theme.of(context).textTheme.bodyLarge;
+
     Widget child;
 
-    // テキスト・アイコンで分岐
-    final size = backgroundSize ?? (iconSize! * 2);
-    if (text != null) {
-      child = Text(
-        text!,
-        style: textStyle ?? Theme.of(context).textTheme.bodyLarge,
+    if (text != null && iconData != null) {
+      child = Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(iconData!, size: iconSize, color: effectiveIconColor),
+          SizedBox(width: iconTextSpacing),
+          Text(text!, style: effectiveTextStyle),
+        ],
       );
+    } else if (text != null) {
+      // テキストのみ
+      child = Text(text!, style: effectiveTextStyle);
     } else {
-      child = Icon(iconData!, size: iconSize, color: glass.iconColor);
+      // アイコンのみ
+      child = Icon(iconData!, size: iconSize, color: effectiveIconColor);
     }
 
+    if (padding != null) {
+      child = Padding(padding: padding!, child: child);
+    }
+
+    // サイズの計算
+    final isIconOnly = text == null && iconData != null;
+    final defaultSize = backgroundSize ?? (iconSize! * 2);
+
     return GlassWrapper(
-      width: text != null ? width : size,
-      height: text != null ? height : size,
+      width: isIconOnly ? defaultSize : width,
+      height: isIconOnly ? defaultSize : height,
       borderColor: borderColor,
       showBorder: showBorder,
       gradient: gradient,
       showBackground: showBackground,
       child: Material(
         color: Colors.transparent,
-        child: InkWell(onTap: onPressed, child: Center(child: child)),
+        child: InkWell(
+          onTap: onPressed,
+          child: Align(alignment: alignment, child: child),
+        ),
       ),
     );
   }

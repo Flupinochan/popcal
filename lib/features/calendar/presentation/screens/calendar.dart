@@ -349,11 +349,10 @@ class CalendarScreen extends HookConsumerWidget {
         border: Border.all(color: glass.borderColor, width: 0.5),
       ),
       child: Column(
-        mainAxisAlignment:
-            isRotationDay ? MainAxisAlignment.start : MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          const SizedBox(),
           Container(
-            margin: isRotationDay ? const EdgeInsets.only(top: 8) : null,
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               color:
@@ -375,20 +374,17 @@ class CalendarScreen extends HookConsumerWidget {
               ),
             ),
           ),
-          if (isRotationDay)
-            Expanded(
-              child: Center(
-                child: Text(
-                  memberName,
-                  style: textTheme.labelMedium!.copyWith(
-                    color: getMemberColor(memberName, rotationGroup),
-                  ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+          isRotationDay
+              ? Text(
+                memberName,
+                style: textTheme.labelMedium!.copyWith(
+                  color: getMemberColor(memberName, rotationGroup),
                 ),
-              ),
-            ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              )
+              : const SizedBox(),
         ],
       ),
     );

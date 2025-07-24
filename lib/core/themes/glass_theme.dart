@@ -177,8 +177,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Colors.redAccent.withValues(alpha: 0.4),
-        Colors.redAccent.withValues(alpha: 0.2),
+        Colors.redAccent.withValues(alpha: 0.3),
+        Colors.redAccent.withValues(alpha: 0.3),
       ],
     ),
     successGradient: LinearGradient(

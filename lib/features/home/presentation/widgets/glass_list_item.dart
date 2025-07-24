@@ -60,9 +60,7 @@ class GlassListItem extends StatelessWidget {
                           Text(
                             rotationGroup.rotationName,
                             style: Theme.of(context).textTheme.titleMedium,
-                            // 1行に制限
                             maxLines: 1,
-                            // はみ出し部分を...で表示
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
