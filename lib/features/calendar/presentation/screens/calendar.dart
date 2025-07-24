@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_chip.dart';
@@ -282,6 +283,7 @@ class CalendarScreen extends HookConsumerWidget {
               context,
               notificationDetails,
               day,
+              rotationGroup,
               false,
               false,
             );
@@ -292,6 +294,7 @@ class CalendarScreen extends HookConsumerWidget {
               context,
               notificationDetails,
               day,
+              rotationGroup,
               true,
               false,
             );
@@ -302,6 +305,7 @@ class CalendarScreen extends HookConsumerWidget {
               context,
               notificationDetails,
               day,
+              rotationGroup,
               false,
               true,
             );
@@ -315,6 +319,7 @@ class CalendarScreen extends HookConsumerWidget {
     BuildContext context,
     List<NotificationDetail> notificationDetails,
     DateTime day,
+    RotationGroup rotationGroup,
     bool isToday,
     bool isSelected,
   ) {
@@ -340,33 +345,49 @@ class CalendarScreen extends HookConsumerWidget {
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
-        color:
-            isSelected
-                // 選択日
-                ? Colors.blue.withValues(alpha: 0.4)
-                : isToday
-                // 今日
-                ? Colors.amber.withValues(alpha: 0.3)
-                : isRotationDay
-                // ローテーション日
-                ? Colors.white.withValues(alpha: 0.15)
-                // その他
-                : Colors.transparent,
+        color: Colors.transparent,
         border: Border.all(color: glass.borderColor, width: 0.5),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment:
+            isRotationDay ? MainAxisAlignment.start : MainAxisAlignment.center,
         children: [
-          // 日付
-          Text('${day.day}', style: textTheme.labelMedium),
-          // メンバー名
+          Container(
+            margin: isRotationDay ? const EdgeInsets.only(top: 8) : null,
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color:
+                  isSelected
+                      ? Colors.blue.withValues(alpha: 0.4)
+                      : isToday
+                      ? Colors.amber.withValues(alpha: 0.3)
+                      : isRotationDay
+                      ? Colors.white.withValues(alpha: 0.15)
+                      : Colors.transparent,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              '${day.day}',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
           if (isRotationDay)
-            Text(
-              memberName,
-              style: textTheme.labelSmall,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
+            Expanded(
+              child: Center(
+                child: Text(
+                  memberName,
+                  style: textTheme.labelMedium!.copyWith(
+                    color: getMemberColor(memberName, rotationGroup),
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
             ),
         ],
       ),
