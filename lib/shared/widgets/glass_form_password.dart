@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
-class GlassFormText extends StatelessWidget {
+class GlassFormPassword extends HookWidget {
   final String name;
   final String? initialValue;
   final String? hintText;
@@ -12,7 +13,7 @@ class GlassFormText extends StatelessWidget {
   final void Function(String?)? onSubmitted;
   final IconData? prefixIcon;
 
-  const GlassFormText({
+  const GlassFormPassword({
     super.key,
     required this.name,
     this.initialValue,
@@ -27,6 +28,7 @@ class GlassFormText extends StatelessWidget {
   Widget build(BuildContext context) {
     final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
+    final isPasswordVisible = useState(false);
 
     return GlassWrapper(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
@@ -54,7 +56,16 @@ class GlassFormText extends StatelessWidget {
               validator: validator,
               controller: controller,
               onSubmitted: onSubmitted,
+              obscureText: !isPasswordVisible.value,
             ),
+          ),
+          IconButton(
+            icon: Icon(
+              isPasswordVisible.value ? Icons.visibility : Icons.visibility_off,
+              color: glassTheme.iconColor,
+              size: 20,
+            ),
+            onPressed: () => isPasswordVisible.value = !isPasswordVisible.value,
           ),
         ],
       ),
