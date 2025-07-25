@@ -1,5 +1,7 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/value_objects/email.dart';
+import 'package:popcal/features/auth/domain/value_objects/password.dart';
 
 abstract class AuthRepository {
   // 認証状態(認証済 or 未認証)を監視
@@ -10,8 +12,8 @@ abstract class AuthRepository {
 
   // Email + Passwordでサインイン
   Future<Result<AppUser?>> signInWithEmailAndPassword(
-    String email,
-    String password,
+    Email email,
+    Password password,
   );
 
   // サインアウト
@@ -19,8 +21,8 @@ abstract class AuthRepository {
 
   // サインアップ (Email + Password)
   Future<Result<AppUser?>> signUpWithEmailAndPassword(
-    String email,
-    String password,
+    Email email,
+    Password password,
   );
 
   // // その他の方法でサインイン（必要に応じて実装）

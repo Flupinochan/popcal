@@ -1,3 +1,4 @@
+import 'package:popcal/features/auth/data/dto/email_sign_in_request_dto.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -17,15 +18,15 @@ class AuthViewModel extends _$AuthViewModel {
   }
 
   /// メールアドレスとパスワードでサインイン
-  Future<Result<AppUser?>> signIn(String email, String password) async {
+  Future<Result<AppUser?>> signIn(EmailSignInRequestDto dto) async {
     // Result<AppUser?> がstate
     // stateは単一の状態管理する値
     // AsyncLoadingでローディング状態
     state = const AsyncLoading();
 
     final result = await _authRepository.signInWithEmailAndPassword(
-      email,
-      password,
+      dto.email,
+      dto.password,
     );
 
     result.when(
@@ -41,12 +42,12 @@ class AuthViewModel extends _$AuthViewModel {
   }
 
   /// メールアドレスとパスワードでサインアップ
-  Future<Result<AppUser?>> signUp(String email, String password) async {
+  Future<Result<AppUser?>> signUp(EmailSignInRequestDto dto) async {
     state = const AsyncLoading();
 
     final result = await _authRepository.signUpWithEmailAndPassword(
-      email,
-      password,
+      dto.email,
+      dto.password,
     );
 
     result.when(

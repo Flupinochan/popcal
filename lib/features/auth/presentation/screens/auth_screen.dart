@@ -7,7 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/data/dto/email_sign_in_request_dto.dart';
+import 'package:popcal/features/auth/domain/entities/auth_mode.dart';
+import 'package:popcal/features/auth/domain/entities/login_form_field.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/value_objects/email.dart';
+import 'package:popcal/features/auth/domain/value_objects/password.dart';
 import 'package:popcal/features/auth/presentation/view_models/auth_view_model.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/router/routes.dart';
@@ -28,35 +33,46 @@ class LoginScreen extends HookConsumerWidget {
     final authViewModel = ref.read(authViewModelProvider.notifier);
     final isLoading = ref.watch(authViewModelProvider).isLoading;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
-    final selectedMode = useState('Sign In');
-    final validator = ref.read(emailSignInValidatorProvider);
+    final selectedMode = useState(AuthMode.signIn);
 
     /// サインイン/サインアップ処理
     Future<void> handleSubmit() async {
-      if (formKey.currentState!.saveAndValidate()) {
-        final formData = formKey.currentState!.value;
-        final email = formData['email'] as String;
-        final password = formData['password'] as String;
+      if (!formKey.currentState!.saveAndValidate()) return;
 
-        Either<Failure, AppUser?> result;
-        if (selectedMode.value == 'Sign In') {
-          result = await authViewModel.signIn(email, password);
-        } else {
-          result = await authViewModel.signUp(email, password);
+      final formData = formKey.currentState!.value;
+      final email = formData[LoginFormField.email.key] as String;
+      final password = formData[LoginFormField.password.key] as String;
+
+      final dtoResult = EmailSignInRequestDto.create(
+        email: email,
+        password: password,
+      );
+      if (dtoResult.isFailure) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('エラー: ${dtoResult.displayText}')),
+          );
         }
-        result.when(
-          success: (user) {
-            context.push(Routes.home);
-          },
-          failure: (error) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('エラー: ${error.message}')));
-            }
-          },
-        );
+        return;
       }
+
+      final dto = dtoResult.valueOrNull!;
+      final authResult =
+          selectedMode.value == AuthMode.signIn
+              ? await authViewModel.signIn(dto)
+              : await authViewModel.signUp(dto);
+      authResult.when(
+        success: (user) {
+          context.push(Routes.home);
+        },
+        failure: (error) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('エラー: ${error.message}')));
+          }
+        },
+      );
     }
 
     return Scaffold(
@@ -112,18 +128,22 @@ class LoginScreen extends HookConsumerWidget {
                             Expanded(
                               child: GlassToggleButton(
                                 height: 40,
-                                text: 'Sign In',
-                                isSelected: selectedMode.value == 'Sign In',
-                                onPressed: () => selectedMode.value = 'Sign In',
+                                text: AuthMode.signIn.displayName,
+                                isSelected:
+                                    selectedMode.value == AuthMode.signIn,
+                                onPressed:
+                                    () => selectedMode.value = AuthMode.signIn,
                               ),
                             ),
                             SizedBox(width: 8),
                             Expanded(
                               child: GlassToggleButton(
                                 height: 40,
-                                text: 'Sign Up',
-                                isSelected: selectedMode.value == 'Sign Up',
-                                onPressed: () => selectedMode.value = 'Sign Up',
+                                text: AuthMode.signUp.displayName,
+                                isSelected:
+                                    selectedMode.value == AuthMode.signUp,
+                                onPressed:
+                                    () => selectedMode.value = AuthMode.signUp,
                               ),
                             ),
                           ],
@@ -136,20 +156,22 @@ class LoginScreen extends HookConsumerWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Email', style: textTheme.titleMedium),
+                                Text(
+                                  LoginFormField.email.key,
+                                  style: textTheme.titleMedium,
+                                ),
                                 SizedBox(height: 8),
                                 GlassFormText(
-                                  name: 'email',
-                                  hintText: 'Enter your email',
+                                  name: LoginFormField.email.key,
+                                  hintText:
+                                      'Enter your ${LoginFormField.email.key}',
                                   prefixIcon: Icons.email_outlined,
                                   validator: (value) {
                                     if (value == null) return '入力してください';
-                                    final result = validator.validateEmail(
-                                      value,
-                                    );
+                                    final result = Email.create(value);
                                     return result.when(
                                       success: (_) => null,
-                                      failure: (error) => error.toString(),
+                                      failure: (error) => error.message,
                                     );
                                   },
                                 ),
@@ -160,20 +182,22 @@ class LoginScreen extends HookConsumerWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Password', style: textTheme.titleMedium),
+                                Text(
+                                  LoginFormField.password.key,
+                                  style: textTheme.titleMedium,
+                                ),
                                 SizedBox(height: 8),
                                 GlassFormPassword(
-                                  name: 'password',
-                                  hintText: 'Enter your password',
+                                  name: LoginFormField.password.key,
+                                  hintText:
+                                      'Enter your ${LoginFormField.password.key}',
                                   prefixIcon: Icons.lock_outline,
                                   validator: (value) {
                                     if (value == null) return '入力してください';
-                                    final result = validator.validatePassword(
-                                      value,
-                                    );
+                                    final result = Password.create(value);
                                     return result.when(
                                       success: (_) => null,
-                                      failure: (error) => error.toString(),
+                                      failure: (error) => error.message,
                                     );
                                   },
                                 ),
@@ -192,7 +216,7 @@ class LoginScreen extends HookConsumerWidget {
                               ),
                             )
                             : GlassButton(
-                              text: selectedMode.value,
+                              text: selectedMode.value.displayName,
                               height: 50,
                               onPressed: handleSubmit,
                             ),

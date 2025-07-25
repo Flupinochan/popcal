@@ -80,25 +80,5 @@ final authStateChangesProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthStateChangesRef = AutoDisposeStreamProviderRef<Result<AppUser?>>;
-String _$emailSignInValidatorHash() =>
-    r'905909050a797c9a00b5bd3451a481d9c31ea7eb';
-
-/// See also [emailSignInValidator].
-@ProviderFor(emailSignInValidator)
-final emailSignInValidatorProvider =
-    AutoDisposeProvider<EmailSignInValidator>.internal(
-      emailSignInValidator,
-      name: r'emailSignInValidatorProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$emailSignInValidatorHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef EmailSignInValidatorRef = AutoDisposeProviderRef<EmailSignInValidator>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

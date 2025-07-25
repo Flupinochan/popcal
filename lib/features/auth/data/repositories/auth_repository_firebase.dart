@@ -3,6 +3,8 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/data/datasources/firebase_auth_datasource.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
+import 'package:popcal/features/auth/domain/value_objects/email.dart';
+import 'package:popcal/features/auth/domain/value_objects/password.dart';
 
 class AuthRepositoryFirebase implements AuthRepository {
   final FirebaseAuthDataSource _firebaseAuthDataSource;
@@ -38,12 +40,12 @@ class AuthRepositoryFirebase implements AuthRepository {
 
   @override
   Future<Result<AppUser?>> signInWithEmailAndPassword(
-    String email,
-    String password,
+    Email email,
+    Password password,
   ) async {
     final result = await _firebaseAuthDataSource.signInWithEmailAndPassword(
-      email,
-      password,
+      email.value,
+      password.value,
     );
     return result.when(
       success: (userDto) => Results.success(userDto.toEntity()),
@@ -58,12 +60,12 @@ class AuthRepositoryFirebase implements AuthRepository {
 
   @override
   Future<Result<AppUser?>> signUpWithEmailAndPassword(
-    String email,
-    String password,
+    Email email,
+    Password password,
   ) async {
     final result = await _firebaseAuthDataSource.signUpWithEmailAndPassword(
-      email,
-      password,
+      email.value,
+      password.value,
     );
     return result.when(
       success: (userDto) => Results.success(userDto.toEntity()),

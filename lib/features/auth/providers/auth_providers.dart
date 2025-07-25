@@ -7,7 +7,6 @@ import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/data/repositories/auth_repository_firebase.dart';
 import 'package:popcal/features/auth/data/datasources/firebase_auth_datasource.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
-import 'package:popcal/features/auth/presentation/validators/email_sign_in_validator.dart';
 
 part 'auth_providers.g.dart';
 
@@ -30,9 +29,4 @@ AuthRepository authRepository(Ref ref) {
 @riverpod
 Stream<Result<AppUser?>> authStateChanges(Ref ref) {
   return ref.watch(authRepositoryProvider).authStateChanges;
-}
-
-@riverpod
-EmailSignInValidator emailSignInValidator(Ref ref) {
-  return EmailSignInValidator();
 }
