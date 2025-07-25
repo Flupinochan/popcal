@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/presentation/view_models/auth_view_model.dart';
+import 'package:popcal/features/auth/providers/auth_providers.dart';
+import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_form_password.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
@@ -19,8 +26,38 @@ class LoginScreen extends HookConsumerWidget {
     final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
     final authViewModel = ref.read(authViewModelProvider.notifier);
+    final isLoading = ref.watch(authViewModelProvider).isLoading;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final selectedMode = useState('Sign In');
+    final validator = ref.read(emailSignInValidatorProvider);
+
+    /// サインイン/サインアップ処理
+    Future<void> handleSubmit() async {
+      if (formKey.currentState!.saveAndValidate()) {
+        final formData = formKey.currentState!.value;
+        final email = formData['email'] as String;
+        final password = formData['password'] as String;
+
+        Either<Failure, AppUser?> result;
+        if (selectedMode.value == 'Sign In') {
+          result = await authViewModel.signIn(email, password);
+        } else {
+          result = await authViewModel.signUp(email, password);
+        }
+        result.when(
+          success: (user) {
+            context.push(Routes.home);
+          },
+          failure: (error) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('エラー: ${error.message}')));
+            }
+          },
+        );
+      }
+    }
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -106,7 +143,14 @@ class LoginScreen extends HookConsumerWidget {
                                   hintText: 'Enter your email',
                                   prefixIcon: Icons.email_outlined,
                                   validator: (value) {
-                                    return null;
+                                    if (value == null) return '入力してください';
+                                    final result = validator.validateEmail(
+                                      value,
+                                    );
+                                    return result.when(
+                                      success: (_) => null,
+                                      failure: (error) => error.toString(),
+                                    );
                                   },
                                 ),
                               ],
@@ -123,7 +167,14 @@ class LoginScreen extends HookConsumerWidget {
                                   hintText: 'Enter your password',
                                   prefixIcon: Icons.lock_outline,
                                   validator: (value) {
-                                    return null;
+                                    if (value == null) return '入力してください';
+                                    final result = validator.validatePassword(
+                                      value,
+                                    );
+                                    return result.when(
+                                      success: (_) => null,
+                                      failure: (error) => error.toString(),
+                                    );
                                   },
                                 ),
                               ],
@@ -132,7 +183,19 @@ class LoginScreen extends HookConsumerWidget {
                         ),
                         SizedBox(height: 32),
                         // Sign In/Sign Up ボタン
-                        GlassButton(text: selectedMode.value, height: 50),
+                        isLoading
+                            ? GlassWrapper(
+                              height: 50,
+                              child: CircularProgressIndicator(
+                                color: glassTheme.surfaceColor,
+                                strokeWidth: 3,
+                              ),
+                            )
+                            : GlassButton(
+                              text: selectedMode.value,
+                              height: 50,
+                              onPressed: handleSubmit,
+                            ),
                         SizedBox(height: 20),
                         // Forgot password リンク
                         Text(

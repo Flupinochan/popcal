@@ -8,9 +8,6 @@ part 'auth_view_model.g.dart';
 
 @riverpod
 class AuthViewModel extends _$AuthViewModel {
-  String _email = '';
-  String _password = '';
-
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   // 初期値はnull
@@ -19,38 +16,22 @@ class AuthViewModel extends _$AuthViewModel {
     return null;
   }
 
-  // setter ※TextFormFieldのonChangedから取得
-  void updateEmail(String email) {
-    _email = email;
-  }
-
-  void updatePassword(String password) {
-    _password = password;
-  }
-
-  // clear
-  void clearForm() {
-    _email = '';
-    _password = '';
-  }
-
   /// メールアドレスとパスワードでサインイン
-  Future<Result<AppUser?>> signIn() async {
+  Future<Result<AppUser?>> signIn(String email, String password) async {
     // Result<AppUser?> がstate
     // stateは単一の状態管理する値
     // AsyncLoadingでローディング状態
     state = const AsyncLoading();
 
     final result = await _authRepository.signInWithEmailAndPassword(
-      _email,
-      _password,
+      email,
+      password,
     );
 
     result.when(
       success: (user) {
         // AsyncDataは成功状態
         state = AsyncData(user);
-        clearForm();
       },
       // AsyncErrorは失敗状態
       failure: (error) => state = AsyncError(error, StackTrace.current),
@@ -60,18 +41,17 @@ class AuthViewModel extends _$AuthViewModel {
   }
 
   /// メールアドレスとパスワードでサインアップ
-  Future<Result<AppUser?>> signUp() async {
+  Future<Result<AppUser?>> signUp(String email, String password) async {
     state = const AsyncLoading();
 
     final result = await _authRepository.signUpWithEmailAndPassword(
-      _email,
-      _password,
+      email,
+      password,
     );
 
     result.when(
       success: (user) {
         state = AsyncData(user);
-        clearForm();
       },
       failure: (error) => state = AsyncError(error, StackTrace.current),
     );
@@ -85,7 +65,6 @@ class AuthViewModel extends _$AuthViewModel {
 
     if (result.isSuccess) {
       state = const AsyncData(null);
-      clearForm();
     }
 
     return result;
