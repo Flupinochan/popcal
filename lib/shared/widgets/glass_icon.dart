@@ -10,6 +10,8 @@ class GlassIcon extends StatelessWidget {
   final Color? iconColor;
   final EdgeInsets? margin;
   final bool showBorder;
+  final Gradient? backgroundGradient;
+  final Color? borderColor;
 
   const GlassIcon({
     super.key,
@@ -19,6 +21,8 @@ class GlassIcon extends StatelessWidget {
     this.backgroundSize,
     this.margin,
     this.showBorder = false,
+    this.backgroundGradient,
+    this.borderColor,
   });
 
   @override
@@ -27,15 +31,13 @@ class GlassIcon extends StatelessWidget {
     // デフォルトの背景のサイズはIconの2倍
     final size = backgroundSize ?? (iconSize * 2);
     // 背景色を少し濃い目の白
-    final iconTheme = glass.copyWith(
-      backgroundGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Colors.white.withValues(alpha: 0.25),
-          Colors.white.withValues(alpha: 0.125),
-        ],
-      ),
+    final defaultGradient = LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.white.withValues(alpha: 0.25),
+        Colors.white.withValues(alpha: 0.125),
+      ],
     );
 
     return Container(
@@ -48,17 +50,21 @@ class GlassIcon extends StatelessWidget {
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              gradient: iconTheme.backgroundGradient,
+              gradient: backgroundGradient ?? defaultGradient,
               shape: BoxShape.circle,
               border:
                   showBorder
                       ? Border.all(
-                        color: glass.borderColor,
+                        color: borderColor ?? glass.borderColor,
                         width: glass.borderWidth,
                       )
                       : null,
             ),
-            child: Icon(iconData, size: iconSize, color: glass.iconColor),
+            child: Icon(
+              iconData,
+              size: iconSize,
+              color: iconColor ?? glass.iconColor,
+            ),
           ),
         ),
       ),

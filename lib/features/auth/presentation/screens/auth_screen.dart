@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/data/dto/email_sign_in_request_dto.dart';
 import 'package:popcal/features/auth/domain/entities/auth_mode.dart';
 import 'package:popcal/features/auth/domain/entities/login_form_field.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 import 'package:popcal/features/auth/presentation/view_models/auth_view_model.dart';
-import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
+import 'package:popcal/shared/widgets/glass_dialog.dart';
 import 'package:popcal/shared/widgets/glass_form_password.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
@@ -48,11 +45,7 @@ class LoginScreen extends HookConsumerWidget {
         password: password,
       );
       if (dtoResult.isFailure) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('エラー: ${dtoResult.displayText}')),
-          );
-        }
+        showErrorDialog(context, dtoResult.displayText);
         return;
       }
 
@@ -66,11 +59,7 @@ class LoginScreen extends HookConsumerWidget {
           context.push(Routes.home);
         },
         failure: (error) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('エラー: ${error.message}')));
-          }
+          showErrorDialog(context, error.message);
         },
       );
     }

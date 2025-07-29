@@ -23,6 +23,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     required this.backgroundColor,
     required this.errorBorderColor,
     required this.errorGradient,
+    required this.successBorderColor,
     required this.successGradient,
   });
 
@@ -49,6 +50,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
 
   final Color errorBorderColor;
   final LinearGradient errorGradient;
+  final Color successBorderColor;
   final LinearGradient successGradient;
 
   /// デフォルトのテーマのプロパティをオーバーライドしてスタイルを適用するためのメソッド
@@ -70,6 +72,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     Color? backgroundColor,
     Color? errorBorderColor,
     LinearGradient? errorGradient,
+    Color? successBorderColor,
     LinearGradient? successGradient,
   }) {
     return GlassTheme(
@@ -90,6 +93,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       errorBorderColor: errorBorderColor ?? this.borderColor,
       errorGradient: errorGradient ?? this.errorGradient,
+      successBorderColor: successBorderColor ?? this.successBorderColor,
       successGradient: successGradient ?? this.successGradient,
     );
   }
@@ -131,6 +135,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
           Color.lerp(errorBorderColor, other.errorBorderColor, t)!,
       errorGradient:
           LinearGradient.lerp(errorGradient, other.errorGradient, t)!,
+      successBorderColor:
+          Color.lerp(successBorderColor, other.successBorderColor, t)!,
       successGradient:
           LinearGradient.lerp(successGradient, other.successGradient, t)!,
     );
@@ -181,6 +187,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
         Colors.redAccent.withValues(alpha: 0.3),
       ],
     ),
+    successBorderColor: Colors.greenAccent.withValues(alpha: 0.4),
     successGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
