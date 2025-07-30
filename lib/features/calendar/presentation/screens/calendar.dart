@@ -4,6 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/shared/screen/error_screen.dart';
+import 'package:popcal/shared/screen/loading_screen.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_chip.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
@@ -22,25 +24,35 @@ class CalendarScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
-
+    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final currentUserState = ref.watch(currentUserProvider);
-    final focusedDay = useState(DateTime.now().toLocal());
-    final selectedDay = useState<DateTime?>(DateTime.now().toLocal());
+    final notificationRepository = ref.read(notificationRepositoryProvider);
+    final initialDate = useMemoized(() => DateTime.now().toLocal());
+    final focusedDay = useState(initialDate);
+    final selectedDay = useState<DateTime?>(initialDate);
     final notificationDetails = useState<List<NotificationDetail>>([]);
+    final errorMessage = useState<String?>(null);
 
+    // ユーザ情報を取得
     final currentUser = currentUserState.when(
       data:
-          (result) =>
-              result.when(success: (user) => user, failure: (_) => null),
+          (result) => result.when(
+            success: (user) => user,
+            failure: (error) {
+              errorMessage.value = error.message;
+              return null;
+            },
+          ),
       loading: () => null,
-      error: (_, __) => null,
+      error: (error, stackTrace) {
+        errorMessage.value = error.toString();
+        return null;
+      },
     );
 
     // 通知詳細情報を取得
     useEffect(() {
       () async {
-        final notificationRepository = ref.read(notificationRepositoryProvider);
         final result = await notificationRepository.getNotificationDetails();
         result.when(
           success: (details) {
@@ -53,53 +65,46 @@ class CalendarScreen extends HookConsumerWidget {
             notificationDetails.value = filteredDetails;
           },
           failure: (error) {
-            print('通知詳細の取得に失敗: $error');
+            errorMessage.value = error.message;
           },
         );
       }();
       return null;
     }, []);
 
-    if (currentUser == null) {
-      return _buildLoadingScreen(glass);
+    if (errorMessage.value != null) {
+      return ErrorScreen(message: errorMessage.value!);
     }
 
     final rotationDetailAsync = ref.watch(
-      rotationDetailProvider(currentUser.uid, rotationGroupId),
+      rotationDetailProvider(currentUser!.uid, rotationGroupId),
     );
-
     return rotationDetailAsync.when(
       data: (rotationGroup) {
         if (rotationGroup == null) {
-          return _buildErrorScreen(context, 'ローテーション情報が見つかりません', glass);
+          return ErrorScreen(message: 'ローテーション情報が見つかりません');
         }
 
         // ローテーション作成日から1年分を計算
-        useEffect(() {
-          final notificationRepository = ref.read(
-            notificationRepositoryProvider,
-          );
+        final notificationRepository = ref.read(notificationRepositoryProvider);
 
-          // ローテーション作成日から1年分の期間を設定
-          final startDate = rotationGroup.rotationStartDate;
-          final endDate = startDate.add(const Duration(days: 365));
+        // ローテーション作成日から1年分の期間を設定
+        final startDate = rotationGroup.rotationStartDate;
+        final endDate = startDate.add(const Duration(days: 365));
 
-          final result = notificationRepository.calculateCalendarDetails(
-            rotationGroup: rotationGroup,
-            startDate: startDate,
-            endDate: endDate,
-          );
-
-          result.when(
-            success: (details) {
-              notificationDetails.value = details;
-            },
-            failure: (error) {
-              print('カレンダー詳細の計算に失敗: $error');
-            },
-          );
-          return null;
-        }, [rotationGroup.rotationGroupId]);
+        final result = notificationRepository.calculateCalendarDetails(
+          rotationGroup: rotationGroup,
+          startDate: startDate,
+          endDate: endDate,
+        );
+        result.when(
+          success: (details) {
+            notificationDetails.value = details;
+          },
+          failure: (error) {
+            return ErrorScreen(message: error.message);
+          },
+        );
 
         return _buildCalendarScreen(
           context,
@@ -109,59 +114,8 @@ class CalendarScreen extends HookConsumerWidget {
           notificationDetails.value,
         );
       },
-      loading: () => _buildLoadingScreen(glass),
-      error:
-          (error, stack) =>
-              _buildErrorScreen(context, 'エラーが発生しました: $error', glass),
-    );
-  }
-
-  // ローディング画面
-  Widget _buildLoadingScreen(GlassTheme glass) {
-    return Scaffold(
-      backgroundColor: glass.backgroundColor,
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(gradient: glass.primaryGradient),
-        child: Center(
-          child: CircularProgressIndicator(color: glass.surfaceColor),
-        ),
-      ),
-    );
-  }
-
-  // エラー画面
-  Widget _buildErrorScreen(
-    BuildContext context,
-    String message,
-    GlassTheme glass,
-  ) {
-    return Scaffold(
-      backgroundColor: glass.backgroundColor,
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(gradient: glass.primaryGradient),
-
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                message,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('戻る'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      loading: () => LoadingScreen(),
+      error: (error, stack) => ErrorScreen(message: error.toString()),
     );
   }
 

@@ -48,8 +48,8 @@ class LoginScreen extends HookConsumerWidget {
         showErrorDialog(context, dtoResult.displayText);
         return;
       }
-
       final dto = dtoResult.valueOrNull!;
+
       final authResult =
           selectedMode.value == AuthMode.signIn
               ? await authViewModel.signIn(dto)

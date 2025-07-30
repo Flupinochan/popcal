@@ -11,6 +11,8 @@ import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
+import 'package:popcal/shared/screen/error_screen.dart';
+import 'package:popcal/shared/screen/loading_screen.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_form_list.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
@@ -153,7 +155,7 @@ class RotationScreen extends HookConsumerWidget {
 
     // 編集モード - currentUserが必要
     if (currentUser == null) {
-      return _buildLoadingScreen();
+      return ErrorScreen();
     }
 
     // 編集モード - AsyncNotifierProviderを使用
@@ -164,7 +166,7 @@ class RotationScreen extends HookConsumerWidget {
     return rotationDetailAsync.when(
       data: (rotationGroup) {
         if (rotationGroup == null) {
-          return _buildErrorScreen(context, 'データが見つかりません');
+          return ErrorScreen(message: 'データが見つかりません');
         }
         return _buildFormScreen(
           context: context,
@@ -176,62 +178,8 @@ class RotationScreen extends HookConsumerWidget {
           glass: glass,
         );
       },
-      loading: () => _buildLoadingScreen(),
-      error: (error, stack) => _buildErrorScreen(context, 'エラーが発生しました: $error'),
-    );
-  }
-
-  Widget _buildLoadingScreen() {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
-        child: const Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorScreen(BuildContext context, String message) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                message,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('戻る'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      loading: () => LoadingScreen(),
+      error: (error, stack) => ErrorScreen(message: error.toString()),
     );
   }
 

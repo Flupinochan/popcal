@@ -63,6 +63,7 @@ class GlassDialog extends StatelessWidget {
   }
 }
 
+/// ダイアログはshowDialogメソッドで表示する
 void showErrorDialog(BuildContext context, String message) {
   final glassTheme = Theme.of(context).extension<GlassTheme>()!;
 

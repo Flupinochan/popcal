@@ -20,6 +20,7 @@ import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_dialog.dart';
+import 'package:popcal/shared/widgets/loading_widget.dart';
 
 class HomeScreen extends HookConsumerWidget {
   HomeScreen({super.key});
@@ -33,21 +34,31 @@ class HomeScreen extends HookConsumerWidget {
     final syncUseCase = ref.watch(syncNotificationsUseCaseProvider);
     final homeViewModel = ref.read(homeViewModelProvider.notifier);
     final currentUserState = ref.watch(currentUserProvider);
+    final errorMessage = useState<String?>(null);
+    final deletedItem = useState<RotationGroup?>(null);
+
     final currentUser = currentUserState.when(
       data:
-          (result) =>
-              result.when(success: (user) => user, failure: (_) => null),
+          (result) => result.when(
+            success: (user) => user,
+            failure: (error) {
+              errorMessage.value = error.message;
+              return null;
+            },
+          ),
       loading: () => null,
-      error: (_, __) => null,
+      error: (error, stackTrace) {
+        errorMessage.value = error.toString();
+        return null;
+      },
     );
+
     final rotationGroupsStream =
         currentUser != null
             ? ref.watch(rotationGroupsStreamProvider(currentUser.uid))
             : AsyncValue<Result<List<RotationGroup>>>.data(
               Results.failure<List<RotationGroup>>(AuthFailure('未認証です')),
             );
-    // 削除されたアイテムを一時的に保持するstate
-    final deletedItem = useState<RotationGroup?>(null);
 
     // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)
     useEffect(() {
@@ -103,30 +114,16 @@ class HomeScreen extends HookConsumerWidget {
                               ),
                   failure: (error) {
                     logger.severe('データ取得エラー: $error');
-                    return _buildLoadingIndicator(glass, context);
+                    return LoadingWidget();
                   },
                 ),
-            loading: () => _buildLoadingIndicator(glass, context),
+            loading: () => LoadingWidget(),
             error: (error, stackTrace) {
               logger.severe('データ取得エラー: $error, $stackTrace');
-              return _buildLoadingIndicator(glass, context);
+              return LoadingWidget();
             },
           ),
         ),
-      ),
-    );
-  }
-
-  /// ローディング画面
-  Widget _buildLoadingIndicator(GlassTheme glass, BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(color: glass.surfaceColor, strokeWidth: 3),
-          const SizedBox(height: 16),
-          Text('データを読み込み中...', style: Theme.of(context).textTheme.titleLarge),
-        ],
       ),
     );
   }
