@@ -19,7 +19,6 @@ import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
-import 'package:popcal/shared/widgets/glass_dialog.dart';
 import 'package:popcal/shared/widgets/loading_widget.dart';
 
 class HomeScreen extends HookConsumerWidget {
@@ -182,7 +181,8 @@ class HomeScreen extends HookConsumerWidget {
     if (currentUser == null || rotationGroup.rotationGroupId == null) {
       return;
     }
-
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     deletedItem.value = rotationGroup;
 
@@ -194,42 +194,46 @@ class HomeScreen extends HookConsumerWidget {
     result.when(
       success: (_) {
         SnackBarUtils.showGlassSnackBarWithAction(
-          scaffoldMessenger,
-          '${rotationGroup.rotationName}を削除しました',
-          onAction:
-              () => _handleRestore(
-                scaffoldMessenger,
-                rotationGroup,
-                deletedItem,
-                homeViewModel,
-              ),
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
+          message: '${rotationGroup.rotationName}を削除しました',
+          onAction: () async {
+            // Restore
+            final result = await homeViewModel.restoreRotationGroup(
+              rotationGroup,
+            );
+            result.when(
+              success: (_) {
+                deletedItem.value = null;
+                SnackBarUtils.showGlassSnackBar(
+                  textTheme: textTheme,
+                  glassTheme: glassTheme,
+                  scaffoldMessenger: scaffoldMessenger,
+                  message: '${rotationGroup.rotationName}を元に戻しました',
+                );
+              },
+              failure: (error) {
+                SnackBarUtils.showGlassSnackBar(
+                  textTheme: textTheme,
+                  glassTheme: glassTheme,
+                  scaffoldMessenger: scaffoldMessenger,
+                  message: '復元に失敗しました: $error',
+                );
+              },
+            );
+          },
+          actionLabel: '元に戻す',
         );
       },
       failure: (error) {
-        deletedItem.value = null;
-        SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '削除に失敗しました: $error');
-      },
-    );
-  }
-
-  void _handleRestore(
-    ScaffoldMessengerState scaffoldMessenger,
-    RotationGroup rotationGroup,
-    ValueNotifier<RotationGroup?> deletedItem,
-    HomeViewModel homeViewModel,
-  ) async {
-    final result = await homeViewModel.restoreRotationGroup(rotationGroup);
-
-    result.when(
-      success: (_) {
         deletedItem.value = null;
         SnackBarUtils.showGlassSnackBar(
-          scaffoldMessenger,
-          '${rotationGroup.rotationName}を復元しました',
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
+          message: '削除に失敗しました: $error',
         );
-      },
-      failure: (error) {
-        SnackBarUtils.showGlassSnackBar(scaffoldMessenger, '復元に失敗しました: $error');
       },
     );
   }

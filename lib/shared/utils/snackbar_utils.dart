@@ -1,47 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:popcal/shared/widgets/glass_snackbar_content.dart';
-import 'package:popcal/shared/widgets/glass_snackbar_content_with_action.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/shared/widgets/glass_button.dart';
+import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class SnackBarUtils {
-  // 基本的なGlassSnackBarを表示
-  static void showGlassSnackBar(
-    ScaffoldMessengerState scaffoldMessenger,
-    String message, {
+  // 表示のみSnackBar ※contextは渡せないため注意
+  static void showGlassSnackBar({
+    required TextTheme textTheme,
+    required GlassTheme glassTheme,
+    required ScaffoldMessengerState scaffoldMessenger,
+    required String message,
     Duration duration = const Duration(seconds: 2),
   }) {
     scaffoldMessenger.clearSnackBars();
     scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: GlassSnackbarContent(message: message),
-        backgroundColor: Colors.transparent,
+        content: GlassWrapper(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Text(message, style: textTheme.bodyLarge),
+        ),
+        backgroundColor: glassTheme.backgroundColor,
         elevation: 0,
+        padding: EdgeInsets.all(0),
+        margin: EdgeInsets.symmetric(vertical: 36, horizontal: 24),
         behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
         duration: duration,
       ),
     );
   }
 
-  // アクション付きGlassSnackBarを表示
-  static void showGlassSnackBarWithAction(
-    ScaffoldMessengerState scaffoldMessenger,
-    String message, {
+  // アクション付きSnackBar
+  static void showGlassSnackBarWithAction({
+    required TextTheme textTheme,
+    required GlassTheme glassTheme,
+    required ScaffoldMessengerState scaffoldMessenger,
+    required String message,
     required VoidCallback onAction,
-    String actionLabel = '元に戻す',
+    required String actionLabel,
     Duration duration = const Duration(seconds: 5),
   }) {
     scaffoldMessenger.clearSnackBars();
     scaffoldMessenger.showSnackBar(
       SnackBar(
-        content: GlassSnackbarContentWithAction(
-          message: message,
-          onAction: onAction,
-          actionLabel: actionLabel,
+        content: GlassWrapper(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(message, style: textTheme.bodyLarge),
+              const SizedBox(width: 24),
+              GlassButton(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                gradient: glassTheme.backgroundGradientStrong,
+                text: actionLabel,
+                textStyle: textTheme.labelLarge,
+                onPressed: () {
+                  onAction();
+                  scaffoldMessenger.hideCurrentSnackBar();
+                },
+              ),
+            ],
+          ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: glassTheme.backgroundColor,
         elevation: 0,
+        padding: EdgeInsets.all(0),
+        margin: EdgeInsets.symmetric(vertical: 36, horizontal: 24),
         behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
         duration: duration,
       ),
     );

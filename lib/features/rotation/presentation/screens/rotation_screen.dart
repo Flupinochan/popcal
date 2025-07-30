@@ -13,6 +13,7 @@ import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
 import 'package:popcal/shared/screen/error_screen.dart';
 import 'package:popcal/shared/screen/loading_screen.dart';
+import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_form_list.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
@@ -26,7 +27,9 @@ class RotationScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final isUpdateMode = rotationGroupId != null;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
@@ -53,11 +56,12 @@ class RotationScreen extends HookConsumerWidget {
 
       if (formKey.currentState!.saveAndValidate()) {
         final formData = formKey.currentState!.value;
+        final rotationName = formData['rotationName'] as String;
 
         final rotationGroup = RotationGroup(
           rotationGroupId: null,
           ownerUserId: currentUser.uid,
-          rotationName: formData['rotationName'] as String,
+          rotationName: rotationName,
           rotationMembers: List<String>.from(
             formData['rotationMembers'] as List,
           ),
@@ -71,23 +75,21 @@ class RotationScreen extends HookConsumerWidget {
           rotationGroup,
         );
 
-        result.when(
-          success: (_) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('作成しました')));
-              Navigator.pop(context);
-            }
-          },
-          failure: (error) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('エラーが発生しました: $error')));
-            }
-          },
+        final message = result.when(
+          success: (_) => '$rotationNameを作成しました',
+          failure: (error) => error.message,
         );
+
+        // 非同期処理の後はif (context.mounted)でチェックが必須
+        if (context.mounted) {
+          SnackBarUtils.showGlassSnackBar(
+            glassTheme: glassTheme,
+            textTheme: textTheme,
+            scaffoldMessenger: scaffoldMessenger,
+            message: message,
+          );
+          Navigator.pop(context);
+        }
       }
     }
 
@@ -149,7 +151,7 @@ class RotationScreen extends HookConsumerWidget {
         initialRotationGroup: null,
         isLoading: isLoading,
         onSubmit: handleCreateRotationGroup,
-        glass: glass,
+        glass: glassTheme,
       );
     }
 
@@ -175,7 +177,7 @@ class RotationScreen extends HookConsumerWidget {
           initialRotationGroup: rotationGroup,
           isLoading: isLoading,
           onSubmit: () => handleUpdateRotationGroup(rotationGroup),
-          glass: glass,
+          glass: glassTheme,
         );
       },
       loading: () => LoadingScreen(),
