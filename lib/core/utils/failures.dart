@@ -26,3 +26,8 @@ class NetworkFailure extends Failure {
 class NotificationFailure extends Failure {
   const NotificationFailure(super.message);
 }
+
+// ローテーショングループ設定エラー
+class RotationGroupFailure extends Failure {
+  const RotationGroupFailure(super.message);
+}

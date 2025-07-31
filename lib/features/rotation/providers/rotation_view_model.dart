@@ -7,7 +7,7 @@ import 'package:popcal/features/rotation/domain/use_cases/update_rotation_group_
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'rotation_view_model.g.dart';
+part '../presentation/view_models/rotation_view_model.g.dart';
 
 @riverpod
 class RotationViewModel extends _$RotationViewModel {

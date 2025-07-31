@@ -54,3 +54,11 @@ UpdateRotationGroupUseCase updateRotationGroupUseCase(Ref ref) {
     ref.watch(notificationRepositoryProvider),
   );
 }
+
+@riverpod
+Future<Result>
+
+class RotationData {
+  final AppUser user;
+  final 
+}

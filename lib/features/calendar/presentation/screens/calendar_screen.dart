@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/presentation/providers/calendar_providers.dart';
+import 'package:popcal/features/calendar/presentation/providers/calendar_provider.dart';
 import 'package:popcal/shared/screen/error_screen.dart';
 import 'package:popcal/shared/screen/loading_screen.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
@@ -52,11 +52,11 @@ class CalendarScreen extends HookConsumerWidget {
     ValueNotifier<DateTime?> selectedDay,
     List<NotificationDetail> notificationDetails,
   ) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: glass.backgroundColor,
+      backgroundColor: glassTheme.backgroundColor,
       extendBodyBehindAppBar: true,
       appBar: GlassAppBar(
         title: rotationGroup.rotationName,
@@ -66,7 +66,7 @@ class CalendarScreen extends HookConsumerWidget {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(gradient: glass.primaryGradient),
+        decoration: BoxDecoration(gradient: glassTheme.primaryGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -87,7 +87,7 @@ class CalendarScreen extends HookConsumerWidget {
                         rotationGroup,
                         selectedDay.value,
                         notificationDetails,
-                        glass,
+                        glassTheme,
                         textTheme,
                       ),
                       const SizedBox(height: 16),
