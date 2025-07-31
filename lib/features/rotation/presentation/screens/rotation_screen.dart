@@ -145,7 +145,7 @@ class RotationScreen extends HookConsumerWidget {
               formKey,
               rotationViewModel,
               rotationData.appUser,
-              initialRotationGroup!,
+              initialRotationGroup,
               isUpdateMode,
             ),
       ),
@@ -158,7 +158,7 @@ Future<void> _handleCreateRotationGroup(
   GlobalKey<FormBuilderState> formKey,
   RotationViewModel rotationViewModel,
   AppUser appUser,
-  RotationGroup originalRotationGroup,
+  RotationGroup? originalRotationGroup,
   bool isUpdateMode,
 ) async {
   final glassTheme = Theme.of(context).extension<GlassTheme>()!;
@@ -171,7 +171,16 @@ Future<void> _handleCreateRotationGroup(
 
     final rotationGroup =
         isUpdateMode
-            ? RotationGroup(
+            ? originalRotationGroup!.copyWith(
+              rotationName: rotationName,
+              rotationMembers: List<String>.from(
+                formData['rotationMembers'] as List,
+              ),
+              rotationDays: formData['rotationDays'] as List<Weekday>,
+              notificationTime: formData['notificationTime'] as TimeOfDay,
+              updatedAt: DateTime.now().toLocal(),
+            )
+            : RotationGroup(
               rotationGroupId: null,
               ownerUserId: appUser.uid,
               rotationName: rotationName,
@@ -182,25 +191,16 @@ Future<void> _handleCreateRotationGroup(
               notificationTime: formData['notificationTime'] as TimeOfDay,
               rotationStartDate: DateTime.now().toLocal(),
               updatedAt: DateTime.now().toLocal(),
-            )
-            : originalRotationGroup.copyWith(
-              rotationName: formData['rotationName'] as String,
-              rotationMembers: List<String>.from(
-                formData['rotationMembers'] as List,
-              ),
-              rotationDays: formData['rotationDays'] as List<Weekday>,
-              notificationTime: formData['notificationTime'] as TimeOfDay,
-              updatedAt: DateTime.now().toLocal(),
             );
 
     final result =
         isUpdateMode
-            ? await rotationViewModel.createRotationGroup(rotationGroup)
-            : await rotationViewModel.updateRotationGroup(rotationGroup);
+            ? await rotationViewModel.updateRotationGroup(rotationGroup)
+            : await rotationViewModel.createRotationGroup(rotationGroup);
 
     final message = result.when(
       success:
-          (_) => isUpdateMode ? '$rotationNameを作成しました' : '$rotationNameを更新しました',
+          (_) => isUpdateMode ? '$rotationNameを更新しました' : '$rotationNameを作成しました',
       failure: (error) => error.message,
     );
 
