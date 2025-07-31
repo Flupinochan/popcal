@@ -9,13 +9,13 @@ sealed class Password with _$Password {
   const factory Password(String value) = _Password;
   const Password._();
 
-  static Result<Password> create(String input) {
-    if (input.isEmpty) {
+  static Result<Password> create(String? input) {
+    if (input == null || input.trim().isEmpty) {
       return Results.failure(ValidationFailure('パスワードを入力してください'));
     }
 
     if (input.length < 6) {
-      return Results.failure(ValidationFailure('パスワードは6文字以上で入力してください'));
+      return Results.failure(ValidationFailure('6文字以上で入力してください'));
     }
 
     final hasUpperCase = input.contains(RegExp(r'[A-Z]'));
@@ -23,7 +23,7 @@ sealed class Password with _$Password {
     final hasDigits = input.contains(RegExp(r'[0-9]'));
 
     if (!hasUpperCase || !hasLowerCase || !hasDigits) {
-      return Results.failure(ValidationFailure('パスワードは大文字、小文字、数字を含む必要があります'));
+      return Results.failure(ValidationFailure('大文字、小文字、数字が必要です'));
     }
 
     return Results.success(Password(input));

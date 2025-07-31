@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
 import 'package:popcal/features/notifications/data/repositories/notification_repository_local.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/notifications/domain/use_cases/sync_notifications_use_case.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,5 +29,27 @@ SyncNotificationsUseCase syncNotificationsUseCase(Ref ref) {
   return SyncNotificationsUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
+  );
+}
+
+@riverpod
+Future<List<NotificationDetail>> calendarNotificationDetails(
+  Ref ref,
+  RotationGroup rotationGroup,
+) async {
+  final notificationRepository = ref.watch(notificationRepositoryProvider);
+
+  final startDate = rotationGroup.rotationStartDate;
+  final endDate = startDate.add(const Duration(days: 365));
+
+  final result = notificationRepository.calculateCalendarDetails(
+    rotationGroup: rotationGroup,
+    startDate: startDate,
+    endDate: endDate,
+  );
+
+  return result.when(
+    success: (details) => details,
+    failure: (error) => throw Exception(error.message),
   );
 }

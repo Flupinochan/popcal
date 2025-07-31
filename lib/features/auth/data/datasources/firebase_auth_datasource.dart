@@ -15,7 +15,7 @@ class FirebaseAuthDataSource {
         if (firebaseUser != null) {
           return Results.success(UserDto.fromFirebaseUser(firebaseUser));
         } else {
-          return Results.failure(AuthFailure('未認証です'));
+          return Results.success(null);
         }
       } on FirebaseAuthException catch (error) {
         return Results.failure(AuthFailure(_mapFirebaseError(error)));
@@ -30,7 +30,7 @@ class FirebaseAuthDataSource {
     try {
       final firebaseUser = _firebaseAuth.currentUser;
       if (firebaseUser == null) {
-        return Results.failure(AuthFailure('未認証または存在しないユーザを取得しようとしました'));
+        return Results.success(null);
       }
       final userDto = UserDto.fromFirebaseUser(firebaseUser);
       return Results.success(userDto);
@@ -63,18 +63,6 @@ class FirebaseAuthDataSource {
     }
   }
 
-  // サインアウト
-  Future<Result<void>> signOut() async {
-    try {
-      await _firebaseAuth.signOut();
-      return Results.success(null);
-    } on FirebaseAuthException catch (error) {
-      return Results.failure(AuthFailure(_mapFirebaseError(error)));
-    } catch (error) {
-      return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
-    }
-  }
-
   // サインアップ
   Future<Result<UserDto>> signUpWithEmailAndPassword(
     String email,
@@ -94,6 +82,18 @@ class FirebaseAuthDataSource {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Results.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
+    }
+  }
+
+  // サインアウト
+  Future<Result<void>> signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+      return Results.success(null);
+    } on FirebaseAuthException catch (error) {
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
+    } catch (error) {
+      return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
     }
   }
 

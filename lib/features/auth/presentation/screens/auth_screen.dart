@@ -10,7 +10,7 @@ import 'package:popcal/features/auth/domain/entities/auth_mode.dart';
 import 'package:popcal/features/auth/domain/entities/login_form_field.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
-import 'package:popcal/features/auth/presentation/view_models/auth_view_model.dart';
+import 'package:popcal/features/auth/providers/auth_view_model.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_dialog.dart';
@@ -156,7 +156,6 @@ class LoginScreen extends HookConsumerWidget {
                                       'Enter your ${LoginFormField.email.key}',
                                   prefixIcon: Icons.email_outlined,
                                   validator: (value) {
-                                    if (value == null) return '入力してください';
                                     final result = Email.create(value);
                                     return result.when(
                                       success: (_) => null,
@@ -182,7 +181,6 @@ class LoginScreen extends HookConsumerWidget {
                                       'Enter your ${LoginFormField.password.key}',
                                   prefixIcon: Icons.lock_outline,
                                   validator: (value) {
-                                    if (value == null) return '入力してください';
                                     final result = Password.create(value);
                                     return result.when(
                                       success: (_) => null,
@@ -199,9 +197,13 @@ class LoginScreen extends HookConsumerWidget {
                         isLoading
                             ? GlassWrapper(
                               height: 50,
-                              child: CircularProgressIndicator(
-                                color: glassTheme.surfaceColor,
-                                strokeWidth: 3,
+                              child: SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: glassTheme.surfaceColor,
+                                  strokeWidth: 3,
+                                ),
                               ),
                             )
                             : GlassButton(

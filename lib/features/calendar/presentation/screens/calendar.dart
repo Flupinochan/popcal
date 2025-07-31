@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/calendar/presentation/providers/calendar_providers.dart';
 import 'package:popcal/shared/screen/error_screen.dart';
 import 'package:popcal/shared/screen/loading_screen.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
@@ -12,9 +13,6 @@ import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
-import 'package:popcal/features/auth/providers/user_provider.dart';
-import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
-import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 
 class CalendarScreen extends HookConsumerWidget {
@@ -24,96 +22,23 @@ class CalendarScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
-    final currentUserState = ref.watch(currentUserProvider);
-    final notificationRepository = ref.read(notificationRepositoryProvider);
-    final initialDate = useMemoized(() => DateTime.now().toLocal());
-    final focusedDay = useState(initialDate);
-    final selectedDay = useState<DateTime?>(initialDate);
-    final notificationDetails = useState<List<NotificationDetail>>([]);
-    final errorMessage = useState<String?>(null);
+    final calendarDataAsync = ref.watch(calendarDataProvider(rotationGroupId));
+    final focusedDay = useState(DateTime.now().toLocal());
+    final selectedDay = useState<DateTime?>(DateTime.now().toLocal());
 
-    // ユーザ情報を取得
-    final currentUser = currentUserState.when(
+    return calendarDataAsync.when(
       data:
           (result) => result.when(
-            success: (user) => user,
-            failure: (error) {
-              errorMessage.value = error.message;
-              return null;
-            },
+            success:
+                (calendarData) => _buildCalendarScreen(
+                  context,
+                  calendarData.rotationGroup,
+                  focusedDay,
+                  selectedDay,
+                  calendarData.notificationDetails,
+                ),
+            failure: (error) => ErrorScreen(message: error.message),
           ),
-      loading: () => null,
-      error: (error, stackTrace) {
-        errorMessage.value = error.toString();
-        return null;
-      },
-    );
-
-    // 通知詳細情報を取得
-    useEffect(() {
-      () async {
-        final result = await notificationRepository.getNotificationDetails();
-        result.when(
-          success: (details) {
-            // 対象のローテーショングループの通知のみフィルタリング
-            final filteredDetails =
-                details.where((detail) {
-                  return detail.title.isNotEmpty &&
-                      detail.memberName.isNotEmpty;
-                }).toList();
-            notificationDetails.value = filteredDetails;
-          },
-          failure: (error) {
-            errorMessage.value = error.message;
-          },
-        );
-      }();
-      return null;
-    }, []);
-
-    if (errorMessage.value != null) {
-      return ErrorScreen(message: errorMessage.value!);
-    }
-
-    final rotationDetailAsync = ref.watch(
-      rotationDetailProvider(currentUser!.uid, rotationGroupId),
-    );
-    return rotationDetailAsync.when(
-      data: (rotationGroup) {
-        if (rotationGroup == null) {
-          return ErrorScreen(message: 'ローテーション情報が見つかりません');
-        }
-
-        // ローテーション作成日から1年分を計算
-        final notificationRepository = ref.read(notificationRepositoryProvider);
-
-        // ローテーション作成日から1年分の期間を設定
-        final startDate = rotationGroup.rotationStartDate;
-        final endDate = startDate.add(const Duration(days: 365));
-
-        final result = notificationRepository.calculateCalendarDetails(
-          rotationGroup: rotationGroup,
-          startDate: startDate,
-          endDate: endDate,
-        );
-        result.when(
-          success: (details) {
-            notificationDetails.value = details;
-          },
-          failure: (error) {
-            return ErrorScreen(message: error.message);
-          },
-        );
-
-        return _buildCalendarScreen(
-          context,
-          rotationGroup,
-          focusedDay,
-          selectedDay,
-          notificationDetails.value,
-        );
-      },
       loading: () => LoadingScreen(),
       error: (error, stack) => ErrorScreen(message: error.toString()),
     );

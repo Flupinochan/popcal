@@ -4,7 +4,6 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
-import 'package:popcal/features/auth/providers/user_provider.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
