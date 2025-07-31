@@ -19,7 +19,6 @@ import 'package:popcal/shared/screen/loading_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
-import 'package:popcal/shared/widgets/loading_widget.dart';
 
 class HomeScreen extends HookConsumerWidget {
   HomeScreen({super.key});
@@ -132,9 +131,6 @@ class HomeScreen extends HookConsumerWidget {
     ValueNotifier<RotationGroup?> deletedItem,
     HomeViewModel homeViewModel,
   ) async {
-    final textTheme = Theme.of(context).textTheme;
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     deletedItem.value = rotationGroup;
 
     final result = await homeViewModel.deleteRotationGroup(
@@ -145,9 +141,7 @@ class HomeScreen extends HookConsumerWidget {
     result.when(
       success: (_) {
         SnackBarUtils.showGlassSnackBarWithAction(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
+          context: context,
           message: '${rotationGroup.rotationName}を削除しました',
           onAction: () async {
             // Restore
@@ -158,17 +152,13 @@ class HomeScreen extends HookConsumerWidget {
               success: (_) {
                 deletedItem.value = null;
                 SnackBarUtils.showGlassSnackBar(
-                  textTheme: textTheme,
-                  glassTheme: glassTheme,
-                  scaffoldMessenger: scaffoldMessenger,
+                  context: context,
                   message: '${rotationGroup.rotationName}を元に戻しました',
                 );
               },
               failure: (error) {
                 SnackBarUtils.showGlassSnackBar(
-                  textTheme: textTheme,
-                  glassTheme: glassTheme,
-                  scaffoldMessenger: scaffoldMessenger,
+                  context: context,
                   message: '復元に失敗しました: $error',
                 );
               },
@@ -180,9 +170,7 @@ class HomeScreen extends HookConsumerWidget {
       failure: (error) {
         deletedItem.value = null;
         SnackBarUtils.showGlassSnackBar(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
+          context: context,
           message: '削除に失敗しました: $error',
         );
       },
