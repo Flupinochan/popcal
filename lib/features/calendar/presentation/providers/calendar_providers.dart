@@ -19,7 +19,7 @@ Future<Result<CalendarData>> calendarData(
   String rotationGroupId,
 ) async {
   try {
-    // 1. ユーザ情報を取得
+    // 1. ユーザ情報を取得 ※futureで1度だけ取得が可能
     final authResult = await ref.watch(authStateChangesProvider.future);
     if (authResult.isFailure) {
       return Results.failure(authResult.failureOrNull!);
