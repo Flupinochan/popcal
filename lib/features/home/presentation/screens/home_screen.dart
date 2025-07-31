@@ -15,6 +15,7 @@ import 'package:popcal/features/notifications/providers/notification_providers.d
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/screen/error_screen.dart';
+import 'package:popcal/shared/screen/loading_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
@@ -45,7 +46,7 @@ class HomeScreen extends HookConsumerWidget {
                     _buildHomeScreen(context, ref, homeData, deletedItem),
             failure: (error) => ErrorScreen(message: error.message),
           ),
-      loading: () => LoadingWidget(),
+      loading: () => LoadingScreen(),
       error: (error, stack) => ErrorScreen(message: error.toString()),
     );
   }

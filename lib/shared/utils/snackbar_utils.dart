@@ -4,7 +4,7 @@ import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class SnackBarUtils {
-  // 表示のみSnackBar ※contextは渡せないため注意
+  // 表示のみSnackBar ※ScaffoldのあるWidgetでのみ実行可能
   static void showGlassSnackBar({
     required TextTheme textTheme,
     required GlassTheme glassTheme,
