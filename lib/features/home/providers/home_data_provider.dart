@@ -22,7 +22,7 @@ Future<Result<HomeData>> homeData(Ref ref) async {
     return Results.failure(AuthFailure('未認証です'));
   }
 
-  // 2. ローテーション一覧を取得
+  // 2. ローテーショングループ一覧を取得
   final rotationGroupsResult = await ref.watch(
     rotationGroupsStreamProvider(user.uid).future,
   );

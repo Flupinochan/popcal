@@ -5,12 +5,12 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/providers/user_provider.dart';
+import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
-import 'package:popcal/features/rotation/presentation/view_models/rotation_view_model.dart';
-import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
+import 'package:popcal/features/rotation/providers/rotation_data_provider.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
+import 'package:popcal/features/rotation/providers/rotation_view_model.dart';
 import 'package:popcal/shared/screen/error_screen.dart';
 import 'package:popcal/shared/screen/loading_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
@@ -27,159 +27,24 @@ class RotationScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final isUpdateMode = rotationGroupId != null;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
     final isLoading = ref.watch(rotationViewModelProvider).isLoading;
+    final rotationDataAsync = ref.watch(rotationDataProvider(rotationGroupId));
 
-    final currentUserState = ref.watch(currentUserProvider);
-    final currentUser = currentUserState.when(
+    return rotationDataAsync.when(
       data:
-          (result) =>
-              result.when(success: (user) => user, failure: (_) => null),
-      loading: () => null,
-      error: (_, __) => null,
-    );
-
-    Future<void> handleCreateRotationGroup() async {
-      if (currentUser == null) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('ログインが必要です')));
-        }
-        return;
-      }
-
-      if (formKey.currentState!.saveAndValidate()) {
-        final formData = formKey.currentState!.value;
-        final rotationName = formData['rotationName'] as String;
-
-        final rotationGroup = RotationGroup(
-          rotationGroupId: null,
-          ownerUserId: currentUser.uid,
-          rotationName: rotationName,
-          rotationMembers: List<String>.from(
-            formData['rotationMembers'] as List,
+          (result) => result.when(
+            success:
+                (rotationData) => _buildFormScreen(
+                  context: context,
+                  formKey: formKey,
+                  rotationData: rotationData,
+                  rotationViewModel: rotationViewModel,
+                  isLoading: isLoading,
+                ),
+            failure: (error) => ErrorScreen(message: error.message),
           ),
-          rotationDays: formData['rotationDays'] as List<Weekday>,
-          notificationTime: formData['notificationTime'] as TimeOfDay,
-          rotationStartDate: DateTime.now().toLocal(),
-          updatedAt: DateTime.now().toLocal(),
-        );
-
-        final result = await rotationViewModel.createRotationGroup(
-          rotationGroup,
-        );
-
-        final message = result.when(
-          success: (_) => '$rotationNameを作成しました',
-          failure: (error) => error.message,
-        );
-
-        // 非同期処理の後はif (context.mounted)でチェックが必須
-        if (context.mounted) {
-          SnackBarUtils.showGlassSnackBar(
-            glassTheme: glassTheme,
-            textTheme: textTheme,
-            scaffoldMessenger: scaffoldMessenger,
-            message: message,
-          );
-          Navigator.pop(context);
-        }
-      }
-    }
-
-    Future<void> handleUpdateRotationGroup(
-      RotationGroup originalRotationGroup,
-    ) async {
-      if (currentUser == null) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('ログインが必要です')));
-        }
-        return;
-      }
-
-      if (formKey.currentState!.saveAndValidate()) {
-        final formData = formKey.currentState!.value;
-
-        final updatedRotationGroup = originalRotationGroup.copyWith(
-          rotationName: formData['rotationName'] as String,
-          rotationMembers: List<String>.from(
-            formData['rotationMembers'] as List,
-          ),
-          rotationDays: formData['rotationDays'] as List<Weekday>,
-          notificationTime: formData['notificationTime'] as TimeOfDay,
-          updatedAt: DateTime.now().toLocal(),
-        );
-
-        final result = await rotationViewModel.updateRotationGroup(
-          updatedRotationGroup,
-        );
-
-        result.when(
-          success: (_) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('更新しました')));
-              Navigator.pop(context);
-            }
-          },
-          failure: (error) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('エラーが発生しました: $error')));
-            }
-          },
-        );
-      }
-    }
-
-    // 新規作成モード
-    if (!isUpdateMode) {
-      return _buildFormScreen(
-        context: context,
-        formKey: formKey,
-        isUpdateMode: false,
-        initialRotationGroup: null,
-        isLoading: isLoading,
-        onSubmit: handleCreateRotationGroup,
-        glass: glassTheme,
-      );
-    }
-
-    // 編集モード - currentUserが必要
-    if (currentUser == null) {
-      return ErrorScreen();
-    }
-
-    // 編集モード - AsyncNotifierProviderを使用
-    final rotationDetailAsync = ref.watch(
-      rotationDetailProvider(currentUser.uid, rotationGroupId!),
-    );
-
-    return rotationDetailAsync.when(
-      data: (rotationGroup) {
-        if (rotationGroup == null) {
-          return ErrorScreen(message: 'データが見つかりません');
-        }
-        return _buildFormScreen(
-          context: context,
-          formKey: formKey,
-          isUpdateMode: true,
-          initialRotationGroup: rotationGroup,
-          isLoading: isLoading,
-          onSubmit: () => handleUpdateRotationGroup(rotationGroup),
-          glass: glassTheme,
-        );
-      },
       loading: () => LoadingScreen(),
       error: (error, stack) => ErrorScreen(message: error.toString()),
     );
@@ -188,12 +53,14 @@ class RotationScreen extends HookConsumerWidget {
   Widget _buildFormScreen({
     required BuildContext context,
     required GlobalKey<FormBuilderState> formKey,
-    required bool isUpdateMode,
-    required RotationGroup? initialRotationGroup,
+    required RotationData rotationData,
+    required RotationViewModel rotationViewModel,
     required bool isLoading,
-    required VoidCallback onSubmit,
-    required GlassTheme glass,
   }) {
+    final isUpdateMode = rotationData.rotationGroup != null;
+    final initialRotationGroup = rotationData.rotationGroup;
+    final glass = Theme.of(context).extension<GlassTheme>()!;
+
     return Scaffold(
       backgroundColor: glass.backgroundColor,
       extendBodyBehindAppBar: true,
@@ -272,8 +139,79 @@ class RotationScreen extends HookConsumerWidget {
         isLoading: isLoading,
         isUpdateMode: isUpdateMode,
         onCancel: () => Navigator.pop(context),
-        onSubmit: onSubmit,
+        onSubmit:
+            () => _handleCreateRotationGroup(
+              context,
+              formKey,
+              rotationViewModel,
+              rotationData.appUser,
+              initialRotationGroup!,
+              isUpdateMode,
+            ),
       ),
     );
+  }
+}
+
+Future<void> _handleCreateRotationGroup(
+  BuildContext context,
+  GlobalKey<FormBuilderState> formKey,
+  RotationViewModel rotationViewModel,
+  AppUser appUser,
+  RotationGroup originalRotationGroup,
+  bool isUpdateMode,
+) async {
+  final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+  final textTheme = Theme.of(context).textTheme;
+  final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+  if (formKey.currentState!.saveAndValidate()) {
+    final formData = formKey.currentState!.value;
+    final rotationName = formData['rotationName'] as String;
+
+    final rotationGroup =
+        isUpdateMode
+            ? RotationGroup(
+              rotationGroupId: null,
+              ownerUserId: appUser.uid,
+              rotationName: rotationName,
+              rotationMembers: List<String>.from(
+                formData['rotationMembers'] as List,
+              ),
+              rotationDays: formData['rotationDays'] as List<Weekday>,
+              notificationTime: formData['notificationTime'] as TimeOfDay,
+              rotationStartDate: DateTime.now().toLocal(),
+              updatedAt: DateTime.now().toLocal(),
+            )
+            : originalRotationGroup.copyWith(
+              rotationName: formData['rotationName'] as String,
+              rotationMembers: List<String>.from(
+                formData['rotationMembers'] as List,
+              ),
+              rotationDays: formData['rotationDays'] as List<Weekday>,
+              notificationTime: formData['notificationTime'] as TimeOfDay,
+              updatedAt: DateTime.now().toLocal(),
+            );
+
+    final result =
+        isUpdateMode
+            ? await rotationViewModel.createRotationGroup(rotationGroup)
+            : await rotationViewModel.updateRotationGroup(rotationGroup);
+
+    final message = result.when(
+      success:
+          (_) => isUpdateMode ? '$rotationNameを作成しました' : '$rotationNameを更新しました',
+      failure: (error) => error.message,
+    );
+
+    if (context.mounted) {
+      SnackBarUtils.showGlassSnackBar(
+        glassTheme: glassTheme,
+        textTheme: textTheme,
+        scaffoldMessenger: scaffoldMessenger,
+        message: message,
+      );
+      Navigator.pop(context);
+    }
   }
 }

@@ -5,8 +5,6 @@ import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 
 part 'rotation_detail_provider.g.dart';
 
-// useEffect内での状態変更は不可能で、viewModelには含められないため
-// riverpodでwatchするように変更
 @riverpod
 class RotationDetail extends _$RotationDetail {
   @override

@@ -30,21 +30,21 @@ Future<Result<CalendarData>> calendarData(
   }
 
   // 2. ローテーション情報取得 ※ユーザ情報はここで利用
-  final rotationResult = await ref.watch(
+  final rotationGroup = await ref.watch(
     rotationDetailProvider(user.uid, rotationGroupId).future,
   );
-  if (rotationResult == null) {
+  if (rotationGroup == null) {
     return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
   }
 
   // 3. 通知情報取得
   final notificationResult = await ref.watch(
-    calendarNotificationDetailsProvider(rotationResult).future,
+    calendarNotificationDetailsProvider(rotationGroup).future,
   );
 
   final calendarData = CalendarData(
     user: user,
-    rotationGroup: rotationResult,
+    rotationGroup: rotationGroup,
     notificationDetails: notificationResult,
   );
 

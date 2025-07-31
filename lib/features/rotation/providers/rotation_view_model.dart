@@ -1,5 +1,3 @@
-// lib/features/rotation/presentation/view_models/rotation_view_model.dart
-
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/use_cases/create_rotation_group_use_case.dart';
@@ -7,7 +5,7 @@ import 'package:popcal/features/rotation/domain/use_cases/update_rotation_group_
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part '../presentation/view_models/rotation_view_model.g.dart';
+part 'rotation_view_model.g.dart';
 
 @riverpod
 class RotationViewModel extends _$RotationViewModel {
