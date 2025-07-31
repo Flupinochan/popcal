@@ -27,42 +27,9 @@ class LoginScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
-    final authViewModel = ref.read(authViewModelProvider.notifier);
     final isLoading = ref.watch(authViewModelProvider).isLoading;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final selectedMode = useState(AuthMode.signIn);
-
-    /// サインイン/サインアップ処理
-    Future<void> handleSubmit() async {
-      if (!formKey.currentState!.saveAndValidate()) return;
-
-      final formData = formKey.currentState!.value;
-      final email = formData[LoginFormField.email.key] as String;
-      final password = formData[LoginFormField.password.key] as String;
-
-      final dtoResult = EmailSignInRequestDto.create(
-        email: email,
-        password: password,
-      );
-      if (dtoResult.isFailure) {
-        showErrorDialog(context, dtoResult.displayText);
-        return;
-      }
-      final dto = dtoResult.valueOrNull!;
-
-      final authResult =
-          selectedMode.value == AuthMode.signIn
-              ? await authViewModel.signIn(dto)
-              : await authViewModel.signUp(dto);
-      authResult.when(
-        success: (user) {
-          context.push(Routes.home);
-        },
-        failure: (error) {
-          showErrorDialog(context, error.message);
-        },
-      );
-    }
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -209,7 +176,13 @@ class LoginScreen extends HookConsumerWidget {
                             : GlassButton(
                               text: selectedMode.value.displayName,
                               height: 50,
-                              onPressed: handleSubmit,
+                              onPressed:
+                                  () => _handleSubmit(
+                                    context,
+                                    ref,
+                                    formKey,
+                                    selectedMode,
+                                  ),
                             ),
                         SizedBox(height: 20),
                         // Forgot password リンク
@@ -286,6 +259,47 @@ class LoginScreen extends HookConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // サインイン/サインアップ処理
+  Future<void> _handleSubmit(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<FormBuilderState> formKey,
+    ValueNotifier<AuthMode> selectedMode,
+  ) async {
+    if (!formKey.currentState!.saveAndValidate()) return;
+
+    final formData = formKey.currentState!.value;
+    final email = formData[LoginFormField.email.key] as String;
+    final password = formData[LoginFormField.password.key] as String;
+
+    final dtoResult = EmailSignInRequestDto.create(
+      email: email,
+      password: password,
+    );
+    if (dtoResult.isFailure) {
+      if (context.mounted) {
+        showErrorDialog(context, dtoResult.displayText);
+      }
+      return;
+    }
+    final dto = dtoResult.valueOrNull!;
+
+    final authViewModel = ref.read(authViewModelProvider.notifier);
+    final authResult =
+        selectedMode.value == AuthMode.signIn
+            ? await authViewModel.signIn(dto)
+            : await authViewModel.signUp(dto);
+    if (!context.mounted) return;
+    authResult.when(
+      success: (user) {
+        context.push(Routes.home);
+      },
+      failure: (error) {
+        showErrorDialog(context, error.message);
+      },
     );
   }
 }

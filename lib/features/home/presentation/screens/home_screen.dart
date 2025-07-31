@@ -28,14 +28,12 @@ class HomeScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationProvider = ref.watch(notificationRepositoryProvider);
-    final homeViewModel = ref.read(homeViewModelProvider.notifier);
     final homeDataAsync = ref.watch(homeDataProvider);
+    final deletedItem = useState<RotationGroup?>(null);
 
     // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)
     useEffect(() {
-      () async {
-        await notificationProvider.initializeNotificationLaunch();
-      }();
+      notificationProvider.initializeNotificationLaunch();
       return null;
     }, []);
 
@@ -44,7 +42,7 @@ class HomeScreen extends HookConsumerWidget {
           (result) => result.when(
             success:
                 (homeData) =>
-                    _buildHomeScreen(context, homeData, homeViewModel),
+                    _buildHomeScreen(context, ref, homeData, deletedItem),
             failure: (error) => ErrorScreen(message: error.message),
           ),
       loading: () => LoadingWidget(),
@@ -54,11 +52,12 @@ class HomeScreen extends HookConsumerWidget {
 
   Widget _buildHomeScreen(
     BuildContext context,
+    WidgetRef ref,
     HomeData homeData,
-    HomeViewModel homeViewModel,
+    ValueNotifier<RotationGroup?> deletedItem,
   ) {
+    final homeViewModel = ref.read(homeViewModelProvider.notifier);
     final glassTheme = Theme.of(context).extension<GlassTheme>()!;
-    final deletedItem = useState<RotationGroup?>(null);
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
