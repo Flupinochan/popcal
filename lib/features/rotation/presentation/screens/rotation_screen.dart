@@ -205,12 +205,7 @@ Future<void> _handleCreateRotationGroup(
     );
 
     if (context.mounted) {
-      SnackBarUtils.showGlassSnackBar(
-        glassTheme: glassTheme,
-        textTheme: textTheme,
-        scaffoldMessenger: scaffoldMessenger,
-        message: message,
-      );
+      SnackBarUtils.showGlassSnackBar(context: context, message: message);
       Navigator.pop(context);
     }
   }
