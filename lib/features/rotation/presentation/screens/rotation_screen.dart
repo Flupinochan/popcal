@@ -27,22 +27,13 @@ class RotationScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
-    final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
-    final isLoading = ref.watch(rotationViewModelProvider).isLoading;
     final rotationDataAsync = ref.watch(rotationDataProvider(rotationGroupId));
 
     return rotationDataAsync.when(
       data:
           (result) => result.when(
             success:
-                (rotationData) => _buildFormScreen(
-                  context: context,
-                  formKey: formKey,
-                  rotationData: rotationData,
-                  rotationViewModel: rotationViewModel,
-                  isLoading: isLoading,
-                ),
+                (rotationData) => _buildFormScreen(context, ref, rotationData),
             failure: (error) => customErrorWidget(context, error.message),
           ),
       loading: () => customLoadingWidget(context),
@@ -50,17 +41,17 @@ class RotationScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFormScreen({
-    required BuildContext context,
-    required GlobalKey<FormBuilderState> formKey,
-    required RotationData rotationData,
-    required RotationViewModel rotationViewModel,
-    required bool isLoading,
-  }) {
+  Widget _buildFormScreen(
+    BuildContext context,
+    WidgetRef ref,
+    RotationData rotationData,
+  ) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final isUpdateMode = rotationData.rotationGroup != null;
     final initialRotationGroup = rotationData.rotationGroup;
+    final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
+    final isLoading = ref.watch(rotationViewModelProvider).isLoading;
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -141,10 +132,10 @@ class RotationScreen extends HookConsumerWidget {
         isUpdateMode: isUpdateMode,
         onCancel: () => Navigator.pop(context),
         onSubmit:
-            () => _handleCreateRotationGroup(
+            () => _handleSubmit(
               context,
+              ref,
               formKey,
-              rotationViewModel,
               rotationData.appUser,
               initialRotationGroup,
               isUpdateMode,
@@ -154,10 +145,10 @@ class RotationScreen extends HookConsumerWidget {
   }
 }
 
-Future<void> _handleCreateRotationGroup(
+Future<void> _handleSubmit(
   BuildContext context,
+  WidgetRef ref,
   GlobalKey<FormBuilderState> formKey,
-  RotationViewModel rotationViewModel,
   AppUser appUser,
   RotationGroup? originalRotationGroup,
   bool isUpdateMode,
@@ -190,6 +181,7 @@ Future<void> _handleCreateRotationGroup(
               updatedAt: DateTime.now().toLocal(),
             );
 
+    final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
     final result =
         isUpdateMode
             ? await rotationViewModel.updateRotationGroup(rotationGroup)
