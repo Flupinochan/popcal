@@ -160,15 +160,13 @@ class HomeScreen extends HookConsumerWidget {
     AppUser user,
     List<RotationGroup> rotationGroups,
   ) {
-    // hooksはWidget内でのみ定義可能
-    final deletedItem = useState<RotationGroup?>(null);
-
     return CustomScrollView(
       slivers: [
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
           sliver: SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
+            // このcontextは使用しない
+            delegate: SliverChildBuilderDelegate((_, index) {
               final rotationGroup = rotationGroups[index];
               return GlassListItem(
                 rotationGroup: rotationGroup,
@@ -183,13 +181,7 @@ class HomeScreen extends HookConsumerWidget {
                   );
                 },
                 onDelete:
-                    () => _handleDelete(
-                      context,
-                      ref,
-                      rotationGroup,
-                      user,
-                      deletedItem,
-                    ),
+                    () => _handleDelete(context, ref, rotationGroup, user),
               );
             }, childCount: rotationGroups.length),
           ),
@@ -204,12 +196,9 @@ class HomeScreen extends HookConsumerWidget {
     WidgetRef ref,
     RotationGroup rotationGroup,
     AppUser currentUser,
-    ValueNotifier<RotationGroup?> deletedItem,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
     final createUseCase = ref.read(createRotationGroupUseCaseProvider);
-
-    deletedItem.value = rotationGroup;
 
     // 削除処理
     final result = await rotationRepository.deleteRotationGroup(
@@ -233,9 +222,10 @@ class HomeScreen extends HookConsumerWidget {
               rotationGroupToCreate,
             );
 
+            // _buildRotationGroupEmpty から _buildRotationGroupList に戻る場合はcontextが異なるため戻れない
+            // 以下のcontextが前の親のcontextのためエラー
             restoreResult.when(
               success: (_) {
-                deletedItem.value = null;
                 SnackBarUtils.showGlassSnackBar(
                   context: context,
                   message: '${rotationGroup.rotationName}を元に戻しました',
@@ -253,7 +243,6 @@ class HomeScreen extends HookConsumerWidget {
         );
       },
       failure: (error) {
-        deletedItem.value = null;
         SnackBarUtils.showGlassSnackBar(
           context: context,
           message: '削除に失敗しました: $error',
