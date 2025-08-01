@@ -21,41 +21,41 @@ GoRouter router(Ref ref) {
     debugLogDiagnostics: true,
     redirect: (context, state) {
       return authState.when(
-        data: (user) {
+        data: (result) {
           final isAuthPage = state.uri.path == Routes.auth;
-
-          if (user.isFailure && !isAuthPage) {
-            return Routes.auth;
-          }
-
-          if (user.isSuccess && isAuthPage) {
-            return Routes.home;
-          }
-
-          return null;
+          return result.when(
+            success: (user) {
+              if (user != null && isAuthPage) {
+                // 認証済かつ認証画面にいる => ホーム画面へ
+                return Routes.home;
+                // 未認証かつ認証画面にいない => 認証画面へ
+              } else if (user == null && !isAuthPage) {
+                return Routes.auth;
+                // 画面遷移しない
+              } else {
+                return null;
+              }
+            },
+            failure: (error) {
+              if (!isAuthPage) {
+                // 認証画面にいない => 認証画面へ
+                return Routes.auth;
+              } else {
+                return null;
+              }
+            },
+          );
         },
         loading: () => null,
         error: (_, __) => Routes.auth,
       );
     },
     routes: [
-      GoRoute(
-        path: Routes.home,
-        builder: (context, state) {
-          return HomeScreen();
-        },
-      ),
-      GoRoute(
-        path: Routes.auth,
-        builder: (context, state) {
-          return LoginScreen();
-        },
-      ),
+      GoRoute(path: Routes.home, builder: (context, state) => HomeScreen()),
+      GoRoute(path: Routes.auth, builder: (context, state) => LoginScreen()),
       GoRoute(
         path: Routes.rotation,
-        builder: (context, state) {
-          return RotationScreen();
-        },
+        builder: (context, state) => RotationScreen(),
       ),
       GoRoute(
         path: Routes.rotationUpdate,

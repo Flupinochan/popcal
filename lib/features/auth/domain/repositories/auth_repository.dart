@@ -4,7 +4,7 @@ import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 
 abstract class AuthRepository {
-  // 未認証の場合はnullを返却
+  // successで未認証の場合はnullを返却
   Stream<Result<AppUser?>> get authStateChanges;
   Future<Result<AppUser?>> getUser();
 
