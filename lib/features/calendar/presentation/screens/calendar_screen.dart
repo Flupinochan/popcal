@@ -8,7 +8,7 @@ import 'package:popcal/features/calendar/presentation/providers/calendar_provide
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
-import 'package:popcal/shared/widgets/glass_chip.dart';
+import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';

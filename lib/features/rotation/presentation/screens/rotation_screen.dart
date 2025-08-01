@@ -15,10 +15,10 @@ import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
-import 'package:popcal/shared/widgets/glass_form_list.dart';
+import 'package:popcal/features/rotation/presentation/widgets/glass_form_list.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
-import 'package:popcal/shared/widgets/glass_form_time.dart';
-import 'package:popcal/shared/widgets/glass_form_weekday.dart';
+import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.dart';
+import 'package:popcal/features/rotation/presentation/widgets/glass_form_weekday.dart';
 
 class RotationScreen extends HookConsumerWidget {
   final String? rotationGroupId;

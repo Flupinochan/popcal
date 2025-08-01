@@ -14,10 +14,10 @@ import 'package:popcal/features/auth/providers/auth_view_model.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_dialog.dart';
-import 'package:popcal/shared/widgets/glass_form_password.dart';
+import 'package:popcal/features/auth/presentation/widgets/glass_form_password.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
-import 'package:popcal/shared/widgets/glass_toggle_button.dart';
+import 'package:popcal/features/auth/presentation/widgets/glass_toggle_button.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class LoginScreen extends HookConsumerWidget {
