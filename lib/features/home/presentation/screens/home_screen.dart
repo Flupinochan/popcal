@@ -9,19 +9,18 @@ import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
-import 'package:popcal/features/home/presentation/screens/home_screen_empty.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
-import 'package:popcal/features/home/providers/home_view_model.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
-import 'package:popcal/shared/screen/error_screen.dart';
-import 'package:popcal/shared/screen/loading_screen.dart';
+import 'package:popcal/shared/widgets/custom_error_widget.dart';
+import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
-import 'package:popcal/shared/widgets/loading_widget.dart';
+import 'package:popcal/shared/widgets/glass_icon.dart';
+import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class HomeScreen extends HookConsumerWidget {
   HomeScreen({super.key});
@@ -31,8 +30,9 @@ class HomeScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)
-    final notificationProvider = ref.watch(notificationRepositoryProvider);
     useEffect(() {
+      // useEffect内はref.watchは使用不可
+      final notificationProvider = ref.read(notificationRepositoryProvider);
       notificationProvider.initializeNotificationLaunch();
       return null;
     }, []);
@@ -47,21 +47,23 @@ class HomeScreen extends HookConsumerWidget {
 
               // 通知同期処理
               useEffect(() {
-                final syncUseCase = ref.watch(syncNotificationsUseCaseProvider);
+                final syncUseCase = ref.read(syncNotificationsUseCaseProvider);
                 syncUseCase.execute(user.uid);
                 return null;
               }, [user.uid]);
 
-              return _buildHomeScreen(context, ref, user);
+              return _buildHome(context, ref, user);
             },
-            failure: (error) => ErrorScreen(message: error.message),
+            failure: (error) {
+              return customErrorWidget(context, error.message);
+            },
           ),
-      loading: () => LoadingScreen(),
-      error: (error, stack) => ErrorScreen(message: error.toString()),
+      loading: () => customLoadingWidget(context),
+      error: (error, stack) => customErrorWidget(context, error.toString()),
     );
   }
 
-  Widget _buildHomeScreen(BuildContext context, WidgetRef ref, AppUser user) {
+  Widget _buildHome(BuildContext context, WidgetRef ref, AppUser user) {
     final rotationGroupsAsync = ref.watch(
       rotationGroupsStreamProvider(user.uid),
     );
@@ -90,30 +92,75 @@ class HomeScreen extends HookConsumerWidget {
                   success:
                       (rotationGroups) =>
                           rotationGroups.isEmpty
-                              ? HomeScreenEmpty()
+                              ? _buildRotationGroupEmpty(context)
                               : _buildRotationGroupList(
                                 context,
                                 ref,
                                 user,
                                 rotationGroups,
                               ),
-                  failure: (error) => ErrorScreen(message: error.message),
+                  failure:
+                      (error) =>
+                          customErrorSimpleWidget(context, error.message),
                 ),
-            loading: () => LoadingWidget(),
-            error: (error, stack) => ErrorWidget(error.toString()),
+            loading: () => customLoadingSimpleWidget(context),
+            error:
+                (error, stack) =>
+                    customErrorSimpleWidget(context, error.toString()),
           ),
         ),
       ),
     );
   }
 
+  // ローテーションが1つもない場合の画面
+  Widget _buildRotationGroupEmpty(BuildContext context) {
+    return Center(
+      child: GlassWrapper(
+        width: 340,
+        height: 240,
+        padding: EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Icon
+            GlassIcon(iconData: Icons.group_add),
+            const SizedBox(height: 16),
+            // Text1
+            Text(
+              'ローテーションがありません',
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            // Text2
+            Text(
+              '新しいローテーションを作成してみましょう',
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            // 作成Button
+            GlassButton(
+              width: 120,
+              height: 40,
+              text: '作成',
+              onPressed: () => context.push(Routes.rotation),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ローテーショングループ一覧表示
   Widget _buildRotationGroupList(
     BuildContext context,
     WidgetRef ref,
     AppUser user,
     List<RotationGroup> rotationGroups,
   ) {
-    final homeViewModel = ref.read(homeViewModelProvider.notifier);
+    // hooksはWidget内でのみ定義可能
     final deletedItem = useState<RotationGroup?>(null);
 
     return CustomScrollView(
@@ -138,10 +185,10 @@ class HomeScreen extends HookConsumerWidget {
                 onDelete:
                     () => _handleDelete(
                       context,
+                      ref,
                       rotationGroup,
                       user,
                       deletedItem,
-                      homeViewModel,
                     ),
               );
             }, childCount: rotationGroups.length),
@@ -154,14 +201,18 @@ class HomeScreen extends HookConsumerWidget {
   // ローテーショングループの削除処理&復元処理
   void _handleDelete(
     BuildContext context,
+    WidgetRef ref,
     RotationGroup rotationGroup,
     AppUser currentUser,
     ValueNotifier<RotationGroup?> deletedItem,
-    HomeViewModel homeViewModel,
   ) async {
+    final rotationRepository = ref.read(rotationRepositoryProvider);
+    final createUseCase = ref.read(createRotationGroupUseCaseProvider);
+
     deletedItem.value = rotationGroup;
 
-    final result = await homeViewModel.deleteRotationGroup(
+    // 削除処理
+    final result = await rotationRepository.deleteRotationGroup(
       currentUser.uid,
       rotationGroup.rotationGroupId!,
     );
@@ -172,11 +223,17 @@ class HomeScreen extends HookConsumerWidget {
           context: context,
           message: '${rotationGroup.rotationName}を削除しました',
           onAction: () async {
-            // Restore
-            final result = await homeViewModel.restoreRotationGroup(
-              rotationGroup,
+            // 再作成処理
+            final rotationGroupToCreate = rotationGroup.copyWith(
+              rotationGroupId: null,
+              rotationStartDate: DateTime.now().toLocal(),
+              updatedAt: DateTime.now().toLocal(),
             );
-            result.when(
+            final restoreResult = await createUseCase.execute(
+              rotationGroupToCreate,
+            );
+
+            restoreResult.when(
               success: (_) {
                 deletedItem.value = null;
                 SnackBarUtils.showGlassSnackBar(

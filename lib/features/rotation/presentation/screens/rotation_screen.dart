@@ -11,8 +11,8 @@ import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/providers/rotation_data_provider.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
 import 'package:popcal/features/rotation/providers/rotation_view_model.dart';
-import 'package:popcal/shared/screen/error_screen.dart';
-import 'package:popcal/shared/screen/loading_screen.dart';
+import 'package:popcal/shared/widgets/custom_error_widget.dart';
+import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_form_list.dart';
@@ -43,10 +43,10 @@ class RotationScreen extends HookConsumerWidget {
                   rotationViewModel: rotationViewModel,
                   isLoading: isLoading,
                 ),
-            failure: (error) => ErrorScreen(message: error.message),
+            failure: (error) => customErrorWidget(context, error.message),
           ),
-      loading: () => LoadingScreen(),
-      error: (error, stack) => ErrorScreen(message: error.toString()),
+      loading: () => customLoadingWidget(context),
+      error: (error, stack) => customErrorWidget(context, error.toString()),
     );
   }
 
