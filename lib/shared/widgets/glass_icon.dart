@@ -27,7 +27,8 @@ class GlassIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     // デフォルトの背景のサイズはIconの2倍
     final size = backgroundSize ?? (iconSize * 2);
     // 背景色を少し濃い目の白
@@ -46,7 +47,10 @@ class GlassIcon extends StatelessWidget {
       margin: margin,
       child: ClipOval(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: glass.blur, sigmaY: glass.blur),
+          filter: ImageFilter.blur(
+            sigmaX: glassTheme.blur,
+            sigmaY: glassTheme.blur,
+          ),
           child: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -55,15 +59,15 @@ class GlassIcon extends StatelessWidget {
               border:
                   showBorder
                       ? Border.all(
-                        color: borderColor ?? glass.borderColor,
-                        width: glass.borderWidth,
+                        color: borderColor ?? glassTheme.borderColor,
+                        width: glassTheme.borderWidth,
                       )
                       : null,
             ),
             child: Icon(
               iconData,
               size: iconSize,
-              color: iconColor ?? glass.iconColor,
+              color: iconColor ?? glassTheme.iconColor,
             ),
           ),
         ),

@@ -23,7 +23,8 @@ class GlassDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return Dialog(
       backgroundColor: glassTheme.backgroundColor,
@@ -65,7 +66,8 @@ class GlassDialog extends StatelessWidget {
 
 /// ダイアログはshowDialogメソッドで表示する
 void showErrorDialog(BuildContext context, String message) {
-  final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+  final glassTheme =
+      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
   showDialog<void>(
     context: context,
@@ -81,7 +83,8 @@ void showErrorDialog(BuildContext context, String message) {
 }
 
 void showInfoDialog(BuildContext context, String message) {
-  final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+  final glassTheme =
+      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
   showDialog<void>(
     context: context,

@@ -57,12 +57,13 @@ class RotationScreen extends HookConsumerWidget {
     required RotationViewModel rotationViewModel,
     required bool isLoading,
   }) {
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final isUpdateMode = rotationData.rotationGroup != null;
     final initialRotationGroup = rotationData.rotationGroup;
-    final glass = Theme.of(context).extension<GlassTheme>()!;
 
     return Scaffold(
-      backgroundColor: glass.backgroundColor,
+      backgroundColor: glassTheme.backgroundColor,
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: GlassAppBar(
@@ -73,7 +74,7 @@ class RotationScreen extends HookConsumerWidget {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(gradient: glass.primaryGradient),
+        decoration: BoxDecoration(gradient: glassTheme.primaryGradient),
         child: SafeArea(
           child: FormBuilder(
             key: formKey,
@@ -161,10 +162,6 @@ Future<void> _handleCreateRotationGroup(
   RotationGroup? originalRotationGroup,
   bool isUpdateMode,
 ) async {
-  final glassTheme = Theme.of(context).extension<GlassTheme>()!;
-  final textTheme = Theme.of(context).textTheme;
-  final scaffoldMessenger = ScaffoldMessenger.of(context);
-
   if (formKey.currentState!.saveAndValidate()) {
     final formData = formKey.currentState!.value;
     final rotationName = formData['rotationName'] as String;

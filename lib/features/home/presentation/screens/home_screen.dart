@@ -45,7 +45,7 @@ class HomeScreen extends HookConsumerWidget {
             success: (user) {
               if (user == null) return LoginScreen();
 
-              // 通知同期処理
+              // バックグラウンドで通知同期処理
               useEffect(() {
                 final syncUseCase = ref.read(syncNotificationsUseCaseProvider);
                 syncUseCase.execute(user.uid);
@@ -64,10 +64,11 @@ class HomeScreen extends HookConsumerWidget {
   }
 
   Widget _buildHome(BuildContext context, WidgetRef ref, AppUser user) {
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final rotationGroupsAsync = ref.watch(
       rotationGroupsStreamProvider(user.uid),
     );
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -85,7 +86,7 @@ class HomeScreen extends HookConsumerWidget {
         width: double.infinity,
         decoration: BoxDecoration(gradient: glassTheme.primaryGradient),
         child: SafeArea(
-          // ローテーショングループ一覧表示
+          // ローテーショングループ一覧表示 (StreamBuilderと同じ)
           child: rotationGroupsAsync.when(
             data:
                 (result) => result.when(
@@ -113,7 +114,7 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  // ローテーションが1つもない場合の画面
+  // ローテーショングループが1つもない場合
   Widget _buildRotationGroupEmpty(BuildContext context) {
     return Center(
       child: GlassWrapper(
@@ -153,7 +154,7 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  // ローテーショングループ一覧表示
+  // ローテーショングループを一覧表示
   Widget _buildRotationGroupList(
     BuildContext context,
     WidgetRef ref,
@@ -165,7 +166,7 @@ class HomeScreen extends HookConsumerWidget {
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
           sliver: SliverList(
-            // このcontextは使用しない
+            // このcontextは使用しない ※ローカル内で扱うcontextの場合は使用してOK (scaffold messengerはNG)
             delegate: SliverChildBuilderDelegate((_, index) {
               final rotationGroup = rotationGroups[index];
               return GlassListItem(
@@ -190,7 +191,7 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  // ローテーショングループの削除処理&復元処理
+  // ローテーショングループの削除&復元処理
   void _handleDelete(
     BuildContext context,
     WidgetRef ref,

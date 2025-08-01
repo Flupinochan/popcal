@@ -13,8 +13,9 @@ class DrawerScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final authRepository = ref.read(authRepositoryProvider);
 
     return Drawer(

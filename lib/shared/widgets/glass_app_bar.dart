@@ -19,7 +19,8 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return AppBar(
       backgroundColor: glassTheme.backgroundColor,
@@ -44,7 +45,8 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   // AppBarの右側にローディング状態を表示
   Widget _buildAction(BuildContext context) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     switch (syncStatus) {
       case SyncStatus.syncing:

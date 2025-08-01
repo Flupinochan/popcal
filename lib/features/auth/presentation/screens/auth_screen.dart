@@ -25,8 +25,9 @@ class LoginScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final isLoading = ref.watch(authViewModelProvider).isLoading;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final selectedMode = useState(AuthMode.signIn);

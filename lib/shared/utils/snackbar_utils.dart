@@ -11,7 +11,8 @@ class SnackBarUtils {
     Duration duration = const Duration(seconds: 2),
   }) {
     final textTheme = Theme.of(context).textTheme;
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     scaffoldMessenger.clearSnackBars();
@@ -40,7 +41,8 @@ class SnackBarUtils {
     Duration duration = const Duration(seconds: 5),
   }) {
     final textTheme = Theme.of(context).textTheme;
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     scaffoldMessenger.clearSnackBars();

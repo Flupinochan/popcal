@@ -10,8 +10,8 @@ class GlassFormTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
-
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     // ローカル日時で指定
     final now = DateTime.now().toLocal();
     final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
@@ -76,7 +76,7 @@ class GlassFormTime extends StatelessWidget {
                       ),
                       textButtonTheme: TextButtonThemeData(
                         style: TextButton.styleFrom(
-                          foregroundColor: glass.iconColor,
+                          foregroundColor: glassTheme.iconColor,
                         ),
                       ),
                     ),

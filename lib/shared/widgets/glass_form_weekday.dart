@@ -11,7 +11,8 @@ class GlassFormWeekday extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return FormBuilderField<List<Weekday>>(
       name: 'rotationDays',
@@ -41,7 +42,8 @@ class GlassFormWeekday extends StatelessWidget {
                         Weekday.saturday,
                       ]
                       .map(
-                        (weekday) => _buildWeekdayButton(weekday, field, glass),
+                        (weekday) =>
+                            _buildWeekdayButton(weekday, field, glassTheme),
                       )
                       .toList(),
             ),

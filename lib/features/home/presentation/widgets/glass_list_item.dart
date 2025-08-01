@@ -20,7 +20,8 @@ class GlassListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -29,8 +30,8 @@ class GlassListItem extends StatelessWidget {
         direction: DismissDirection.horizontal,
         // Dismissによる削除時の背景色
         background: GlassWrapper(
-          borderColor: glass.errorBorderColor,
-          gradient: glass.errorGradient,
+          borderColor: glassTheme.errorBorderColor,
+          gradient: glassTheme.errorGradient,
           child: const SizedBox.shrink(),
         ),
         confirmDismiss: (direction) async {
@@ -40,7 +41,7 @@ class GlassListItem extends StatelessWidget {
         // ListItem
         child: GlassWrapper(
           child: Material(
-            color: glass.backgroundColor,
+            color: glassTheme.backgroundColor,
             child: InkWell(
               onTap: onTap,
               child: Padding(
@@ -88,7 +89,7 @@ class GlassListItem extends StatelessWidget {
                           // Popup Button
                           icon: Icon(
                             Icons.more_vert,
-                            color: glass.surfaceColor,
+                            color: glassTheme.surfaceColor,
                           ),
                         );
                       },
@@ -102,7 +103,9 @@ class GlassListItem extends StatelessWidget {
                         shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(color: glass.borderColorStrong),
+                            side: BorderSide(
+                              color: glassTheme.borderColorStrong,
+                            ),
                           ),
                         ),
                       ),
@@ -118,7 +121,7 @@ class GlassListItem extends StatelessWidget {
                         ),
                         // 区切り線
                         Divider(
-                          color: glass.borderColor,
+                          color: glassTheme.borderColor,
                           height: 1,
                           thickness: 1,
                           indent: 10,

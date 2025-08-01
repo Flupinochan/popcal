@@ -26,8 +26,9 @@ class GlassFormPassword extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final isPasswordVisible = useState(false);
 
     return GlassWrapper(

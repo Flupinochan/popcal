@@ -32,7 +32,8 @@ class GlassWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return Container(
       width: width,
@@ -40,10 +41,13 @@ class GlassWrapper extends StatelessWidget {
       margin: margin,
       // ClipRRect: 角丸
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(glass.borderRadius),
+        borderRadius: BorderRadius.circular(glassTheme.borderRadius),
         // BackdropFilter, ImageFilter: 背景をぼかす
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: glass.blur, sigmaY: glass.blur),
+          filter: ImageFilter.blur(
+            sigmaX: glassTheme.blur,
+            sigmaY: glassTheme.blur,
+          ),
           child: Container(
             alignment: alignment,
             padding: padding,
@@ -51,14 +55,14 @@ class GlassWrapper extends StatelessWidget {
             decoration: BoxDecoration(
               gradient:
                   showBackground
-                      ? (gradient ?? glass.backgroundGradient)
-                      : glass.transparentGradient,
-              borderRadius: BorderRadius.circular(glass.borderRadius),
+                      ? (gradient ?? glassTheme.backgroundGradient)
+                      : glassTheme.transparentGradient,
+              borderRadius: BorderRadius.circular(glassTheme.borderRadius),
               border:
                   showBorder
                       ? Border.all(
-                        color: borderColor ?? glass.borderColor,
-                        width: glass.borderWidth,
+                        color: borderColor ?? glassTheme.borderColor,
+                        width: glassTheme.borderWidth,
                       )
                       : null,
             ),

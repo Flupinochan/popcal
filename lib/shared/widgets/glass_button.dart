@@ -43,10 +43,11 @@ class GlassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
-    final effectiveIconColor = iconColor ?? glass.iconColor;
-    final effectiveTextStyle =
-        textStyle ?? Theme.of(context).textTheme.bodyLarge;
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final effectiveIconColor = iconColor ?? glassTheme.iconColor;
+    final effectiveTextStyle = textStyle ?? textTheme.bodyLarge;
 
     Widget child;
 

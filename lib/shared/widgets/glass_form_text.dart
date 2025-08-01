@@ -25,8 +25,9 @@ class GlassFormText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return GlassWrapper(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),

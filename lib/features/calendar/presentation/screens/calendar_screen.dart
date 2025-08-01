@@ -23,20 +23,11 @@ class CalendarScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final calendarDataAsync = ref.watch(calendarDataProvider(rotationGroupId));
-    final focusedDay = useState(DateTime.now().toLocal());
-    final selectedDay = useState<DateTime?>(DateTime.now().toLocal());
-
     return calendarDataAsync.when(
       data:
           (result) => result.when(
             success:
-                (calendarData) => _buildCalendarScreen(
-                  context,
-                  calendarData.rotationGroup,
-                  focusedDay,
-                  selectedDay,
-                  calendarData.notificationDetails,
-                ),
+                (calendarData) => _buildCalendarScreen(context, calendarData),
             failure: (error) => customErrorWidget(context, error.message),
           ),
       loading: () => customLoadingWidget(context),
@@ -44,16 +35,14 @@ class CalendarScreen extends HookConsumerWidget {
     );
   }
 
-  // カレンダー画面
-  Widget _buildCalendarScreen(
-    BuildContext context,
-    RotationGroup rotationGroup,
-    ValueNotifier<DateTime> focusedDay,
-    ValueNotifier<DateTime?> selectedDay,
-    List<NotificationDetail> notificationDetails,
-  ) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
+  Widget _buildCalendarScreen(BuildContext context, CalendarData calendarData) {
     final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final focusedDay = useState(DateTime.now().toLocal());
+    final selectedDay = useState<DateTime?>(DateTime.now().toLocal());
+    final rotationGroup = calendarData.rotationGroup;
+    final notificationDetails = calendarData.notificationDetails;
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -113,7 +102,8 @@ class CalendarScreen extends HookConsumerWidget {
     List<NotificationDetail> notificationDetails,
   ) {
     final textTheme = Theme.of(context).textTheme;
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return GlassWrapper(
       child: TableCalendar<String>(
@@ -136,10 +126,13 @@ class CalendarScreen extends HookConsumerWidget {
           formatButtonVisible: false,
           titleCentered: true,
           titleTextStyle: textTheme.titleLarge!,
-          leftChevronIcon: Icon(Icons.chevron_left, color: glass.surfaceColor),
+          leftChevronIcon: Icon(
+            Icons.chevron_left,
+            color: glassTheme.surfaceColor,
+          ),
           rightChevronIcon: Icon(
             Icons.chevron_right,
-            color: glass.surfaceColor,
+            color: glassTheme.surfaceColor,
           ),
           headerPadding: EdgeInsets.only(left: 0, right: 0, top: 16, bottom: 6),
         ),
@@ -203,7 +196,8 @@ class CalendarScreen extends HookConsumerWidget {
     bool isSelected,
   ) {
     final textTheme = Theme.of(context).textTheme;
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     // 通知詳細から該当日の担当者を取得
     final notification = notificationDetails.firstWhere(
@@ -225,7 +219,7 @@ class CalendarScreen extends HookConsumerWidget {
       height: double.infinity,
       decoration: BoxDecoration(
         color: Colors.transparent,
-        border: Border.all(color: glass.borderColor, width: 0.5),
+        border: Border.all(color: glassTheme.borderColor, width: 0.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -385,8 +379,9 @@ class CalendarScreen extends HookConsumerWidget {
 
   // 3. ローテーション情報
   Widget _buildRotationInfo(BuildContext context, RotationGroup rotationGroup) {
-    final glassTheme = Theme.of(context).extension<GlassTheme>()!;
     final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return GlassWrapper(
       child: Padding(

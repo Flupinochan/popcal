@@ -13,7 +13,7 @@ part 'calendar_provider.g.dart';
 
 // CalendarScreen表示に必要な3つの情報を取得して返却
 // 画面表示時に取得する3つの非同期データを1つのローディングにまとめる
-// ※画面表示時に実行する非同期処理が多い場合はriverpodにまとめる
+// ※リアルタイムで画面更新が必要ないため全てを初期取得1回にする
 @riverpod
 Future<Result<CalendarData>> calendarData(
   Ref ref,

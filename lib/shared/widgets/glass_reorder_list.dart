@@ -68,7 +68,8 @@ class _GlassReorderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     // reorder時はスタイル変更
     return Transform.scale(
@@ -81,8 +82,8 @@ class _GlassReorderItem extends StatelessWidget {
         // 背景濃く
         gradient:
             isDragging
-                ? glass.backgroundGradientStrong
-                : glass.backgroundGradient,
+                ? glassTheme.backgroundGradientStrong
+                : glassTheme.backgroundGradient,
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         margin: EdgeInsets.only(bottom: 8),
         child: Row(
@@ -109,7 +110,7 @@ class _GlassReorderItem extends StatelessWidget {
             ),
             // 削除ボタン
             IconButton(
-              icon: Icon(Icons.close, color: glass.iconColor, size: 20),
+              icon: Icon(Icons.close, color: glassTheme.iconColor, size: 20),
               onPressed: () => onDelete,
             ),
           ],

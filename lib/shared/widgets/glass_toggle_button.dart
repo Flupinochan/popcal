@@ -22,14 +22,15 @@ class GlassToggleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glass = Theme.of(context).extension<GlassTheme>()!;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return GlassWrapper(
       width: width,
       height: height,
       showBorder: isSelected,
-      gradient: isSelected ? glass.backgroundGradientStrong : null,
-      borderColor: glass.borderColorStrong,
+      gradient: isSelected ? glassTheme.backgroundGradientStrong : null,
+      borderColor: glassTheme.borderColorStrong,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
