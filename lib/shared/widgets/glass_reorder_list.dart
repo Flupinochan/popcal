@@ -111,7 +111,7 @@ class _GlassReorderItem extends StatelessWidget {
             // 削除ボタン
             IconButton(
               icon: Icon(Icons.close, color: glassTheme.iconColor, size: 20),
-              onPressed: () => onDelete,
+              onPressed: onDelete,
             ),
           ],
         ),
