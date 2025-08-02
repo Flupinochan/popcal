@@ -1,4 +1,4 @@
-import 'package:popcal/features/auth/infrastructure/dto/user_firebase_dto.dart';
+import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -32,7 +32,7 @@ Future<Result<CalendarData>> calendarData(
 
   // 2. ローテーション情報取得 ※ユーザ情報はここで利用
   final rotationGroup = await ref.watch(
-    rotationDetailProvider(userDto.uid.value, rotationGroupId).future,
+    rotationDetailProvider(userDto.userId.value, rotationGroupId).future,
   );
   if (rotationGroup == null) {
     return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
@@ -49,7 +49,7 @@ Future<Result<CalendarData>> calendarData(
 }
 
 class CalendarData {
-  final UserFirebaseDto userDto;
+  final UserViewModelDto userDto;
   final RotationGroup rotationGroup;
   final List<NotificationDetail> notificationDetails;
 

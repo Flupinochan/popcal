@@ -1,6 +1,6 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/infrastructure/datasources/firebase_auth_datasource.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
@@ -14,11 +14,11 @@ class AuthRepositoryFirebase implements AuthRepository {
   Stream<Result<AppUser?>> get authStateChanges {
     return _firebaseAuthDataSource.authStateChanges.asyncMap((dtoResult) async {
       return dtoResult.when(
-        success: (userDto) {
-          if (userDto == null) {
+        success: (dto) {
+          if (dto == null) {
             return Results.success(null);
           }
-          return userDto.toEntity().when(
+          return dto.toEntity().when(
             success: (entity) => Results.success(entity),
             failure: (error) => Results.failure(error),
           );
@@ -32,11 +32,11 @@ class AuthRepositoryFirebase implements AuthRepository {
   Future<Result<AppUser?>> getUser() async {
     final dtoResult = await _firebaseAuthDataSource.getUser();
     return dtoResult.when(
-      success: (userDto) {
-        if (userDto == null) {
+      success: (dto) {
+        if (dto == null) {
           return Results.success(null);
         }
-        return userDto.toEntity().when(
+        return dto.toEntity().when(
           success: (entity) => Results.success(entity),
           failure: (error) => Results.failure(error),
         );
@@ -56,8 +56,8 @@ class AuthRepositoryFirebase implements AuthRepository {
     );
 
     return dtoResult.when(
-      success: (userDto) {
-        return userDto.toEntity().when(
+      success: (dto) {
+        return dto.toEntity().when(
           success: (entity) => Results.success(entity),
           failure: (error) => Results.failure(error),
         );
@@ -77,8 +77,8 @@ class AuthRepositoryFirebase implements AuthRepository {
     );
 
     return dtoResult.when(
-      success: (userDto) {
-        return userDto.toEntity().when(
+      success: (dto) {
+        return dto.toEntity().when(
           success: (entity) => Results.success(entity),
           failure: (error) => Results.failure(error),
         );

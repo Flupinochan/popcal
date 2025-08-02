@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserFirebaseDto {
 
- UserId get uid; Email get email;
+ UserId get userId; Email get email;
 /// Create a copy of UserFirebaseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $UserFirebaseDtoCopyWith<UserFirebaseDto> get copyWith => _$UserFirebaseDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFirebaseDto&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFirebaseDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email);
+int get hashCode => Object.hash(runtimeType,userId,email);
 
 @override
 String toString() {
-  return 'UserFirebaseDto(uid: $uid, email: $email)';
+  return 'UserFirebaseDto(userId: $userId, email: $email)';
 }
 
 
@@ -49,11 +49,11 @@ abstract mixin class $UserFirebaseDtoCopyWith<$Res>  {
   factory $UserFirebaseDtoCopyWith(UserFirebaseDto value, $Res Function(UserFirebaseDto) _then) = _$UserFirebaseDtoCopyWithImpl;
 @useResult
 $Res call({
- UserId uid, Email email
+ UserId userId, Email email
 });
 
 
-$UserIdCopyWith<$Res> get uid;$EmailCopyWith<$Res> get email;
+$UserIdCopyWith<$Res> get userId;$EmailCopyWith<$Res> get email;
 
 }
 /// @nodoc
@@ -66,9 +66,9 @@ class _$UserFirebaseDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserFirebaseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? email = null,}) {
   return _then(_self.copyWith(
-uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as Email,
   ));
@@ -77,10 +77,10 @@ as Email,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get uid {
+$UserIdCopyWith<$Res> get userId {
   
-  return $UserIdCopyWith<$Res>(_self.uid, (value) {
-    return _then(_self.copyWith(uid: value));
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
   });
 }/// Create a copy of UserFirebaseDto
 /// with the given fields replaced by the non-null parameter values.
@@ -99,10 +99,10 @@ $EmailCopyWith<$Res> get email {
 @JsonSerializable()
 
 class _UserFirebaseDto extends UserFirebaseDto {
-  const _UserFirebaseDto({required this.uid, required this.email}): super._();
+  const _UserFirebaseDto({required this.userId, required this.email}): super._();
   factory _UserFirebaseDto.fromJson(Map<String, dynamic> json) => _$UserFirebaseDtoFromJson(json);
 
-@override final  UserId uid;
+@override final  UserId userId;
 @override final  Email email;
 
 /// Create a copy of UserFirebaseDto
@@ -118,16 +118,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFirebaseDto&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFirebaseDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email);
+int get hashCode => Object.hash(runtimeType,userId,email);
 
 @override
 String toString() {
-  return 'UserFirebaseDto(uid: $uid, email: $email)';
+  return 'UserFirebaseDto(userId: $userId, email: $email)';
 }
 
 
@@ -138,11 +138,11 @@ abstract mixin class _$UserFirebaseDtoCopyWith<$Res> implements $UserFirebaseDto
   factory _$UserFirebaseDtoCopyWith(_UserFirebaseDto value, $Res Function(_UserFirebaseDto) _then) = __$UserFirebaseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- UserId uid, Email email
+ UserId userId, Email email
 });
 
 
-@override $UserIdCopyWith<$Res> get uid;@override $EmailCopyWith<$Res> get email;
+@override $UserIdCopyWith<$Res> get userId;@override $EmailCopyWith<$Res> get email;
 
 }
 /// @nodoc
@@ -155,9 +155,9 @@ class __$UserFirebaseDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserFirebaseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? email = null,}) {
   return _then(_UserFirebaseDto(
-uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as Email,
   ));
@@ -167,10 +167,10 @@ as Email,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get uid {
+$UserIdCopyWith<$Res> get userId {
   
-  return $UserIdCopyWith<$Res>(_self.uid, (value) {
-    return _then(_self.copyWith(uid: value));
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
   });
 }/// Create a copy of UserFirebaseDto
 /// with the given fields replaced by the non-null parameter values.

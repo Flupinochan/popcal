@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/infrastructure/dto/user_firebase_dto.dart';
+import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
@@ -29,7 +29,7 @@ Future<Result<RotationData>> rotationData(
   } else {
     // 2. ローテーショングループ情報を取得
     final rotationGroup = await ref.watch(
-      rotationDetailProvider(userDto.uid.value, rotationGroupId).future,
+      rotationDetailProvider(userDto.userId.value, rotationGroupId).future,
     );
     if (rotationGroup == null) {
       return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
@@ -39,7 +39,7 @@ Future<Result<RotationData>> rotationData(
 }
 
 class RotationData {
-  final UserFirebaseDto userDto;
+  final UserViewModelDto userDto;
   final RotationGroup? rotationGroup;
 
   const RotationData(this.userDto, this.rotationGroup);

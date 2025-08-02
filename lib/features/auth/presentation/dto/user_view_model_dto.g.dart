@@ -8,9 +8,9 @@ part of 'user_view_model_dto.dart';
 
 _UserViewModelDto _$UserViewModelDtoFromJson(Map<String, dynamic> json) =>
     _UserViewModelDto(
-      uid: UserId.fromJson(json['uid'] as String),
+      userId: UserId.fromJson(json['userId'] as String),
       email: Email.fromJson(json['email'] as String),
     );
 
 Map<String, dynamic> _$UserViewModelDtoToJson(_UserViewModelDto instance) =>
-    <String, dynamic>{'uid': instance.uid, 'email': instance.email};
+    <String, dynamic>{'userId': instance.userId, 'email': instance.email};

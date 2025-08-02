@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
@@ -15,8 +15,10 @@ part 'user_view_model_dto.g.dart'; // json_serializable
 sealed class UserViewModelDto with _$UserViewModelDto {
   const UserViewModelDto._();
 
-  const factory UserViewModelDto({required UserId uid, required Email email}) =
-      _UserViewModelDto;
+  const factory UserViewModelDto({
+    required UserId userId,
+    required Email email,
+  }) = _UserViewModelDto;
 
   // Firebase認証情報 => Dto
   static Result<UserViewModelDto> fromFirebaseUser(
@@ -28,12 +30,12 @@ sealed class UserViewModelDto with _$UserViewModelDto {
       );
     }
 
-    final uidResult = UserId.create(firebaseUser.uid);
+    final userIdResult = UserId.create(firebaseUser.uid);
     final emailResult = Email.create(firebaseUser.email!);
 
-    return uidResult.flatMap(
+    return userIdResult.flatMap(
       (validUid) => emailResult.map(
-        (validEmail) => UserViewModelDto(uid: validUid, email: validEmail),
+        (validEmail) => UserViewModelDto(userId: validUid, email: validEmail),
       ),
     );
   }
@@ -53,12 +55,12 @@ sealed class UserViewModelDto with _$UserViewModelDto {
 
   // Entity => Dto
   factory UserViewModelDto.fromEntity(AppUser entity) {
-    return UserViewModelDto(uid: entity.uid, email: entity.email);
+    return UserViewModelDto(userId: entity.userId, email: entity.email);
   }
 
   // Dto => Entity
   Result<AppUser> toEntity() {
-    return Results.success(AppUser(uid: uid, email: email));
+    return Results.success(AppUser(userId: userId, email: email));
   }
 }
 

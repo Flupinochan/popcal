@@ -8,9 +8,9 @@ part of 'user_firebase_dto.dart';
 
 _UserFirebaseDto _$UserFirebaseDtoFromJson(Map<String, dynamic> json) =>
     _UserFirebaseDto(
-      uid: UserId.fromJson(json['uid'] as String),
+      userId: UserId.fromJson(json['userId'] as String),
       email: Email.fromJson(json['email'] as String),
     );
 
 Map<String, dynamic> _$UserFirebaseDtoToJson(_UserFirebaseDto instance) =>
-    <String, dynamic>{'uid': instance.uid, 'email': instance.email};
+    <String, dynamic>{'userId': instance.userId, 'email': instance.email};

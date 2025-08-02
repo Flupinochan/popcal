@@ -1,5 +1,5 @@
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 

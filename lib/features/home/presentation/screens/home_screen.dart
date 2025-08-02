@@ -5,9 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/infrastructure/dto/user_firebase_dto.dart';
+import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
-import 'package:popcal/features/auth/providers/auth_provider.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
@@ -42,18 +41,18 @@ class HomeScreen extends HookConsumerWidget {
     final authState = ref.watch(authStateForUIProvider);
     return authState.when(
       data:
-          (authResult) => authResult.when(
-            success: (userDto) {
-              if (userDto == null) return LoginScreen();
+          (dtoResult) => dtoResult.when(
+            success: (dto) {
+              if (dto == null) return LoginScreen();
 
               // バックグラウンドで通知同期処理
               useEffect(() {
                 final syncUseCase = ref.read(syncNotificationsUseCaseProvider);
-                syncUseCase.execute(userDto.uid.value);
+                syncUseCase.execute(dto.userId.value);
                 return null;
-              }, [userDto.uid]);
+              }, [dto.userId]);
 
-              return _buildHome(context, ref, userDto);
+              return _buildHome(context, ref, dto);
             },
             failure: (error) {
               return customErrorWidget(context, error.message);
@@ -64,15 +63,11 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildHome(
-    BuildContext context,
-    WidgetRef ref,
-    UserFirebaseDto userDto,
-  ) {
+  Widget _buildHome(BuildContext context, WidgetRef ref, UserViewModelDto dto) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final rotationGroupsAsync = ref.watch(
-      rotationGroupsStreamProvider(userDto.uid.value),
+      rotationGroupsStreamProvider(dto.userId.value),
     );
 
     return Scaffold(
@@ -102,7 +97,7 @@ class HomeScreen extends HookConsumerWidget {
                               : _buildRotationGroupList(
                                 context,
                                 ref,
-                                userDto,
+                                dto,
                                 rotationGroups,
                               ),
                   failure:
@@ -163,7 +158,7 @@ class HomeScreen extends HookConsumerWidget {
   Widget _buildRotationGroupList(
     BuildContext context,
     WidgetRef ref,
-    UserFirebaseDto userDto,
+    UserViewModelDto userDto,
     List<RotationGroup> rotationGroups,
   ) {
     return CustomScrollView(
@@ -201,14 +196,14 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     RotationGroup rotationGroup,
-    UserFirebaseDto userDto,
+    UserViewModelDto userDto,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
     final createUseCase = ref.read(createRotationGroupUseCaseProvider);
 
     // 削除処理
     final result = await rotationRepository.deleteRotationGroup(
-      userDto.uid.value,
+      userDto.userId.value,
       rotationGroup.rotationGroupId!,
     );
 
