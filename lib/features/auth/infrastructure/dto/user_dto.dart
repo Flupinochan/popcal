@@ -60,13 +60,16 @@ sealed class UserDto with _$UserDto {
 
 // UI表示用の拡張メソッド
 extension UserDtoDisplay on UserDto {
-  // emailのローカル部分（@より前）
-  String get displayName => email.localPart;
-
-  // emailのドメイン取得（@より後）
-  String get emailDomain => email.domain;
-
-  // 表示用の文字列値
-  String get uidValue => uid.value;
-  String get emailValue => email.value;
+  String get displayName => toEntity().fold(
+    (error) => 'Unknown User',
+    (entity) => entity.displayName,
+  );
+  String get emailDomain => toEntity().fold(
+    (error) => 'Unknown Domain',
+    (entity) => entity.emailDomain,
+  );
+  String get email => toEntity().fold(
+    (error) => 'Unknown Email',
+    (entity) => entity.emailValue,
+  );
 }

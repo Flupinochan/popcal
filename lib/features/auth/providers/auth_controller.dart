@@ -10,6 +10,7 @@ import 'package:popcal/features/auth/providers/auth_provider.dart';
 part 'auth_controller.g.dart';
 
 // 複数のriverpod providerメソッドで同じ状態(.isLoading)を扱う場合はclassにまとめる
+// シンプルなためUseCase層の役割も含めているが複雑化した場合は、UseCase層に切り出す
 @riverpod
 class AuthController extends _$AuthController {
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
