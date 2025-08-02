@@ -7,7 +7,8 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
-import 'package:popcal/features/auth/providers/auth_providers.dart';
+import 'package:popcal/features/auth/providers/auth_provider.dart';
+import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
@@ -38,7 +39,7 @@ class HomeScreen extends HookConsumerWidget {
     }, []);
 
     // ユーザ情報取得
-    final authState = ref.watch(authStateChangesProvider);
+    final authState = ref.watch(authStateForUIProvider);
     return authState.when(
       data:
           (authResult) => authResult.when(

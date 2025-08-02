@@ -3,7 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/data/dto/user_dto.dart';
-import 'package:popcal/features/auth/providers/auth_providers.dart';
+import 'package:popcal/features/auth/providers/auth_provider.dart';
+import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
@@ -40,13 +41,17 @@ class DrawerScreen extends HookConsumerWidget {
                     // name & email
                     Consumer(
                       builder: (context, ref, child) {
-                        final authResult = ref.watch(authStateChangesProvider);
+                        final authResult = ref.watch(authStateForUIProvider);
                         return authResult.when(
                           data:
                               (result) => result.when(
-                                success:
-                                    (userDto) =>
-                                        _buildUserInfo(textTheme, userDto),
+                                success: (userDto) {
+                                  if (userDto == null) {
+                                    return _buildUserInfo(textTheme, null);
+                                  } else {
+                                    return _buildUserInfo(textTheme, userDto);
+                                  }
+                                },
                                 failure: (_) => _buildUserInfo(textTheme, null),
                               ),
                           loading: () => _buildUserInfo(textTheme, null),

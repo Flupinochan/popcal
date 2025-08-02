@@ -1,6 +1,6 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/data/datasources/firebase_auth_datasource.dart';
-import 'package:popcal/features/auth/data/dto/user_dto.dart';
+import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
@@ -11,50 +11,78 @@ class AuthRepositoryFirebase implements AuthRepository {
   AuthRepositoryFirebase(this._firebaseAuthDataSource);
 
   @override
-  Stream<Result<UserDto?>> get authStateChanges {
-    return _firebaseAuthDataSource.authStateChanges.map((result) {
-      return result.when(
-        success: (userDto) => Results.success(userDto),
+  Stream<Result<AppUser?>> get authStateChanges {
+    return _firebaseAuthDataSource.authStateChanges.asyncMap((dtoResult) async {
+      return dtoResult.when(
+        success: (userDto) {
+          if (userDto == null) {
+            return Results.success(null);
+          }
+          return userDto.toEntity().when(
+            success: (entity) => Results.success(entity),
+            failure: (error) => Results.failure(error),
+          );
+        },
         failure: (error) => Results.failure(error),
       );
     });
   }
 
   @override
-  Future<Result<UserDto?>> getUser() async {
-    final result = await _firebaseAuthDataSource.getUser();
-    return result.when(
-      success: (userDto) => Results.success(userDto),
+  Future<Result<AppUser?>> getUser() async {
+    final dtoResult = await _firebaseAuthDataSource.getUser();
+    return dtoResult.when(
+      success: (userDto) {
+        if (userDto == null) {
+          return Results.success(null);
+        }
+        return userDto.toEntity().when(
+          success: (entity) => Results.success(entity),
+          failure: (error) => Results.failure(error),
+        );
+      },
       failure: (error) => Results.failure(error),
     );
   }
 
   @override
-  Future<Result<UserDto>> signInWithEmailAndPassword(
+  Future<Result<AppUser>> signInWithEmailAndPassword(
     Email email,
     Password password,
   ) async {
-    final result = await _firebaseAuthDataSource.signInWithEmailAndPassword(
+    final dtoResult = await _firebaseAuthDataSource.signInWithEmailAndPassword(
       email.value,
       password.value,
     );
-    return result.when(
-      success: (userDto) => Results.success(userDto),
+
+    return dtoResult.when(
+      success: (userDto) {
+        return userDto.toEntity().when(
+          success: (entity) => Results.success(entity),
+          failure: (error) => Results.failure(error),
+        );
+      },
       failure: (error) => Results.failure(error),
     );
   }
 
   @override
-  Future<Result<UserDto>> signUpWithEmailAndPassword(
+  Future<Result<AppUser>> signUpWithEmailAndPassword(
     Email email,
     Password password,
   ) async {
-    final result = await _firebaseAuthDataSource.signUpWithEmailAndPassword(
+    final dtoResult = await _firebaseAuthDataSource.signUpWithEmailAndPassword(
       email.value,
       password.value,
     );
-    return result.when(
-      success: (userDto) => Results.success(userDto),
+
+    return dtoResult.when(
+      success: (userDto) {
+        return userDto.toEntity().when(
+          success: (entity) => Results.success(entity),
+          failure: (error) => Results.failure(error),
+        );
+      },
       failure: (error) => Results.failure(error),
     );
   }

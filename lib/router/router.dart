@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 
-import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
@@ -14,7 +14,7 @@ part 'router.g.dart';
 
 @riverpod
 GoRouter router(Ref ref) {
-  final authState = ref.watch(authStateChangesProvider);
+  final authState = ref.watch(authStateForUIProvider);
 
   return GoRouter(
     initialLocation: Routes.home,

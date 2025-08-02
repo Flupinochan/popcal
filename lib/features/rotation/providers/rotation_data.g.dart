@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calendar_provider.dart';
+part of 'rotation_data.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$calendarDataHash() => r'f240b21d445de3e1aa008389a071cc834f758444';
+String _$rotationDataHash() => r'472a0e87a888ec9cfb841d8cdd59195259afd2fb';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,23 +29,23 @@ class _SystemHash {
   }
 }
 
-/// See also [calendarData].
-@ProviderFor(calendarData)
-const calendarDataProvider = CalendarDataFamily();
+/// See also [rotationData].
+@ProviderFor(rotationData)
+const rotationDataProvider = RotationDataFamily();
 
-/// See also [calendarData].
-class CalendarDataFamily extends Family<AsyncValue<Result<CalendarData>>> {
-  /// See also [calendarData].
-  const CalendarDataFamily();
+/// See also [rotationData].
+class RotationDataFamily extends Family<AsyncValue<Result<RotationData>>> {
+  /// See also [rotationData].
+  const RotationDataFamily();
 
-  /// See also [calendarData].
-  CalendarDataProvider call(String rotationGroupId) {
-    return CalendarDataProvider(rotationGroupId);
+  /// See also [rotationData].
+  RotationDataProvider call(String? rotationGroupId) {
+    return RotationDataProvider(rotationGroupId);
   }
 
   @override
-  CalendarDataProvider getProviderOverride(
-    covariant CalendarDataProvider provider,
+  RotationDataProvider getProviderOverride(
+    covariant RotationDataProvider provider,
   ) {
     return call(provider.rotationGroupId);
   }
@@ -62,29 +62,29 @@ class CalendarDataFamily extends Family<AsyncValue<Result<CalendarData>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'calendarDataProvider';
+  String? get name => r'rotationDataProvider';
 }
 
-/// See also [calendarData].
-class CalendarDataProvider
-    extends AutoDisposeFutureProvider<Result<CalendarData>> {
-  /// See also [calendarData].
-  CalendarDataProvider(String rotationGroupId)
+/// See also [rotationData].
+class RotationDataProvider
+    extends AutoDisposeFutureProvider<Result<RotationData>> {
+  /// See also [rotationData].
+  RotationDataProvider(String? rotationGroupId)
     : this._internal(
-        (ref) => calendarData(ref as CalendarDataRef, rotationGroupId),
-        from: calendarDataProvider,
-        name: r'calendarDataProvider',
+        (ref) => rotationData(ref as RotationDataRef, rotationGroupId),
+        from: rotationDataProvider,
+        name: r'rotationDataProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
-                : _$calendarDataHash,
-        dependencies: CalendarDataFamily._dependencies,
+                : _$rotationDataHash,
+        dependencies: RotationDataFamily._dependencies,
         allTransitiveDependencies:
-            CalendarDataFamily._allTransitiveDependencies,
+            RotationDataFamily._allTransitiveDependencies,
         rotationGroupId: rotationGroupId,
       );
 
-  CalendarDataProvider._internal(
+  RotationDataProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -94,16 +94,16 @@ class CalendarDataProvider
     required this.rotationGroupId,
   }) : super.internal();
 
-  final String rotationGroupId;
+  final String? rotationGroupId;
 
   @override
   Override overrideWith(
-    FutureOr<Result<CalendarData>> Function(CalendarDataRef provider) create,
+    FutureOr<Result<RotationData>> Function(RotationDataRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: CalendarDataProvider._internal(
-        (ref) => create(ref as CalendarDataRef),
+      override: RotationDataProvider._internal(
+        (ref) => create(ref as RotationDataRef),
         from: from,
         name: null,
         dependencies: null,
@@ -115,13 +115,13 @@ class CalendarDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<Result<CalendarData>> createElement() {
-    return _CalendarDataProviderElement(this);
+  AutoDisposeFutureProviderElement<Result<RotationData>> createElement() {
+    return _RotationDataProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CalendarDataProvider &&
+    return other is RotationDataProvider &&
         other.rotationGroupId == rotationGroupId;
   }
 
@@ -136,19 +136,19 @@ class CalendarDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin CalendarDataRef on AutoDisposeFutureProviderRef<Result<CalendarData>> {
+mixin RotationDataRef on AutoDisposeFutureProviderRef<Result<RotationData>> {
   /// The parameter `rotationGroupId` of this provider.
-  String get rotationGroupId;
+  String? get rotationGroupId;
 }
 
-class _CalendarDataProviderElement
-    extends AutoDisposeFutureProviderElement<Result<CalendarData>>
-    with CalendarDataRef {
-  _CalendarDataProviderElement(super.provider);
+class _RotationDataProviderElement
+    extends AutoDisposeFutureProviderElement<Result<RotationData>>
+    with RotationDataRef {
+  _RotationDataProviderElement(super.provider);
 
   @override
-  String get rotationGroupId =>
-      (origin as CalendarDataProvider).rotationGroupId;
+  String? get rotationGroupId =>
+      (origin as RotationDataProvider).rotationGroupId;
 }
 
 // ignore_for_file: type=lint

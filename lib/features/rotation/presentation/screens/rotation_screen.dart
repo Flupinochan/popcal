@@ -8,7 +8,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
-import 'package:popcal/features/rotation/providers/rotation_data_provider.dart';
+import 'package:popcal/features/rotation/providers/rotation_data.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
 import 'package:popcal/features/rotation/providers/rotation_view_model.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
