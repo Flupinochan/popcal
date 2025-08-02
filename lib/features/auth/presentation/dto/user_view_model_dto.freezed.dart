@@ -12,7 +12,6 @@ part of 'user_view_model_dto.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$UserViewModelDto {
 
@@ -23,8 +22,6 @@ mixin _$UserViewModelDto {
 @pragma('vm:prefer-inline')
 $UserViewModelDtoCopyWith<UserViewModelDto> get copyWith => _$UserViewModelDtoCopyWithImpl<UserViewModelDto>(this as UserViewModelDto, _$identity);
 
-  /// Serializes this UserViewModelDto to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -32,7 +29,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is UserViewModelDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,userId,email);
 
@@ -96,11 +93,11 @@ $EmailCopyWith<$Res> get email {
 
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _UserViewModelDto extends UserViewModelDto {
   const _UserViewModelDto({required this.userId, required this.email}): super._();
-  factory _UserViewModelDto.fromJson(Map<String, dynamic> json) => _$UserViewModelDtoFromJson(json);
+  
 
 @override final  UserId userId;
 @override final  Email email;
@@ -111,17 +108,14 @@ class _UserViewModelDto extends UserViewModelDto {
 @pragma('vm:prefer-inline')
 _$UserViewModelDtoCopyWith<_UserViewModelDto> get copyWith => __$UserViewModelDtoCopyWithImpl<_UserViewModelDto>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$UserViewModelDtoToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserViewModelDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,userId,email);
 
