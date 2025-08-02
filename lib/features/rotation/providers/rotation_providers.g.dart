@@ -220,7 +220,7 @@ class _RotationGroupsStreamProviderElement
 }
 
 String _$createRotationGroupUseCaseHash() =>
-    r'387ecf51f475e54c058a279506c2c5cea6ee6b25';
+    r'ab499033916bc0fab3f3b596e953058686f88b92';
 
 /// See also [createRotationGroupUseCase].
 @ProviderFor(createRotationGroupUseCase)
@@ -241,7 +241,7 @@ final createRotationGroupUseCaseProvider =
 typedef CreateRotationGroupUseCaseRef =
     AutoDisposeProviderRef<CreateRotationGroupUseCase>;
 String _$updateRotationGroupUseCaseHash() =>
-    r'ac0429c3ef02d6ea9cb5c7b3c576478bc3a5603a';
+    r'd12d65fb75d1c8ee7405d3061a90d6180cf0ea79';
 
 /// See also [updateRotationGroupUseCase].
 @ProviderFor(updateRotationGroupUseCase)

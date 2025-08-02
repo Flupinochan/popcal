@@ -1,13 +1,13 @@
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_day.dart';
+import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 // カレンダー表示用データおよびロジック
 class CalendarData {
   final AppUser appUser;
   final RotationGroup rotationGroup;
-  final List<CalendarDay> calendarDays;
+  final Map<String, CalendarDay> calendarDays;
 
   const CalendarData({
     required this.appUser,
@@ -15,27 +15,32 @@ class CalendarData {
     required this.calendarDays,
   });
 
-  // 指定日の通知情報を取得
-  // 通知日でなく通知情報がない場合はnullを返却
+  /// 指定日の通知情報を取得
+  /// 通知日でない場合はnullを返却
   CalendarDay? getNotificationForDate(DateTime date) {
-    final matches = calendarDays.where(
-      (detail) => isSameDay(detail.date, date),
-    );
-    return matches.isNotEmpty ? matches.first : null;
+    final key = TimeUtils.createDateKey(date);
+    return calendarDays[key];
   }
 
   /// 指定日の担当者名を取得
   String? getMemberNameForDate(DateTime date) {
-    final notification = getNotificationForDate(date);
-    if (notification == null) {
-      return null;
-    }
-    return notification.memberName;
+    final calendarDay = getNotificationForDate(date);
+    return calendarDay?.memberName;
   }
 
   /// 指定日がローテーション日かどうか
   bool isRotationDay(DateTime date) {
-    final notification = getNotificationForDate(date);
-    return notification != null;
+    final calendarDay = getNotificationForDate(date);
+    return calendarDay?.isRotationDay ?? false;
+  }
+
+  /// 全てのローテーション日を取得
+  List<CalendarDay> get allRotationDays {
+    return calendarDays.values.where((day) => day.isRotationDay).toList();
+  }
+
+  /// 全てのカレンダー日を取得
+  List<CalendarDay> get allCalendarDays {
+    return calendarDays.values.toList();
   }
 }

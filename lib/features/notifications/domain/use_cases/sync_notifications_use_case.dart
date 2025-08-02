@@ -1,4 +1,5 @@
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -7,10 +8,12 @@ import 'package:popcal/core/utils/result.dart';
 class SyncNotificationsUseCase {
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
+  final ScheduleCalculationService _scheduleCalculationService;
 
   SyncNotificationsUseCase(
     this._rotationRepository,
     this._notificationRepository,
+    this._scheduleCalculationService,
   );
 
   Future<Result<void>> execute(String ownerUserId) async {
@@ -33,8 +36,8 @@ class SyncNotificationsUseCase {
     // 3. 各ローテーショングループを同期
     for (final group in rotationGroups) {
       // 3-1. 通知スケジュールを計算
-      final calculationResult = _notificationRepository
-          .calculateNotificationSchedule(rotationGroup: group);
+      final calculationResult = _scheduleCalculationService
+          .planUpcomingNotifications(rotationGroup: group);
 
       if (calculationResult.isFailure) {
         print('通知計算失敗: ${group.rotationName}');
@@ -45,7 +48,7 @@ class SyncNotificationsUseCase {
 
       // 3-2. 不足分のみフィルタリング
       final missingNotifications =
-          result.notifications.where((notification) {
+          result.notificationSettings.where((notification) {
             return !localNotificationIds.contains(notification.notificationId);
           }).toList();
 
@@ -71,7 +74,7 @@ class SyncNotificationsUseCase {
           currentRotationIndex: result.newCurrentRotationIndex,
           lastScheduledDate:
               result.hasNotifications
-                  ? result.notifications.last.notificationTime
+                  ? result.notificationSettings.last.notificationTime
                   : group.lastScheduledDate,
         );
 
@@ -95,12 +98,12 @@ class SyncNotificationsUseCase {
     final validNotificationIds = <int>{};
 
     for (final group in rotationGroups) {
-      final calculationResult = _notificationRepository
-          .calculateNotificationSchedule(rotationGroup: group);
+      final calculationResult = _scheduleCalculationService
+          .planUpcomingNotifications(rotationGroup: group);
 
       if (calculationResult.isSuccess) {
         for (final notification
-            in calculationResult.valueOrNull!.notifications) {
+            in calculationResult.valueOrNull!.notificationSettings) {
           validNotificationIds.add(notification.notificationId);
         }
       }

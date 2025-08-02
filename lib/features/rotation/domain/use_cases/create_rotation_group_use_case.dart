@@ -2,6 +2,7 @@
 
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
@@ -9,10 +10,12 @@ import 'package:popcal/features/notifications/domain/repositories/notification_r
 class CreateRotationGroupUseCase {
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
+  final ScheduleCalculationService _scheduleCalculationService;
 
   CreateRotationGroupUseCase(
     this._rotationRepository,
     this._notificationRepository,
+    this._scheduleCalculationService,
   );
 
   Future<Result<RotationGroup>> execute(RotationGroup rotationGroup) async {
@@ -22,8 +25,8 @@ class CreateRotationGroupUseCase {
     print('入力されたcurrentRotationIndex: ${rotationGroup.currentRotationIndex}');
 
     // 1. 最初の通知予定日を取得
-    final firstNotificationDateResult = _notificationRepository
-        .getFirstNotificationDate(
+    final firstNotificationDateResult = _scheduleCalculationService
+        .findNextRotationDate(
           rotationDays: rotationGroup.rotationDays,
           notificationTime: rotationGroup.notificationTime,
         );
@@ -68,19 +71,19 @@ class CreateRotationGroupUseCase {
           print('作成されたrotationStartDate: ${createdGroup.rotationStartDate}');
 
           // 3. RotationNotificationsを作成（未来分のみ計算済み）
-          final calculationResult = _notificationRepository
-              .calculateNotificationSchedule(rotationGroup: createdGroup);
+          final calculationResult = _scheduleCalculationService
+              .planUpcomingNotifications(rotationGroup: createdGroup);
           if (calculationResult.isFailure) {
             throw Exception('通知計算失敗: ${calculationResult.displayText}');
           }
           final result = calculationResult.valueOrNull!;
 
-          print('計算された通知数: ${result.notifications.length}');
+          print('計算された通知数: ${result.notificationSettings.length}');
           print('通知作成開始...');
 
           // 4. 各通知を作成（すべて未来分）
           int successCount = 0;
-          for (final notification in result.notifications) {
+          for (final notification in result.notificationSettings) {
             final createResult = await _notificationRepository
                 .createNotification(notification);
             if (createResult.isFailure) {
@@ -88,7 +91,7 @@ class CreateRotationGroupUseCase {
             }
             successCount++;
             print(
-              '[$successCount/${result.notifications.length}] 通知作成成功: ${notification.notificationTime} - ${notification.memberName}',
+              '[$successCount/${result.notificationSettings.length}] 通知作成成功: ${notification.notificationTime} - ${notification.memberName}',
             );
           }
 
@@ -97,7 +100,7 @@ class CreateRotationGroupUseCase {
             currentRotationIndex: result.newCurrentRotationIndex,
             lastScheduledDate:
                 result.hasNotifications
-                    ? result.notifications.last.notificationTime
+                    ? result.notificationSettings.last.notificationTime
                     : createdGroup.lastScheduledDate,
           );
 

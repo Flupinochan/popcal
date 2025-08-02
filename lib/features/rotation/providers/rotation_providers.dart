@@ -44,6 +44,7 @@ CreateRotationGroupUseCase createRotationGroupUseCase(Ref ref) {
   return CreateRotationGroupUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
+    ref.watch(scheduleCalculationServiceRepositoryProvider),
   );
 }
 
@@ -52,5 +53,6 @@ UpdateRotationGroupUseCase updateRotationGroupUseCase(Ref ref) {
   return UpdateRotationGroupUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
+    ref.watch(scheduleCalculationServiceRepositoryProvider),
   );
 }

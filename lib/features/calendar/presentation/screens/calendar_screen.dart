@@ -7,6 +7,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/domain/use_cases/get_calendar_data_use_case.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_data_dto.dart';
 import 'package:popcal/features/calendar/presentation/providers/calendar_screen_data.dart';
+import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
@@ -113,7 +114,8 @@ class CalendarScreen extends HookConsumerWidget {
           const Duration(days: GetCalendarDataUseCase.futureDays),
         ),
         focusedDay: focusedDay.value,
-        selectedDayPredicate: (day) => isSameDay(selectedDay.value, day),
+        selectedDayPredicate:
+            (day) => TimeUtils.isSameDay(selectedDay.value, day),
         calendarFormat: CalendarFormat.month,
         startingDayOfWeek: StartingDayOfWeek.monday,
         sixWeekMonthsEnforced: true,

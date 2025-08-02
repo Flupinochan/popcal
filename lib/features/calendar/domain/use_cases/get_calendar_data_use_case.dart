@@ -4,6 +4,7 @@ import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_data.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_data_dto.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
 class GetCalendarDataUseCase {
@@ -15,11 +16,13 @@ class GetCalendarDataUseCase {
   final AuthRepository _authRepository;
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
+  final ScheduleCalculationService _scheduleCalculationService;
 
   GetCalendarDataUseCase(
     this._authRepository,
     this._rotationRepository,
     this._notificationRepository,
+    this._scheduleCalculationService,
   );
 
   // CalendarScreen表示に必要な3つの情報を取得して返却
@@ -52,11 +55,12 @@ class GetCalendarDataUseCase {
     final startDate = now.subtract(const Duration(days: pastDays));
     final endDate = now.add(const Duration(days: futureDays));
 
-    final notificationResult = _notificationRepository.calculateCalendarDetails(
-      rotationGroup: rotationGroup,
-      startDate: startDate,
-      endDate: endDate,
-    );
+    final notificationResult = _scheduleCalculationService
+        .buildCalendarSchedule(
+          rotationGroup: rotationGroup,
+          fromDate: startDate,
+          toDate: endDate,
+        );
     if (notificationResult.isFailure) {
       return Results.failure(notificationResult.failureOrNull!);
     }
@@ -65,7 +69,7 @@ class GetCalendarDataUseCase {
     final calendarData = CalendarData(
       appUser: appUser,
       rotationGroup: rotationGroup,
-      notificationDetails: notificationResult.valueOrNull!,
+      calendarDays: notificationResult.valueOrNull!,
     );
 
     // 5. 各日付表示用データを作成

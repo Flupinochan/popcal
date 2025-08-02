@@ -7,24 +7,32 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_calculati
 
 /// 2. 計算ロジックDomain Service
 abstract class ScheduleCalculationService {
-  /// Calendar表示用スケジュールを生成 ※1年分
-  /// ※1. 実際の通知設定は30日分だが、過去1年から未来1年まで表示
-  /// ※2. 作成日以降のみ表示、過去の表示は通知したことのある作成日以降の過去のみ
-  Result<Map<String, CalendarDay>> buildCalendarSchedule({
-    required RotationGroup rotationGroup,
-    required DateTime fromDate,
-    required DateTime toDate,
-  });
-
-  /// 最初の通知予定日を計算
+  /// 1. 最初の通知予定日を計算 ※次回通知予定日を計算
   /// ※作成した今日がローテーション日の場合で、すでに時刻が過ぎている場合は次週から計算
-  Result<DateTime?> findNextRotationDate({
+  /// [rotationDays] ローテーション曜日
+  /// [notificationTime] ローテーション通知時刻
+  /// [now] 現在の時刻
+  Result<DateTime> findNextRotationDate({
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
-    DateTime? fromDate,
+    DateTime? currentTime,
   });
 
-  /// 通知設定用スケジュールを計算 ※実際に設定するのは30日分
+  /// 2. Calendar表示用スケジュールを生成 ※1年分
+  /// ※1. 実際の通知設定は30日分だが、カレンダーは過去1年から未来1年まで表示
+  /// ※2. 最初の通知予定日以降を表示、過去の表示は通知したことのある最初の通知予定日以降の過去のみ
+  /// [rotationGroup]
+  /// [fromDate] デフォルトは過去1年分
+  /// [toDate] デフォルトは未来1年分
+  Result<Map<String, CalendarDay>> buildCalendarSchedule({
+    required RotationGroup rotationGroup,
+    DateTime? fromDate,
+    DateTime? toDate,
+  });
+
+  /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
+  /// [rotationGroup]
+  /// [futureDays] デフォルトは今日から30日分
   Result<RotationCalculationResult> planUpcomingNotifications({
     required RotationGroup rotationGroup,
     int futureDays = 30,

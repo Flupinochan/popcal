@@ -4,6 +4,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_data.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_day.dart';
+import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 
 part 'calendar_data_dto.freezed.dart';
@@ -15,8 +16,7 @@ sealed class CalendarDataDto with _$CalendarDataDto {
   const factory CalendarDataDto({
     required UserViewModelDto userViewModelDto,
     required RotationGroup rotationGroup,
-    required List<CalendarDay> calendarDays,
-    required Map<String, CalendarDayDto> dayInfoMap,
+    required Map<String, CalendarDay> calendarDays,
   }) = _CalendarDataDto;
 
   // Entity => DTO
@@ -28,7 +28,6 @@ sealed class CalendarDataDto with _$CalendarDataDto {
       userViewModelDto: UserViewModelDto.fromEntity(entity.appUser),
       rotationGroup: entity.rotationGroup,
       calendarDays: entity.calendarDays,
-      dayInfoMap: dayInfoMap,
     );
   }
 
@@ -48,9 +47,9 @@ sealed class CalendarDataDto with _$CalendarDataDto {
     );
   }
 
-  CalendarDayDto? getDayInfo(DateTime date) {
-    final key = '${date.year}-${date.month}-${date.day}';
-    return dayInfoMap[key];
+  CalendarDay? getDayInfo(DateTime date) {
+    final key = TimeUtils.createDateKey(date);
+    return calendarDays[key];
   }
 }
 
