@@ -4,7 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/presentation/providers/calendar_data.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_data_dto.dart';
+import 'package:popcal/features/calendar/presentation/providers/calendar_screen_data.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
@@ -22,7 +23,9 @@ class CalendarScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final calendarDataAsync = ref.watch(calendarDataProvider(rotationGroupId));
+    final calendarDataAsync = ref.watch(
+      calendarScreenDataProvider(rotationGroupId),
+    );
     return calendarDataAsync.when(
       data:
           (result) => result.when(
@@ -35,7 +38,10 @@ class CalendarScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildCalendarScreen(BuildContext context, CalendarData calendarData) {
+  Widget _buildCalendarScreen(
+    BuildContext context,
+    CalendarDataDto calendarData,
+  ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;

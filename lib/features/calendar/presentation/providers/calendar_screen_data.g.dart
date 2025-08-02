@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calendar_data.dart';
+part of 'calendar_screen_data.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$calendarDataHash() => r'126c11815713b5d16794ae23c796df2e4f76d0c9';
+String _$calendarScreenDataHash() =>
+    r'8e162e6f0d309cc94c0b871663809e8d22d4a00b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,23 +30,24 @@ class _SystemHash {
   }
 }
 
-/// See also [calendarData].
-@ProviderFor(calendarData)
-const calendarDataProvider = CalendarDataFamily();
+/// See also [calendarScreenData].
+@ProviderFor(calendarScreenData)
+const calendarScreenDataProvider = CalendarScreenDataFamily();
 
-/// See also [calendarData].
-class CalendarDataFamily extends Family<AsyncValue<Result<CalendarData>>> {
-  /// See also [calendarData].
-  const CalendarDataFamily();
+/// See also [calendarScreenData].
+class CalendarScreenDataFamily
+    extends Family<AsyncValue<Result<CalendarDataDto>>> {
+  /// See also [calendarScreenData].
+  const CalendarScreenDataFamily();
 
-  /// See also [calendarData].
-  CalendarDataProvider call(String rotationGroupId) {
-    return CalendarDataProvider(rotationGroupId);
+  /// See also [calendarScreenData].
+  CalendarScreenDataProvider call(String rotationGroupId) {
+    return CalendarScreenDataProvider(rotationGroupId);
   }
 
   @override
-  CalendarDataProvider getProviderOverride(
-    covariant CalendarDataProvider provider,
+  CalendarScreenDataProvider getProviderOverride(
+    covariant CalendarScreenDataProvider provider,
   ) {
     return call(provider.rotationGroupId);
   }
@@ -62,29 +64,30 @@ class CalendarDataFamily extends Family<AsyncValue<Result<CalendarData>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'calendarDataProvider';
+  String? get name => r'calendarScreenDataProvider';
 }
 
-/// See also [calendarData].
-class CalendarDataProvider
-    extends AutoDisposeFutureProvider<Result<CalendarData>> {
-  /// See also [calendarData].
-  CalendarDataProvider(String rotationGroupId)
+/// See also [calendarScreenData].
+class CalendarScreenDataProvider
+    extends AutoDisposeFutureProvider<Result<CalendarDataDto>> {
+  /// See also [calendarScreenData].
+  CalendarScreenDataProvider(String rotationGroupId)
     : this._internal(
-        (ref) => calendarData(ref as CalendarDataRef, rotationGroupId),
-        from: calendarDataProvider,
-        name: r'calendarDataProvider',
+        (ref) =>
+            calendarScreenData(ref as CalendarScreenDataRef, rotationGroupId),
+        from: calendarScreenDataProvider,
+        name: r'calendarScreenDataProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
-                : _$calendarDataHash,
-        dependencies: CalendarDataFamily._dependencies,
+                : _$calendarScreenDataHash,
+        dependencies: CalendarScreenDataFamily._dependencies,
         allTransitiveDependencies:
-            CalendarDataFamily._allTransitiveDependencies,
+            CalendarScreenDataFamily._allTransitiveDependencies,
         rotationGroupId: rotationGroupId,
       );
 
-  CalendarDataProvider._internal(
+  CalendarScreenDataProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -98,12 +101,13 @@ class CalendarDataProvider
 
   @override
   Override overrideWith(
-    FutureOr<Result<CalendarData>> Function(CalendarDataRef provider) create,
+    FutureOr<Result<CalendarDataDto>> Function(CalendarScreenDataRef provider)
+    create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: CalendarDataProvider._internal(
-        (ref) => create(ref as CalendarDataRef),
+      override: CalendarScreenDataProvider._internal(
+        (ref) => create(ref as CalendarScreenDataRef),
         from: from,
         name: null,
         dependencies: null,
@@ -115,13 +119,13 @@ class CalendarDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<Result<CalendarData>> createElement() {
-    return _CalendarDataProviderElement(this);
+  AutoDisposeFutureProviderElement<Result<CalendarDataDto>> createElement() {
+    return _CalendarScreenDataProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CalendarDataProvider &&
+    return other is CalendarScreenDataProvider &&
         other.rotationGroupId == rotationGroupId;
   }
 
@@ -136,19 +140,20 @@ class CalendarDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin CalendarDataRef on AutoDisposeFutureProviderRef<Result<CalendarData>> {
+mixin CalendarScreenDataRef
+    on AutoDisposeFutureProviderRef<Result<CalendarDataDto>> {
   /// The parameter `rotationGroupId` of this provider.
   String get rotationGroupId;
 }
 
-class _CalendarDataProviderElement
-    extends AutoDisposeFutureProviderElement<Result<CalendarData>>
-    with CalendarDataRef {
-  _CalendarDataProviderElement(super.provider);
+class _CalendarScreenDataProviderElement
+    extends AutoDisposeFutureProviderElement<Result<CalendarDataDto>>
+    with CalendarScreenDataRef {
+  _CalendarScreenDataProviderElement(super.provider);
 
   @override
   String get rotationGroupId =>
-      (origin as CalendarDataProvider).rotationGroupId;
+      (origin as CalendarScreenDataProvider).rotationGroupId;
 }
 
 // ignore_for_file: type=lint
