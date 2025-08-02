@@ -6,18 +6,22 @@ import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
-part 'user_dto.freezed.dart'; // freezed
-part 'user_dto.g.dart'; // json_serializable
+part 'user_view_model_dto.freezed.dart'; // freezed
+part 'user_view_model_dto.g.dart'; // json_serializable
 
-// 出力用 ドメイン/データ層 => UI
+// ※現状はuser_firebase_dtoと同じ
+// datasourcesで利用するdtoとpresentationで利用するdtoに分けているだけ
 @freezed
-sealed class UserDto with _$UserDto {
-  const UserDto._();
+sealed class UserViewModelDto with _$UserViewModelDto {
+  const UserViewModelDto._();
 
-  const factory UserDto({required UserId uid, required Email email}) = _UserDto;
+  const factory UserViewModelDto({required UserId uid, required Email email}) =
+      _UserViewModelDto;
 
   // Firebase認証情報 => Dto
-  static Result<UserDto> fromFirebaseUser(firebase_auth.User firebaseUser) {
+  static Result<UserViewModelDto> fromFirebaseUser(
+    firebase_auth.User firebaseUser,
+  ) {
     if (firebaseUser.email == null) {
       return Results.failure(
         AuthFailure('Email is required for this application'),
@@ -29,18 +33,18 @@ sealed class UserDto with _$UserDto {
 
     return uidResult.flatMap(
       (validUid) => emailResult.map(
-        (validEmail) => UserDto(uid: validUid, email: validEmail),
+        (validEmail) => UserViewModelDto(uid: validUid, email: validEmail),
       ),
     );
   }
 
   // Json => Dto ※Dto => Jsonは自動生成
-  factory UserDto.fromJson(Map<String, dynamic> json) =>
-      _$UserDtoFromJson(json);
+  factory UserViewModelDto.fromJson(Map<String, dynamic> json) =>
+      _$UserViewModelDtoFromJson(json);
 
-  static Result<UserDto> fromJsonSafe(Map<String, dynamic> json) {
+  static Result<UserViewModelDto> fromJsonSafe(Map<String, dynamic> json) {
     try {
-      final dto = UserDto.fromJson(json);
+      final dto = UserViewModelDto.fromJson(json);
       return Results.success(dto);
     } catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
@@ -48,8 +52,8 @@ sealed class UserDto with _$UserDto {
   }
 
   // Entity => Dto
-  factory UserDto.fromEntity(AppUser entity) {
-    return UserDto(uid: entity.uid, email: entity.email);
+  factory UserViewModelDto.fromEntity(AppUser entity) {
+    return UserViewModelDto(uid: entity.uid, email: entity.email);
   }
 
   // Dto => Entity
@@ -59,7 +63,7 @@ sealed class UserDto with _$UserDto {
 }
 
 // UI表示用の拡張メソッド
-extension UserDtoDisplay on UserDto {
+extension UserDtoDisplay on UserViewModelDto {
   String get displayName => toEntity().fold(
     (error) => 'Unknown User',
     (entity) => entity.displayName,

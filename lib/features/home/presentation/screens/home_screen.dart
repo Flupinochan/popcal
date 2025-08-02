@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/infrastructure/dto/user_dto.dart';
+import 'package:popcal/features/auth/infrastructure/dto/user_firebase_dto.dart';
 import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
 import 'package:popcal/features/auth/providers/auth_provider.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
@@ -64,7 +64,11 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildHome(BuildContext context, WidgetRef ref, UserDto userDto) {
+  Widget _buildHome(
+    BuildContext context,
+    WidgetRef ref,
+    UserFirebaseDto userDto,
+  ) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final rotationGroupsAsync = ref.watch(
@@ -159,7 +163,7 @@ class HomeScreen extends HookConsumerWidget {
   Widget _buildRotationGroupList(
     BuildContext context,
     WidgetRef ref,
-    UserDto userDto,
+    UserFirebaseDto userDto,
     List<RotationGroup> rotationGroups,
   ) {
     return CustomScrollView(
@@ -197,7 +201,7 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     RotationGroup rotationGroup,
-    UserDto userDto,
+    UserFirebaseDto userDto,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
     final createUseCase = ref.read(createRotationGroupUseCaseProvider);
