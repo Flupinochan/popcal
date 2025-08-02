@@ -47,7 +47,7 @@ class GetCalendarDataUseCase {
       return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
     }
 
-    // 3. 通知情報を取得
+    // 3. カレンダー表示用通知情報を取得
     final now = DateTime.now().toLocal();
     final startDate = now.subtract(const Duration(days: pastDays));
     final endDate = now.add(const Duration(days: futureDays));

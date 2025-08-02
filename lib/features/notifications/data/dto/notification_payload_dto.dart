@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 
 part 'notification_payload_dto.freezed.dart';
 part 'notification_payload_dto.g.dart';
@@ -20,7 +20,7 @@ sealed class NotificationPayloadDto with _$NotificationPayloadDto {
   }) = _NotificationPayloadDto;
 
   // Entity => DTO
-  factory NotificationPayloadDto.fromEntity(RotationNotification notification) {
+  factory NotificationPayloadDto.fromEntity(NotificationSetting notification) {
     return NotificationPayloadDto(
       notificationId: notification.notificationId,
       rotationGroupId: notification.rotationGroupId,

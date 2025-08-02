@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_calendar.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/notifications/domain/entities/rotation_notification.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
 
@@ -14,7 +14,6 @@ class NotificationRepositoryLocal implements NotificationRepository {
 
   NotificationRepositoryLocal(this._localNotificationsDatasource);
 
-  /// 0. 初期化
   @override
   Future<Result<void>> initializeNotification() async {
     final result = await _localNotificationsDatasource.initializeNotification();
@@ -24,7 +23,6 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
-  /// 0-2. 通知タップからアプリを起動した場合は画面遷移
   @override
   Future<Result<void>> initializeNotificationLaunch() async {
     final result =
@@ -35,13 +33,12 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
-  /// 1. 通知スケジュールを作成
   @override
   Future<Result<void>> createNotification(
-    RotationNotification notification,
+    NotificationSetting notificationSetting,
   ) async {
     final result = await _localNotificationsDatasource.createNotification(
-      notification,
+      notificationSetting,
     );
     return result.when(
       success: (_) => Results.success(null),
@@ -49,7 +46,6 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
-  /// 2. 通知予定のスケジュールを一覧取得
   @override
   Future<Result<List<int>>> getNotifications() async {
     final result = await _localNotificationsDatasource.getNotifications();
@@ -65,7 +61,6 @@ class NotificationRepositoryLocal implements NotificationRepository {
     throw UnimplementedError();
   }
 
-  /// 4. 特定の通知を削除(キャンセル)
   @override
   Future<Result<void>> deleteNotification(int notificationId) async {
     final result = await _localNotificationsDatasource.deleteNotification(
@@ -77,7 +72,6 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
-  /// 特定のrotationGroupIdの通知を削除(キャンセル)
   @override
   Future<Result<void>> deleteNotificationsByRotationGroupId(
     String rotationGroupId,
@@ -90,9 +84,8 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
-  /// 5. 全通知を削除(キャンセル)
   @override
-  Future<Result<void>> deleteNotifications() async {
+  Future<Result<void>> deleteAllNotifications() async {
     final result = await _localNotificationsDatasource.deleteNotifications();
     return result.when(
       success: (_) => Results.success(null),
@@ -100,23 +93,12 @@ class NotificationRepositoryLocal implements NotificationRepository {
     );
   }
 
-  /// 【デバッグ用】通知予定ログ出力
   @override
   Future<Result<void>> logPendingNotifications() async {
     final result =
         await _localNotificationsDatasource.logPendingNotifications();
     return result.when(
       success: (_) => Results.success(null),
-      failure: (error) => Results.failure(error),
-    );
-  }
-
-  /// 2-2. 通知予定のスケジュールを一覧取得 (Calendar表示用)
-  @override
-  Future<Result<List<NotificationDetail>>> getNotificationDetails() async {
-    final result = await _localNotificationsDatasource.getNotificationDetails();
-    return result.when(
-      success: (details) => Results.success(details),
       failure: (error) => Results.failure(error),
     );
   }
@@ -207,7 +189,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
 
   /// RotationGroupから1年分の通知情報(Calendar表示用)を作成
   @override
-  Result<List<NotificationDetail>> calculateCalendarDetails({
+  Result<List<NotificationCalendar>> calculateCalendarDetails({
     required RotationGroup rotationGroup,
     required DateTime startDate,
     required DateTime endDate,
@@ -237,7 +219,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
       // RotationNotification → NotificationDetail に変換
       final details =
           result.notifications.map((notification) {
-            return NotificationDetail(
+            return NotificationCalendar(
               notificationId: notification.notificationId,
               date: notification.notificationDate,
               memberName: notification.memberName,
@@ -262,7 +244,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
     required DateTime endDate,
     DateTime? currentTime, // nullの場合は時刻チェックなし
   }) {
-    final notifications = <RotationNotification>[];
+    final notifications = <NotificationSetting>[];
     var currentIndex = 0; // 常に0から開始
 
     print('--- 通知生成詳細 ---');
@@ -304,7 +286,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
             date,
           );
 
-          final notification = RotationNotification(
+          final notification = NotificationSetting(
             notificationId: notificationId,
             rotationGroupId: rotationGroup.rotationGroupId!,
             ownerUserId: rotationGroup.ownerUserId,

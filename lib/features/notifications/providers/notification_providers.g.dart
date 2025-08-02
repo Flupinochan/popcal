@@ -70,7 +70,7 @@ final syncNotificationsUseCaseProvider =
 typedef SyncNotificationsUseCaseRef =
     AutoDisposeProviderRef<SyncNotificationsUseCase>;
 String _$calendarNotificationDetailsHash() =>
-    r'8bcc9bceb9d648450a6045cc03ea822769063e81';
+    r'76c4fc1ac79a84c13640078baf2bc020ddf4e3b2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -99,7 +99,7 @@ const calendarNotificationDetailsProvider = CalendarNotificationDetailsFamily();
 
 /// See also [calendarNotificationDetails].
 class CalendarNotificationDetailsFamily
-    extends Family<AsyncValue<List<NotificationDetail>>> {
+    extends Family<AsyncValue<List<NotificationCalendar>>> {
   /// See also [calendarNotificationDetails].
   const CalendarNotificationDetailsFamily();
 
@@ -132,7 +132,7 @@ class CalendarNotificationDetailsFamily
 
 /// See also [calendarNotificationDetails].
 class CalendarNotificationDetailsProvider
-    extends AutoDisposeFutureProvider<List<NotificationDetail>> {
+    extends AutoDisposeFutureProvider<List<NotificationCalendar>> {
   /// See also [calendarNotificationDetails].
   CalendarNotificationDetailsProvider(RotationGroup rotationGroup)
     : this._internal(
@@ -166,7 +166,7 @@ class CalendarNotificationDetailsProvider
 
   @override
   Override overrideWith(
-    FutureOr<List<NotificationDetail>> Function(
+    FutureOr<List<NotificationCalendar>> Function(
       CalendarNotificationDetailsRef provider,
     )
     create,
@@ -186,7 +186,7 @@ class CalendarNotificationDetailsProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<List<NotificationDetail>> createElement() {
+  AutoDisposeFutureProviderElement<List<NotificationCalendar>> createElement() {
     return _CalendarNotificationDetailsProviderElement(this);
   }
 
@@ -208,13 +208,13 @@ class CalendarNotificationDetailsProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin CalendarNotificationDetailsRef
-    on AutoDisposeFutureProviderRef<List<NotificationDetail>> {
+    on AutoDisposeFutureProviderRef<List<NotificationCalendar>> {
   /// The parameter `rotationGroup` of this provider.
   RotationGroup get rotationGroup;
 }
 
 class _CalendarNotificationDetailsProviderElement
-    extends AutoDisposeFutureProviderElement<List<NotificationDetail>>
+    extends AutoDisposeFutureProviderElement<List<NotificationCalendar>>
     with CalendarNotificationDetailsRef {
   _CalendarNotificationDetailsProviderElement(super.provider);
 

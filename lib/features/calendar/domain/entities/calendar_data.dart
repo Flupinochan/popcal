@@ -1,5 +1,5 @@
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
+import 'package:popcal/features/calendar/domain/entities/calendar_day.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -7,18 +7,18 @@ import 'package:table_calendar/table_calendar.dart';
 class CalendarData {
   final AppUser appUser;
   final RotationGroup rotationGroup;
-  final List<NotificationDetail> notificationDetails;
+  final List<CalendarDay> calendarDays;
 
   const CalendarData({
     required this.appUser,
     required this.rotationGroup,
-    required this.notificationDetails,
+    required this.calendarDays,
   });
 
   // 指定日の通知情報を取得
   // 通知日でなく通知情報がない場合はnullを返却
-  NotificationDetail? getNotificationForDate(DateTime date) {
-    final matches = notificationDetails.where(
+  CalendarDay? getNotificationForDate(DateTime date) {
+    final matches = calendarDays.where(
       (detail) => isSameDay(detail.date, date),
     );
     return matches.isNotEmpty ? matches.first : null;
@@ -36,6 +36,6 @@ class CalendarData {
   /// 指定日がローテーション日かどうか
   bool isRotationDay(DateTime date) {
     final notification = getNotificationForDate(date);
-    return notification != null && notification.memberName.isNotEmpty;
+    return notification != null;
   }
 }
