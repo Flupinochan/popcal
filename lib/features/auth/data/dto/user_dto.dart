@@ -1,29 +1,72 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/domain/value_objects/email.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
-class UserDto {
-  final String uid;
-  final String? email;
+part 'user_dto.freezed.dart'; // freezed
+part 'user_dto.g.dart'; // json_serializable
 
-  const UserDto({required this.uid, this.email});
+// 出力用 ドメイン/データ層 => UI
+@freezed
+sealed class UserDto with _$UserDto {
+  const UserDto._();
 
-  // Firebaseの認証情報 => user dto/entity に変換
-  factory UserDto.fromFirebaseUser(firebase_auth.User firebaseUser) {
-    return UserDto(uid: firebaseUser.uid, email: firebaseUser.email!);
+  const factory UserDto({required UserId uid, required Email email}) = _UserDto;
+
+  // Firebase認証情報 => Dto
+  static Result<UserDto> fromFirebaseUser(firebase_auth.User firebaseUser) {
+    if (firebaseUser.email == null) {
+      return Results.failure(
+        AuthFailure('Email is required for this application'),
+      );
+    }
+
+    final uidResult = UserId.create(firebaseUser.uid);
+    final emailResult = Email.create(firebaseUser.email!);
+
+    return uidResult.flatMap(
+      (validUid) => emailResult.map(
+        (validEmail) => UserDto(uid: validUid, email: validEmail),
+      ),
+    );
   }
 
-  // Json => Dto へ変換
-  factory UserDto.fromJson(Map<String, dynamic> json) {
-    return UserDto(uid: json['uid'] as String, email: json['email'] as String);
+  // Json => Dto ※Dto => Jsonは自動生成
+  factory UserDto.fromJson(Map<String, dynamic> json) =>
+      _$UserDtoFromJson(json);
+
+  static Result<UserDto> fromJsonSafe(Map<String, dynamic> json) {
+    try {
+      final dto = UserDto.fromJson(json);
+      return Results.success(dto);
+    } catch (e) {
+      return Results.failure(ValidationFailure('JSON parsing failed: $e'));
+    }
   }
 
-  // Dto => Json へ変換
-  Map<String, dynamic> toJson() {
-    return {'uid': uid, 'email': email};
+  // Entity => Dto
+  factory UserDto.fromEntity(AppUser entity) {
+    return UserDto(uid: entity.uid, email: entity.email);
   }
 
-  // Dto => Entity へ変換
-  AppUser toEntity() {
-    return AppUser(uid: uid, email: email ?? '');
+  // Dto => Entity
+  Result<AppUser> toEntity() {
+    return Results.success(AppUser(uid: uid, email: email));
   }
+}
+
+// UI表示用の拡張メソッド
+extension UserDtoDisplay on UserDto {
+  // emailのローカル部分（@より前）
+  String get displayName => email.localPart;
+
+  // emailのドメイン取得（@より後）
+  String get emailDomain => email.domain;
+
+  // 表示用の文字列値
+  String get uidValue => uid.value;
+  String get emailValue => email.value;
 }

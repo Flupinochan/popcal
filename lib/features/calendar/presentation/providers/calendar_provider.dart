@@ -1,8 +1,8 @@
+import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
@@ -24,14 +24,14 @@ Future<Result<CalendarData>> calendarData(
   if (authResult.isFailure) {
     return Results.failure(authResult.failureOrNull!);
   }
-  final user = authResult.valueOrNull;
-  if (user == null) {
+  final userDto = authResult.valueOrNull;
+  if (userDto == null) {
     return Results.failure(AuthFailure('未認証です'));
   }
 
   // 2. ローテーション情報取得 ※ユーザ情報はここで利用
   final rotationGroup = await ref.watch(
-    rotationDetailProvider(user.uid, rotationGroupId).future,
+    rotationDetailProvider(userDto.uid.value, rotationGroupId).future,
   );
   if (rotationGroup == null) {
     return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
@@ -42,23 +42,19 @@ Future<Result<CalendarData>> calendarData(
     calendarNotificationDetailsProvider(rotationGroup).future,
   );
 
-  final calendarData = CalendarData(
-    user: user,
-    rotationGroup: rotationGroup,
-    notificationDetails: notificationResult,
-  );
+  final calendarData = CalendarData(userDto, rotationGroup, notificationResult);
 
   return Results.success(calendarData);
 }
 
 class CalendarData {
-  final AppUser user;
+  final UserDto userDto;
   final RotationGroup rotationGroup;
   final List<NotificationDetail> notificationDetails;
 
-  const CalendarData({
-    required this.user,
-    required this.rotationGroup,
-    required this.notificationDetails,
-  });
+  const CalendarData(
+    this.userDto,
+    this.rotationGroup,
+    this.notificationDetails,
+  );
 }

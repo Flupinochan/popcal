@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
@@ -45,8 +45,8 @@ class DrawerScreen extends HookConsumerWidget {
                           data:
                               (result) => result.when(
                                 success:
-                                    (appUser) =>
-                                        _buildUserInfo(textTheme, appUser),
+                                    (userDto) =>
+                                        _buildUserInfo(textTheme, userDto),
                                 failure: (_) => _buildUserInfo(textTheme, null),
                               ),
                           loading: () => _buildUserInfo(textTheme, null),
@@ -114,15 +114,15 @@ class DrawerScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildUserInfo(TextTheme textTheme, AppUser? appUser) {
+  Widget _buildUserInfo(TextTheme textTheme, UserDto? userDto) {
     return Column(
       children: [
         Text(
-          appUser == null ? "読み込み中..." : appUser.email.split('@').first,
+          userDto == null ? "読み込み中..." : userDto.email.value.split('@').first,
           style: textTheme.titleMedium,
         ),
         Text(
-          appUser == null ? "お待ちください" : appUser.email,
+          userDto == null ? "お待ちください" : userDto.email.value,
           style: textTheme.bodySmall,
         ),
       ],

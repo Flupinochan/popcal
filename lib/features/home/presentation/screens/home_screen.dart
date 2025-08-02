@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
@@ -42,17 +42,17 @@ class HomeScreen extends HookConsumerWidget {
     return authState.when(
       data:
           (authResult) => authResult.when(
-            success: (user) {
-              if (user == null) return LoginScreen();
+            success: (userDto) {
+              if (userDto == null) return LoginScreen();
 
               // バックグラウンドで通知同期処理
               useEffect(() {
                 final syncUseCase = ref.read(syncNotificationsUseCaseProvider);
-                syncUseCase.execute(user.uid);
+                syncUseCase.execute(userDto.uid.value);
                 return null;
-              }, [user.uid]);
+              }, [userDto.uid]);
 
-              return _buildHome(context, ref, user);
+              return _buildHome(context, ref, userDto);
             },
             failure: (error) {
               return customErrorWidget(context, error.message);
@@ -63,11 +63,11 @@ class HomeScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildHome(BuildContext context, WidgetRef ref, AppUser user) {
+  Widget _buildHome(BuildContext context, WidgetRef ref, UserDto userDto) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final rotationGroupsAsync = ref.watch(
-      rotationGroupsStreamProvider(user.uid),
+      rotationGroupsStreamProvider(userDto.uid.value),
     );
 
     return Scaffold(
@@ -97,7 +97,7 @@ class HomeScreen extends HookConsumerWidget {
                               : _buildRotationGroupList(
                                 context,
                                 ref,
-                                user,
+                                userDto,
                                 rotationGroups,
                               ),
                   failure:
@@ -158,7 +158,7 @@ class HomeScreen extends HookConsumerWidget {
   Widget _buildRotationGroupList(
     BuildContext context,
     WidgetRef ref,
-    AppUser user,
+    UserDto userDto,
     List<RotationGroup> rotationGroups,
   ) {
     return CustomScrollView(
@@ -182,7 +182,7 @@ class HomeScreen extends HookConsumerWidget {
                   );
                 },
                 onDelete:
-                    () => _handleDelete(context, ref, rotationGroup, user),
+                    () => _handleDelete(context, ref, rotationGroup, userDto),
               );
             }, childCount: rotationGroups.length),
           ),
@@ -196,14 +196,14 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     RotationGroup rotationGroup,
-    AppUser currentUser,
+    UserDto userDto,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
     final createUseCase = ref.read(createRotationGroupUseCaseProvider);
 
     // 削除処理
     final result = await rotationRepository.deleteRotationGroup(
-      currentUser.uid,
+      userDto.uid.value,
       rotationGroup.rotationGroupId!,
     );
 

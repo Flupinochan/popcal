@@ -1,18 +1,20 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 
 part 'email_sign_in_request_dto.freezed.dart';
 
+// 入力用 UI => ドメイン/データ層
 @freezed
 sealed class EmailSignInRequestDto with _$EmailSignInRequestDto {
+  const EmailSignInRequestDto._();
+
   const factory EmailSignInRequestDto({
     required Email email,
     required Password password,
   }) = _EmailSignInRequestDto;
-
-  const EmailSignInRequestDto._();
 
   static Result<EmailSignInRequestDto> create({
     required String email,
@@ -30,17 +32,15 @@ sealed class EmailSignInRequestDto with _$EmailSignInRequestDto {
     );
   }
 
-  factory EmailSignInRequestDto.fromJson(Map<String, dynamic> json) {
-    final createResult = create(
-      email: json['email'] as String,
-      password: json['password'] as String,
-    );
+  static Result<EmailSignInRequestDto> fromJson(Map<String, dynamic> json) {
+    final email = json['email'];
+    final password = json['password'];
 
-    return createResult.when(
-      success: (dto) => dto,
-      failure:
-          (error) => throw FormatException('Invalid DTO: ${error.message}'),
-    );
+    if (email is! String || password is! String) {
+      return Results.failure(ValidationFailure('Invalid JSON structure'));
+    }
+
+    return create(email: email, password: password);
   }
 
   Map<String, dynamic> toJson() => {

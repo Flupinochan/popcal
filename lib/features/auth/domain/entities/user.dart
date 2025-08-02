@@ -1,7 +1,9 @@
-/// ユーザ情報 (外部ライブラリに依存しない)
+import 'package:popcal/features/auth/domain/value_objects/email.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
+
 class AppUser {
-  final String uid;
-  final String email;
+  final UserId uid;
+  final Email email;
 
   const AppUser({required this.uid, required this.email});
 }

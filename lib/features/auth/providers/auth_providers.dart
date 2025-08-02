@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:popcal/core/utils/result.dart';
@@ -27,6 +28,6 @@ AuthRepository authRepository(Ref ref) {
 }
 
 @riverpod
-Stream<Result<AppUser?>> authStateChanges(Ref ref) {
+Stream<Result<UserDto?>> authStateChanges(Ref ref) {
   return ref.watch(authRepositoryProvider).authStateChanges;
 }

@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
+import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
@@ -19,28 +19,28 @@ Future<Result<RotationData>> rotationData(
   if (authResult.isFailure) {
     return Results.failure(authResult.failureOrNull!);
   }
-  final appUser = authResult.valueOrNull;
-  if (appUser == null) {
+  final userDto = authResult.valueOrNull;
+  if (userDto == null) {
     return Results.failure(AuthFailure('未認証です'));
   }
 
   if (rotationGroupId == null) {
-    return Results.success(RotationData(appUser, null));
+    return Results.success(RotationData(userDto, null));
   } else {
     // 2. ローテーショングループ情報を取得
     final rotationGroup = await ref.watch(
-      rotationDetailProvider(appUser.uid, rotationGroupId).future,
+      rotationDetailProvider(userDto.uid.value, rotationGroupId).future,
     );
     if (rotationGroup == null) {
       return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
     }
-    return Results.success(RotationData(appUser, rotationGroup));
+    return Results.success(RotationData(userDto, rotationGroup));
   }
 }
 
 class RotationData {
-  final AppUser appUser;
+  final UserDto userDto;
   final RotationGroup? rotationGroup;
 
-  const RotationData(this.appUser, this.rotationGroup);
+  const RotationData(this.userDto, this.rotationGroup);
 }

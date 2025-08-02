@@ -13,7 +13,11 @@ class FirebaseAuthDataSource {
     return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
       try {
         if (firebaseUser != null) {
-          return Results.success(UserDto.fromFirebaseUser(firebaseUser));
+          final userDtoResult = UserDto.fromFirebaseUser(firebaseUser);
+          return userDtoResult.when(
+            success: (userDto) => Results.success(userDto),
+            failure: (error) => Results.failure(AuthFailure(error.message)),
+          );
         } else {
           return Results.success(null);
         }
@@ -32,8 +36,11 @@ class FirebaseAuthDataSource {
       if (firebaseUser == null) {
         return Results.success(null);
       }
-      final userDto = UserDto.fromFirebaseUser(firebaseUser);
-      return Results.success(userDto);
+      final userDtoResult = UserDto.fromFirebaseUser(firebaseUser);
+      return userDtoResult.when(
+        success: (userDto) => Results.success(userDto),
+        failure: (error) => Results.failure(AuthFailure(error.message)),
+      );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
@@ -54,8 +61,11 @@ class FirebaseAuthDataSource {
       if (credential.user == null) {
         return Results.failure(AuthFailure('メールアドレス認証認証に失敗しました'));
       }
-      final userDto = UserDto.fromFirebaseUser(credential.user!);
-      return Results.success(userDto);
+      final userDtoResult = UserDto.fromFirebaseUser(credential.user!);
+      return userDtoResult.when(
+        success: (userDto) => Results.success(userDto),
+        failure: (error) => Results.failure(AuthFailure(error.message)),
+      );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
@@ -76,8 +86,11 @@ class FirebaseAuthDataSource {
       if (credential.user == null) {
         return Results.failure(AuthFailure('サインアップに失敗しました'));
       }
-      final userDto = UserDto.fromFirebaseUser(credential.user!);
-      return Results.success(userDto);
+      final userDtoResult = UserDto.fromFirebaseUser(credential.user!);
+      return userDtoResult.when(
+        success: (userDto) => Results.success(userDto),
+        failure: (error) => Results.failure(AuthFailure(error.message)),
+      );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {

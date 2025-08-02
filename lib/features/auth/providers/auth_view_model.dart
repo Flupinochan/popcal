@@ -1,8 +1,8 @@
+import 'package:popcal/features/auth/data/dto/user_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/features/auth/data/dto/email_sign_in_request_dto.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 
 part 'auth_view_model.g.dart';
@@ -14,24 +14,24 @@ class AuthViewModel extends _$AuthViewModel {
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   @override
-  FutureOr<AppUser?> build() {
+  FutureOr<UserDto?> build() {
     return null;
   }
 
-  Future<Result<AppUser?>> signIn(EmailSignInRequestDto dto) async {
+  Future<Result<UserDto?>> signIn(EmailSignInRequestDto dto) async {
     return _executeAuthOperation(
       () => _authRepository.signInWithEmailAndPassword(dto.email, dto.password),
     );
   }
 
-  Future<Result<AppUser?>> signUp(EmailSignInRequestDto dto) async {
+  Future<Result<UserDto?>> signUp(EmailSignInRequestDto dto) async {
     return _executeAuthOperation(
       () => _authRepository.signUpWithEmailAndPassword(dto.email, dto.password),
     );
   }
 
-  Future<Result<AppUser?>> _executeAuthOperation(
-    Future<Result<AppUser?>> Function() operation,
+  Future<Result<UserDto?>> _executeAuthOperation(
+    Future<Result<UserDto?>> Function() operation,
   ) async {
     state = const AsyncLoading();
     final result = await operation();
