@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/data/dto/user_dto.dart';
+import 'package:popcal/features/auth/infrastructure/dto/user_dto.dart';
 import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
 import 'package:popcal/features/auth/providers/auth_provider.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';

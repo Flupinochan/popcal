@@ -1,5 +1,5 @@
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/data/datasources/firebase_auth_datasource.dart';
+import 'package:popcal/features/auth/infrastructure/datasources/firebase_auth_datasource.dart';
 import 'package:popcal/features/auth/domain/entities/user.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';

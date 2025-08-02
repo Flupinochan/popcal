@@ -1,4 +1,4 @@
-import 'package:popcal/features/auth/data/dto/user_dto.dart';
+import 'package:popcal/features/auth/infrastructure/dto/user_dto.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
