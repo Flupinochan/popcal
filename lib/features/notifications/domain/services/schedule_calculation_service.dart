@@ -22,11 +22,9 @@ abstract class ScheduleCalculationService {
   /// ※1. 実際の通知設定は30日分だが、カレンダーは過去1年から未来1年まで表示
   /// ※2. 最初の通知予定日以降を表示、過去の表示は通知したことのある最初の通知予定日以降の過去のみ
   /// [rotationGroup]
-  /// [fromDate] デフォルトは過去1年分
   /// [toDate] デフォルトは未来1年分
   Result<Map<String, CalendarDay>> buildCalendarSchedule({
     required RotationGroup rotationGroup,
-    DateTime? fromDate,
     DateTime? toDate,
   });
 

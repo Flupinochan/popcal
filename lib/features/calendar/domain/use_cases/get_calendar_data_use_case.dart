@@ -3,7 +3,6 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_data.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_data_dto.dart';
-import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
@@ -15,13 +14,11 @@ class GetCalendarDataUseCase {
 
   final AuthRepository _authRepository;
   final RotationRepository _rotationRepository;
-  final NotificationRepository _notificationRepository;
   final ScheduleCalculationService _scheduleCalculationService;
 
   GetCalendarDataUseCase(
     this._authRepository,
     this._rotationRepository,
-    this._notificationRepository,
     this._scheduleCalculationService,
   );
 
@@ -56,11 +53,7 @@ class GetCalendarDataUseCase {
     final endDate = now.add(const Duration(days: futureDays));
 
     final notificationResult = _scheduleCalculationService
-        .buildCalendarSchedule(
-          rotationGroup: rotationGroup,
-          fromDate: startDate,
-          toDate: endDate,
-        );
+        .buildCalendarSchedule(rotationGroup: rotationGroup, toDate: endDate);
     if (notificationResult.isFailure) {
       return Results.failure(notificationResult.failureOrNull!);
     }

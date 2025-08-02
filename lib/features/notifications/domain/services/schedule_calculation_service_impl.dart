@@ -17,23 +17,36 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
     required TimeOfDay notificationTime,
     DateTime? currentTime,
   }) {
-    final now = DateTime.now();
-    final defaultCurrentTime =
-        currentTime ?? DateTime(now.year - 1, now.month, now.day);
+    final defaultCurrentTime = currentTime ?? DateTime.now().toLocal();
 
     // 曜日指定のローテーション機能であり、遅くても未来7日後までに最初の通知日があるはず
     for (
       var checkDate = defaultCurrentTime;
-      checkDate.isBefore(defaultCurrentTime.add(const Duration(days: 7)));
+      checkDate.isBefore(defaultCurrentTime.add(const Duration(days: 8)));
       checkDate = checkDate.add(const Duration(days: 1))
     ) {
       // 開始日は+0日で、今から未来+7日分をチェック
       final checkDay = Weekday.fromDateTime(checkDate);
 
-      // ローテーション日に含まれる かつ 今より未来の時刻の場合
-      if (rotationDays.contains(checkDay) &&
-          checkDate.isAfter(defaultCurrentTime)) {
-        return Results.success(checkDate);
+      // ローテーション曜日の場合
+      if (rotationDays.contains(checkDay)) {
+        // 当日の場合は通知時刻で判定
+        if (TimeUtils.isSameDay(checkDate, defaultCurrentTime)) {
+          final notificationDateTime = DateTime(
+            checkDate.year,
+            checkDate.month,
+            checkDate.day,
+            notificationTime.hour,
+            notificationTime.minute,
+          );
+          // 未来の日付かどうか
+          if (notificationDateTime.isAfter(defaultCurrentTime)) {
+            return Results.success(checkDate);
+          }
+        } else if (checkDate.isAfter(defaultCurrentTime)) {
+          // 翌日以降はそのまま判定
+          return Results.success(checkDate);
+        }
       }
     }
     return Results.failure(ValidationFailure('次回ローテーション日の取得に失敗しました'));
@@ -41,70 +54,96 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
 
   /// 2. Calendar表示用スケジュールを生成 ※1年分
   @override
+  @override
   Result<Map<String, CalendarDay>> buildCalendarSchedule({
     required RotationGroup rotationGroup,
     DateTime? fromDate,
     DateTime? toDate,
   }) {
     try {
-      // デフォルトは過去1年から未来1年分をカレンダーで表示
       final now = DateTime.now();
       final defaultFromDate =
           fromDate ?? DateTime(now.year - 1, now.month, now.day);
       final defaultToDate =
           toDate ?? DateTime(now.year + 1, now.month, now.day);
 
-      // currentRotationIndexを0にリセット
-      final resetRotationGroup = rotationGroup.copyWith(
-        currentRotationIndex: 0,
+      // 1. 最初の通知予定日を計算
+      final firstNotificationDateResult = findNextRotationDate(
+        rotationDays: rotationGroup.rotationDays,
+        notificationTime: rotationGroup.notificationTime,
+        currentTime: DateTime.now().toLocal(),
       );
 
-      // 通知日を計算
-      final rotationCalculationResult = _calculateSchedule(
-        rotationGroup: resetRotationGroup,
-        fromDate: defaultFromDate,
-        toDate: defaultToDate,
-      );
-      if (rotationCalculationResult.isFailure) {
-        return Results.failure(rotationCalculationResult.failureOrNull!);
+      if (firstNotificationDateResult.isFailure) {
+        return Results.failure(firstNotificationDateResult.failureOrNull!);
       }
 
-      final notificationSettings =
-          rotationCalculationResult.valueOrNull!.notificationSettings;
+      final firstNotificationDate = firstNotificationDateResult.valueOrNull!;
 
-      // 期間内の各日付に対してCalendarDayを作成
+      // 2. カレンダー表示用の計算（専用メソッド）
+      final calendarResult = _buildCalendarDays(
+        rotationGroup: rotationGroup,
+        fromDate: defaultFromDate,
+        toDate: defaultToDate,
+        firstNotificationDate: firstNotificationDate,
+      );
+
+      return calendarResult;
+    } catch (error) {
+      return Results.failure(CalendarFailure('カレンダーの作成に失敗しました: $error'));
+    }
+  }
+
+  /// カレンダー表示専用の計算メソッド
+  Result<Map<String, CalendarDay>> _buildCalendarDays({
+    required RotationGroup rotationGroup,
+    required DateTime fromDate,
+    required DateTime toDate,
+    required DateTime firstNotificationDate,
+  }) {
+    try {
       final dayInfoMap = <String, CalendarDay>{};
+      var currentIndex = 0;
+
+      // 期間内の各日付をループ（過去1年〜未来1年）
       for (
-        var checkDate = defaultFromDate;
-        checkDate.isBefore(defaultToDate.add(const Duration(days: 1)));
+        var checkDate = fromDate;
+        checkDate.isBefore(toDate.add(const Duration(days: 1)));
         checkDate = checkDate.add(const Duration(days: 1))
       ) {
-        // 通知日かどうか判定
-        final matchingNotificationSettings =
-            notificationSettings
-                .where(
-                  (notification) => TimeUtils.isSameDay(
-                    notification.notificationTime,
-                    checkDate,
-                  ),
-                )
-                .firstOrNull;
+        final checkDay = Weekday.fromDateTime(checkDate);
 
-        final isRotationDay = matchingNotificationSettings != null;
-        final memberName = matchingNotificationSettings?.memberName;
+        // ローテーション日かつ最初の通知予定日以降かどうか判定
+        final isRotationDay = rotationGroup.rotationDays.contains(checkDay);
+        final isAfterFirstNotification =
+            checkDate.isAfter(firstNotificationDate) ||
+            TimeUtils.isSameDay(checkDate, firstNotificationDate);
+
+        // 通知日として表示するかどうか
+        final isNotificationDay = isRotationDay && isAfterFirstNotification;
+
+        String? memberName;
+        if (isNotificationDay) {
+          // 担当者を計算
+          final memberIndex =
+              currentIndex % rotationGroup.rotationMembers.length;
+          memberName = rotationGroup.rotationMembers[memberIndex];
+          currentIndex++;
+        }
 
         final calendarDay = CalendarDay(
           date: checkDate,
           memberName: memberName,
-          isRotationDay: isRotationDay,
+          isRotationDay: isNotificationDay,
         );
 
         final key = TimeUtils.createDateKey(checkDate);
         dayInfoMap[key] = calendarDay;
       }
+
       return Results.success(dayInfoMap);
     } catch (error) {
-      return Results.failure(CalendarFailure('カレンダーの作成に失敗しました: $error'));
+      return Results.failure(CalendarFailure('カレンダー日付の計算に失敗しました: $error'));
     }
   }
 
@@ -151,7 +190,7 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
       ) {
         final checkDay = Weekday.fromDateTime(checkDate);
 
-        // ローテーション日に含まれる場合
+        // ローテーション日 かつ 最初の通知予定日以降の場合 ※最初の通知予定日を含む
         if (rotationGroup.rotationDays.contains(checkDay)) {
           final memberIndex =
               currentIndex % rotationGroup.rotationMembers.length;

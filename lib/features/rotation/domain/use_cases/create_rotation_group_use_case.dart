@@ -24,40 +24,40 @@ class CreateRotationGroupUseCase {
     print('メンバー: ${rotationGroup.rotationMembers}');
     print('入力されたcurrentRotationIndex: ${rotationGroup.currentRotationIndex}');
 
-    // 1. 最初の通知予定日を取得
-    final firstNotificationDateResult = _scheduleCalculationService
-        .findNextRotationDate(
-          rotationDays: rotationGroup.rotationDays,
-          notificationTime: rotationGroup.notificationTime,
-        );
+    // // 1. 最初の通知予定日を取得
+    // final firstNotificationDateResult = _scheduleCalculationService
+    //     .findNextRotationDate(
+    //       rotationDays: rotationGroup.rotationDays,
+    //       notificationTime: rotationGroup.notificationTime,
+    //     );
 
-    if (firstNotificationDateResult.isFailure) {
-      return Results.failure(firstNotificationDateResult.failureOrNull!);
-    }
+    // if (firstNotificationDateResult.isFailure) {
+    //   return Results.failure(firstNotificationDateResult.failureOrNull!);
+    // }
 
-    final firstNotificationDate = firstNotificationDateResult.valueOrNull;
-    if (firstNotificationDate == null) {
-      return Results.failure(ValidationFailure('最初の通知予定日が見つかりません'));
-    }
+    // final firstNotificationDate = firstNotificationDateResult.valueOrNull;
+    // if (firstNotificationDate == null) {
+    //   return Results.failure(ValidationFailure('最初の通知予定日が見つかりません'));
+    // }
 
-    print('最初の通知予定日: $firstNotificationDate');
+    // print('最初の通知予定日: $firstNotificationDate');
 
-    // 2. RotationGroupを作成（rotationStartDateを最初の通知予定日に設定）
-    final rotationGroupWithFirstDate = rotationGroup.copyWith(
-      currentRotationIndex: 0, // 新規作成時は必ず0
-      rotationStartDate: firstNotificationDate, // 最初の通知予定日を設定
-      updatedAt: DateTime.now().toLocal(),
-    );
+    // // 2. RotationGroupを作成（rotationStartDateを最初の通知予定日に設定）
+    // final rotationGroupWithFirstDate = rotationGroup.copyWith(
+    //   currentRotationIndex: 0, // 新規作成時は必ず0
+    //   rotationStartDate: firstNotificationDate, // 最初の通知予定日を設定
+    //   updatedAt: DateTime.now().toLocal(),
+    // );
 
-    print(
-      '作成用currentRotationIndex: ${rotationGroupWithFirstDate.currentRotationIndex}',
-    );
-    print(
-      '作成用rotationStartDate: ${rotationGroupWithFirstDate.rotationStartDate}',
-    );
+    // print(
+    //   '作成用currentRotationIndex: ${rotationGroupWithFirstDate.currentRotationIndex}',
+    // );
+    // print(
+    //   '作成用rotationStartDate: ${rotationGroupWithFirstDate.rotationStartDate}',
+    // );
 
     final rotationResult = await _rotationRepository.createRotationGroup(
-      rotationGroupWithFirstDate,
+      rotationGroup,
     );
 
     return rotationResult.when(

@@ -107,10 +107,10 @@ class CalendarScreen extends HookConsumerWidget {
 
     return GlassWrapper(
       child: TableCalendar<String>(
-        firstDay: DateTime.now().subtract(
+        firstDay: DateTime.now().toLocal().subtract(
           const Duration(days: GetCalendarDataUseCase.pastDays),
         ),
-        lastDay: DateTime.now().add(
+        lastDay: DateTime.now().toLocal().add(
           const Duration(days: GetCalendarDataUseCase.futureDays),
         ),
         focusedDay: focusedDay.value,

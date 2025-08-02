@@ -17,7 +17,6 @@ GetCalendarDataUseCase getCalendarDataUseCase(Ref ref) {
   return GetCalendarDataUseCase(
     ref.watch(authRepositoryProvider),
     ref.watch(rotationRepositoryProvider),
-    ref.watch(notificationRepositoryProvider),
     ref.watch(scheduleCalculationServiceRepositoryProvider),
   );
 }
