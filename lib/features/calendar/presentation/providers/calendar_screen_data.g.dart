@@ -6,8 +6,29 @@ part of 'calendar_screen_data.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$getCalendarDataUseCaseHash() =>
+    r'76902bea62eaa8ee6888420dcee3502c5f0e6eaf';
+
+/// See also [getCalendarDataUseCase].
+@ProviderFor(getCalendarDataUseCase)
+final getCalendarDataUseCaseProvider =
+    AutoDisposeProvider<GetCalendarDataUseCase>.internal(
+      getCalendarDataUseCase,
+      name: r'getCalendarDataUseCaseProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$getCalendarDataUseCaseHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetCalendarDataUseCaseRef =
+    AutoDisposeProviderRef<GetCalendarDataUseCase>;
 String _$calendarScreenDataHash() =>
-    r'8e162e6f0d309cc94c0b871663809e8d22d4a00b';
+    r'c613c18aa1832a40a5d6de3acc6d14b1aa176b95';
 
 /// Copied from Dart SDK
 class _SystemHash {

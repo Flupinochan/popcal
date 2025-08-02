@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/calendar/domain/use_cases/get_calendar_data_use_case.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_data_dto.dart';
 import 'package:popcal/features/calendar/presentation/providers/calendar_screen_data.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
@@ -12,9 +13,7 @@ import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/entities/weekday.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_detail.dart';
 
 class CalendarScreen extends HookConsumerWidget {
   final String rotationGroupId;
@@ -29,8 +28,7 @@ class CalendarScreen extends HookConsumerWidget {
     return calendarDataAsync.when(
       data:
           (result) => result.when(
-            success:
-                (calendarData) => _buildCalendarScreen(context, calendarData),
+            success: (dto) => _buildCalendarScreen(context, dto),
             failure: (error) => customErrorWidget(context, error.message),
           ),
       loading: () => customLoadingWidget(context),
@@ -40,21 +38,19 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarScreen(
     BuildContext context,
-    CalendarDataDto calendarData,
+    CalendarDataDto calendarDataDto,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final focusedDay = useState(DateTime.now().toLocal());
     final selectedDay = useState<DateTime?>(DateTime.now().toLocal());
-    final rotationGroup = calendarData.rotationGroup;
-    final notificationDetails = calendarData.notificationDetails;
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
       extendBodyBehindAppBar: true,
       appBar: GlassAppBar(
-        title: rotationGroup.rotationName,
+        title: calendarDataDto.rotationGroup.rotationName,
         leadingIcon: Icons.arrow_back_ios_new,
         onLeadingPressed: () => Navigator.pop(context),
       ),
@@ -72,21 +68,19 @@ class CalendarScreen extends HookConsumerWidget {
                     children: [
                       _buildCalendarContainer(
                         context,
-                        rotationGroup,
+                        calendarDataDto,
                         focusedDay,
                         selectedDay,
-                        notificationDetails,
                       ),
                       const SizedBox(height: 16),
                       _buildSelectedDayInfo(
-                        rotationGroup,
+                        calendarDataDto,
                         selectedDay.value,
-                        notificationDetails,
                         glassTheme,
                         textTheme,
                       ),
                       const SizedBox(height: 16),
-                      _buildRotationInfo(context, rotationGroup),
+                      _buildRotationInfo(context, calendarDataDto),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -102,10 +96,9 @@ class CalendarScreen extends HookConsumerWidget {
   // 1. カレンダー
   Widget _buildCalendarContainer(
     BuildContext context,
-    RotationGroup rotationGroup,
+    CalendarDataDto calendarDataDto,
     ValueNotifier<DateTime> focusedDay,
     ValueNotifier<DateTime?> selectedDay,
-    List<NotificationDetail> notificationDetails,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
@@ -113,8 +106,12 @@ class CalendarScreen extends HookConsumerWidget {
 
     return GlassWrapper(
       child: TableCalendar<String>(
-        firstDay: DateTime.now().subtract(const Duration(days: 365)),
-        lastDay: DateTime.now().add(const Duration(days: 365)),
+        firstDay: DateTime.now().subtract(
+          const Duration(days: GetCalendarDataUseCase.pastDays),
+        ),
+        lastDay: DateTime.now().add(
+          const Duration(days: GetCalendarDataUseCase.futureDays),
+        ),
         focusedDay: focusedDay.value,
         selectedDayPredicate: (day) => isSameDay(selectedDay.value, day),
         calendarFormat: CalendarFormat.month,
@@ -159,9 +156,8 @@ class CalendarScreen extends HookConsumerWidget {
           defaultBuilder: (context, day, focusedDay) {
             return _buildCalendarCell(
               context,
-              notificationDetails,
+              calendarDataDto,
               day,
-              rotationGroup,
               false,
               false,
             );
@@ -170,9 +166,8 @@ class CalendarScreen extends HookConsumerWidget {
           todayBuilder: (context, day, focusedDay) {
             return _buildCalendarCell(
               context,
-              notificationDetails,
+              calendarDataDto,
               day,
-              rotationGroup,
               true,
               false,
             );
@@ -181,9 +176,8 @@ class CalendarScreen extends HookConsumerWidget {
           selectedBuilder: (context, day, focusedDay) {
             return _buildCalendarCell(
               context,
-              notificationDetails,
+              calendarDataDto,
               day,
-              rotationGroup,
               false,
               true,
             );
@@ -195,9 +189,8 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarCell(
     BuildContext context,
-    List<NotificationDetail> notificationDetails,
+    CalendarDataDto calendarDataDto,
     DateTime day,
-    RotationGroup rotationGroup,
     bool isToday,
     bool isSelected,
   ) {
@@ -205,20 +198,9 @@ class CalendarScreen extends HookConsumerWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
-    // 通知詳細から該当日の担当者を取得
-    final notification = notificationDetails.firstWhere(
-      (detail) => isSameDay(detail.date, day),
-      orElse:
-          () => NotificationDetail(
-            notificationId: 0,
-            date: day,
-            memberName: '',
-            title: '',
-            body: '',
-          ),
-    );
-    final memberName = notification.memberName;
-    final isRotationDay = memberName.isNotEmpty;
+    final dayInfo = calendarDataDto.getDayInfo(day);
+    final memberName = dayInfo?.memberName;
+    final isRotationDay = dayInfo?.isRotationDay ?? false;
 
     return Container(
       width: double.infinity,
@@ -253,11 +235,14 @@ class CalendarScreen extends HookConsumerWidget {
               ),
             ),
           ),
-          isRotationDay
+          isRotationDay && memberName != null
               ? Text(
                 memberName,
                 style: textTheme.labelMedium!.copyWith(
-                  color: getMemberColor(memberName, rotationGroup),
+                  color: getMemberColor(
+                    memberName,
+                    calendarDataDto.rotationGroup,
+                  ),
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
@@ -271,9 +256,8 @@ class CalendarScreen extends HookConsumerWidget {
 
   // 2. 選択した曜日のローテーションメンバー名表示
   Widget _buildSelectedDayInfo(
-    RotationGroup rotationGroup,
+    CalendarDataDto calendarDataDto,
     DateTime? selectedDay,
-    List<NotificationDetail> notificationDetails,
     GlassTheme glass,
     TextTheme textTheme,
   ) {
@@ -281,21 +265,9 @@ class CalendarScreen extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    // 通知詳細から該当日の情報を取得
-    final notification = notificationDetails.firstWhere(
-      (detail) => isSameDay(detail.date, selectedDay),
-      orElse:
-          () => NotificationDetail(
-            notificationId: 0,
-            date: selectedDay,
-            memberName: '',
-            title: '',
-            body: '',
-          ),
-    );
-
-    final memberName = notification.memberName;
-    final isRotationDay = memberName.isNotEmpty;
+    final dayInfo = calendarDataDto.getDayInfo(selectedDay);
+    final memberName = dayInfo?.memberName;
+    final isRotationDay = dayInfo?.isRotationDay ?? false;
 
     return GlassWrapper(
       child: Padding(
@@ -336,7 +308,7 @@ class CalendarScreen extends HookConsumerWidget {
                       const SizedBox(width: 8),
                       // 担当日/対象外
                       GlassChip(
-                        text: isRotationDay ? "担当日" : "対象外",
+                        text: dayInfo?.displayText ?? "情報なし",
                         gradient:
                             isRotationDay
                                 ? glass.successGradient
@@ -364,7 +336,7 @@ class CalendarScreen extends HookConsumerWidget {
                       const SizedBox(width: 10),
                       // メンバー名
                       Text(
-                        isRotationDay ? memberName : 'ローテーション対象外',
+                        memberName ?? 'ローテーション対象外',
                         style: textTheme.titleMedium!.copyWith(
                           color:
                               isRotationDay
@@ -384,10 +356,11 @@ class CalendarScreen extends HookConsumerWidget {
   }
 
   // 3. ローテーション情報
-  Widget _buildRotationInfo(BuildContext context, RotationGroup rotationGroup) {
+  Widget _buildRotationInfo(
+    BuildContext context,
+    CalendarDataDto calendarDataDto,
+  ) {
     final textTheme = Theme.of(context).textTheme;
-    final glassTheme =
-        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return GlassWrapper(
       child: Padding(
@@ -397,8 +370,7 @@ class CalendarScreen extends HookConsumerWidget {
           children: [
             // ローテーション情報
             _rotationInfoItem(
-              textTheme,
-              glassTheme,
+              context,
               'ローテーション情報',
               Icons.info_outline,
               iconSize: 20,
@@ -407,25 +379,22 @@ class CalendarScreen extends HookConsumerWidget {
             const SizedBox(height: 14),
             // メンバー
             _rotationInfoItem(
-              textTheme,
-              glassTheme,
-              'メンバー: ${rotationGroup.rotationMembers.join(', ')}',
+              context,
+              'メンバー: ${calendarDataDto.rotationGroup.rotationMembers.join(', ')}',
               Icons.group,
             ),
             const SizedBox(height: 12),
             // 曜日
             _rotationInfoItem(
-              textTheme,
-              glassTheme,
-              '曜日: ${rotationGroup.rotationDays.map((w) => w.displayName).join(', ')}',
+              context,
+              '曜日: ${calendarDataDto.rotationGroup.rotationDays.map((w) => w.displayName).join(', ')}',
               Icons.calendar_today,
             ),
             const SizedBox(height: 12),
             // 通知時刻
             _rotationInfoItem(
-              textTheme,
-              glassTheme,
-              '時刻: ${rotationGroup.notificationTime.hour.toString().padLeft(2, '0')}:${rotationGroup.notificationTime.minute.toString().padLeft(2, '0')}',
+              context,
+              '時刻: ${calendarDataDto.rotationGroup.notificationTime.hour.toString().padLeft(2, '0')}:${calendarDataDto.rotationGroup.notificationTime.minute.toString().padLeft(2, '0')}',
               Icons.access_time,
             ),
           ],
@@ -435,13 +404,16 @@ class CalendarScreen extends HookConsumerWidget {
   }
 
   Widget _rotationInfoItem(
-    TextTheme textTheme,
-    GlassTheme glassTheme,
+    BuildContext context,
     String infoText,
     IconData iconData, {
     double iconSize = 18,
     TextStyle? textStyle,
   }) {
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+
     final effectiveTextStyle = textStyle ?? textTheme.titleSmall;
 
     return Row(

@@ -1,5 +1,3 @@
-// lib/features/notifications/data/repositories/notification_repository_local.dart
-
 import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -233,7 +231,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
         rotationGroup: rotationGroupForCalendar,
         startDate: startDate,
         endDate: endDate,
-        currentTime: null, // 時刻チェックなし
+        currentTime: rotationGroup.rotationStartDate,
       );
 
       // RotationNotification → NotificationDetail に変換

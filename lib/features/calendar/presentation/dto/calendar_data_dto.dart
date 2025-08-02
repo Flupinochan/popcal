@@ -16,14 +16,19 @@ sealed class CalendarDataDto with _$CalendarDataDto {
     required UserViewModelDto userViewModelDto,
     required RotationGroup rotationGroup,
     required List<NotificationDetail> notificationDetails,
+    required Map<String, CalendarDayDto> dayInfoMap,
   }) = _CalendarDataDto;
 
   // Entity => DTO
-  factory CalendarDataDto.fromEntity(CalendarData entity) {
+  factory CalendarDataDto.fromEntity(
+    CalendarData entity,
+    Map<String, CalendarDayDto> dayInfoMap,
+  ) {
     return CalendarDataDto(
       userViewModelDto: UserViewModelDto.fromEntity(entity.appUser),
       rotationGroup: entity.rotationGroup,
       notificationDetails: entity.notificationDetails,
+      dayInfoMap: dayInfoMap,
     );
   }
 
@@ -42,4 +47,20 @@ sealed class CalendarDataDto with _$CalendarDataDto {
       failure: (error) => Results.failure(CalendarFailure(error.message)),
     );
   }
+
+  CalendarDayDto? getDayInfo(DateTime date) {
+    final key = '${date.year}-${date.month}-${date.day}';
+    return dayInfoMap[key];
+  }
+}
+
+// 各日付表示用データ
+@freezed
+sealed class CalendarDayDto with _$CalendarDayDto {
+  const factory CalendarDayDto({
+    required DateTime date,
+    required String? memberName,
+    required bool isRotationDay,
+    required String displayText,
+  }) = _CalendarDayDto;
 }
