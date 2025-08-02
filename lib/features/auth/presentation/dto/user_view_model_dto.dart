@@ -6,8 +6,6 @@ import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
 part 'user_view_model_dto.freezed.dart'; // freezed
 
-// ※現状はuser_firebase_dtoと同じ
-// datasourcesで利用するdtoとpresentationで利用するdtoに分けているだけ
 @freezed
 sealed class UserViewModelDto with _$UserViewModelDto {
   const UserViewModelDto._();

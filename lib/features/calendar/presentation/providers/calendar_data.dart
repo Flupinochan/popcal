@@ -12,15 +12,14 @@ import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart
 part 'calendar_data.g.dart';
 
 // CalendarScreen表示に必要な3つの情報を取得して返却
-// 画面表示時に取得する3つの非同期データを1つのローディングにまとめる
+// 画面表示時に取得する3つの非同期データを1つの.when()にまとめる
 // ※リアルタイムで画面更新が必要ないため全てを初期取得1回にする
-// .when()用初期画面表示用データ取得
 @riverpod
 Future<Result<CalendarData>> calendarData(
   Ref ref,
   String rotationGroupId,
 ) async {
-  // 1. ユーザ情報を取得 ※futureで1度だけ取得が可能
+  // 1. ユーザ情報を取得 ※.futureでstreamから1度だけ取得が可能
   final authResult = await ref.watch(authStateForUIProvider.future);
   if (authResult.isFailure) {
     return Results.failure(authResult.failureOrNull!);
