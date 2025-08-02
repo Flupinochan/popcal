@@ -1,4 +1,3 @@
-/// エラーの種類を定義
 sealed class Failure {
   final String message;
   const Failure(this.message);
@@ -7,27 +6,35 @@ sealed class Failure {
   String toString() => message;
 }
 
-// バリデーションエラー
 class ValidationFailure extends Failure {
   const ValidationFailure(super.message);
 }
 
-// 認証エラー
-class AuthFailure extends Failure {
-  const AuthFailure(super.message);
-}
-
-// ネットワークエラー
 class NetworkFailure extends Failure {
   const NetworkFailure(super.message);
 }
 
-// 通知設定エラー
+// 最低限featureごとに定義
+class AuthFailure extends Failure {
+  const AuthFailure(super.message);
+}
+
+class CalendarFailure extends Failure {
+  const CalendarFailure(super.message);
+}
+
+class DrawerFailure extends Failure {
+  const DrawerFailure(super.message);
+}
+
+class HomeFailure extends Failure {
+  const HomeFailure(super.message);
+}
+
 class NotificationFailure extends Failure {
   const NotificationFailure(super.message);
 }
 
-// ローテーショングループ設定エラー
 class RotationGroupFailure extends Failure {
   const RotationGroupFailure(super.message);
 }
