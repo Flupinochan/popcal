@@ -3,7 +3,7 @@ import 'glass_theme.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
-    return ThemeData(
+    final baseTheme = ThemeData(
       // Textスタイル定義
       textTheme: TextTheme(
         // 大見出し - スクリーンタイトル、Welcomeメッセージ
@@ -58,7 +58,10 @@ class AppTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
-      // Glass用スタイル定義
+    );
+
+    return ThemeData(
+      textTheme: baseTheme.textTheme.apply(fontFamily: "NotoSansJP"),
       extensions: [GlassTheme.defaultTheme],
     );
   }
