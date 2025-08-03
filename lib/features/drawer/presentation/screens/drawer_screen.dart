@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
@@ -87,7 +88,6 @@ class DrawerScreen extends HookConsumerWidget {
                     ],
                   ),
                 ),
-
                 // Sign Out
                 GlassButton(
                   text: "サインアウト",
@@ -95,6 +95,33 @@ class DrawerScreen extends HookConsumerWidget {
                   borderColor: glassTheme.errorBorderColor,
                   gradient: glassTheme.errorGradient,
                   onPressed: () => authRepository.signOut(),
+                ),
+                SizedBox(height: 32),
+                // Version
+                FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text('読み込み中...', style: textTheme.bodySmall);
+                    }
+                    if (snapshot.hasError) {
+                      return Text(
+                        'エラー: ${snapshot.error}',
+                        style: textTheme.bodySmall,
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      final packageInfo = snapshot.data!;
+                      return Text(
+                        'version: ${packageInfo.version}',
+                        style: textTheme.bodySmall,
+                      );
+                    }
+                    return Text(
+                      'バージョン情報を取得できませんでした',
+                      style: textTheme.bodySmall,
+                    );
+                  },
                 ),
               ],
             ),
