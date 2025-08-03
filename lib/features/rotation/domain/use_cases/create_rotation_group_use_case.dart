@@ -51,7 +51,7 @@ class CreateRotationGroupUseCase {
           final createNotificationResult = await _notificationRepository
               .createNotification(notification);
           if (createNotificationResult.isFailure) {
-            Results.failure<RotationGroup>(
+            return Results.failure<RotationGroup>(
               NotificationFailure(createNotificationResult.displayText),
             );
           }

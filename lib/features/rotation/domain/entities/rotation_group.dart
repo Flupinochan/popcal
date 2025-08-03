@@ -51,4 +51,10 @@ class RotationGroup {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  // メンバーの順番を取得
+  int getMemberIndex(String memberName) {
+    final index = rotationMembers.indexOf(memberName);
+    return index >= 0 ? index : 0;
+  }
 }

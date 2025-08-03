@@ -43,4 +43,11 @@ class CalendarData {
   List<CalendarDay> get allCalendarDays {
     return calendarDays.values.toList();
   }
+
+  // 日付から表示用データを返却
+  CalendarDay getCalendarDayForDate(DateTime date) {
+    final key = TimeUtils.createDateKey(date);
+    return calendarDays[key] ??
+        CalendarDay(date: date, memberName: null, isRotationDay: false);
+  }
 }

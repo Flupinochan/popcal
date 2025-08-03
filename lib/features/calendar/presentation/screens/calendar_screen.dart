@@ -241,10 +241,9 @@ class CalendarScreen extends HookConsumerWidget {
               ? Text(
                 memberName,
                 style: textTheme.labelMedium!.copyWith(
-                  color: getMemberColor(
-                    memberName,
-                    calendarDataDto.rotationGroup,
-                  ),
+                  color:
+                      memberColors[dayInfo!.memberColorIndex %
+                          memberColors.length],
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,

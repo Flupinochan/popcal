@@ -3,7 +3,9 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_data.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_data_dto.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_day_view_dto.dart';
 import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
+import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
 class GetCalendarDataUseCase {
@@ -67,25 +69,29 @@ class GetCalendarDataUseCase {
 
     // 5. 各日付表示用データを作成
     // {各日付: 各日付表示用データ} のMap
-    final dayInfoMap = <String, CalendarDayDto>{};
+    final dayInfoMap = <String, CalendarDayViewDto>{};
     for (
-      var date = startDate;
-      date.isBefore(endDate.add(const Duration(days: 1)));
-      date = date.add(const Duration(days: 1))
+      var checkDate = startDate;
+      checkDate.isBefore(endDate.add(const Duration(days: 1)));
+      checkDate = checkDate.add(const Duration(days: 1))
     ) {
       // Entityのビジネスロジックを実行
-      final memberName = calendarData.getMemberNameForDate(date);
-      final isRotationDay = calendarData.isRotationDay(date);
+      final calendarDay = calendarData.getCalendarDayForDate(checkDate);
 
-      final dayInfo = CalendarDayDto(
-        date: date,
-        memberName: memberName,
-        isRotationDay: isRotationDay,
-        displayText: isRotationDay ? "担当日" : "対象外",
+      // メンバーインデックス取得
+      final memberColorIndex =
+          calendarDay.memberName != null
+              ? rotationGroup.getMemberIndex(calendarDay.memberName!)
+              : 0;
+
+      // Entity => DTO
+      final dayViewDto = CalendarDayViewDto.fromEntity(
+        calendarDay,
+        memberColorIndex,
       );
 
-      final key = '${date.year}-${date.month}-${date.day}';
-      dayInfoMap[key] = dayInfo;
+      final key = TimeUtils.createDateKey(checkDate);
+      dayInfoMap[key] = dayViewDto;
     }
 
     // 6. DTOに変換して返却

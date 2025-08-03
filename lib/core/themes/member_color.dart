@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 
 // カレンダーで表示するメンバーの色
 const List<Color> memberColors = [
@@ -14,9 +13,3 @@ const List<Color> memberColors = [
   Color(0xFFF8C471),
   Color(0xFFBFC9CA),
 ];
-
-// Member配列のindexで色を決定
-Color getMemberColor(String memberName, RotationGroup rotationGroup) {
-  final index = rotationGroup.rotationMembers.indexOf(memberName);
-  return index >= 0 ? memberColors[index % memberColors.length] : Colors.white;
-}
