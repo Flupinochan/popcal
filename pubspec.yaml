@@ -58,6 +58,8 @@ dependencies:
   stack_trace: ^1.12.1
   logging: ^1.3.0
   package_info_plus: ^8.3.0
+  flutter_native_splash: ^2.4.6
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -116,3 +118,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/splash.png
+
+  # Android 12以降の専用の設定も必要
+  android_12:
+    icon_background_color: "#ffffff"
+    image: assets/images/splash.png
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
