@@ -7,7 +7,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/entities/weekday.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/providers/rotation_data.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
 import 'package:popcal/features/rotation/providers/rotation_view_model.dart';

@@ -6,7 +6,7 @@ import 'package:popcal/features/notifications/domain/entities/notification_setti
 import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/entities/weekday.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
 
 class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
@@ -101,6 +101,7 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
     int futureDays = 30,
   }) {
     try {
+      // 現在時刻をベース
       final currentTime = DateTime.now().toLocal();
       final toDate = currentTime.add(Duration(days: futureDays));
 

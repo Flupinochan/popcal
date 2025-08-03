@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:popcal/features/rotation/domain/entities/weekday.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
 // ローテーション設定
 class RotationGroup {

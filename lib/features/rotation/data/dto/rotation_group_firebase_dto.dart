@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/entities/weekday.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
 part 'rotation_group_firebase_dto.freezed.dart';
 

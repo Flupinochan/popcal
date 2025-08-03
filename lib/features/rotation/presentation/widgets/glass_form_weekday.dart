@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/features/rotation/domain/entities/weekday.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 
 class GlassFormWeekday extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_day.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/domain/entities/weekday.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
 
 /// 2. 計算ロジックDomain Service

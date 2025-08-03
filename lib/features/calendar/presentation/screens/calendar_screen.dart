@@ -14,7 +14,7 @@ import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:popcal/features/rotation/domain/entities/weekday.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
 class CalendarScreen extends HookConsumerWidget {
   final String rotationGroupId;
