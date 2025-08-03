@@ -26,7 +26,7 @@ class GlassListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Dismissible(
-        key: Key(rotationGroup.rotationGroupId ?? ''),
+        key: Key(rotationGroup.rotationGroupId),
         direction: DismissDirection.horizontal,
         // Dismissによる削除時の背景色
         background: GlassWrapper(

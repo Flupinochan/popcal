@@ -232,15 +232,12 @@ class LocalNotificationsDatasource {
           await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
       pendingNotifications.sort((a, b) => a.id.compareTo(b.id));
 
-      print('=== 設定済み通知一覧 (${pendingNotifications.length}件) ===');
-
       for (final notification in pendingNotifications) {
         String dateTime = '日時不明';
 
         try {
           // 🔥 通知IDから日時を復元（yyyyMMdd形式）
           final dateInt = notification.id;
-          final year = dateInt ~/ 10000;
           final month = (dateInt % 10000) ~/ 100;
           final day = dateInt % 100;
 
