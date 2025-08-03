@@ -27,27 +27,27 @@ class RotationGroup {
     required this.updatedAt,
   });
 
-  // 特定の値を更新するために利用
+  // 更新処理で利用
   RotationGroup copyWith({
     String? rotationGroupId,
-    String? ownerUserId,
+    String? userId,
     String? rotationName,
     List<String>? rotationMembers,
     List<Weekday>? rotationDays,
     TimeOfDay? notificationTime,
     int? currentRotationIndex,
-    DateTime? rotationStartDate,
+    DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return RotationGroup(
       rotationGroupId: rotationGroupId ?? this.rotationGroupId,
-      userId: ownerUserId ?? this.userId,
+      userId: userId ?? this.userId,
       rotationName: rotationName ?? this.rotationName,
       rotationMembers: rotationMembers ?? this.rotationMembers,
       rotationDays: rotationDays ?? this.rotationDays,
       notificationTime: notificationTime ?? this.notificationTime,
       currentRotationIndex: currentRotationIndex ?? this.currentRotationIndex,
-      createdAt: rotationStartDate ?? this.createdAt,
+      createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

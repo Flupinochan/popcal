@@ -4,6 +4,7 @@ import 'package:popcal/features/notifications/domain/services/schedule_calculati
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_dto.dart';
 
 class UpdateRotationGroupUseCase {
   final RotationRepository _rotationRepository;
@@ -16,131 +17,76 @@ class UpdateRotationGroupUseCase {
     this._scheduleCalculationService,
   );
 
-  Future<Result<RotationGroup>> execute(RotationGroup rotationGroup) async {
-    try {
-      if (rotationGroup.rotationGroupId == null) {
-        return Results.failure(ValidationFailure('ローテーションIDが未設定です'));
-      }
-
-      final targetRotationGroupId = rotationGroup.rotationGroupId!;
-
-      print('=== ローテーショングループ更新開始 ===');
-      print('ローテーション名: ${rotationGroup.rotationName}');
-      print('ID: $targetRotationGroupId');
-      print('更新前currentRotationIndex: ${rotationGroup.currentRotationIndex}');
-      print('更新前rotationStartDate: ${rotationGroup.createdAt}');
-
-      // 1. 新しい最初の通知予定日を取得
-      final firstNotificationDateResult = _scheduleCalculationService
-          .findNextRotationDate(
-            rotationDays: rotationGroup.rotationDays,
-            notificationTime: rotationGroup.notificationTime,
-            fromDate: rotationGroup.updatedAt,
-          );
-
-      if (firstNotificationDateResult.isFailure) {
-        return Results.failure(firstNotificationDateResult.failureOrNull!);
-      }
-
-      final firstNotificationDate = firstNotificationDateResult.valueOrNull;
-      if (firstNotificationDate == null) {
-        return Results.failure(ValidationFailure('最初の通知予定日が見つかりません'));
-      }
-
-      print('新しい最初の通知予定日: $firstNotificationDate');
-
-      // 2. 対象rotationGroupIdの既存通知を削除
-      print('既存通知削除開始...');
-      final deleteResult = await _notificationRepository
-          .deleteNotificationsByRotationGroupId(targetRotationGroupId);
-
-      if (deleteResult.isFailure) {
-        return Results.failure(deleteResult.failureOrNull!);
-      }
-      print('既存通知削除完了');
-
-      // 3. RotationGroupを更新（currentRotationIndexを0にリセット、rotationStartDateを新しい最初の通知予定日に設定）
-      final updatedGroup = rotationGroup.copyWith(
-        updatedAt: DateTime.now().toLocal(),
-        currentRotationIndex: 0, // 更新時は必ず0にリセット
-        rotationStartDate: firstNotificationDate, // 新しい最初の通知予定日を設定
-      );
-
-      print(
-        'currentRotationIndex更新: ${rotationGroup.currentRotationIndex} → ${updatedGroup.currentRotationIndex}',
-      );
-      print(
-        'rotationStartDate更新: ${rotationGroup.createdAt} → ${updatedGroup.createdAt}',
-      );
-
-      final updateResult = await _rotationRepository.updateRotationGroup(
-        updatedGroup,
-      );
-
-      if (updateResult.isFailure) {
-        return Results.failure(updateResult.failureOrNull!);
-      }
-
-      final finalGroup = updateResult.valueOrNull!;
-      print('ローテーショングループ更新完了');
-      print('更新後currentRotationIndex: ${finalGroup.currentRotationIndex}');
-      print('更新後rotationStartDate: ${finalGroup.createdAt}');
-
-      // 4. 新しい通知スケジュールを計算（未来分のみ）
-      print('新しい通知スケジュール計算開始...');
-      final calculationResult = _scheduleCalculationService
-          .planUpcomingNotifications(rotationGroup: finalGroup);
-
-      if (calculationResult.isFailure) {
-        return Results.failure(calculationResult.failureOrNull!);
-      }
-
-      final result = calculationResult.valueOrNull!;
-      print('計算された通知数: ${result.notificationSettings.length}');
-
-      // 5. 新しい通知を作成（すべて未来分）
-      print('新しい通知作成開始...');
-      int successCount = 0;
-      for (final notification in result.notificationSettings) {
-        final createResult = await _notificationRepository.createNotification(
-          notification,
-        );
-        if (createResult.isFailure) {
-          throw Exception('通知作成失敗: ${createResult.displayText}');
-        }
-        successCount++;
-        print(
-          '[$successCount/${result.notificationSettings.length}] 通知作成成功: ${notification.notificationTime} - ${notification.memberName}',
-        );
-      }
-
-      // 6. RotationGroupの状態を最終更新
-      final finalUpdatedGroup = finalGroup.copyWith(
-        currentRotationIndex: result.newCurrentRotationIndex,
-      );
-
-      print(
-        '最終currentRotationIndex更新: ${finalGroup.currentRotationIndex} → ${finalUpdatedGroup.currentRotationIndex}',
-      );
-
-      final finalUpdateResult = await _rotationRepository.updateRotationGroup(
-        finalUpdatedGroup,
-      );
-
-      if (finalUpdateResult.isFailure) {
-        return Results.failure(finalUpdateResult.failureOrNull!);
-      }
-
-      final result_final = finalUpdateResult.valueOrNull!;
-      print('最終currentRotationIndex: ${result_final.currentRotationIndex}');
-      print('最終rotationStartDate: ${result_final.createdAt}');
-      print('=== ローテーショングループ更新処理完了 ===');
-
-      return Results.success(result_final);
-    } catch (e) {
-      print('=== 更新処理エラー ===');
-      print('エラー内容: $e');
-      return Results.failure(NotificationFailure('更新処理に失敗しました: $e'));
+  /// 更新処理は、既存のローテーショングループを削除し、再作成
+  Future<Result<RotationGroup>> execute(UpdateRotationGroupDto dto) async {
+    // 1. 更新対象のローテーショングループ情報を取得
+    final existingResult = await _rotationRepository.getRotationGroup(
+      dto.userId,
+      dto.rotationGroupId,
+    );
+    if (existingResult.isFailure) {
+      return Results.failure(existingResult.failureOrNull!);
     }
+
+    // 2. Entityへ変換
+    final existingEntity = existingResult.valueOrNull;
+    if (existingEntity == null) {
+      return Results.failure(ValidationFailure('ローテーショングループが見つかりませんでした'));
+    }
+
+    // 3. ローテーショングループを削除
+    final deleteResult = await _notificationRepository
+        .deleteNotificationsByRotationGroupId(existingEntity.rotationGroupId!);
+    if (deleteResult.isFailure) {
+      return Results.failure(deleteResult.failureOrNull!);
+    }
+
+    // 4. ローテーショングループを再作成
+    // ※メンバーの更新場所と同一箇所でindexやcreatedAtも更新しておくべき
+    final updatedEntityResult = dto.applyToEntity(existingEntity);
+    if (updatedEntityResult.isFailure) {
+      return Results.failure(updatedEntityResult.failureOrNull!);
+    }
+    final updatedRotationGroup = updatedEntityResult.valueOrNull!;
+
+    final updateResult = await _rotationRepository.updateRotationGroup(
+      updatedRotationGroup,
+    );
+    if (updateResult.isFailure) {
+      return Results.failure(updateResult.failureOrNull!);
+    }
+    final finalGroup = updateResult.valueOrNull!;
+
+    // 5. 新しい通知スケジュールを計算
+    final calculationResult = _scheduleCalculationService
+        .planUpcomingNotifications(rotationGroup: finalGroup);
+    if (calculationResult.isFailure) {
+      return Results.failure(calculationResult.failureOrNull!);
+    }
+    final result = calculationResult.valueOrNull!;
+
+    // 6. 新しい通知を作成
+    for (final notification in result.notificationSettings) {
+      final createResult = await _notificationRepository.createNotification(
+        notification,
+      );
+      if (createResult.isFailure) {
+        return Results.failure(createResult.failureOrNull!);
+      }
+    }
+
+    // 7. RotationGroupの状態を最終更新
+    final finalUpdatedGroup = finalGroup.copyWith(
+      currentRotationIndex: result.newCurrentRotationIndex,
+    );
+    final finalUpdateResult = await _rotationRepository.updateRotationGroup(
+      finalUpdatedGroup,
+    );
+    if (finalUpdateResult.isFailure) {
+      return Results.failure(finalUpdateResult.failureOrNull!);
+    }
+    final finalRotationGroup = finalUpdateResult.valueOrNull!;
+
+    return Results.success(finalRotationGroup);
   }
 }

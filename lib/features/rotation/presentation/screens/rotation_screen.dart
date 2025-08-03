@@ -8,9 +8,12 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/providers/rotation_controller.dart';
 import 'package:popcal/features/rotation/providers/rotation_data.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
-import 'package:popcal/features/rotation/providers/rotation_view_model.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
@@ -48,10 +51,10 @@ class RotationScreen extends HookConsumerWidget {
   ) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final isUpdateMode = rotationData.rotationGroup != null;
-    final initialRotationGroup = rotationData.rotationGroup;
+    final isUpdateMode = rotationData.rotationGroupDto != null;
+    final initialRotationGroup = rotationData.rotationGroupDto;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
-    final isLoading = ref.watch(rotationViewModelProvider).isLoading;
+    final isLoading = ref.watch(rotationControllerProvider).isLoading;
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -150,52 +153,61 @@ Future<void> _handleSubmit(
   WidgetRef ref,
   GlobalKey<FormBuilderState> formKey,
   UserViewModelDto userDto,
-  RotationGroup? originalRotationGroup,
+  ViewRotationGroupDto? originalRotationGroup,
   bool isUpdateMode,
 ) async {
   if (formKey.currentState!.saveAndValidate()) {
     final formData = formKey.currentState!.value;
-    final rotationName = formData['rotationName'] as String;
+    final rotationController = ref.read(rotationControllerProvider.notifier);
 
-    final rotationGroup =
-        isUpdateMode
-            ? originalRotationGroup!.copyWith(
-              rotationName: rotationName,
-              rotationMembers: List<String>.from(
-                formData['rotationMembers'] as List,
-              ),
-              rotationDays: formData['rotationDays'] as List<Weekday>,
-              notificationTime: formData['notificationTime'] as TimeOfDay,
-              updatedAt: DateTime.now().toLocal(),
-            )
-            : RotationGroup(
-              rotationGroupId: null,
-              userId: userDto.userId.value,
-              rotationName: rotationName,
-              rotationMembers: List<String>.from(
-                formData['rotationMembers'] as List,
-              ),
-              rotationDays: formData['rotationDays'] as List<Weekday>,
-              notificationTime: formData['notificationTime'] as TimeOfDay,
-              createdAt: DateTime.now().toLocal(),
-              updatedAt: DateTime.now().toLocal(),
-            );
+    try {
+      final Result<RotationGroup> result;
 
-    final rotationViewModel = ref.read(rotationViewModelProvider.notifier);
-    final result =
-        isUpdateMode
-            ? await rotationViewModel.updateRotationGroup(rotationGroup)
-            : await rotationViewModel.createRotationGroup(rotationGroup);
+      if (isUpdateMode) {
+        final dto = UpdateRotationGroupDto(
+          userId: userDto.userId.value,
+          rotationGroupId: originalRotationGroup!.rotationGroupId,
+          rotationName: formData['rotationName'] as String,
+          rotationMembers: List<String>.from(
+            formData['rotationMembers'] as List,
+          ),
+          rotationDays: formData['rotationDays'] as List<Weekday>,
+          notificationTime: formData['notificationTime'] as TimeOfDay,
+        );
+        result = await rotationController.updateRotationGroup(dto);
+      } else {
+        final dto = CreateRotationGroupDto(
+          userId: userDto.userId.value,
+          rotationName: formData['rotationName'] as String,
+          rotationMembers: List<String>.from(
+            formData['rotationMembers'] as List,
+          ),
+          rotationDays: formData['rotationDays'] as List<Weekday>,
+          notificationTime: formData['notificationTime'] as TimeOfDay,
+        );
+        result = await rotationController.createRotationGroup(dto);
+      }
 
-    final message = result.when(
-      success:
-          (_) => isUpdateMode ? '$rotationNameを更新しました' : '$rotationNameを作成しました',
-      failure: (error) => error.message,
-    );
+      final message = result.when(
+        success:
+            (_) =>
+                isUpdateMode
+                    ? '${formData['rotationName']}を更新しました'
+                    : '${formData['rotationName']}を作成しました',
+        failure: (error) => error.message,
+      );
 
-    if (context.mounted) {
-      SnackBarUtils.showGlassSnackBar(context: context, message: message);
-      Navigator.pop(context);
+      if (context.mounted) {
+        SnackBarUtils.showGlassSnackBar(context: context, message: message);
+        Navigator.pop(context);
+      }
+    } catch (error) {
+      if (context.mounted) {
+        SnackBarUtils.showGlassSnackBar(
+          context: context,
+          message: 'エラーが発生しました: $error',
+        );
+      }
     }
   }
 }

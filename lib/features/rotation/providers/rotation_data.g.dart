@@ -6,7 +6,7 @@ part of 'rotation_data.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$rotationDataHash() => r'20cffe635cb52e13c7722c62ba8d7b76459f417c';
+String _$rotationDataHash() => r'744bf5d8fef2ee360fa217a95da660795d358fa2';
 
 /// Copied from Dart SDK
 class _SystemHash {

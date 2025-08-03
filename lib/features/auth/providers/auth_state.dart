@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/auth_provider.dart';
 

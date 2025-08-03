@@ -3,7 +3,7 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,24 +23,24 @@ Future<Result<RotationData>> rotationData(
   if (userDto == null) {
     return Results.failure(AuthFailure('未認証です'));
   }
-
   if (rotationGroupId == null) {
     return Results.success(RotationData(userDto, null));
-  } else {
-    // 2. ローテーショングループ情報を取得
-    final rotationGroup = await ref.watch(
-      rotationDetailProvider(userDto.userId.value, rotationGroupId).future,
-    );
-    if (rotationGroup == null) {
-      return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
-    }
-    return Results.success(RotationData(userDto, rotationGroup));
   }
+
+  // 2. ローテーショングループ情報を取得
+  final rotationGroup = await ref.watch(
+    rotationDetailProvider(userDto.userId.value, rotationGroupId).future,
+  );
+  if (rotationGroup == null) {
+    return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
+  }
+  final rotationGroupDto = ViewRotationGroupDto.fromEntity(rotationGroup);
+  return Results.success(RotationData(userDto, rotationGroupDto));
 }
 
 class RotationData {
   final UserViewModelDto userDto;
-  final RotationGroup? rotationGroup;
+  final ViewRotationGroupDto? rotationGroupDto;
 
-  const RotationData(this.userDto, this.rotationGroup);
+  const RotationData(this.userDto, this.rotationGroupDto);
 }

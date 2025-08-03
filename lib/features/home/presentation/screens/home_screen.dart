@@ -11,8 +11,10 @@ import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
+import 'package:popcal/features/rotation/providers/rotation_state.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
@@ -67,7 +69,7 @@ class HomeScreen extends HookConsumerWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final rotationGroupsAsync = ref.watch(
-      rotationGroupsStreamProvider(dto.userId.value),
+      rotationGroupListStreamProvider(dto.userId.value),
     );
 
     return Scaffold(
@@ -159,7 +161,7 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     UserViewModelDto userDto,
-    List<RotationGroup> rotationGroups,
+    List<ViewRotationGroupDto> rotationGroups,
   ) {
     return CustomScrollView(
       slivers: [
@@ -173,12 +175,12 @@ class HomeScreen extends HookConsumerWidget {
                 rotationGroup: rotationGroup,
                 onTap: () {
                   context.push(
-                    Routes.calendarPath(rotationGroup.rotationGroupId!),
+                    Routes.calendarPath(rotationGroup.rotationGroupId),
                   );
                 },
                 onEdit: () {
                   context.push(
-                    Routes.rotationUpdatePath(rotationGroup.rotationGroupId!),
+                    Routes.rotationUpdatePath(rotationGroup.rotationGroupId),
                   );
                 },
                 onDelete:
@@ -195,7 +197,7 @@ class HomeScreen extends HookConsumerWidget {
   void _handleDelete(
     BuildContext context,
     WidgetRef ref,
-    RotationGroup rotationGroup,
+    ViewRotationGroupDto rotationGroup,
     UserViewModelDto userDto,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
@@ -204,7 +206,7 @@ class HomeScreen extends HookConsumerWidget {
     // 削除処理
     final result = await rotationRepository.deleteRotationGroup(
       userDto.userId.value,
-      rotationGroup.rotationGroupId!,
+      rotationGroup.rotationGroupId,
     );
 
     result.when(
@@ -214,14 +216,15 @@ class HomeScreen extends HookConsumerWidget {
           message: '${rotationGroup.rotationName}を削除しました',
           onAction: () async {
             // 再作成処理
-            final rotationGroupToCreate = rotationGroup.copyWith(
-              rotationGroupId: null,
-              rotationStartDate: DateTime.now().toLocal(),
-              updatedAt: DateTime.now().toLocal(),
+            final createDto = CreateRotationGroupDto(
+              userId: rotationGroup.userId,
+              rotationName: rotationGroup.rotationName,
+              rotationMembers: rotationGroup.rotationMembers,
+              rotationDays: rotationGroup.rotationDays,
+              notificationTime: rotationGroup.notificationTime,
             );
-            final restoreResult = await createUseCase.execute(
-              rotationGroupToCreate,
-            );
+
+            final restoreResult = await createUseCase.execute(createDto);
 
             // _buildRotationGroupEmpty から _buildRotationGroupList に戻る場合はcontextが異なるため戻れない
             // 以下のcontextが前の親のcontextのためエラー

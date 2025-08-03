@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassListItem extends StatelessWidget {
-  final RotationGroup rotationGroup;
+  final ViewRotationGroupDto rotationGroup;
   final VoidCallback? onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
