@@ -10,11 +10,11 @@ class FirebaseRotationDatasource {
 
   // 1. 自動ローテーショングループ一覧取得
   Stream<Result<List<RotationGroupFirebaseDto>>> watchRotationGroups(
-    String ownerUserId,
+    String userId,
   ) {
     return _firebaseFirestore
         .collection('users')
-        .doc(ownerUserId)
+        .doc(userId)
         .collection('rotationGroups')
         .withConverter(
           fromFirestore: RotationGroupFirebaseDto.fromFirestore,
@@ -36,12 +36,12 @@ class FirebaseRotationDatasource {
 
   // 2. 手動ローテーショングループ一覧取得
   Future<Result<List<RotationGroupFirebaseDto>>> getRotationGroups(
-    String ownerUserId,
+    String userId,
   ) async {
     try {
       final ref = _firebaseFirestore
           .collection('users')
-          .doc(ownerUserId)
+          .doc(userId)
           .collection('rotationGroups')
           // withConverterで型安全に処理可能
           .withConverter(
@@ -59,13 +59,13 @@ class FirebaseRotationDatasource {
 
   // 3. 特定のローテーショングループを取得
   Future<Result<RotationGroupFirebaseDto?>> getRotationGroup(
-    String ownerUserId,
+    String userId,
     String rotationGroupId,
   ) async {
     try {
       final docRef = _firebaseFirestore
           .collection('users')
-          .doc(ownerUserId)
+          .doc(userId)
           .collection('rotationGroups')
           .doc(rotationGroupId)
           .withConverter(
@@ -95,7 +95,7 @@ class FirebaseRotationDatasource {
       final docRef =
           _firebaseFirestore
               .collection('users')
-              .doc(dto.ownerUserId)
+              .doc(dto.userId)
               .collection('rotationGroups')
               .doc();
 
@@ -104,7 +104,7 @@ class FirebaseRotationDatasource {
 
       final result = RotationGroupFirebaseDto(
         rotationGroupId: docRef.id, // 生成されたdocument id
-        ownerUserId: dto.ownerUserId,
+        userId: dto.userId,
         rotationName: dto.rotationName,
         rotationMembers: dto.rotationMembers,
         rotationDays: dto.rotationDays,
@@ -131,7 +131,7 @@ class FirebaseRotationDatasource {
 
       final docRef = _firebaseFirestore
           .collection('users')
-          .doc(dto.ownerUserId)
+          .doc(dto.userId)
           .collection('rotationGroups')
           .doc(dto.rotationGroupId);
 
@@ -148,13 +148,13 @@ class FirebaseRotationDatasource {
 
   // 6. ローテーショングループ削除
   Future<Result<void>> deleteRotationGroup(
-    String ownerUserId,
+    String userId,
     String rotationGroupId,
   ) async {
     try {
       final docRef = _firebaseFirestore
           .collection('users')
-          .doc(ownerUserId)
+          .doc(userId)
           .collection('rotationGroups')
           .doc(rotationGroupId);
 

@@ -13,7 +13,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
 
   const factory RotationGroupFirebaseDto({
     required String? rotationGroupId,
-    required String ownerUserId,
+    required String userId,
     required String rotationName,
     required List<String> rotationMembers,
     required List<int> rotationDays,
@@ -32,7 +32,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
           entity.rotationGroupId?.isNotEmpty == true
               ? entity.rotationGroupId
               : null,
-      ownerUserId: entity.userId,
+      userId: entity.userId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,
       rotationDays:
@@ -54,7 +54,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
     final data = snapshot.data() as Map<String, dynamic>;
     return RotationGroupFirebaseDto(
       rotationGroupId: snapshot.id,
-      ownerUserId: data['ownerUserId'] as String,
+      userId: data['ownerUserId'] as String,
       rotationName: data['rotationName'] as String,
       rotationMembers: List<String>.from(
         data['rotationMembers'] as List<dynamic>,
@@ -73,7 +73,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
   RotationGroup toEntity() {
     return RotationGroup(
       rotationGroupId: rotationGroupId,
-      userId: ownerUserId,
+      userId: userId,
       rotationName: rotationName,
       rotationMembers: rotationMembers,
       rotationDays:
@@ -88,7 +88,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
   // DTO => Firestore (instance method)
   Map<String, dynamic> toFirestore() {
     return {
-      'ownerUserId': ownerUserId,
+      'ownerUserId': userId,
       'rotationName': rotationName,
       'rotationMembers': rotationMembers,
       'rotationDays': rotationDays,

@@ -1,12 +1,12 @@
 import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 
 /// 30日分の通知設定作成結果
-class RotationCalculationResult {
+class NotificationPlan {
   final List<NotificationSetting> notificationSettings;
-  // 通知作成分だけ増加
+  // 通知作成分だけ増加 ※ローテーション処理に必須のため返却
   final int newCurrentRotationIndex;
 
-  const RotationCalculationResult({
+  const NotificationPlan({
     required this.notificationSettings,
     required this.newCurrentRotationIndex,
   });

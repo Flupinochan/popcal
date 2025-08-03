@@ -11,8 +11,8 @@ class RotationRepositoryFirebase implements RotationRepository {
 
   // 1. 自動ローテーショングループ一覧取得
   @override
-  Stream<Result<List<RotationGroup>>> watchRotationGroups(String ownerUserId) {
-    return _firebaseRotationDatasource.watchRotationGroups(ownerUserId).map((
+  Stream<Result<List<RotationGroup>>> watchRotationGroups(String userId) {
+    return _firebaseRotationDatasource.watchRotationGroups(userId).map((
       result,
     ) {
       return result.when(
@@ -26,12 +26,8 @@ class RotationRepositoryFirebase implements RotationRepository {
 
   // 2. 手動ローテーショングループ一覧取得
   @override
-  Future<Result<List<RotationGroup>>> getRotationGroups(
-    String ownerUserId,
-  ) async {
-    final result = await _firebaseRotationDatasource.getRotationGroups(
-      ownerUserId,
-    );
+  Future<Result<List<RotationGroup>>> getRotationGroups(String userId) async {
+    final result = await _firebaseRotationDatasource.getRotationGroups(userId);
     return result.when(
       success:
           (dtos) => Results.success(dtos.map((dto) => dto.toEntity()).toList()),
@@ -42,11 +38,11 @@ class RotationRepositoryFirebase implements RotationRepository {
   // 3. 特定のローテーショングループを取得
   @override
   Future<Result<RotationGroup?>> getRotationGroup(
-    String ownerUserId,
+    String userId,
     String rotationGroupId,
   ) async {
     final result = await _firebaseRotationDatasource.getRotationGroup(
-      ownerUserId,
+      userId,
       rotationGroupId,
     );
     return result.when(
@@ -88,11 +84,11 @@ class RotationRepositoryFirebase implements RotationRepository {
   // 6. ローテーショングループ削除
   @override
   Future<Result<void>> deleteRotationGroup(
-    String ownerUserId,
+    String userId,
     String rotationGroupId,
   ) async {
     final result = await _firebaseRotationDatasource.deleteRotationGroup(
-      ownerUserId,
+      userId,
       rotationGroupId,
     );
     return result.when(

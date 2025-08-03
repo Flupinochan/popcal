@@ -12,7 +12,6 @@ class RotationGroup {
   final TimeOfDay notificationTime;
   // ローテーションした回数
   final int currentRotationIndex;
-  // 最後の通知設定日 => 直近30日分を常に更新して通知設定するため
   final DateTime createdAt;
   final DateTime updatedAt;
 

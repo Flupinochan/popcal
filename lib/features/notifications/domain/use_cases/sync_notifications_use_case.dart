@@ -4,7 +4,7 @@ import 'package:popcal/features/notifications/domain/services/schedule_calculati
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_plan.dart';
 
 /// home画面表示時に通知設定を同期するUseCase
 /// firebaseとの同期ではなく、現在時刻から30日分を計算、作成
@@ -78,7 +78,7 @@ class SyncNotificationsUseCase {
 
   // ローカル通知の作成を同期
   Future<Result<void>> createSync(
-    RotationCalculationResult result,
+    NotificationPlan result,
     Set<int> currentLocalNotificationIds,
     RotationGroup group,
   ) async {
@@ -124,7 +124,7 @@ class SyncNotificationsUseCase {
 
   // ローカル通知の削除を同期
   Future<Result<void>> deleteSync(
-    RotationCalculationResult result,
+    NotificationPlan result,
     Set<int> currentLocalNotificationIds,
   ) async {
     String? errorMessage;
