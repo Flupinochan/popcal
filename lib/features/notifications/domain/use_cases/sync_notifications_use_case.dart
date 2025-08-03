@@ -1,10 +1,13 @@
+import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_calculation_result.dart';
 
 /// home画面表示時に通知設定を同期するUseCase
+/// firebaseとの同期ではなく、現在時刻から30日分を計算、作成
 class SyncNotificationsUseCase {
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
@@ -17,7 +20,7 @@ class SyncNotificationsUseCase {
   );
 
   Future<Result<void>> execute(String ownerUserId) async {
-    // 1. ローテーショングループ一覧を取得
+    // 1. Firebaseからローテーショングループ一覧を取得
     final rotationGroupsResult = await _rotationRepository.getRotationGroups(
       ownerUserId,
     );
@@ -26,96 +29,132 @@ class SyncNotificationsUseCase {
     }
     final rotationGroups = rotationGroupsResult.valueOrNull!;
 
-    // 2. 現在のローカル通知IDリストを取得
+    // 2. 現在設定されているローカル通知IDリストを取得
     final notificationResult = await _notificationRepository.getNotifications();
     if (notificationResult.isFailure) {
       return Results.failure(notificationResult.failureOrNull!);
     }
-    final localNotificationIds = notificationResult.valueOrNull!.toSet();
+    final currentLocalNotificationIds = notificationResult.valueOrNull!.toSet();
 
-    // 3. 各ローテーショングループを同期
+    // 3. 各ローテーショングループの通知設定を現在時刻から再計算
+    String? errorMessage;
     for (final group in rotationGroups) {
       // 3-1. 通知スケジュールを計算
       final calculationResult = _scheduleCalculationService
           .planUpcomingNotifications(rotationGroup: group);
-
       if (calculationResult.isFailure) {
-        print('通知計算失敗: ${group.rotationName}');
+        errorMessage = calculationResult.failureOrNull!.message;
+        continue;
+      }
+      final result = calculationResult.valueOrNull!;
+
+      // 3-2. 通知作成を同期
+      final createResult = await createSync(
+        result,
+        currentLocalNotificationIds,
+        group,
+      );
+      if (createResult.isFailure) {
+        errorMessage = createResult.failureOrNull!.message;
         continue;
       }
 
-      final result = calculationResult.valueOrNull!;
-
-      // 3-2. 不足分のみフィルタリング
-      final missingNotifications =
-          result.notificationSettings.where((notification) {
-            return !localNotificationIds.contains(notification.notificationId);
-          }).toList();
-
-      // 3-3. 不足分の通知を作成
-      for (final notification in missingNotifications) {
-        final createResult = await _notificationRepository.createNotification(
-          notification,
-        );
-        if (createResult.isFailure) {
-          print(
-            '通知作成失敗: ${notification.memberName} - ${notification.notificationTime}',
-          );
-        } else {
-          print(
-            '通知作成成功: ${notification.memberName} - ${notification.notificationTime}',
-          );
-        }
-      }
-
-      // 3-4. ローテーション状態を更新
-      if (missingNotifications.isNotEmpty) {
-        final updatedGroup = group.copyWith(
-          currentRotationIndex: result.newCurrentRotationIndex,
-          lastScheduledDate:
-              result.hasNotifications
-                  ? result.notificationSettings.last.notificationTime
-                  : group.lastScheduledDate,
-        );
-
-        await _rotationRepository.updateRotationGroup(updatedGroup);
-        print('ローテーション状態更新: ${group.rotationName}');
+      // 3.3 通知削除を同期
+      final deleteResult = await deleteSync(
+        result,
+        currentLocalNotificationIds,
+      );
+      if (deleteResult.isFailure) {
+        errorMessage = deleteResult.failureOrNull!.message;
+        continue;
       }
     }
-
-    // 4. 不要な通知を削除（オプション）
-    await _cleanupOrphanedNotifications(rotationGroups, localNotificationIds);
+    if (errorMessage != null) {
+      return Results.failure(NotificationFailure(errorMessage));
+    }
 
     return Results.success(null);
   }
 
-  /// 孤立した通知を削除
-  Future<void> _cleanupOrphanedNotifications(
-    List<RotationGroup> rotationGroups,
-    Set<int> localNotificationIds,
+  // ローカル通知の作成を同期
+  Future<Result<void>> createSync(
+    RotationCalculationResult result,
+    Set<int> currentLocalNotificationIds,
+    RotationGroup group,
   ) async {
-    // 現在有効な通知IDを収集
-    final validNotificationIds = <int>{};
+    String? errorMessage;
 
-    for (final group in rotationGroups) {
-      final calculationResult = _scheduleCalculationService
-          .planUpcomingNotifications(rotationGroup: group);
+    // 不足しているローカル通知設定を取得
+    final missingNotifications =
+        result.notificationSettings.where((notification) {
+          return !currentLocalNotificationIds.contains(
+            notification.notificationId,
+          );
+        }).toList();
 
-      if (calculationResult.isSuccess) {
-        for (final notification
-            in calculationResult.valueOrNull!.notificationSettings) {
-          validNotificationIds.add(notification.notificationId);
-        }
+    // 不足分の通知を作成
+    for (final notification in missingNotifications) {
+      final createResult = await _notificationRepository.createNotification(
+        notification,
+      );
+      if (createResult.isFailure) {
+        errorMessage = createResult.failureOrNull!.message;
       }
     }
 
-    // 不要な通知を削除
-    final orphanedIds = localNotificationIds.where(
+    // ローテーション状態を更新
+    if (missingNotifications.isNotEmpty) {
+      final updatedGroup = group.copyWith(
+        currentRotationIndex: result.newCurrentRotationIndex,
+        lastScheduledDate:
+            result.hasNotifications
+                ? result.notificationSettings.last.notificationTime
+                : group.lastScheduledDate,
+      );
+      final updateResult = await _rotationRepository.updateRotationGroup(
+        updatedGroup,
+      );
+      if (updateResult.isFailure) {
+        errorMessage = updateResult.failureOrNull!.message;
+      }
+    }
+
+    if (errorMessage != null) {
+      return Results.failure(NotificationFailure(errorMessage));
+    } else {
+      return Results.success(null);
+    }
+  }
+
+  // ローカル通知の削除を同期
+  Future<Result<void>> deleteSync(
+    RotationCalculationResult result,
+    Set<int> currentLocalNotificationIds,
+  ) async {
+    String? errorMessage;
+
+    // 計算結果の通知Idsを取得
+    final validNotificationIds = <int>{};
+    for (final notification in result.notificationSettings) {
+      validNotificationIds.add(notification.notificationId);
+    }
+
+    // 計算結果の通知Idsに含まれていない現在設定されている通知Idsは削除対象
+    final deleteTargetIds = currentLocalNotificationIds.where(
       (id) => !validNotificationIds.contains(id),
     );
-    for (final id in orphanedIds) {
-      await _notificationRepository.deleteNotification(id);
-      print('孤立した通知を削除: $id');
+
+    for (final id in deleteTargetIds) {
+      final result = await _notificationRepository.deleteNotification(id);
+      if (result.isFailure) {
+        errorMessage = result.failureOrNull!.message;
+      }
+    }
+
+    if (errorMessage != null) {
+      return Results.failure(NotificationFailure(errorMessage));
+    } else {
+      return Results.success(null);
     }
   }
 }
