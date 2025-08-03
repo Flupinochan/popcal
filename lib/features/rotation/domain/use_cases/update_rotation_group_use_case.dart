@@ -30,13 +30,14 @@ class UpdateRotationGroupUseCase {
       print('ローテーション名: ${rotationGroup.rotationName}');
       print('ID: $targetRotationGroupId');
       print('更新前currentRotationIndex: ${rotationGroup.currentRotationIndex}');
-      print('更新前rotationStartDate: ${rotationGroup.rotationStartDate}');
+      print('更新前rotationStartDate: ${rotationGroup.createdAt}');
 
       // 1. 新しい最初の通知予定日を取得
       final firstNotificationDateResult = _scheduleCalculationService
           .findNextRotationDate(
             rotationDays: rotationGroup.rotationDays,
             notificationTime: rotationGroup.notificationTime,
+            fromDate: rotationGroup.updatedAt,
           );
 
       if (firstNotificationDateResult.isFailure) {
@@ -71,7 +72,7 @@ class UpdateRotationGroupUseCase {
         'currentRotationIndex更新: ${rotationGroup.currentRotationIndex} → ${updatedGroup.currentRotationIndex}',
       );
       print(
-        'rotationStartDate更新: ${rotationGroup.rotationStartDate} → ${updatedGroup.rotationStartDate}',
+        'rotationStartDate更新: ${rotationGroup.createdAt} → ${updatedGroup.createdAt}',
       );
 
       final updateResult = await _rotationRepository.updateRotationGroup(
@@ -85,7 +86,7 @@ class UpdateRotationGroupUseCase {
       final finalGroup = updateResult.valueOrNull!;
       print('ローテーショングループ更新完了');
       print('更新後currentRotationIndex: ${finalGroup.currentRotationIndex}');
-      print('更新後rotationStartDate: ${finalGroup.rotationStartDate}');
+      print('更新後rotationStartDate: ${finalGroup.createdAt}');
 
       // 4. 新しい通知スケジュールを計算（未来分のみ）
       print('新しい通知スケジュール計算開始...');
@@ -138,7 +139,7 @@ class UpdateRotationGroupUseCase {
 
       final result_final = finalUpdateResult.valueOrNull!;
       print('最終currentRotationIndex: ${result_final.currentRotationIndex}');
-      print('最終rotationStartDate: ${result_final.rotationStartDate}');
+      print('最終rotationStartDate: ${result_final.createdAt}');
       print('=== ローテーショングループ更新処理完了 ===');
 
       return Results.success(result_final);

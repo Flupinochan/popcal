@@ -6,6 +6,8 @@ import 'package:popcal/features/notifications/domain/entities/notification_setti
 part 'notification_payload_dto.freezed.dart';
 part 'notification_payload_dto.g.dart';
 
+/// 通知情報
+/// ※ポップアップに含まれるペイロード情報を定義
 @freezed
 sealed class NotificationPayloadDto with _$NotificationPayloadDto {
   const NotificationPayloadDto._();
@@ -13,10 +15,11 @@ sealed class NotificationPayloadDto with _$NotificationPayloadDto {
   const factory NotificationPayloadDto({
     required int notificationId,
     required String rotationGroupId,
-    required String ownerUserId,
+    required String userId,
     required String rotationName,
     required DateTime notificationTime,
     required String memberName,
+    required DateTime rotationStartDate,
   }) = _NotificationPayloadDto;
 
   // Entity => DTO
@@ -24,10 +27,11 @@ sealed class NotificationPayloadDto with _$NotificationPayloadDto {
     return NotificationPayloadDto(
       notificationId: notification.notificationId,
       rotationGroupId: notification.rotationGroupId,
-      ownerUserId: notification.ownerUserId,
+      userId: notification.userId,
       rotationName: notification.rotationName,
       notificationTime: notification.notificationTime,
       memberName: notification.memberName,
+      rotationStartDate: notification.rotationStartDate,
     );
   }
 

@@ -33,7 +33,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
           entity.rotationGroupId?.isNotEmpty == true
               ? entity.rotationGroupId
               : null,
-      ownerUserId: entity.ownerUserId,
+      ownerUserId: entity.userId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,
       rotationDays:
@@ -41,7 +41,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
       notificationTime: _timeOfDayToMap(entity.notificationTime),
       currentRotationIndex: entity.currentRotationIndex,
       lastScheduledDate: Timestamp.fromDate(entity.lastScheduledDate),
-      rotationStartDate: Timestamp.fromDate(entity.rotationStartDate),
+      rotationStartDate: Timestamp.fromDate(entity.createdAt),
       updatedAt: Timestamp.fromDate(entity.updatedAt),
     );
   }
@@ -76,7 +76,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
   RotationGroup toEntity() {
     return RotationGroup(
       rotationGroupId: rotationGroupId,
-      ownerUserId: ownerUserId,
+      userId: ownerUserId,
       rotationName: rotationName,
       rotationMembers: rotationMembers,
       rotationDays:
@@ -84,7 +84,7 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
       notificationTime: _mapToTimeOfDay(notificationTime),
       currentRotationIndex: currentRotationIndex,
       lastScheduledDate: lastScheduledDate.toDate(),
-      rotationStartDate: rotationStartDate.toDate(),
+      createdAt: rotationStartDate.toDate(),
       updatedAt: updatedAt.toDate(),
     );
   }

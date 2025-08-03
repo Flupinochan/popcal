@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationPayloadDto {
 
- int get notificationId; String get rotationGroupId; String get ownerUserId; String get rotationName; DateTime get notificationTime; String get memberName;
+ int get notificationId; String get rotationGroupId; String get userId; String get rotationName; DateTime get notificationTime; String get memberName; DateTime get rotationStartDate;
 /// Create a copy of NotificationPayloadDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $NotificationPayloadDtoCopyWith<NotificationPayloadDto> get copyWith => _$Notifi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationPayloadDto&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.ownerUserId, ownerUserId) || other.ownerUserId == ownerUserId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationPayloadDto&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,notificationId,rotationGroupId,ownerUserId,rotationName,notificationTime,memberName);
+int get hashCode => Object.hash(runtimeType,notificationId,rotationGroupId,userId,rotationName,notificationTime,memberName,rotationStartDate);
 
 @override
 String toString() {
-  return 'NotificationPayloadDto(notificationId: $notificationId, rotationGroupId: $rotationGroupId, ownerUserId: $ownerUserId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName)';
+  return 'NotificationPayloadDto(notificationId: $notificationId, rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName, rotationStartDate: $rotationStartDate)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $NotificationPayloadDtoCopyWith<$Res>  {
   factory $NotificationPayloadDtoCopyWith(NotificationPayloadDto value, $Res Function(NotificationPayloadDto) _then) = _$NotificationPayloadDtoCopyWithImpl;
 @useResult
 $Res call({
- int notificationId, String rotationGroupId, String ownerUserId, String rotationName, DateTime notificationTime, String memberName
+ int notificationId, String rotationGroupId, String userId, String rotationName, DateTime notificationTime, String memberName, DateTime rotationStartDate
 });
 
 
@@ -66,15 +66,16 @@ class _$NotificationPayloadDtoCopyWithImpl<$Res>
 
 /// Create a copy of NotificationPayloadDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? notificationId = null,Object? rotationGroupId = null,Object? ownerUserId = null,Object? rotationName = null,Object? notificationTime = null,Object? memberName = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? notificationId = null,Object? rotationGroupId = null,Object? userId = null,Object? rotationName = null,Object? notificationTime = null,Object? memberName = null,Object? rotationStartDate = null,}) {
   return _then(_self.copyWith(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
 as int,rotationGroupId: null == rotationGroupId ? _self.rotationGroupId : rotationGroupId // ignore: cast_nullable_to_non_nullable
-as String,ownerUserId: null == ownerUserId ? _self.ownerUserId : ownerUserId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as DateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
-as String,
+as String,rotationStartDate: null == rotationStartDate ? _self.rotationStartDate : rotationStartDate // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -85,15 +86,16 @@ as String,
 @JsonSerializable()
 
 class _NotificationPayloadDto extends NotificationPayloadDto {
-  const _NotificationPayloadDto({required this.notificationId, required this.rotationGroupId, required this.ownerUserId, required this.rotationName, required this.notificationTime, required this.memberName}): super._();
+  const _NotificationPayloadDto({required this.notificationId, required this.rotationGroupId, required this.userId, required this.rotationName, required this.notificationTime, required this.memberName, required this.rotationStartDate}): super._();
   factory _NotificationPayloadDto.fromJson(Map<String, dynamic> json) => _$NotificationPayloadDtoFromJson(json);
 
 @override final  int notificationId;
 @override final  String rotationGroupId;
-@override final  String ownerUserId;
+@override final  String userId;
 @override final  String rotationName;
 @override final  DateTime notificationTime;
 @override final  String memberName;
+@override final  DateTime rotationStartDate;
 
 /// Create a copy of NotificationPayloadDto
 /// with the given fields replaced by the non-null parameter values.
@@ -108,16 +110,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationPayloadDto&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.ownerUserId, ownerUserId) || other.ownerUserId == ownerUserId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationPayloadDto&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,notificationId,rotationGroupId,ownerUserId,rotationName,notificationTime,memberName);
+int get hashCode => Object.hash(runtimeType,notificationId,rotationGroupId,userId,rotationName,notificationTime,memberName,rotationStartDate);
 
 @override
 String toString() {
-  return 'NotificationPayloadDto(notificationId: $notificationId, rotationGroupId: $rotationGroupId, ownerUserId: $ownerUserId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName)';
+  return 'NotificationPayloadDto(notificationId: $notificationId, rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName, rotationStartDate: $rotationStartDate)';
 }
 
 
@@ -128,7 +130,7 @@ abstract mixin class _$NotificationPayloadDtoCopyWith<$Res> implements $Notifica
   factory _$NotificationPayloadDtoCopyWith(_NotificationPayloadDto value, $Res Function(_NotificationPayloadDto) _then) = __$NotificationPayloadDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int notificationId, String rotationGroupId, String ownerUserId, String rotationName, DateTime notificationTime, String memberName
+ int notificationId, String rotationGroupId, String userId, String rotationName, DateTime notificationTime, String memberName, DateTime rotationStartDate
 });
 
 
@@ -145,15 +147,16 @@ class __$NotificationPayloadDtoCopyWithImpl<$Res>
 
 /// Create a copy of NotificationPayloadDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? notificationId = null,Object? rotationGroupId = null,Object? ownerUserId = null,Object? rotationName = null,Object? notificationTime = null,Object? memberName = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? notificationId = null,Object? rotationGroupId = null,Object? userId = null,Object? rotationName = null,Object? notificationTime = null,Object? memberName = null,Object? rotationStartDate = null,}) {
   return _then(_NotificationPayloadDto(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
 as int,rotationGroupId: null == rotationGroupId ? _self.rotationGroupId : rotationGroupId // ignore: cast_nullable_to_non_nullable
-as String,ownerUserId: null == ownerUserId ? _self.ownerUserId : ownerUserId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as DateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
-as String,
+as String,rotationStartDate: null == rotationStartDate ? _self.rotationStartDate : rotationStartDate // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

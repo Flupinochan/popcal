@@ -7,15 +7,14 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_calculati
 
 /// 2. 計算ロジックDomain Service
 abstract class ScheduleCalculationService {
-  /// 1. 最初の通知予定日を計算 ※次回通知予定日を計算
-  /// ※作成した今日がローテーション日の場合で、すでに時刻が過ぎている場合は次週から計算
+  /// 1. 次回の通知予定日を計算
   /// [rotationDays] ローテーション曜日
-  /// [notificationTime] ローテーション通知時刻
-  /// [now] 現在の時刻
+  /// [notificationTime] 通知時刻
+  /// [fromDate] 判定開始日 ※作成日or更新日
   Result<DateTime> findNextRotationDate({
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
-    DateTime? currentTime,
+    required DateTime fromDate,
   });
 
   /// 2. Calendar表示用スケジュールを生成 ※1年分

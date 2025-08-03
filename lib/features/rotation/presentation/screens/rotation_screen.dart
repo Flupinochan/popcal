@@ -170,14 +170,14 @@ Future<void> _handleSubmit(
             )
             : RotationGroup(
               rotationGroupId: null,
-              ownerUserId: userDto.userId.value,
+              userId: userDto.userId.value,
               rotationName: rotationName,
               rotationMembers: List<String>.from(
                 formData['rotationMembers'] as List,
               ),
               rotationDays: formData['rotationDays'] as List<Weekday>,
               notificationTime: formData['notificationTime'] as TimeOfDay,
-              rotationStartDate: DateTime.now().toLocal(),
+              createdAt: DateTime.now().toLocal(),
               updatedAt: DateTime.now().toLocal(),
             );
 

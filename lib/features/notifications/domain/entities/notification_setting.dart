@@ -1,8 +1,10 @@
-/// 通知設定用
+/// 通知設定
 class NotificationSetting {
   final int notificationId;
+  // rotationGroupIdはポップアップをタップした際に、カレンダー画面を表示するさいに必要
   final String rotationGroupId;
-  final String ownerUserId;
+  final String userId;
+  // 以下ポップアップの通知情報
   final String rotationName;
   final DateTime notificationTime;
   final String memberName;
@@ -11,18 +13,18 @@ class NotificationSetting {
   const NotificationSetting({
     required this.notificationId,
     required this.rotationGroupId,
-    required this.ownerUserId,
+    required this.userId,
     required this.rotationName,
     required this.notificationTime,
     required this.memberName,
     required this.rotationStartDate,
   });
 
-  /// 通知タイトル
-  String get title => rotationName;
+  String generateTitle() => rotationName;
+  String generateMessage() => '今日は$memberNameの番です';
 
-  /// 通知本文
-  String get message => '今日は$memberNameの番です';
+  String get title => generateTitle();
+  String get message => generateMessage();
 
   @override
   String toString() {
