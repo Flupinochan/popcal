@@ -21,7 +21,6 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
     required int currentRotationIndex,
     // firestoreに保存する際はTimestampが適切
     // Widget(UI)はDateTimeが適切
-    required Timestamp lastScheduledDate,
     required Timestamp rotationStartDate,
     required Timestamp updatedAt,
   }) = _RotationGroupFirebaseDto;
@@ -40,7 +39,6 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
           entity.rotationDays.map((weekday) => weekday.value).toList(),
       notificationTime: _timeOfDayToMap(entity.notificationTime),
       currentRotationIndex: entity.currentRotationIndex,
-      lastScheduledDate: Timestamp.fromDate(entity.lastScheduledDate),
       rotationStartDate: Timestamp.fromDate(entity.createdAt),
       updatedAt: Timestamp.fromDate(entity.updatedAt),
     );
@@ -66,7 +64,6 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
         data['notificationTime'] as Map<String, dynamic>,
       ),
       currentRotationIndex: data['currentRotationIndex'] as int,
-      lastScheduledDate: data['lastScheduledDate'] as Timestamp,
       rotationStartDate: data['rotationStartDate'] as Timestamp,
       updatedAt: data['updatedAt'] as Timestamp,
     );
@@ -83,7 +80,6 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
           rotationDays.map((value) => Weekday.fromInt(value)).toList(),
       notificationTime: _mapToTimeOfDay(notificationTime),
       currentRotationIndex: currentRotationIndex,
-      lastScheduledDate: lastScheduledDate.toDate(),
       createdAt: rotationStartDate.toDate(),
       updatedAt: updatedAt.toDate(),
     );
@@ -98,7 +94,6 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
       'rotationDays': rotationDays,
       'notificationTime': notificationTime,
       'currentRotationIndex': currentRotationIndex,
-      'lastScheduledDate': lastScheduledDate,
       'rotationStartDate': rotationStartDate,
       'updatedAt': updatedAt,
     };

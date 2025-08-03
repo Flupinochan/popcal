@@ -106,10 +106,6 @@ class SyncNotificationsUseCase {
     if (missingNotifications.isNotEmpty) {
       final updatedGroup = group.copyWith(
         currentRotationIndex: result.newCurrentRotationIndex,
-        lastScheduledDate:
-            result.hasNotifications
-                ? result.notificationSettings.last.notificationTime
-                : group.lastScheduledDate,
       );
       final updateResult = await _rotationRepository.updateRotationGroup(
         updatedGroup,

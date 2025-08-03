@@ -119,10 +119,6 @@ class UpdateRotationGroupUseCase {
       // 6. RotationGroupの状態を最終更新
       final finalUpdatedGroup = finalGroup.copyWith(
         currentRotationIndex: result.newCurrentRotationIndex,
-        lastScheduledDate:
-            result.hasNotifications
-                ? result.notificationSettings.last.notificationTime
-                : finalGroup.lastScheduledDate,
       );
 
       print(
