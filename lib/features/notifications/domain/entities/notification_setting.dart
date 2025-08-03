@@ -21,10 +21,12 @@ class NotificationSetting {
   });
 
   String generateTitle() => rotationName;
-  String generateMessage() => '今日は$memberNameの番です';
+  String generateDescription() => '$rotationNameの通知';
+  String generateContent() => '今日は$memberNameの番です';
 
   String get title => generateTitle();
-  String get message => generateMessage();
+  String get description => generateDescription();
+  String get content => generateContent();
 
   @override
   String toString() {

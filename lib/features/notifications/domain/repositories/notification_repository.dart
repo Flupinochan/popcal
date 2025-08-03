@@ -3,10 +3,12 @@ import 'package:popcal/features/notifications/domain/entities/notification_setti
 
 /// 1. CRUD操作
 abstract class NotificationRepository {
-  /// 0-1. 初期化 ※とりあえず必要
+  /// 0-1. 初期化
+  /// 通知アイコン設定
+  /// アプリ起動中に通知をタップした際の動作を設定
   Future<Result<void>> initializeNotification();
 
-  /// 0-2. 通知タップからアプリを起動した場合の画面遷移
+  /// 0-2. アプリが起動していない場合に、通知タップからアプリを起動した場合
   Future<Result<void>> initializeNotificationLaunch();
 
   /// 1 通知スケジュールを作成
@@ -14,12 +16,12 @@ abstract class NotificationRepository {
     NotificationSetting notificationSetting,
   );
 
-  /// 2. 通知予定のスケジュールを一覧取得 ※デフォルトは30日分
+  /// 2. 通知予定のスケジュールを一覧取得
   /// rotationGroupIdのListを取得
   Future<Result<List<int>>> getNotifications();
 
   /// 3. 通知を更新
-  /// ※local notificationにupdateは存在しないため delete + create で実装する
+  /// ※local notificationにupdateは存在しないため UseCase層を作成し delete + create で実装する
 
   /// 4-1. 特定の通知を削除
   Future<Result<void>> deleteNotification(int notificationId);

@@ -2,8 +2,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/data/dto/notification_payload_dto.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
+import 'package:popcal/features/notifications/data/dto/local_notification_setting_dto.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -14,8 +13,9 @@ class LocalNotificationsDatasource {
 
   LocalNotificationsDatasource(this._router);
 
-  /// 0. 初期化
-  /// 通知アイコンや通知をタップした際の動作を設定
+  /// 0-1. 初期化
+  /// 通知アイコン設定
+  /// アプリ起動中に通知をタップした際の動作を設定
   Future<Result<void>> initializeNotification() async {
     try {
       const AndroidInitializationSettings android =
@@ -86,7 +86,7 @@ class LocalNotificationsDatasource {
     }
   }
 
-  /// 0-2. 通知タップからアプリを起動した場合は画面遷移
+  /// 0-2. アプリが起動していない場合に、通知タップからアプリを起動した場合
   Future<Result<void>> initializeNotificationLaunch() async {
     try {
       final NotificationAppLaunchDetails? notificationAppLaunchDetails =
@@ -109,30 +109,32 @@ class LocalNotificationsDatasource {
 
   /// 1. 通知スケジュールを作成
   Future<Result<void>> createNotification(
-    NotificationSetting notification,
+    LocalNotificationSettingDto notificationSettingDto,
   ) async {
     try {
-      if (notification.notificationTime.isBefore(DateTime.now().toLocal())) {
-        print(
-          '警告: 過去の通知作成が要求されました - ${notification.notificationTime} - ${notification.memberName}',
+      if (notificationSettingDto.notificationTime.isBefore(
+        DateTime.now().toLocal(),
+      )) {
+        return Results.failure(
+          NotificationFailure(
+            '警告: 過去の通知作成が要求されました - ${notificationSettingDto.notificationTime} - ${notificationSettingDto.memberName}',
+          ),
         );
-        return Results.success(null);
       }
 
-      final payloadDto = NotificationPayloadDto.fromEntity(notification);
-      final payloadJson = payloadDto.toJsonString();
+      final payloadJson = notificationSettingDto.toJsonString();
 
       await _flutterLocalNotificationsPlugin.zonedSchedule(
-        notification.notificationId,
-        notification.title,
-        notification.message,
-        tz.TZDateTime.from(notification.notificationTime, tz.local),
+        notificationSettingDto.notificationId,
+        notificationSettingDto.title,
+        notificationSettingDto.content,
+        tz.TZDateTime.from(notificationSettingDto.notificationTime, tz.local),
         NotificationDetails(
           // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
           android: AndroidNotificationDetails(
-            notification.rotationGroupId,
-            notification.rotationName,
-            channelDescription: '${notification.rotationName}の通知',
+            notificationSettingDto.rotationGroupId,
+            notificationSettingDto.title,
+            channelDescription: notificationSettingDto.description,
             priority: Priority.high,
             importance: Importance.high,
             showWhen: true,
@@ -164,7 +166,7 @@ class LocalNotificationsDatasource {
     }
   }
 
-  /// 4-1. 特定の通知を削除(キャンセル)
+  /// 4-1. 特定の通知を削除
   Future<Result<void>> deleteNotification(int notificationId) async {
     try {
       await _flutterLocalNotificationsPlugin.cancel(notificationId);
@@ -174,43 +176,46 @@ class LocalNotificationsDatasource {
     }
   }
 
-  /// 4-2. 特定のrotationGroupIdの通知を削除(キャンセル)
+  /// 4-2 特定のrotationGroupIdの通知を削除
   Future<Result<void>> deleteNotificationsByRotationGroupId(
     String rotationGroupId,
   ) async {
-    try {
-      final List<PendingNotificationRequest> pendingNotifications =
-          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    final List<PendingNotificationRequest> pendingNotifications =
+        await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
 
-      int deletedCount = 0;
-      for (final notification in pendingNotifications) {
-        if (notification.payload != null) {
-          try {
-            final notificationPayload =
-                NotificationPayloadDtoJsonX.fromJsonString(
-                  notification.payload!,
-                );
-            if (notificationPayload.rotationGroupId == rotationGroupId) {
-              await _flutterLocalNotificationsPlugin.cancel(notification.id);
-              deletedCount++;
-              print('通知削除: ID=${notification.id}, GroupId=$rotationGroupId');
+    int deletedCount = 0;
+    String? errorMessage;
+    for (final notification in pendingNotifications) {
+      if (notification.payload != null) {
+        final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+          notification.payload!,
+        );
+        dtoResult.when(
+          success: (localNotificationSettingDto) {
+            if (localNotificationSettingDto.rotationGroupId ==
+                rotationGroupId) {
+              try {
+                _flutterLocalNotificationsPlugin.cancel(notification.id);
+                deletedCount++;
+                print('通知削除: ID=${notification.id}, GroupId=$rotationGroupId');
+              } catch (error) {
+                errorMessage = error.toString();
+              }
             }
-          } catch (e) {
-            // JSON解析に失敗した場合はスキップ
-            print('通知payload解析失敗: ${notification.id} - $e');
-            continue;
-          }
-        }
+          },
+          failure: (error) => errorMessage = error.message,
+        );
       }
-
-      print('削除した通知数: $deletedCount (対象GroupId: $rotationGroupId)');
+    }
+    print('削除した通知数: $deletedCount (対象GroupId: $rotationGroupId)');
+    if (errorMessage != null) {
+      return Results.failure(NotificationFailure(errorMessage!));
+    } else {
       return Results.success(null);
-    } catch (error) {
-      return Results.failure(NotificationFailure('特定通知の削除に失敗しました: $error'));
     }
   }
 
-  /// 5. 全通知を削除(キャンセル)
+  /// 4-3. 全通知を削除
   Future<Result<void>> deleteNotifications() async {
     try {
       await _flutterLocalNotificationsPlugin.cancelAllPendingNotifications();
@@ -257,18 +262,20 @@ class LocalNotificationsDatasource {
     }
   }
 
-  /// 通知タップ時の処理
+  /// 通知タップ時の共通処理
   void _handleNotificationTap(String? payload) {
     if (payload != null) {
-      try {
-        final notificationPayload = NotificationPayloadDtoJsonX.fromJsonString(
-          payload,
-        );
-        _router.push(Routes.calendarPath(notificationPayload.rotationGroupId));
-      } catch (e) {
-        // JSON解析に失敗した場合
-        _router.push(Routes.calendarPath(payload));
-      }
+      final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+        payload,
+      );
+      dtoResult.when(
+        success:
+            (localNotificationSettingDto) => _router.push(
+              Routes.calendarPath(localNotificationSettingDto.rotationGroupId),
+            ),
+        failure: (error) => _router.push(Routes.home),
+      );
     }
+    _router.push(Routes.home);
   }
 }

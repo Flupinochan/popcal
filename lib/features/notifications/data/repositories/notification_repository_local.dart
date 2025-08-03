@@ -1,5 +1,6 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
+import 'package:popcal/features/notifications/data/dto/local_notification_setting_dto.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 
@@ -34,16 +35,22 @@ class NotificationRepositoryLocal implements NotificationRepository {
   Future<Result<void>> createNotification(
     NotificationSetting notificationSetting,
   ) async {
-    final result = await _localNotificationsDatasource.createNotification(
+    final dtoResult = LocalNotificationSettingDto.fromEntity(
       notificationSetting,
     );
+    if (dtoResult.isFailure) {
+      return Results.failure(dtoResult.failureOrNull!);
+    }
+    final dto = dtoResult.valueOrNull!;
+
+    final result = await _localNotificationsDatasource.createNotification(dto);
     return result.when(
       success: (_) => Results.success(null),
       failure: (error) => Results.failure(error),
     );
   }
 
-  /// 2. 通知予定のスケジュールを一覧取得 ※デフォルトは30日分
+  /// 2. 通知予定のスケジュールを一覧取得
   @override
   Future<Result<List<int>>> getNotifications() async {
     final result = await _localNotificationsDatasource.getNotifications();

@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'notification_payload_dto.dart';
+part of 'local_notification_setting_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_NotificationPayloadDto _$NotificationPayloadDtoFromJson(
+_LocalNotificationSettingDto _$LocalNotificationSettingDtoFromJson(
   Map<String, dynamic> json,
-) => _NotificationPayloadDto(
+) => _LocalNotificationSettingDto(
   notificationId: (json['notificationId'] as num).toInt(),
   rotationGroupId: json['rotationGroupId'] as String,
   userId: json['userId'] as String,
@@ -16,10 +16,13 @@ _NotificationPayloadDto _$NotificationPayloadDtoFromJson(
   notificationTime: DateTime.parse(json['notificationTime'] as String),
   memberName: json['memberName'] as String,
   rotationStartDate: DateTime.parse(json['rotationStartDate'] as String),
+  title: json['title'] as String,
+  description: json['description'] as String,
+  content: json['content'] as String,
 );
 
-Map<String, dynamic> _$NotificationPayloadDtoToJson(
-  _NotificationPayloadDto instance,
+Map<String, dynamic> _$LocalNotificationSettingDtoToJson(
+  _LocalNotificationSettingDto instance,
 ) => <String, dynamic>{
   'notificationId': instance.notificationId,
   'rotationGroupId': instance.rotationGroupId,
@@ -28,4 +31,7 @@ Map<String, dynamic> _$NotificationPayloadDtoToJson(
   'notificationTime': instance.notificationTime.toIso8601String(),
   'memberName': instance.memberName,
   'rotationStartDate': instance.rotationStartDate.toIso8601String(),
+  'title': instance.title,
+  'description': instance.description,
+  'content': instance.content,
 };

@@ -9,8 +9,8 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_calculati
 abstract class ScheduleCalculationService {
   /// 1. 次回の通知予定日を計算
   /// [rotationDays] ローテーション曜日
-  /// [notificationTime] 通知時刻
-  /// [fromDate] 判定開始日 ※作成日or更新日
+  /// [notificationTime] ローテーション通知時刻
+  /// [fromDate] 判定開始日 ローテーション作成日or更新日 ※カレンダー表示では作成日、通知設定では更新日
   Result<DateTime> findNextRotationDate({
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
