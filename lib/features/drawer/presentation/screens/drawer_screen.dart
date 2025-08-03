@@ -9,6 +9,9 @@ import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+final Uri _url = Uri.parse('https://flupinochan.github.io/popcal-document/');
 
 class DrawerScreen extends HookConsumerWidget {
   const DrawerScreen({super.key});
@@ -96,7 +99,29 @@ class DrawerScreen extends HookConsumerWidget {
                   gradient: glassTheme.errorGradient,
                   onPressed: () => authRepository.signOut(),
                 ),
-                SizedBox(height: 32),
+                SizedBox(height: 16),
+                // Document Link
+                TextButton.icon(
+                  onPressed: () async {
+                    if (!await launchUrl(
+                      _url,
+                      mode: LaunchMode.externalApplication,
+                    )) {
+                      throw Exception('Could not launch $_url');
+                    }
+                  },
+                  icon: Icon(
+                    Icons.open_in_new,
+                    color: Colors.blue.withValues(alpha: 0.8),
+                    size: 16,
+                  ),
+                  label: Text(
+                    'How to use PopCal',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: Colors.blue.withValues(alpha: 0.8),
+                    ),
+                  ),
+                ),
                 // Version
                 FutureBuilder<PackageInfo>(
                   future: PackageInfo.fromPlatform(),
