@@ -9,8 +9,6 @@ import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/router/router.dart';
-import 'package:popcal/shared/widgets/custom_error_widget.dart';
-import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'firebase_options.dart';
@@ -63,26 +61,35 @@ void main() async {
 }
 
 class MainApp extends ConsumerWidget {
-  const MainApp({super.key});
+  MainApp({super.key});
+
+  final Logger logger = Logger("MainApp");
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final notificationInitAsync = ref.watch(notificationInitializationProvider);
 
-    return notificationInitAsync.when(
-      data:
-          (result) => result.when(
-            success:
-                (_) => MaterialApp.router(
-                  themeMode: ThemeMode.system,
-                  theme: AppTheme.lightTheme,
-                  routerConfig: router,
-                ),
-            failure: (error) => customErrorWidget(context, error.message),
-          ),
-      error: (error, stack) => customErrorWidget(context, error.toString()),
-      loading: () => customLoadingWidget(context),
+    // 通知初期化
+    ref.listen(notificationInitializationProvider, (previous, next) {
+      next.when(
+        data:
+            (result) => result.when(
+              success: (_) => logger.severe('通知初期化成功'),
+              failure: (error) {
+                logger.severe('通知初期化失敗: ${error.message}');
+                // 通知機能無効化フラグをグローバルに設定すべき
+                // ref.read(notificationEnabledProvider.notifier).state = false;
+              },
+            ),
+        error: (error, stack) => logger.severe('通知初期化エラー: $error'),
+        loading: () => logger.severe('通知初期化中...'),
+      );
+    });
+
+    return MaterialApp.router(
+      themeMode: ThemeMode.system,
+      theme: AppTheme.lightTheme,
+      routerConfig: router,
     );
   }
 }
