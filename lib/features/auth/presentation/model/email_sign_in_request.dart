@@ -4,19 +4,19 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 
-part 'email_sign_in_request_dto.freezed.dart';
+part 'email_sign_in_request.freezed.dart';
 
 // 入力用 UI => ドメイン/データ層
 @freezed
-sealed class EmailSignInRequestDto with _$EmailSignInRequestDto {
-  const EmailSignInRequestDto._();
+sealed class EmailSignInRequest with _$EmailSignInRequest {
+  const EmailSignInRequest._();
 
-  const factory EmailSignInRequestDto({
+  const factory EmailSignInRequest({
     required Email email,
     required Password password,
-  }) = _EmailSignInRequestDto;
+  }) = _EmailSignInRequest;
 
-  static Result<EmailSignInRequestDto> create({
+  static Result<EmailSignInRequest> create({
     required String email,
     required String password,
   }) {
@@ -27,12 +27,12 @@ sealed class EmailSignInRequestDto with _$EmailSignInRequestDto {
     return emailResult.flatMap(
       (validEmail) => passwordResult.map(
         (validPassword) =>
-            EmailSignInRequestDto(email: validEmail, password: validPassword),
+            EmailSignInRequest(email: validEmail, password: validPassword),
       ),
     );
   }
 
-  static Result<EmailSignInRequestDto> fromJson(Map<String, dynamic> json) {
+  static Result<EmailSignInRequest> fromJson(Map<String, dynamic> json) {
     final email = json['email'];
     final password = json['password'];
 

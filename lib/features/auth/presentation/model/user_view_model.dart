@@ -4,20 +4,18 @@ import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
-part 'user_view_model_dto.freezed.dart'; // freezed
+part 'user_view_model.freezed.dart'; // freezed
 
 @freezed
-sealed class UserViewModelDto with _$UserViewModelDto {
-  const UserViewModelDto._();
+sealed class UserViewModel with _$UserViewModel {
+  const UserViewModel._();
 
-  const factory UserViewModelDto({
-    required UserId userId,
-    required Email email,
-  }) = _UserViewModelDto;
+  const factory UserViewModel({required UserId userId, required Email email}) =
+      _UserViewModel;
 
   // Entity => Dto
-  factory UserViewModelDto.fromEntity(AppUser entity) {
-    return UserViewModelDto(userId: entity.userId, email: entity.email);
+  factory UserViewModel.fromEntity(AppUser entity) {
+    return UserViewModel(userId: entity.userId, email: entity.email);
   }
 
   // Dto => Entity
@@ -27,7 +25,7 @@ sealed class UserViewModelDto with _$UserViewModelDto {
 }
 
 // UI表示用の拡張メソッド
-extension UserDtoDisplay on UserViewModelDto {
+extension UserDtoDisplay on UserViewModel {
   String get displayName => toEntity().fold(
     (error) => 'Unknown User',
     (entity) => entity.displayName,

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/presentation/dto/email_sign_in_request_dto.dart';
+import 'package:popcal/features/auth/presentation/model/email_sign_in_request.dart';
 import 'package:popcal/features/auth/presentation/enum/auth_mode_enum.dart';
 import 'package:popcal/features/auth/presentation/enum/login_form_field_enum.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
@@ -276,7 +276,7 @@ class LoginScreen extends HookConsumerWidget {
     final email = formData[LoginFormField.email.key] as String;
     final password = formData[LoginFormField.password.key] as String;
 
-    final dtoResult = EmailSignInRequestDto.create(
+    final dtoResult = EmailSignInRequest.create(
       email: email,
       password: password,
     );

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CalendarDataDto {
 
- UserViewModelDto get userViewModelDto; RotationGroup get rotationGroup; Map<String, CalendarDayViewDto> get dayInfoMap;
+ UserViewModel get userViewModelDto; RotationGroup get rotationGroup; Map<String, CalendarDayViewDto> get dayInfoMap;
 /// Create a copy of CalendarDataDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,11 +46,11 @@ abstract mixin class $CalendarDataDtoCopyWith<$Res>  {
   factory $CalendarDataDtoCopyWith(CalendarDataDto value, $Res Function(CalendarDataDto) _then) = _$CalendarDataDtoCopyWithImpl;
 @useResult
 $Res call({
- UserViewModelDto userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewDto> dayInfoMap
+ UserViewModel userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewDto> dayInfoMap
 });
 
 
-$UserViewModelDtoCopyWith<$Res> get userViewModelDto;
+$UserViewModelCopyWith<$Res> get userViewModelDto;
 
 }
 /// @nodoc
@@ -66,7 +66,7 @@ class _$CalendarDataDtoCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? userViewModelDto = null,Object? rotationGroup = null,Object? dayInfoMap = null,}) {
   return _then(_self.copyWith(
 userViewModelDto: null == userViewModelDto ? _self.userViewModelDto : userViewModelDto // ignore: cast_nullable_to_non_nullable
-as UserViewModelDto,rotationGroup: null == rotationGroup ? _self.rotationGroup : rotationGroup // ignore: cast_nullable_to_non_nullable
+as UserViewModel,rotationGroup: null == rotationGroup ? _self.rotationGroup : rotationGroup // ignore: cast_nullable_to_non_nullable
 as RotationGroup,dayInfoMap: null == dayInfoMap ? _self.dayInfoMap : dayInfoMap // ignore: cast_nullable_to_non_nullable
 as Map<String, CalendarDayViewDto>,
   ));
@@ -75,9 +75,9 @@ as Map<String, CalendarDayViewDto>,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserViewModelDtoCopyWith<$Res> get userViewModelDto {
+$UserViewModelCopyWith<$Res> get userViewModelDto {
   
-  return $UserViewModelDtoCopyWith<$Res>(_self.userViewModelDto, (value) {
+  return $UserViewModelCopyWith<$Res>(_self.userViewModelDto, (value) {
     return _then(_self.copyWith(userViewModelDto: value));
   });
 }
@@ -91,7 +91,7 @@ class _CalendarDataDto extends CalendarDataDto {
   const _CalendarDataDto({required this.userViewModelDto, required this.rotationGroup, required final  Map<String, CalendarDayViewDto> dayInfoMap}): _dayInfoMap = dayInfoMap,super._();
   
 
-@override final  UserViewModelDto userViewModelDto;
+@override final  UserViewModel userViewModelDto;
 @override final  RotationGroup rotationGroup;
  final  Map<String, CalendarDayViewDto> _dayInfoMap;
 @override Map<String, CalendarDayViewDto> get dayInfoMap {
@@ -131,11 +131,11 @@ abstract mixin class _$CalendarDataDtoCopyWith<$Res> implements $CalendarDataDto
   factory _$CalendarDataDtoCopyWith(_CalendarDataDto value, $Res Function(_CalendarDataDto) _then) = __$CalendarDataDtoCopyWithImpl;
 @override @useResult
 $Res call({
- UserViewModelDto userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewDto> dayInfoMap
+ UserViewModel userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewDto> dayInfoMap
 });
 
 
-@override $UserViewModelDtoCopyWith<$Res> get userViewModelDto;
+@override $UserViewModelCopyWith<$Res> get userViewModelDto;
 
 }
 /// @nodoc
@@ -151,7 +151,7 @@ class __$CalendarDataDtoCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? userViewModelDto = null,Object? rotationGroup = null,Object? dayInfoMap = null,}) {
   return _then(_CalendarDataDto(
 userViewModelDto: null == userViewModelDto ? _self.userViewModelDto : userViewModelDto // ignore: cast_nullable_to_non_nullable
-as UserViewModelDto,rotationGroup: null == rotationGroup ? _self.rotationGroup : rotationGroup // ignore: cast_nullable_to_non_nullable
+as UserViewModel,rotationGroup: null == rotationGroup ? _self.rotationGroup : rotationGroup // ignore: cast_nullable_to_non_nullable
 as RotationGroup,dayInfoMap: null == dayInfoMap ? _self._dayInfoMap : dayInfoMap // ignore: cast_nullable_to_non_nullable
 as Map<String, CalendarDayViewDto>,
   ));
@@ -161,9 +161,9 @@ as Map<String, CalendarDayViewDto>,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserViewModelDtoCopyWith<$Res> get userViewModelDto {
+$UserViewModelCopyWith<$Res> get userViewModelDto {
   
-  return $UserViewModelDtoCopyWith<$Res>(_self.userViewModelDto, (value) {
+  return $UserViewModelCopyWith<$Res>(_self.userViewModelDto, (value) {
     return _then(_self.copyWith(userViewModelDto: value));
   });
 }

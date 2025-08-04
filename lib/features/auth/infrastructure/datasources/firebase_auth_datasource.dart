@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/infrastructure/dto/user_firebase_dto.dart';
+import 'package:popcal/features/auth/infrastructure/model/user_firebase_model.dart';
 
 class FirebaseAuthDataSource {
   final FirebaseAuth _firebaseAuth;
@@ -9,11 +9,11 @@ class FirebaseAuthDataSource {
   FirebaseAuthDataSource(this._firebaseAuth);
 
   // 認証状態(認証済 or 未認証)を監視
-  Stream<Result<UserFirebaseDto?>> get authStateChanges {
+  Stream<Result<UserFirebaseModel?>> get authStateChanges {
     return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
       try {
         if (firebaseUser != null) {
-          final dtoResult = UserFirebaseDto.fromFirebaseUser(firebaseUser);
+          final dtoResult = UserFirebaseModel.fromFirebaseUser(firebaseUser);
           return dtoResult.when(
             success: (dto) => Results.success(dto),
             failure: (error) => Results.failure(AuthFailure(error.message)),
@@ -30,13 +30,13 @@ class FirebaseAuthDataSource {
   }
 
   // ユーザ情報を取得
-  Future<Result<UserFirebaseDto?>> getUser() async {
+  Future<Result<UserFirebaseModel?>> getUser() async {
     try {
       final firebaseUser = _firebaseAuth.currentUser;
       if (firebaseUser == null) {
         return Results.success(null);
       }
-      final dtoResult = UserFirebaseDto.fromFirebaseUser(firebaseUser);
+      final dtoResult = UserFirebaseModel.fromFirebaseUser(firebaseUser);
       return dtoResult.when(
         success: (dto) => Results.success(dto),
         failure: (error) => Results.failure(AuthFailure(error.message)),
@@ -49,7 +49,7 @@ class FirebaseAuthDataSource {
   }
 
   // Email + Passwordでサインイン
-  Future<Result<UserFirebaseDto>> signInWithEmailAndPassword(
+  Future<Result<UserFirebaseModel>> signInWithEmailAndPassword(
     String email,
     String password,
   ) async {
@@ -61,7 +61,7 @@ class FirebaseAuthDataSource {
       if (credential.user == null) {
         return Results.failure(AuthFailure('メールアドレス認証認証に失敗しました'));
       }
-      final dtoResult = UserFirebaseDto.fromFirebaseUser(credential.user!);
+      final dtoResult = UserFirebaseModel.fromFirebaseUser(credential.user!);
       return dtoResult.when(
         success: (dto) => Results.success(dto),
         failure: (error) => Results.failure(AuthFailure(error.message)),
@@ -74,7 +74,7 @@ class FirebaseAuthDataSource {
   }
 
   // サインアップ
-  Future<Result<UserFirebaseDto>> signUpWithEmailAndPassword(
+  Future<Result<UserFirebaseModel>> signUpWithEmailAndPassword(
     String email,
     String password,
   ) async {
@@ -86,7 +86,7 @@ class FirebaseAuthDataSource {
       if (credential.user == null) {
         return Results.failure(AuthFailure('サインアップに失敗しました'));
       }
-      final dtoResult = UserFirebaseDto.fromFirebaseUser(credential.user!);
+      final dtoResult = UserFirebaseModel.fromFirebaseUser(credential.user!);
       return dtoResult.when(
         success: (dto) => Results.success(dto),
         failure: (error) => Results.failure(AuthFailure(error.message)),

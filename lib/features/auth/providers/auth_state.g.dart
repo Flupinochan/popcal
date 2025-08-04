@@ -6,12 +6,12 @@ part of 'auth_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authStateForUIHash() => r'bb165eb541f629cfdb3535a85bdb0858880f2706';
+String _$authStateForUIHash() => r'fa135ac594421c569fef847e96ce827694f0dc08';
 
 /// See also [authStateForUI].
 @ProviderFor(authStateForUI)
 final authStateForUIProvider =
-    AutoDisposeStreamProvider<Result<UserViewModelDto?>>.internal(
+    AutoDisposeStreamProvider<Result<UserViewModel?>>.internal(
       authStateForUI,
       name: r'authStateForUIProvider',
       debugGetCreateSourceHash:
@@ -25,6 +25,6 @@ final authStateForUIProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AuthStateForUIRef =
-    AutoDisposeStreamProviderRef<Result<UserViewModelDto?>>;
+    AutoDisposeStreamProviderRef<Result<UserViewModel?>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
+import 'package:popcal/features/auth/presentation/model/user_view_model.dart';
 import 'package:popcal/features/calendar/domain/entities/calendar_data.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_day_view_dto.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
@@ -12,7 +12,7 @@ sealed class CalendarDataDto with _$CalendarDataDto {
   const CalendarDataDto._();
 
   const factory CalendarDataDto({
-    required UserViewModelDto userViewModelDto,
+    required UserViewModel userViewModelDto,
     required RotationGroup rotationGroup,
     required Map<String, CalendarDayViewDto> dayInfoMap,
   }) = _CalendarDataDto;
@@ -23,7 +23,7 @@ sealed class CalendarDataDto with _$CalendarDataDto {
     Map<String, CalendarDayViewDto> dayInfoMap,
   ) {
     return CalendarDataDto(
-      userViewModelDto: UserViewModelDto.fromEntity(entity.appUser),
+      userViewModelDto: UserViewModel.fromEntity(entity.appUser),
       rotationGroup: entity.rotationGroup,
       dayInfoMap: dayInfoMap,
     );

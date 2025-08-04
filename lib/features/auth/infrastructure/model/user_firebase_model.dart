@@ -6,20 +6,20 @@ import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
-part 'user_firebase_dto.freezed.dart'; // freezed
-part 'user_firebase_dto.g.dart'; // json_serializable
+part 'user_firebase_model.freezed.dart'; // freezed
+part 'user_firebase_model.g.dart'; // json_serializable
 
 @freezed
-sealed class UserFirebaseDto with _$UserFirebaseDto {
-  const UserFirebaseDto._();
+sealed class UserFirebaseModel with _$UserFirebaseModel {
+  const UserFirebaseModel._();
 
-  const factory UserFirebaseDto({
+  const factory UserFirebaseModel({
     required UserId userId,
     required Email email,
-  }) = _UserFirebaseDto;
+  }) = _UserFirebaseModel;
 
-  // Firebase認証情報 => Dto
-  static Result<UserFirebaseDto> fromFirebaseUser(
+  // ★Firebase認証情報 => Dto
+  static Result<UserFirebaseModel> fromFirebaseUser(
     firebase_auth.User firebaseUser,
   ) {
     if (firebaseUser.email == null) {
@@ -33,18 +33,18 @@ sealed class UserFirebaseDto with _$UserFirebaseDto {
 
     return userIdResult.flatMap(
       (validUid) => emailResult.map(
-        (validEmail) => UserFirebaseDto(userId: validUid, email: validEmail),
+        (validEmail) => UserFirebaseModel(userId: validUid, email: validEmail),
       ),
     );
   }
 
   // Json => Dto ※Dto => Jsonは自動生成
-  factory UserFirebaseDto.fromJson(Map<String, dynamic> json) =>
-      _$UserFirebaseDtoFromJson(json);
+  factory UserFirebaseModel.fromJson(Map<String, dynamic> json) =>
+      _$UserFirebaseModelFromJson(json);
 
-  static Result<UserFirebaseDto> fromJsonSafe(Map<String, dynamic> json) {
+  static Result<UserFirebaseModel> fromJsonSafe(Map<String, dynamic> json) {
     try {
-      final dto = UserFirebaseDto.fromJson(json);
+      final dto = UserFirebaseModel.fromJson(json);
       return Results.success(dto);
     } catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
@@ -52,8 +52,8 @@ sealed class UserFirebaseDto with _$UserFirebaseDto {
   }
 
   // Entity => Dto
-  factory UserFirebaseDto.fromEntity(AppUser entity) {
-    return UserFirebaseDto(userId: entity.userId, email: entity.email);
+  factory UserFirebaseModel.fromEntity(AppUser entity) {
+    return UserFirebaseModel(userId: entity.userId, email: entity.email);
   }
 
   // Dto => Entity
@@ -63,7 +63,7 @@ sealed class UserFirebaseDto with _$UserFirebaseDto {
 }
 
 // UI表示用の拡張メソッド
-extension UserDtoDisplay on UserFirebaseDto {
+extension UserDtoDisplay on UserFirebaseModel {
   String get displayName => toEntity().fold(
     (error) => 'Unknown User',
     (entity) => entity.displayName,

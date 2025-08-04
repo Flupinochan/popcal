@@ -1,8 +1,8 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
-import 'package:popcal/features/auth/presentation/dto/user_view_model_dto.dart';
+import 'package:popcal/features/auth/presentation/model/user_view_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:popcal/features/auth/presentation/dto/email_sign_in_request_dto.dart';
+import 'package:popcal/features/auth/presentation/model/email_sign_in_request.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/auth_provider.dart';
@@ -16,11 +16,11 @@ class AuthController extends _$AuthController {
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   @override
-  FutureOr<UserViewModelDto?> build() {
+  FutureOr<UserViewModel?> build() {
     return null;
   }
 
-  Future<Result<UserViewModelDto?>> signIn(EmailSignInRequestDto dto) async {
+  Future<Result<UserViewModel?>> signIn(EmailSignInRequest dto) async {
     return _executeAuthOperation(() async {
       final entityResult = await _authRepository.signInWithEmailAndPassword(
         dto.email,
@@ -30,7 +30,7 @@ class AuthController extends _$AuthController {
     });
   }
 
-  Future<Result<UserViewModelDto?>> signUp(EmailSignInRequestDto dto) async {
+  Future<Result<UserViewModel?>> signUp(EmailSignInRequest dto) async {
     return _executeAuthOperation(() async {
       final entityResult = await _authRepository.signUpWithEmailAndPassword(
         dto.email,
@@ -40,8 +40,8 @@ class AuthController extends _$AuthController {
     });
   }
 
-  Future<Result<UserViewModelDto?>> _executeAuthOperation(
-    Future<Result<UserViewModelDto?>> Function() operation,
+  Future<Result<UserViewModel?>> _executeAuthOperation(
+    Future<Result<UserViewModel?>> Function() operation,
   ) async {
     state = const AsyncLoading();
     final result = await operation();
@@ -52,10 +52,9 @@ class AuthController extends _$AuthController {
     return result;
   }
 
-  Result<UserViewModelDto> _convertEntityToDto(Result<AppUser> entityResult) {
+  Result<UserViewModel> _convertEntityToDto(Result<AppUser> entityResult) {
     return entityResult.when(
-      success:
-          (appUser) => Results.success(UserViewModelDto.fromEntity(appUser)),
+      success: (appUser) => Results.success(UserViewModel.fromEntity(appUser)),
       failure: (error) => Results.failure(AuthFailure(error.message)),
     );
   }
