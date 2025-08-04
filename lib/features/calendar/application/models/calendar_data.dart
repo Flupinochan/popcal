@@ -1,5 +1,5 @@
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
-import 'package:popcal/features/calendar/domain/value_objects/calendar_day.dart';
+import 'package:popcal/features/calendar/application/models/calendar_day.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 
@@ -22,26 +22,10 @@ class CalendarData {
     return calendarDays[key];
   }
 
-  /// 指定日の担当者名を取得
-  String? getMemberNameForDate(DateTime date) {
-    final calendarDay = getNotificationForDate(date);
-    return calendarDay?.memberName;
-  }
-
   /// 指定日がローテーション日かどうか
   bool isRotationDay(DateTime date) {
     final calendarDay = getNotificationForDate(date);
     return calendarDay?.isRotationDay ?? false;
-  }
-
-  /// 全てのローテーション日を取得
-  List<CalendarDay> get allRotationDays {
-    return calendarDays.values.where((day) => day.isRotationDay).toList();
-  }
-
-  /// 全てのカレンダー日を取得
-  List<CalendarDay> get allCalendarDays {
-    return calendarDays.values.toList();
   }
 
   // 日付から表示用データを返却

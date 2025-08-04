@@ -1,23 +1,23 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/features/calendar/domain/value_objects/calendar_day.dart';
+import 'package:popcal/features/calendar/application/models/calendar_day.dart';
 
-part 'calendar_day_view_dto.freezed.dart';
+part 'calendar_day_view_model.freezed.dart';
 
 @freezed
-sealed class CalendarDayViewDto with _$CalendarDayViewDto {
-  const factory CalendarDayViewDto({
+sealed class CalendarDayViewModel with _$CalendarDayViewModel {
+  const factory CalendarDayViewModel({
     required DateTime date,
     required String? memberName,
     required bool isRotationDay,
     required String displayText,
     required int memberColorIndex,
-  }) = _CalendarDayViewDto;
+  }) = _CalendarDayViewModel;
 
-  factory CalendarDayViewDto.fromEntity(
+  factory CalendarDayViewModel.fromEntity(
     CalendarDay entity,
     int memberColorIndex,
   ) {
-    return CalendarDayViewDto(
+    return CalendarDayViewModel(
       date: entity.date,
       memberName: entity.memberName,
       isRotationDay: entity.isRotationDay,

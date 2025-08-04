@@ -4,7 +4,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'calendar_data_dto.dart';
+part of 'calendar_data_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,20 +13,20 @@ part of 'calendar_data_dto.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$CalendarDataDto {
+mixin _$CalendarDataModel {
 
- UserViewModel get userViewModelDto; RotationGroup get rotationGroup; Map<String, CalendarDayViewDto> get dayInfoMap;
-/// Create a copy of CalendarDataDto
+ UserViewModel get userViewModelDto; RotationGroup get rotationGroup; Map<String, CalendarDayViewModel> get dayInfoMap;
+/// Create a copy of CalendarDataModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$CalendarDataDtoCopyWith<CalendarDataDto> get copyWith => _$CalendarDataDtoCopyWithImpl<CalendarDataDto>(this as CalendarDataDto, _$identity);
+$CalendarDataModelCopyWith<CalendarDataModel> get copyWith => _$CalendarDataModelCopyWithImpl<CalendarDataModel>(this as CalendarDataModel, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarDataDto&&(identical(other.userViewModelDto, userViewModelDto) || other.userViewModelDto == userViewModelDto)&&(identical(other.rotationGroup, rotationGroup) || other.rotationGroup == rotationGroup)&&const DeepCollectionEquality().equals(other.dayInfoMap, dayInfoMap));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarDataModel&&(identical(other.userViewModelDto, userViewModelDto) || other.userViewModelDto == userViewModelDto)&&(identical(other.rotationGroup, rotationGroup) || other.rotationGroup == rotationGroup)&&const DeepCollectionEquality().equals(other.dayInfoMap, dayInfoMap));
 }
 
 
@@ -35,18 +35,18 @@ int get hashCode => Object.hash(runtimeType,userViewModelDto,rotationGroup,const
 
 @override
 String toString() {
-  return 'CalendarDataDto(userViewModelDto: $userViewModelDto, rotationGroup: $rotationGroup, dayInfoMap: $dayInfoMap)';
+  return 'CalendarDataModel(userViewModelDto: $userViewModelDto, rotationGroup: $rotationGroup, dayInfoMap: $dayInfoMap)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $CalendarDataDtoCopyWith<$Res>  {
-  factory $CalendarDataDtoCopyWith(CalendarDataDto value, $Res Function(CalendarDataDto) _then) = _$CalendarDataDtoCopyWithImpl;
+abstract mixin class $CalendarDataModelCopyWith<$Res>  {
+  factory $CalendarDataModelCopyWith(CalendarDataModel value, $Res Function(CalendarDataModel) _then) = _$CalendarDataModelCopyWithImpl;
 @useResult
 $Res call({
- UserViewModel userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewDto> dayInfoMap
+ UserViewModel userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewModel> dayInfoMap
 });
 
 
@@ -54,24 +54,24 @@ $UserViewModelCopyWith<$Res> get userViewModelDto;
 
 }
 /// @nodoc
-class _$CalendarDataDtoCopyWithImpl<$Res>
-    implements $CalendarDataDtoCopyWith<$Res> {
-  _$CalendarDataDtoCopyWithImpl(this._self, this._then);
+class _$CalendarDataModelCopyWithImpl<$Res>
+    implements $CalendarDataModelCopyWith<$Res> {
+  _$CalendarDataModelCopyWithImpl(this._self, this._then);
 
-  final CalendarDataDto _self;
-  final $Res Function(CalendarDataDto) _then;
+  final CalendarDataModel _self;
+  final $Res Function(CalendarDataModel) _then;
 
-/// Create a copy of CalendarDataDto
+/// Create a copy of CalendarDataModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? userViewModelDto = null,Object? rotationGroup = null,Object? dayInfoMap = null,}) {
   return _then(_self.copyWith(
 userViewModelDto: null == userViewModelDto ? _self.userViewModelDto : userViewModelDto // ignore: cast_nullable_to_non_nullable
 as UserViewModel,rotationGroup: null == rotationGroup ? _self.rotationGroup : rotationGroup // ignore: cast_nullable_to_non_nullable
 as RotationGroup,dayInfoMap: null == dayInfoMap ? _self.dayInfoMap : dayInfoMap // ignore: cast_nullable_to_non_nullable
-as Map<String, CalendarDayViewDto>,
+as Map<String, CalendarDayViewModel>,
   ));
 }
-/// Create a copy of CalendarDataDto
+/// Create a copy of CalendarDataModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -87,31 +87,31 @@ $UserViewModelCopyWith<$Res> get userViewModelDto {
 /// @nodoc
 
 
-class _CalendarDataDto extends CalendarDataDto {
-  const _CalendarDataDto({required this.userViewModelDto, required this.rotationGroup, required final  Map<String, CalendarDayViewDto> dayInfoMap}): _dayInfoMap = dayInfoMap,super._();
+class _CalendarDataModel extends CalendarDataModel {
+  const _CalendarDataModel({required this.userViewModelDto, required this.rotationGroup, required final  Map<String, CalendarDayViewModel> dayInfoMap}): _dayInfoMap = dayInfoMap,super._();
   
 
 @override final  UserViewModel userViewModelDto;
 @override final  RotationGroup rotationGroup;
- final  Map<String, CalendarDayViewDto> _dayInfoMap;
-@override Map<String, CalendarDayViewDto> get dayInfoMap {
+ final  Map<String, CalendarDayViewModel> _dayInfoMap;
+@override Map<String, CalendarDayViewModel> get dayInfoMap {
   if (_dayInfoMap is EqualUnmodifiableMapView) return _dayInfoMap;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_dayInfoMap);
 }
 
 
-/// Create a copy of CalendarDataDto
+/// Create a copy of CalendarDataModel
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$CalendarDataDtoCopyWith<_CalendarDataDto> get copyWith => __$CalendarDataDtoCopyWithImpl<_CalendarDataDto>(this, _$identity);
+_$CalendarDataModelCopyWith<_CalendarDataModel> get copyWith => __$CalendarDataModelCopyWithImpl<_CalendarDataModel>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarDataDto&&(identical(other.userViewModelDto, userViewModelDto) || other.userViewModelDto == userViewModelDto)&&(identical(other.rotationGroup, rotationGroup) || other.rotationGroup == rotationGroup)&&const DeepCollectionEquality().equals(other._dayInfoMap, _dayInfoMap));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarDataModel&&(identical(other.userViewModelDto, userViewModelDto) || other.userViewModelDto == userViewModelDto)&&(identical(other.rotationGroup, rotationGroup) || other.rotationGroup == rotationGroup)&&const DeepCollectionEquality().equals(other._dayInfoMap, _dayInfoMap));
 }
 
 
@@ -120,18 +120,18 @@ int get hashCode => Object.hash(runtimeType,userViewModelDto,rotationGroup,const
 
 @override
 String toString() {
-  return 'CalendarDataDto(userViewModelDto: $userViewModelDto, rotationGroup: $rotationGroup, dayInfoMap: $dayInfoMap)';
+  return 'CalendarDataModel(userViewModelDto: $userViewModelDto, rotationGroup: $rotationGroup, dayInfoMap: $dayInfoMap)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$CalendarDataDtoCopyWith<$Res> implements $CalendarDataDtoCopyWith<$Res> {
-  factory _$CalendarDataDtoCopyWith(_CalendarDataDto value, $Res Function(_CalendarDataDto) _then) = __$CalendarDataDtoCopyWithImpl;
+abstract mixin class _$CalendarDataModelCopyWith<$Res> implements $CalendarDataModelCopyWith<$Res> {
+  factory _$CalendarDataModelCopyWith(_CalendarDataModel value, $Res Function(_CalendarDataModel) _then) = __$CalendarDataModelCopyWithImpl;
 @override @useResult
 $Res call({
- UserViewModel userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewDto> dayInfoMap
+ UserViewModel userViewModelDto, RotationGroup rotationGroup, Map<String, CalendarDayViewModel> dayInfoMap
 });
 
 
@@ -139,25 +139,25 @@ $Res call({
 
 }
 /// @nodoc
-class __$CalendarDataDtoCopyWithImpl<$Res>
-    implements _$CalendarDataDtoCopyWith<$Res> {
-  __$CalendarDataDtoCopyWithImpl(this._self, this._then);
+class __$CalendarDataModelCopyWithImpl<$Res>
+    implements _$CalendarDataModelCopyWith<$Res> {
+  __$CalendarDataModelCopyWithImpl(this._self, this._then);
 
-  final _CalendarDataDto _self;
-  final $Res Function(_CalendarDataDto) _then;
+  final _CalendarDataModel _self;
+  final $Res Function(_CalendarDataModel) _then;
 
-/// Create a copy of CalendarDataDto
+/// Create a copy of CalendarDataModel
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? userViewModelDto = null,Object? rotationGroup = null,Object? dayInfoMap = null,}) {
-  return _then(_CalendarDataDto(
+  return _then(_CalendarDataModel(
 userViewModelDto: null == userViewModelDto ? _self.userViewModelDto : userViewModelDto // ignore: cast_nullable_to_non_nullable
 as UserViewModel,rotationGroup: null == rotationGroup ? _self.rotationGroup : rotationGroup // ignore: cast_nullable_to_non_nullable
 as RotationGroup,dayInfoMap: null == dayInfoMap ? _self._dayInfoMap : dayInfoMap // ignore: cast_nullable_to_non_nullable
-as Map<String, CalendarDayViewDto>,
+as Map<String, CalendarDayViewModel>,
   ));
 }
 
-/// Create a copy of CalendarDataDto
+/// Create a copy of CalendarDataModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

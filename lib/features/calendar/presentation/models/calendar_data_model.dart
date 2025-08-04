@@ -1,35 +1,35 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/auth/presentation/model/user_view_model.dart';
-import 'package:popcal/features/calendar/domain/entities/calendar_data.dart';
-import 'package:popcal/features/calendar/presentation/dto/calendar_day_view_dto.dart';
+import 'package:popcal/features/calendar/application/models/calendar_data.dart';
+import 'package:popcal/features/calendar/presentation/models/calendar_day_view_model.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 
-part 'calendar_data_dto.freezed.dart';
+part 'calendar_data_model.freezed.dart';
 
 @freezed
-sealed class CalendarDataDto with _$CalendarDataDto {
-  const CalendarDataDto._();
+sealed class CalendarDataModel with _$CalendarDataModel {
+  const CalendarDataModel._();
 
-  const factory CalendarDataDto({
+  const factory CalendarDataModel({
     required UserViewModel userViewModelDto,
     required RotationGroup rotationGroup,
-    required Map<String, CalendarDayViewDto> dayInfoMap,
-  }) = _CalendarDataDto;
+    required Map<String, CalendarDayViewModel> dayInfoMap,
+  }) = _CalendarDataModel;
 
   // Entity => DTO
-  factory CalendarDataDto.fromEntity(
+  factory CalendarDataModel.fromEntity(
     CalendarData entity,
-    Map<String, CalendarDayViewDto> dayInfoMap,
+    Map<String, CalendarDayViewModel> dayInfoMap,
   ) {
-    return CalendarDataDto(
+    return CalendarDataModel(
       userViewModelDto: UserViewModel.fromEntity(entity.appUser),
       rotationGroup: entity.rotationGroup,
       dayInfoMap: dayInfoMap,
     );
   }
 
-  CalendarDayViewDto? getDayInfo(DateTime date) {
+  CalendarDayViewModel? getDayInfo(DateTime date) {
     final key = TimeUtils.createDateKey(date);
     return dayInfoMap[key];
   }

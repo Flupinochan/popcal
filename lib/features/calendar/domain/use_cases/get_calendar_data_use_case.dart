@@ -1,9 +1,9 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
-import 'package:popcal/features/calendar/domain/entities/calendar_data.dart';
-import 'package:popcal/features/calendar/presentation/dto/calendar_data_dto.dart';
-import 'package:popcal/features/calendar/presentation/dto/calendar_day_view_dto.dart';
+import 'package:popcal/features/calendar/application/models/calendar_data.dart';
+import 'package:popcal/features/calendar/presentation/models/calendar_data_model.dart';
+import 'package:popcal/features/calendar/presentation/models/calendar_day_view_model.dart';
 import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
@@ -25,7 +25,7 @@ class GetCalendarDataUseCase {
   );
 
   // CalendarScreen表示に必要な3つの情報を取得して返却
-  Future<Result<CalendarDataDto>> execute(String rotationGroupId) async {
+  Future<Result<CalendarDataModel>> execute(String rotationGroupId) async {
     // 1. ユーザ情報を取得 ※.futureでstreamから1度だけ取得が可能
     final authResult = await _authRepository.getUser();
     if (authResult.isFailure) {
@@ -69,7 +69,7 @@ class GetCalendarDataUseCase {
 
     // 5. 各日付表示用データを作成
     // {各日付: 各日付表示用データ} のMap
-    final dayInfoMap = <String, CalendarDayViewDto>{};
+    final dayInfoMap = <String, CalendarDayViewModel>{};
     for (
       var checkDate = startDate;
       checkDate.isBefore(endDate.add(const Duration(days: 1)));
@@ -85,7 +85,7 @@ class GetCalendarDataUseCase {
               : 0;
 
       // Entity => DTO
-      final dayViewDto = CalendarDayViewDto.fromEntity(
+      final dayViewDto = CalendarDayViewModel.fromEntity(
         calendarDay,
         memberColorIndex,
       );
@@ -96,7 +96,7 @@ class GetCalendarDataUseCase {
 
     // 6. DTOに変換して返却
     return Results.success(
-      CalendarDataDto.fromEntity(calendarData, dayInfoMap),
+      CalendarDataModel.fromEntity(calendarData, dayInfoMap),
     );
   }
 }

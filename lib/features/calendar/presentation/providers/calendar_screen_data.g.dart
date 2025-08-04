@@ -28,7 +28,7 @@ final getCalendarDataUseCaseProvider =
 typedef GetCalendarDataUseCaseRef =
     AutoDisposeProviderRef<GetCalendarDataUseCase>;
 String _$calendarScreenDataHash() =>
-    r'c613c18aa1832a40a5d6de3acc6d14b1aa176b95';
+    r'c88217c4440c9273fbef9bc9849b84bd0b127efc';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -57,7 +57,7 @@ const calendarScreenDataProvider = CalendarScreenDataFamily();
 
 /// See also [calendarScreenData].
 class CalendarScreenDataFamily
-    extends Family<AsyncValue<Result<CalendarDataDto>>> {
+    extends Family<AsyncValue<Result<CalendarDataModel>>> {
   /// See also [calendarScreenData].
   const CalendarScreenDataFamily();
 
@@ -90,7 +90,7 @@ class CalendarScreenDataFamily
 
 /// See also [calendarScreenData].
 class CalendarScreenDataProvider
-    extends AutoDisposeFutureProvider<Result<CalendarDataDto>> {
+    extends AutoDisposeFutureProvider<Result<CalendarDataModel>> {
   /// See also [calendarScreenData].
   CalendarScreenDataProvider(String rotationGroupId)
     : this._internal(
@@ -122,7 +122,7 @@ class CalendarScreenDataProvider
 
   @override
   Override overrideWith(
-    FutureOr<Result<CalendarDataDto>> Function(CalendarScreenDataRef provider)
+    FutureOr<Result<CalendarDataModel>> Function(CalendarScreenDataRef provider)
     create,
   ) {
     return ProviderOverride(
@@ -140,7 +140,7 @@ class CalendarScreenDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<Result<CalendarDataDto>> createElement() {
+  AutoDisposeFutureProviderElement<Result<CalendarDataModel>> createElement() {
     return _CalendarScreenDataProviderElement(this);
   }
 
@@ -162,13 +162,13 @@ class CalendarScreenDataProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin CalendarScreenDataRef
-    on AutoDisposeFutureProviderRef<Result<CalendarDataDto>> {
+    on AutoDisposeFutureProviderRef<Result<CalendarDataModel>> {
   /// The parameter `rotationGroupId` of this provider.
   String get rotationGroupId;
 }
 
 class _CalendarScreenDataProviderElement
-    extends AutoDisposeFutureProviderElement<Result<CalendarDataDto>>
+    extends AutoDisposeFutureProviderElement<Result<CalendarDataModel>>
     with CalendarScreenDataRef {
   _CalendarScreenDataProviderElement(super.provider);
 

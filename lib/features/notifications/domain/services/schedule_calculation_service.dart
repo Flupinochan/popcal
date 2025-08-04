@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/domain/value_objects/calendar_day.dart';
+import 'package:popcal/features/calendar/application/models/calendar_day.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_plan.dart';
