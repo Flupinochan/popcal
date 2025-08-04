@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
 import 'package:popcal/features/notifications/data/repositories/notification_repository_local.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
@@ -7,7 +9,6 @@ import 'package:popcal/features/notifications/domain/services/schedule_calculati
 import 'package:popcal/features/notifications/domain/use_cases/sync_notifications_use_case.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/router.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_providers.g.dart';
 
@@ -21,6 +22,12 @@ NotificationRepository notificationRepository(Ref ref) {
   return NotificationRepositoryLocal(
     ref.watch(localNotificationsDatasourceProvider),
   );
+}
+
+@riverpod
+Future<Result<void>> notificationInitialization(Ref ref) async {
+  final notificationRepository = ref.watch(notificationRepositoryProvider);
+  return await notificationRepository.initializeNotification();
 }
 
 @riverpod

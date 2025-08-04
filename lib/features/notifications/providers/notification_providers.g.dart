@@ -48,6 +48,27 @@ final notificationRepositoryProvider =
 // ignore: unused_element
 typedef NotificationRepositoryRef =
     AutoDisposeProviderRef<NotificationRepository>;
+String _$notificationInitializationHash() =>
+    r'16bc08704dc421bb5d93685864a6b0677fc08de0';
+
+/// See also [notificationInitialization].
+@ProviderFor(notificationInitialization)
+final notificationInitializationProvider =
+    AutoDisposeFutureProvider<Result<void>>.internal(
+      notificationInitialization,
+      name: r'notificationInitializationProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$notificationInitializationHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef NotificationInitializationRef =
+    AutoDisposeFutureProviderRef<Result<void>>;
 String _$scheduleCalculationServiceRepositoryHash() =>
     r'c4660b18a8a390165e3f53bcc560dd637b79b606';
 

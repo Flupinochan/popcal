@@ -9,6 +9,8 @@ import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/router/router.dart';
+import 'package:popcal/shared/widgets/custom_error_widget.dart';
+import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'firebase_options.dart';
@@ -66,24 +68,21 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final notificationProvider = ref.watch(notificationRepositoryProvider);
+    final notificationInitAsync = ref.watch(notificationInitializationProvider);
 
-    return FutureBuilder<Result<void>>(
-      // local notification初期化
-      future: notificationProvider.initializeNotification(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(
-            home: Scaffold(body: Center(child: CircularProgressIndicator())),
-          );
-        }
-
-        return MaterialApp.router(
-          themeMode: ThemeMode.system,
-          theme: AppTheme.lightTheme,
-          routerConfig: router,
-        );
-      },
+    return notificationInitAsync.when(
+      data:
+          (result) => result.when(
+            success:
+                (_) => MaterialApp.router(
+                  themeMode: ThemeMode.system,
+                  theme: AppTheme.lightTheme,
+                  routerConfig: router,
+                ),
+            failure: (error) => customErrorWidget(context, error.message),
+          ),
+      error: (error, stack) => customErrorWidget(context, error.toString()),
+      loading: () => customLoadingWidget(context),
     );
   }
 }
