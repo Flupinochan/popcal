@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/infrastructure/model/user_firebase_model.dart';
+import 'package:popcal/features/auth/infrastructure/models/user_firebase_model.dart';
 
 class FirebaseAuthDataSource {
   final FirebaseAuth _firebaseAuth;

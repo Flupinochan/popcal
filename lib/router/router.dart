@@ -5,7 +5,7 @@ import 'package:popcal/features/calendar/presentation/screens/calendar_screen.da
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 
-import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
+import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/router/routes.dart';

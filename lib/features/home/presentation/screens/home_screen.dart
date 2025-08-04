@@ -6,7 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/model/user_view_model.dart';
-import 'package:popcal/features/auth/presentation/screens/auth_screen.dart';
+import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
