@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/domain/entities/calendar_day.dart';
+import 'package:popcal/features/calendar/domain/value_objects/calendar_day.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';

@@ -1,5 +1,5 @@
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
-import 'package:popcal/features/calendar/domain/entities/calendar_day.dart';
+import 'package:popcal/features/calendar/domain/value_objects/calendar_day.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 

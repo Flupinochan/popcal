@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/features/calendar/domain/entities/calendar_day.dart';
+import 'package:popcal/features/calendar/domain/value_objects/calendar_day.dart';
 
 part 'calendar_day_view_dto.freezed.dart';
 
