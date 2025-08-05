@@ -26,7 +26,7 @@ final firebaseFirestoreProvider =
 // ignore: unused_element
 typedef FirebaseFirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
 String _$firebaseRotationDatasourceHash() =>
-    r'bd4e07a084e87a0f66d4776ec322f130ea331bc7';
+    r'7da790650ea9175682c6794a74d84b3e0b74cf57';
 
 /// See also [firebaseRotationDatasource].
 @ProviderFor(firebaseRotationDatasource)
@@ -47,7 +47,7 @@ final firebaseRotationDatasourceProvider =
 typedef FirebaseRotationDatasourceRef =
     AutoDisposeProviderRef<RotationRepositoryFirebase>;
 String _$rotationRepositoryHash() =>
-    r'b8c7a6e1748745a3c542c6cb0016fbe473c9e0da';
+    r'74f6682545c4de8c6d31881753fe0263fb06d428';
 
 /// See also [rotationRepository].
 @ProviderFor(rotationRepository)

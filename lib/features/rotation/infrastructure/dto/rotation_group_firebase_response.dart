@@ -5,10 +5,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
-part 'rotation_group_firebase_dto.freezed.dart';
+part 'rotation_group_firebase_response.freezed.dart';
 
 @freezed
-sealed class RotationGroupFirebaseResponse with _$RotationGroupFirebaseDto {
+sealed class RotationGroupFirebaseResponse
+    with _$RotationGroupFirebaseResponse {
   const RotationGroupFirebaseResponse._();
 
   const factory RotationGroupFirebaseResponse({
@@ -23,7 +24,7 @@ sealed class RotationGroupFirebaseResponse with _$RotationGroupFirebaseDto {
     // Widget(UI)はDateTimeが適切
     required Timestamp createdAt,
     required Timestamp updatedAt,
-  }) = _RotationGroupFirebaseDto;
+  }) = _RotationGroupFirebaseResponse;
 
   // Entity => DTO (factory method)
   factory RotationGroupFirebaseResponse.fromEntity(RotationGroup entity) {

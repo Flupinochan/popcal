@@ -7,7 +7,7 @@ part of 'notification_providers.dart';
 // **************************************************************************
 
 String _$localNotificationsDatasourceHash() =>
-    r'a1f9391392b2617af690abe3552fbdde98669abc';
+    r'0e3700c35ecf96f36a8059fd5b761646d4e82693';
 
 /// See also [localNotificationsDatasource].
 @ProviderFor(localNotificationsDatasource)
@@ -28,7 +28,7 @@ final localNotificationsDatasourceProvider =
 typedef LocalNotificationsDatasourceRef =
     AutoDisposeProviderRef<NotificationGatewayLocal>;
 String _$notificationRepositoryHash() =>
-    r'a5790a75231f1b519952411d5f1640cbbe59a4bd';
+    r'057962b2b1a262d1279b3a6f98048a664488d814';
 
 /// See also [notificationRepository].
 @ProviderFor(notificationRepository)
