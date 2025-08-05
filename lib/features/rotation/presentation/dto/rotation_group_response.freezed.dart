@@ -4,7 +4,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'view_rotation_group_dto.dart';
+part of 'rotation_group_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,20 +13,20 @@ part of 'view_rotation_group_dto.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$ViewRotationGroupDto {
+mixin _$RotationGroupResponse {
 
  String get rotationGroupId; String get userId; String get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; int get currentRotationIndex; DateTime get createdAt; DateTime get updatedAt;
-/// Create a copy of ViewRotationGroupDto
+/// Create a copy of RotationGroupResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$ViewRotationGroupDtoCopyWith<ViewRotationGroupDto> get copyWith => _$ViewRotationGroupDtoCopyWithImpl<ViewRotationGroupDto>(this as ViewRotationGroupDto, _$identity);
+$RotationGroupResponseCopyWith<RotationGroupResponse> get copyWith => _$RotationGroupResponseCopyWithImpl<RotationGroupResponse>(this as RotationGroupResponse, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ViewRotationGroupDto&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMembers, rotationMembers)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RotationGroupResponse&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMembers, rotationMembers)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
@@ -35,15 +35,15 @@ int get hashCode => Object.hash(runtimeType,rotationGroupId,userId,rotationName,
 
 @override
 String toString() {
-  return 'ViewRotationGroupDto(rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'RotationGroupResponse(rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ViewRotationGroupDtoCopyWith<$Res>  {
-  factory $ViewRotationGroupDtoCopyWith(ViewRotationGroupDto value, $Res Function(ViewRotationGroupDto) _then) = _$ViewRotationGroupDtoCopyWithImpl;
+abstract mixin class $RotationGroupResponseCopyWith<$Res>  {
+  factory $RotationGroupResponseCopyWith(RotationGroupResponse value, $Res Function(RotationGroupResponse) _then) = _$RotationGroupResponseCopyWithImpl;
 @useResult
 $Res call({
  String rotationGroupId, String userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
@@ -54,14 +54,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$ViewRotationGroupDtoCopyWithImpl<$Res>
-    implements $ViewRotationGroupDtoCopyWith<$Res> {
-  _$ViewRotationGroupDtoCopyWithImpl(this._self, this._then);
+class _$RotationGroupResponseCopyWithImpl<$Res>
+    implements $RotationGroupResponseCopyWith<$Res> {
+  _$RotationGroupResponseCopyWithImpl(this._self, this._then);
 
-  final ViewRotationGroupDto _self;
-  final $Res Function(ViewRotationGroupDto) _then;
+  final RotationGroupResponse _self;
+  final $Res Function(RotationGroupResponse) _then;
 
-/// Create a copy of ViewRotationGroupDto
+/// Create a copy of RotationGroupResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? rotationGroupId = null,Object? userId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
@@ -84,8 +84,8 @@ as DateTime,
 /// @nodoc
 
 
-class _ViewRotationGroupDto extends ViewRotationGroupDto {
-  const _ViewRotationGroupDto({required this.rotationGroupId, required this.userId, required this.rotationName, required final  List<String> rotationMembers, required final  List<Weekday> rotationDays, required this.notificationTime, required this.currentRotationIndex, required this.createdAt, required this.updatedAt}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,super._();
+class _RotationGroupResponse extends RotationGroupResponse {
+  const _RotationGroupResponse({required this.rotationGroupId, required this.userId, required this.rotationName, required final  List<String> rotationMembers, required final  List<Weekday> rotationDays, required this.notificationTime, required this.currentRotationIndex, required this.createdAt, required this.updatedAt}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,super._();
   
 
 @override final  String rotationGroupId;
@@ -110,17 +110,17 @@ class _ViewRotationGroupDto extends ViewRotationGroupDto {
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 
-/// Create a copy of ViewRotationGroupDto
+/// Create a copy of RotationGroupResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$ViewRotationGroupDtoCopyWith<_ViewRotationGroupDto> get copyWith => __$ViewRotationGroupDtoCopyWithImpl<_ViewRotationGroupDto>(this, _$identity);
+_$RotationGroupResponseCopyWith<_RotationGroupResponse> get copyWith => __$RotationGroupResponseCopyWithImpl<_RotationGroupResponse>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ViewRotationGroupDto&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other._rotationMembers, _rotationMembers)&&const DeepCollectionEquality().equals(other._rotationDays, _rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RotationGroupResponse&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other._rotationMembers, _rotationMembers)&&const DeepCollectionEquality().equals(other._rotationDays, _rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
@@ -129,15 +129,15 @@ int get hashCode => Object.hash(runtimeType,rotationGroupId,userId,rotationName,
 
 @override
 String toString() {
-  return 'ViewRotationGroupDto(rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'RotationGroupResponse(rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$ViewRotationGroupDtoCopyWith<$Res> implements $ViewRotationGroupDtoCopyWith<$Res> {
-  factory _$ViewRotationGroupDtoCopyWith(_ViewRotationGroupDto value, $Res Function(_ViewRotationGroupDto) _then) = __$ViewRotationGroupDtoCopyWithImpl;
+abstract mixin class _$RotationGroupResponseCopyWith<$Res> implements $RotationGroupResponseCopyWith<$Res> {
+  factory _$RotationGroupResponseCopyWith(_RotationGroupResponse value, $Res Function(_RotationGroupResponse) _then) = __$RotationGroupResponseCopyWithImpl;
 @override @useResult
 $Res call({
  String rotationGroupId, String userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
@@ -148,17 +148,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$ViewRotationGroupDtoCopyWithImpl<$Res>
-    implements _$ViewRotationGroupDtoCopyWith<$Res> {
-  __$ViewRotationGroupDtoCopyWithImpl(this._self, this._then);
+class __$RotationGroupResponseCopyWithImpl<$Res>
+    implements _$RotationGroupResponseCopyWith<$Res> {
+  __$RotationGroupResponseCopyWithImpl(this._self, this._then);
 
-  final _ViewRotationGroupDto _self;
-  final $Res Function(_ViewRotationGroupDto) _then;
+  final _RotationGroupResponse _self;
+  final $Res Function(_RotationGroupResponse) _then;
 
-/// Create a copy of ViewRotationGroupDto
+/// Create a copy of RotationGroupResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? rotationGroupId = null,Object? userId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,}) {
-  return _then(_ViewRotationGroupDto(
+  return _then(_RotationGroupResponse(
 rotationGroupId: null == rotationGroupId ? _self.rotationGroupId : rotationGroupId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable

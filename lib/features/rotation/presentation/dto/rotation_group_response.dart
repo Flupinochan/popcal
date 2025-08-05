@@ -4,13 +4,13 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
-part 'view_rotation_group_dto.freezed.dart';
+part 'rotation_group_response.freezed.dart';
 
 @freezed
-sealed class ViewRotationGroupDto with _$ViewRotationGroupDto {
-  const ViewRotationGroupDto._();
+sealed class RotationGroupResponse with _$RotationGroupResponse {
+  const RotationGroupResponse._();
 
-  const factory ViewRotationGroupDto({
+  const factory RotationGroupResponse({
     required String rotationGroupId,
     required String userId,
     required String rotationName,
@@ -20,11 +20,11 @@ sealed class ViewRotationGroupDto with _$ViewRotationGroupDto {
     required int currentRotationIndex,
     required DateTime createdAt,
     required DateTime updatedAt,
-  }) = _ViewRotationGroupDto;
+  }) = _RotationGroupResponse;
 
   /// Entity => DTO
-  factory ViewRotationGroupDto.fromEntity(RotationGroup entity) {
-    return ViewRotationGroupDto(
+  factory RotationGroupResponse.fromEntity(RotationGroup entity) {
+    return RotationGroupResponse(
       rotationGroupId: entity.rotationGroupId!,
       userId: entity.userId,
       rotationName: entity.rotationName,
@@ -56,7 +56,7 @@ sealed class ViewRotationGroupDto with _$ViewRotationGroupDto {
 }
 
 // UI表示用の拡張メソッド
-extension RotationGroupViewDtoDisplay on ViewRotationGroupDto {
+extension RotationGroupViewDtoDisplay on RotationGroupResponse {
   String get membersDisplay => rotationMembers.join(', ');
   String get weekdaysDisplay =>
       rotationDays.map((w) => w.displayName).join(', ');

@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
-import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_dto.dart';
-import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
+import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_request.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 
 part 'rotation_controller.g.dart';
@@ -14,7 +14,7 @@ class RotationController extends _$RotationController {
 
   // 作成
   Future<Result<RotationGroup>> createRotationGroup(
-    CreateRotationGroupDto dto,
+    CreateRotationGroupRequest dto,
   ) async {
     state = const AsyncLoading();
     try {
@@ -31,7 +31,7 @@ class RotationController extends _$RotationController {
 
   // 更新
   Future<Result<RotationGroup>> updateRotationGroup(
-    UpdateRotationGroupDto dto,
+    UpdateRotationGroupRequest dto,
   ) async {
     state = const AsyncLoading();
     try {

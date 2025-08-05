@@ -11,8 +11,8 @@ import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
-import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_dto.dart';
-import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/features/rotation/providers/rotation_state.dart';
 import 'package:popcal/router/routes.dart';
@@ -161,7 +161,7 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     UserResponse userDto,
-    List<ViewRotationGroupDto> rotationGroups,
+    List<RotationGroupResponse> rotationGroups,
   ) {
     return CustomScrollView(
       slivers: [
@@ -197,7 +197,7 @@ class HomeScreen extends HookConsumerWidget {
   void _handleDelete(
     BuildContext context,
     WidgetRef ref,
-    ViewRotationGroupDto rotationGroup,
+    RotationGroupResponse rotationGroup,
     UserResponse userDto,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
@@ -216,7 +216,7 @@ class HomeScreen extends HookConsumerWidget {
           message: '${rotationGroup.rotationName}を削除しました',
           onAction: () async {
             // 再作成処理
-            final createDto = CreateRotationGroupDto(
+            final createDto = CreateRotationGroupRequest(
               userId: rotationGroup.userId,
               rotationName: rotationGroup.rotationName,
               rotationMembers: rotationGroup.rotationMembers,

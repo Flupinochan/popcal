@@ -6,7 +6,7 @@ import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart
 import 'package:popcal/features/notifications/use_cases/calendar_schedule_use_case.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 
 class GetCalendarDataUseCase {
   // UIで表示する期間かつUseCaseで計算に必要な値
@@ -48,7 +48,7 @@ class GetCalendarDataUseCase {
     if (rotationGroup == null) {
       return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
     }
-    final rotationGroupDto = ViewRotationGroupDto.fromEntity(rotationGroup);
+    final rotationGroupDto = RotationGroupResponse.fromEntity(rotationGroup);
 
     // 3. カレンダー表示用通知情報を取得
     final now = DateTime.now().toLocal();

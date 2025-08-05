@@ -4,7 +4,7 @@ import 'package:popcal/features/notifications/domain/services/rotation_calculati
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
-import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_request.dart';
 
 class UpdateRotationGroupUseCase {
   final RotationRepository _rotationRepository;
@@ -18,7 +18,7 @@ class UpdateRotationGroupUseCase {
   );
 
   /// 更新処理は、既存のローテーショングループを削除し、再作成
-  Future<Result<RotationGroup>> execute(UpdateRotationGroupDto dto) async {
+  Future<Result<RotationGroup>> execute(UpdateRotationGroupRequest dto) async {
     // 1. 更新対象のローテーショングループ情報を取得
     final existingResult = await _rotationRepository.getRotationGroup(
       dto.userId,

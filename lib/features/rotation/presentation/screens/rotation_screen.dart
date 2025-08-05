@@ -8,9 +8,9 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_dto.dart';
-import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_dto.dart';
-import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
+import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_request.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_controller.dart';
 import 'package:popcal/features/rotation/providers/rotation_data.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
@@ -153,7 +153,7 @@ Future<void> _handleSubmit(
   WidgetRef ref,
   GlobalKey<FormBuilderState> formKey,
   UserResponse userDto,
-  ViewRotationGroupDto? originalRotationGroup,
+  RotationGroupResponse? originalRotationGroup,
   bool isUpdateMode,
 ) async {
   if (formKey.currentState!.saveAndValidate()) {
@@ -164,7 +164,7 @@ Future<void> _handleSubmit(
       final Result<RotationGroup> result;
 
       if (isUpdateMode) {
-        final dto = UpdateRotationGroupDto(
+        final dto = UpdateRotationGroupRequest(
           userId: userDto.userId.value,
           rotationGroupId: originalRotationGroup!.rotationGroupId,
           rotationName: formData['rotationName'] as String,
@@ -176,7 +176,7 @@ Future<void> _handleSubmit(
         );
         result = await rotationController.updateRotationGroup(dto);
       } else {
-        final dto = CreateRotationGroupDto(
+        final dto = CreateRotationGroupRequest(
           userId: userDto.userId.value,
           rotationName: formData['rotationName'] as String,
           rotationMembers: List<String>.from(

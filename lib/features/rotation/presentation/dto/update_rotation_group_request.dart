@@ -5,20 +5,20 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
-part 'update_rotation_group_dto.freezed.dart';
+part 'update_rotation_group_request.freezed.dart';
 
 @freezed
-sealed class UpdateRotationGroupDto with _$UpdateRotationGroupDto {
-  const UpdateRotationGroupDto._();
+sealed class UpdateRotationGroupRequest with _$UpdateRotationGroupRequest {
+  const UpdateRotationGroupRequest._();
 
-  const factory UpdateRotationGroupDto({
+  const factory UpdateRotationGroupRequest({
     required String userId,
     required String rotationGroupId,
     required String rotationName,
     required List<String> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
-  }) = _UpdateRotationGroupDto;
+  }) = _UpdateRotationGroupRequest;
 
   // DTO => Entity
   Result<RotationGroup> applyToEntity(RotationGroup rotationGroup) {
@@ -53,8 +53,8 @@ sealed class UpdateRotationGroupDto with _$UpdateRotationGroupDto {
   }
 
   /// Entity => DTO
-  factory UpdateRotationGroupDto.fromEntity(RotationGroup entity) {
-    return UpdateRotationGroupDto(
+  factory UpdateRotationGroupRequest.fromEntity(RotationGroup entity) {
+    return UpdateRotationGroupRequest(
       userId: entity.userId,
       rotationGroupId: entity.rotationGroupId!,
       rotationName: entity.rotationName,

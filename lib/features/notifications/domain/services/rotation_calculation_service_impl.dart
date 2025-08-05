@@ -5,7 +5,7 @@ import 'package:popcal/features/notifications/domain/entities/notification_setti
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/presentation/dto/notification_plan.dart';
+import 'package:popcal/features/rotation/presentation/dto/notification_plan_response.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
   /// 1. 次回の通知予定日を計算
@@ -38,7 +38,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
 
   /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
   @override
-  Result<NotificationPlan> planUpcomingNotifications({
+  Result<NotificationPlanResponse> planUpcomingNotifications({
     required RotationGroup rotationGroup,
     int futureDays = 30,
   }) {
@@ -93,7 +93,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       }
 
       return Results.success(
-        NotificationPlan(
+        NotificationPlanResponse(
           notificationSettings: notifications,
           newCurrentRotationIndex: currentIndex,
         ),

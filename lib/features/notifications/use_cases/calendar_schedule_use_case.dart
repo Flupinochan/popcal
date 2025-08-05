@@ -3,7 +3,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
-import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 
 class CalendarScheduleUseCase {
   final RotationCalculationService _rotationCalculationService;
@@ -20,7 +20,7 @@ class CalendarScheduleUseCase {
   /// 2. Calendar表示用スケジュールを生成 ※1年分
   @override
   Result<Map<String, CalendarDayViewModel>> buildCalendarSchedule({
-    required ViewRotationGroupDto rotationGroupDto,
+    required RotationGroupResponse rotationGroupDto,
     DateTime? toDate,
   }) {
     try {

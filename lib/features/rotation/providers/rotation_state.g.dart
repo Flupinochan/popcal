@@ -7,7 +7,7 @@ part of 'rotation_state.dart';
 // **************************************************************************
 
 String _$rotationGroupListStreamHash() =>
-    r'15ce45c321613b163421daf1cd53b6d4fb8d63fc';
+    r'bf9757cce9f272c7112d097e1280022300a1aed6';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -36,7 +36,7 @@ const rotationGroupListStreamProvider = RotationGroupListStreamFamily();
 
 /// See also [rotationGroupListStream].
 class RotationGroupListStreamFamily
-    extends Family<AsyncValue<Result<List<ViewRotationGroupDto>>>> {
+    extends Family<AsyncValue<Result<List<RotationGroupResponse>>>> {
   /// See also [rotationGroupListStream].
   const RotationGroupListStreamFamily();
 
@@ -69,7 +69,7 @@ class RotationGroupListStreamFamily
 
 /// See also [rotationGroupListStream].
 class RotationGroupListStreamProvider
-    extends AutoDisposeStreamProvider<Result<List<ViewRotationGroupDto>>> {
+    extends AutoDisposeStreamProvider<Result<List<RotationGroupResponse>>> {
   /// See also [rotationGroupListStream].
   RotationGroupListStreamProvider(String userId)
     : this._internal(
@@ -101,7 +101,7 @@ class RotationGroupListStreamProvider
 
   @override
   Override overrideWith(
-    Stream<Result<List<ViewRotationGroupDto>>> Function(
+    Stream<Result<List<RotationGroupResponse>>> Function(
       RotationGroupListStreamRef provider,
     )
     create,
@@ -121,7 +121,7 @@ class RotationGroupListStreamProvider
   }
 
   @override
-  AutoDisposeStreamProviderElement<Result<List<ViewRotationGroupDto>>>
+  AutoDisposeStreamProviderElement<Result<List<RotationGroupResponse>>>
   createElement() {
     return _RotationGroupListStreamProviderElement(this);
   }
@@ -143,13 +143,14 @@ class RotationGroupListStreamProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin RotationGroupListStreamRef
-    on AutoDisposeStreamProviderRef<Result<List<ViewRotationGroupDto>>> {
+    on AutoDisposeStreamProviderRef<Result<List<RotationGroupResponse>>> {
   /// The parameter `userId` of this provider.
   String get userId;
 }
 
 class _RotationGroupListStreamProviderElement
-    extends AutoDisposeStreamProviderElement<Result<List<ViewRotationGroupDto>>>
+    extends
+        AutoDisposeStreamProviderElement<Result<List<RotationGroupResponse>>>
     with RotationGroupListStreamRef {
   _RotationGroupListStreamProviderElement(super.provider);
 

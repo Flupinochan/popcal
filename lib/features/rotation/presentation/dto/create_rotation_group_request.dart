@@ -5,19 +5,19 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
-part 'create_rotation_group_dto.freezed.dart';
+part 'create_rotation_group_request.freezed.dart';
 
 @freezed
-sealed class CreateRotationGroupDto with _$CreateRotationGroupDto {
-  const CreateRotationGroupDto._();
+sealed class CreateRotationGroupRequest with _$CreateRotationGroupRequest {
+  const CreateRotationGroupRequest._();
 
-  const factory CreateRotationGroupDto({
+  const factory CreateRotationGroupRequest({
     required String userId,
     required String rotationName,
     required List<String> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
-  }) = _CreateRotationGroupDto;
+  }) = _CreateRotationGroupRequest;
 
   /// DTO => Entity
   Result<RotationGroup> toEntity() {
@@ -47,8 +47,8 @@ sealed class CreateRotationGroupDto with _$CreateRotationGroupDto {
   }
 
   /// Entity => DTO
-  factory CreateRotationGroupDto.fromEntity(RotationGroup entity) {
-    return CreateRotationGroupDto(
+  factory CreateRotationGroupRequest.fromEntity(RotationGroup entity) {
+    return CreateRotationGroupRequest(
       userId: entity.userId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,

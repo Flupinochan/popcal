@@ -3,7 +3,7 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
-import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -34,13 +34,13 @@ Future<Result<RotationData>> rotationData(
   if (rotationGroup == null) {
     return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
   }
-  final rotationGroupDto = ViewRotationGroupDto.fromEntity(rotationGroup);
+  final rotationGroupDto = RotationGroupResponse.fromEntity(rotationGroup);
   return Results.success(RotationData(userDto, rotationGroupDto));
 }
 
 class RotationData {
   final UserResponse userDto;
-  final ViewRotationGroupDto? rotationGroupDto;
+  final RotationGroupResponse? rotationGroupDto;
 
   const RotationData(this.userDto, this.rotationGroupDto);
 }
