@@ -23,15 +23,15 @@ service cloud.firestore {
 
     // スキーマチェック (以下のフィールドをすべて含んだデータの場合のみOK)
     function hasValidSchema(data) {
-      let requiredFields = ['ownerUserId', 'rotationName', 'rotationMembers', 
+      let requiredFields = ['userId', 'rotationName', 'rotationMembers', 
                            'rotationDays', 'notificationTime', 'currentRotationIndex',
-                           'lastScheduledDate', 'rotationStartDate', 'updatedAt'];
+                           'createdAt', 'updatedAt'];
       return data.keys().hasOnly(requiredFields);
     }
 
     // 所有者チェック
     function hasValidOwner(data) {
-      return data.ownerUserId == request.auth.uid;
+      return data.userId == request.auth.uid;
     }
   }
 }

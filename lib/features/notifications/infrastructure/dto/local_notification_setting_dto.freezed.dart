@@ -4,7 +4,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'local_notification_setting_dto.dart';
+part of 'local_notification_setting_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -21,7 +21,7 @@ mixin _$LocalNotificationSettingDto {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$LocalNotificationSettingDtoCopyWith<LocalNotificationSettingDto> get copyWith => _$LocalNotificationSettingDtoCopyWithImpl<LocalNotificationSettingDto>(this as LocalNotificationSettingDto, _$identity);
+$LocalNotificationSettingDtoCopyWith<LocalNotificationSettingResponse> get copyWith => _$LocalNotificationSettingDtoCopyWithImpl<LocalNotificationSettingResponse>(this as LocalNotificationSettingResponse, _$identity);
 
   /// Serializes this LocalNotificationSettingDto to a JSON map.
   Map<String, dynamic> toJson();
@@ -29,7 +29,7 @@ $LocalNotificationSettingDtoCopyWith<LocalNotificationSettingDto> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalNotificationSettingDto&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalNotificationSettingResponse&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.content, content) || other.content == content));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ String toString() {
 
 /// @nodoc
 abstract mixin class $LocalNotificationSettingDtoCopyWith<$Res>  {
-  factory $LocalNotificationSettingDtoCopyWith(LocalNotificationSettingDto value, $Res Function(LocalNotificationSettingDto) _then) = _$LocalNotificationSettingDtoCopyWithImpl;
+  factory $LocalNotificationSettingDtoCopyWith(LocalNotificationSettingResponse value, $Res Function(LocalNotificationSettingResponse) _then) = _$LocalNotificationSettingDtoCopyWithImpl;
 @useResult
 $Res call({
  int notificationId, String rotationGroupId, String userId, String rotationName, DateTime notificationTime, String memberName, DateTime rotationStartDate, String title, String description, String content
@@ -61,8 +61,8 @@ class _$LocalNotificationSettingDtoCopyWithImpl<$Res>
     implements $LocalNotificationSettingDtoCopyWith<$Res> {
   _$LocalNotificationSettingDtoCopyWithImpl(this._self, this._then);
 
-  final LocalNotificationSettingDto _self;
-  final $Res Function(LocalNotificationSettingDto) _then;
+  final LocalNotificationSettingResponse _self;
+  final $Res Function(LocalNotificationSettingResponse) _then;
 
 /// Create a copy of LocalNotificationSettingDto
 /// with the given fields replaced by the non-null parameter values.
@@ -88,7 +88,7 @@ as String,
 /// @nodoc
 @JsonSerializable()
 
-class _LocalNotificationSettingDto extends LocalNotificationSettingDto {
+class _LocalNotificationSettingDto extends LocalNotificationSettingResponse {
   const _LocalNotificationSettingDto({required this.notificationId, required this.rotationGroupId, required this.userId, required this.rotationName, required this.notificationTime, required this.memberName, required this.rotationStartDate, required this.title, required this.description, required this.content}): super._();
   factory _LocalNotificationSettingDto.fromJson(Map<String, dynamic> json) => _$LocalNotificationSettingDtoFromJson(json);
 

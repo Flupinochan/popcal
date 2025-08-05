@@ -1,26 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:popcal/features/notifications/domain/use_cases/calendar_schedule_use_case.dart';
+import 'package:popcal/features/notifications/use_cases/calendar_schedule_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
-import 'package:popcal/features/notifications/data/repositories/notification_repository_local.dart';
-import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_local.dart';
+import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_impl.dart';
+import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service_impl.dart';
-import 'package:popcal/features/notifications/domain/use_cases/sync_notifications_use_case.dart';
+import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/router.dart';
 
 part 'notification_providers.g.dart';
 
 @riverpod
-LocalNotificationsDatasource localNotificationsDatasource(Ref ref) {
-  return LocalNotificationsDatasource(ref.watch(routerProvider));
+NotificationGatewayLocal localNotificationsDatasource(Ref ref) {
+  return NotificationGatewayLocal(ref.watch(routerProvider));
 }
 
 @riverpod
-NotificationRepository notificationRepository(Ref ref) {
-  return NotificationRepositoryLocal(
+NotificationGateway notificationRepository(Ref ref) {
+  return NotificationGatewayImpl(
     ref.watch(localNotificationsDatasourceProvider),
   );
 }

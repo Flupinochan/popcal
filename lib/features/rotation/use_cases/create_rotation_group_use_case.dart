@@ -3,12 +3,12 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_dto.dart';
 
 class CreateRotationGroupUseCase {
   final RotationRepository _rotationRepository;
-  final NotificationRepository _notificationRepository;
+  final NotificationGateway _notificationRepository;
   final RotationCalculationService _scheduleCalculationService;
 
   CreateRotationGroupUseCase(

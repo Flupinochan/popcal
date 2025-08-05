@@ -8,10 +8,11 @@ part 'local_notification_setting_dto.freezed.dart';
 part 'local_notification_setting_dto.g.dart';
 
 @freezed
-sealed class LocalNotificationSettingDto with _$LocalNotificationSettingDto {
-  const LocalNotificationSettingDto._();
+sealed class LocalNotificationSettingResponse
+    with _$LocalNotificationSettingDto {
+  const LocalNotificationSettingResponse._();
 
-  const factory LocalNotificationSettingDto({
+  const factory LocalNotificationSettingResponse({
     required int notificationId,
     required String rotationGroupId,
     required String userId,
@@ -25,12 +26,12 @@ sealed class LocalNotificationSettingDto with _$LocalNotificationSettingDto {
   }) = _LocalNotificationSettingDto;
 
   // Entity => DTO
-  static Result<LocalNotificationSettingDto> fromEntity(
+  static Result<LocalNotificationSettingResponse> fromEntity(
     NotificationSetting notification,
   ) {
     try {
       return Results.success(
-        LocalNotificationSettingDto(
+        LocalNotificationSettingResponse(
           notificationId: notification.notificationId,
           rotationGroupId: notification.rotationGroupId,
           userId: notification.userId,
@@ -72,15 +73,16 @@ sealed class LocalNotificationSettingDto with _$LocalNotificationSettingDto {
   }
 
   // JSON => DTO
-  factory LocalNotificationSettingDto.fromJson(Map<String, dynamic> json) =>
-      _$LocalNotificationSettingDtoFromJson(json);
+  factory LocalNotificationSettingResponse.fromJson(
+    Map<String, dynamic> json,
+  ) => _$LocalNotificationSettingDtoFromJson(json);
 
   // JSON => DTO
-  static Result<LocalNotificationSettingDto> fromJsonSafe(
+  static Result<LocalNotificationSettingResponse> fromJsonSafe(
     Map<String, dynamic> json,
   ) {
     try {
-      final dto = LocalNotificationSettingDto.fromJson(json);
+      final dto = LocalNotificationSettingResponse.fromJson(json);
       return Results.success(dto);
     } catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
@@ -88,18 +90,18 @@ sealed class LocalNotificationSettingDto with _$LocalNotificationSettingDto {
   }
 }
 
-extension LocalNotificationSettingDtoJsonX on LocalNotificationSettingDto {
+extension LocalNotificationSettingDtoJsonX on LocalNotificationSettingResponse {
   // DTO => String(JSON)
   String toJsonString() => jsonEncode(toJson());
 
   // String(JSON) => DTO
-  static Result<LocalNotificationSettingDto> fromJsonStringSafe(
+  static Result<LocalNotificationSettingResponse> fromJsonStringSafe(
     String jsonString,
   ) {
     try {
       final Map<String, dynamic> map =
           jsonDecode(jsonString) as Map<String, dynamic>;
-      return LocalNotificationSettingDto.fromJsonSafe(map);
+      return LocalNotificationSettingResponse.fromJsonSafe(map);
     } catch (e) {
       return Results.failure(
         ValidationFailure('JSON string parsing failed: $e'),
@@ -108,9 +110,9 @@ extension LocalNotificationSettingDtoJsonX on LocalNotificationSettingDto {
   }
 
   // String(JSON) => DTO
-  static LocalNotificationSettingDto fromJsonString(String jsonString) {
+  static LocalNotificationSettingResponse fromJsonString(String jsonString) {
     final Map<String, dynamic> map =
         jsonDecode(jsonString) as Map<String, dynamic>;
-    return LocalNotificationSettingDto.fromJson(map);
+    return LocalNotificationSettingResponse.fromJson(map);
   }
 }

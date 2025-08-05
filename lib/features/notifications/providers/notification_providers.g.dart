@@ -12,7 +12,7 @@ String _$localNotificationsDatasourceHash() =>
 /// See also [localNotificationsDatasource].
 @ProviderFor(localNotificationsDatasource)
 final localNotificationsDatasourceProvider =
-    AutoDisposeProvider<LocalNotificationsDatasource>.internal(
+    AutoDisposeProvider<NotificationGatewayLocal>.internal(
       localNotificationsDatasource,
       name: r'localNotificationsDatasourceProvider',
       debugGetCreateSourceHash:
@@ -26,14 +26,14 @@ final localNotificationsDatasourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef LocalNotificationsDatasourceRef =
-    AutoDisposeProviderRef<LocalNotificationsDatasource>;
+    AutoDisposeProviderRef<NotificationGatewayLocal>;
 String _$notificationRepositoryHash() =>
     r'a5790a75231f1b519952411d5f1640cbbe59a4bd';
 
 /// See also [notificationRepository].
 @ProviderFor(notificationRepository)
 final notificationRepositoryProvider =
-    AutoDisposeProvider<NotificationRepository>.internal(
+    AutoDisposeProvider<NotificationGateway>.internal(
       notificationRepository,
       name: r'notificationRepositoryProvider',
       debugGetCreateSourceHash:
@@ -46,8 +46,7 @@ final notificationRepositoryProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef NotificationRepositoryRef =
-    AutoDisposeProviderRef<NotificationRepository>;
+typedef NotificationRepositoryRef = AutoDisposeProviderRef<NotificationGateway>;
 String _$notificationInitializationHash() =>
     r'16bc08704dc421bb5d93685864a6b0677fc08de0';
 

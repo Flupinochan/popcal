@@ -2,7 +2,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 
 /// 1. CRUD操作
-abstract class NotificationRepository {
+abstract class NotificationGateway {
   /// 0-1. 初期化
   /// 通知アイコン設定
   /// アプリ起動中に通知をタップした際の動作を設定

@@ -2,16 +2,16 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/data/dto/local_notification_setting_dto.dart';
+import 'package:popcal/features/notifications/infrastructure/dto/local_notification_setting_response.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-class LocalNotificationsDatasource {
+class NotificationGatewayLocal {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   final GoRouter _router;
 
-  LocalNotificationsDatasource(this._router);
+  NotificationGatewayLocal(this._router);
 
   /// 0-1. 初期化
   /// 通知アイコン設定
@@ -109,7 +109,7 @@ class LocalNotificationsDatasource {
 
   /// 1. 通知スケジュールを作成
   Future<Result<void>> createNotification(
-    LocalNotificationSettingDto notificationSettingDto,
+    LocalNotificationSettingResponse notificationSettingDto,
   ) async {
     try {
       if (notificationSettingDto.notificationTime.isBefore(

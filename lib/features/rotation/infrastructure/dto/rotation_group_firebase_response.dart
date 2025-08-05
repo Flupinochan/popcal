@@ -54,7 +54,7 @@ sealed class RotationGroupFirebaseResponse with _$RotationGroupFirebaseDto {
     final data = snapshot.data() as Map<String, dynamic>;
     return RotationGroupFirebaseResponse(
       rotationGroupId: snapshot.id,
-      userId: data['ownerUserId'] as String,
+      userId: data['userId'] as String,
       rotationName: data['rotationName'] as String,
       rotationMembers: List<String>.from(
         data['rotationMembers'] as List<dynamic>,
@@ -64,7 +64,7 @@ sealed class RotationGroupFirebaseResponse with _$RotationGroupFirebaseDto {
         data['notificationTime'] as Map<String, dynamic>,
       ),
       currentRotationIndex: data['currentRotationIndex'] as int,
-      createdAt: data['rotationStartDate'] as Timestamp,
+      createdAt: data['createdAt'] as Timestamp,
       updatedAt: data['updatedAt'] as Timestamp,
     );
   }
@@ -86,9 +86,10 @@ sealed class RotationGroupFirebaseResponse with _$RotationGroupFirebaseDto {
   }
 
   // DTO => Firestore (instance method)
+  // Security Ruleでバリデーションされている
   Map<String, dynamic> toFirestore() {
     return {
-      'ownerUserId': userId,
+      'userId': userId,
       'rotationName': rotationName,
       'rotationMembers': rotationMembers,
       'rotationDays': rotationDays,

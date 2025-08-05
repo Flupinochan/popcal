@@ -1,13 +1,13 @@
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
-import 'package:popcal/features/notifications/data/dto/local_notification_setting_dto.dart';
-import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_local.dart';
+import 'package:popcal/features/notifications/infrastructure/dto/local_notification_setting_response.dart';
+import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 
-class NotificationRepositoryLocal implements NotificationRepository {
-  final LocalNotificationsDatasource _localNotificationsDatasource;
+class NotificationGatewayImpl implements NotificationGateway {
+  final NotificationGatewayLocal _localNotificationsDatasource;
 
-  NotificationRepositoryLocal(this._localNotificationsDatasource);
+  NotificationGatewayImpl(this._localNotificationsDatasource);
 
   /// 0-1. 初期化 ※とりあえず必要
   @override
@@ -35,7 +35,7 @@ class NotificationRepositoryLocal implements NotificationRepository {
   Future<Result<void>> createNotification(
     NotificationSetting notificationSetting,
   ) async {
-    final dtoResult = LocalNotificationSettingDto.fromEntity(
+    final dtoResult = LocalNotificationSettingResponse.fromEntity(
       notificationSetting,
     );
     if (dtoResult.isFailure) {

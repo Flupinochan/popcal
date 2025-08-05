@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'local_notification_setting_dto.dart';
+part of 'local_notification_setting_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
