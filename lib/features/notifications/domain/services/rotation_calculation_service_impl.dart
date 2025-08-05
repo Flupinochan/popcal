@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/application/models/calendar_day.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
-import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
-import 'package:popcal/features/notifications/utils/time_utils.dart';
+import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_plan.dart';
+import 'package:popcal/features/rotation/presentation/dto/notification_plan.dart';
 
-class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
+class RotationCalculationServiceImpl implements RotationCalculationService {
   /// 1. 次回の通知予定日を計算
   @override
   Result<DateTime> findNextRotationDate({
@@ -26,7 +24,7 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
       // checkDate.isBefore(fromDate.add(const Duration(days: 8)));
       checkDate = checkDate.add(const Duration(days: 1))
     ) {
-      if (_isValidNotificationDate(
+      if (isValidNotificationDate(
         checkDate: checkDate,
         rotationDays: rotationDays,
         notificationTime: notificationTime,
@@ -36,62 +34,6 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
       }
     }
     return Results.failure(ValidationFailure('次回ローテーション日の取得に失敗しました'));
-  }
-
-  /// 2. Calendar表示用スケジュールを生成 ※1年分
-  @override
-  Result<Map<String, CalendarDay>> buildCalendarSchedule({
-    required RotationGroup rotationGroup,
-    DateTime? toDate,
-  }) {
-    try {
-      final currentTime = DateTime.now();
-      final defaultToDate =
-          toDate ??
-          DateTime(currentTime.year + 1, currentTime.month, currentTime.day);
-
-      final calendarDays = <String, CalendarDay>{};
-      var currentIndex = rotationGroup.currentRotationIndex;
-
-      // 指定期間をループしてカレンダー日を作成
-      for (
-        var checkDate = rotationGroup.createdAt;
-        checkDate.isBefore(defaultToDate);
-        checkDate = checkDate.add(const Duration(days: 1))
-      ) {
-        if (_isValidNotificationDate(
-          checkDate: checkDate,
-          rotationDays: rotationGroup.rotationDays,
-          notificationTime: rotationGroup.notificationTime,
-          createdAt: rotationGroup.createdAt,
-        )) {
-          final memberIndex =
-              currentIndex % rotationGroup.rotationMembers.length;
-          final memberName = rotationGroup.rotationMembers[memberIndex];
-
-          _addCalendarDay(
-            calendarDays: calendarDays,
-            date: checkDate,
-            memberName: memberName,
-            isRotationDay: true,
-          );
-
-          currentIndex++;
-        } else {
-          // ローテーション対象外の日
-          _addCalendarDay(
-            calendarDays: calendarDays,
-            date: checkDate,
-            memberName: null,
-            isRotationDay: false,
-          );
-        }
-      }
-
-      return Results.success(calendarDays);
-    } catch (error) {
-      return Results.failure(CalendarFailure('カレンダーの作成に失敗しました: $error'));
-    }
   }
 
   /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
@@ -114,7 +56,7 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
         checkDate.isBefore(toDate);
         checkDate = checkDate.add(const Duration(days: 1))
       ) {
-        if (_isValidNotificationDate(
+        if (isValidNotificationDate(
           checkDate: checkDate,
           rotationDays: rotationGroup.rotationDays,
           notificationTime: rotationGroup.notificationTime,
@@ -162,7 +104,8 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
   }
 
   /// ローテーション日判定
-  bool _isValidNotificationDate({
+  @override
+  bool isValidNotificationDate({
     required DateTime checkDate,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
@@ -186,21 +129,6 @@ class ScheduleCalculationServiceImpl implements ScheduleCalculationService {
       }
     }
     return false;
-  }
-
-  void _addCalendarDay({
-    required Map<String, CalendarDay> calendarDays,
-    required DateTime date,
-    String? memberName,
-    required bool isRotationDay,
-  }) {
-    final calendarDay = CalendarDay(
-      date: date,
-      memberName: memberName,
-      isRotationDay: isRotationDay,
-    );
-    final key = TimeUtils.createDateKey(date);
-    calendarDays[key] = calendarDay;
   }
 
   /// 通知IDを生成 ※日付ベース

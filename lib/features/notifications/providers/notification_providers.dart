@@ -1,11 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/features/notifications/domain/use_cases/calendar_schedule_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/data/datasource/local_notifications_datasource.dart';
 import 'package:popcal/features/notifications/data/repositories/notification_repository_local.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
-import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
-import 'package:popcal/features/notifications/domain/services/schedule_calculation_service_impl.dart';
+import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
+import 'package:popcal/features/notifications/domain/services/rotation_calculation_service_impl.dart';
 import 'package:popcal/features/notifications/domain/use_cases/sync_notifications_use_case.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/router.dart';
@@ -31,15 +32,20 @@ Future<Result<void>> notificationInitialization(Ref ref) async {
 }
 
 @riverpod
-ScheduleCalculationService scheduleCalculationServiceRepository(Ref ref) {
-  return ScheduleCalculationServiceImpl();
-}
-
-@riverpod
 SyncNotificationsUseCase syncNotificationsUseCase(Ref ref) {
   return SyncNotificationsUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
-    ref.watch(scheduleCalculationServiceRepositoryProvider),
+    ref.watch(rotationCalculationServiceProvider),
   );
+}
+
+@riverpod
+RotationCalculationService rotationCalculationService(Ref ref) {
+  return RotationCalculationServiceImpl();
+}
+
+@riverpod
+CalendarScheduleUseCase calendarScheduleUseCase(Ref ref) {
+  return CalendarScheduleUseCase(ref.watch(rotationCalculationServiceProvider));
 }

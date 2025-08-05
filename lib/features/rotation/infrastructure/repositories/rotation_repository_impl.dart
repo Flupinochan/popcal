@@ -1,13 +1,13 @@
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/data/datasources/firebase_rotation_datasource.dart';
-import 'package:popcal/features/rotation/data/dto/rotation_group_firebase_dto.dart';
+import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_firebase.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/rotation_group_firebase_response.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
-class RotationRepositoryFirebase implements RotationRepository {
-  final FirebaseRotationDatasource _firebaseRotationDatasource;
+class RotationRepositoryImpl implements RotationRepository {
+  final RotationRepositoryFirebase _firebaseRotationDatasource;
 
-  RotationRepositoryFirebase(this._firebaseRotationDatasource);
+  RotationRepositoryImpl(this._firebaseRotationDatasource);
 
   // 1. 自動ローテーショングループ一覧取得
   @override
@@ -57,7 +57,7 @@ class RotationRepositoryFirebase implements RotationRepository {
     RotationGroup rotationGroup,
   ) async {
     // Entity => DTO
-    final dto = RotationGroupFirebaseDto.fromEntity(rotationGroup);
+    final dto = RotationGroupFirebaseResponse.fromEntity(rotationGroup);
 
     // firestoreに作成
     final result = await _firebaseRotationDatasource.createRotationGroup(dto);
@@ -72,7 +72,7 @@ class RotationRepositoryFirebase implements RotationRepository {
   Future<Result<RotationGroup>> updateRotationGroup(
     RotationGroup rotationGroup,
   ) async {
-    final dto = RotationGroupFirebaseDto.fromEntity(rotationGroup);
+    final dto = RotationGroupFirebaseResponse.fromEntity(rotationGroup);
 
     final result = await _firebaseRotationDatasource.updateRotationGroup(dto);
     return result.when(

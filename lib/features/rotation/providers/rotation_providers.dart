@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
-import 'package:popcal/features/rotation/domain/use_cases/create_rotation_group_use_case.dart';
-import 'package:popcal/features/rotation/domain/use_cases/update_rotation_group_use_case.dart';
+import 'package:popcal/features/rotation/use_cases/create_rotation_group_use_case.dart';
+import 'package:popcal/features/rotation/use_cases/update_rotation_group_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:popcal/features/rotation/data/datasources/firebase_rotation_datasource.dart';
-import 'package:popcal/features/rotation/data/repositories/rotation_repository_firebase.dart';
+import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_firebase.dart';
+import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_impl.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
 part 'rotation_providers.g.dart';
@@ -16,15 +16,13 @@ FirebaseFirestore firebaseFirestore(Ref ref) {
 }
 
 @riverpod
-FirebaseRotationDatasource firebaseRotationDatasource(Ref ref) {
-  return FirebaseRotationDatasource(ref.watch(firebaseFirestoreProvider));
+RotationRepositoryFirebase firebaseRotationDatasource(Ref ref) {
+  return RotationRepositoryFirebase(ref.watch(firebaseFirestoreProvider));
 }
 
 @riverpod
 RotationRepository rotationRepository(Ref ref) {
-  return RotationRepositoryFirebase(
-    ref.watch(firebaseRotationDatasourceProvider),
-  );
+  return RotationRepositoryImpl(ref.watch(firebaseRotationDatasourceProvider));
 }
 
 @riverpod
@@ -32,7 +30,7 @@ CreateRotationGroupUseCase createRotationGroupUseCase(Ref ref) {
   return CreateRotationGroupUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
-    ref.watch(scheduleCalculationServiceRepositoryProvider),
+    ref.watch(rotationCalculationServiceProvider),
   );
 }
 
@@ -41,6 +39,6 @@ UpdateRotationGroupUseCase updateRotationGroupUseCase(Ref ref) {
   return UpdateRotationGroupUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
-    ref.watch(scheduleCalculationServiceRepositoryProvider),
+    ref.watch(rotationCalculationServiceProvider),
   );
 }

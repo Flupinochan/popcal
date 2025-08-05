@@ -1,17 +1,17 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/notifications/domain/repositories/notification_repository.dart';
-import 'package:popcal/features/notifications/domain/services/schedule_calculation_service.dart';
+import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_plan.dart';
+import 'package:popcal/features/rotation/presentation/dto/notification_plan.dart';
 
 /// home画面表示時に通知設定を同期するUseCase
 /// firebaseとの同期ではなく、現在時刻から30日分を計算、作成
 class SyncNotificationsUseCase {
   final RotationRepository _rotationRepository;
   final NotificationRepository _notificationRepository;
-  final ScheduleCalculationService _scheduleCalculationService;
+  final RotationCalculationService _scheduleCalculationService;
 
   SyncNotificationsUseCase(
     this._rotationRepository,

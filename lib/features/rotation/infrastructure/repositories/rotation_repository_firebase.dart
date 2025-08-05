@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/data/dto/rotation_group_firebase_dto.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/rotation_group_firebase_response.dart';
 
-class FirebaseRotationDatasource {
+class RotationRepositoryFirebase {
   final FirebaseFirestore _firebaseFirestore;
 
-  FirebaseRotationDatasource(this._firebaseFirestore);
+  RotationRepositoryFirebase(this._firebaseFirestore);
 
   // 1. 自動ローテーショングループ一覧取得
-  Stream<Result<List<RotationGroupFirebaseDto>>> watchRotationGroups(
+  Stream<Result<List<RotationGroupFirebaseResponse>>> watchRotationGroups(
     String userId,
   ) {
     return _firebaseFirestore
@@ -17,8 +17,9 @@ class FirebaseRotationDatasource {
         .doc(userId)
         .collection('rotationGroups')
         .withConverter(
-          fromFirestore: RotationGroupFirebaseDto.fromFirestore,
-          toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
+          fromFirestore: RotationGroupFirebaseResponse.fromFirestore,
+          toFirestore:
+              (RotationGroupFirebaseResponse dto, _) => dto.toFirestore(),
         )
         .snapshots()
         .map((docSnap) {
@@ -35,7 +36,7 @@ class FirebaseRotationDatasource {
   }
 
   // 2. 手動ローテーショングループ一覧取得
-  Future<Result<List<RotationGroupFirebaseDto>>> getRotationGroups(
+  Future<Result<List<RotationGroupFirebaseResponse>>> getRotationGroups(
     String userId,
   ) async {
     try {
@@ -45,8 +46,9 @@ class FirebaseRotationDatasource {
           .collection('rotationGroups')
           // withConverterで型安全に処理可能
           .withConverter(
-            fromFirestore: RotationGroupFirebaseDto.fromFirestore,
-            toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
+            fromFirestore: RotationGroupFirebaseResponse.fromFirestore,
+            toFirestore:
+                (RotationGroupFirebaseResponse dto, _) => dto.toFirestore(),
           );
       final docSnap = await ref.get();
       // doc.data()に型変換したデータが格納
@@ -58,7 +60,7 @@ class FirebaseRotationDatasource {
   }
 
   // 3. 特定のローテーショングループを取得
-  Future<Result<RotationGroupFirebaseDto?>> getRotationGroup(
+  Future<Result<RotationGroupFirebaseResponse?>> getRotationGroup(
     String userId,
     String rotationGroupId,
   ) async {
@@ -69,8 +71,9 @@ class FirebaseRotationDatasource {
           .collection('rotationGroups')
           .doc(rotationGroupId)
           .withConverter(
-            fromFirestore: RotationGroupFirebaseDto.fromFirestore,
-            toFirestore: (RotationGroupFirebaseDto dto, _) => dto.toFirestore(),
+            fromFirestore: RotationGroupFirebaseResponse.fromFirestore,
+            toFirestore:
+                (RotationGroupFirebaseResponse dto, _) => dto.toFirestore(),
           );
 
       final docSnap = await docRef.get();
@@ -87,8 +90,8 @@ class FirebaseRotationDatasource {
   }
 
   // 4. ローテーショングループ作成
-  Future<Result<RotationGroupFirebaseDto>> createRotationGroup(
-    RotationGroupFirebaseDto dto,
+  Future<Result<RotationGroupFirebaseResponse>> createRotationGroup(
+    RotationGroupFirebaseResponse dto,
   ) async {
     try {
       // 作成するdocumentへのrefを作成 ※collectionとdocは交互にしなければならない
@@ -102,7 +105,7 @@ class FirebaseRotationDatasource {
       // Firestoreに保存
       await docRef.set(dto.toFirestore());
 
-      final result = RotationGroupFirebaseDto(
+      final result = RotationGroupFirebaseResponse(
         rotationGroupId: docRef.id, // 生成されたdocument id
         userId: dto.userId,
         rotationName: dto.rotationName,
@@ -121,8 +124,8 @@ class FirebaseRotationDatasource {
   }
 
   // 5. ローテーショングループ更新
-  Future<Result<RotationGroupFirebaseDto>> updateRotationGroup(
-    RotationGroupFirebaseDto dto,
+  Future<Result<RotationGroupFirebaseResponse>> updateRotationGroup(
+    RotationGroupFirebaseResponse dto,
   ) async {
     try {
       if (dto.rotationGroupId == null) {

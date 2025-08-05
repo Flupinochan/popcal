@@ -69,29 +69,8 @@ final notificationInitializationProvider =
 // ignore: unused_element
 typedef NotificationInitializationRef =
     AutoDisposeFutureProviderRef<Result<void>>;
-String _$scheduleCalculationServiceRepositoryHash() =>
-    r'c4660b18a8a390165e3f53bcc560dd637b79b606';
-
-/// See also [scheduleCalculationServiceRepository].
-@ProviderFor(scheduleCalculationServiceRepository)
-final scheduleCalculationServiceRepositoryProvider =
-    AutoDisposeProvider<ScheduleCalculationService>.internal(
-      scheduleCalculationServiceRepository,
-      name: r'scheduleCalculationServiceRepositoryProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$scheduleCalculationServiceRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ScheduleCalculationServiceRepositoryRef =
-    AutoDisposeProviderRef<ScheduleCalculationService>;
 String _$syncNotificationsUseCaseHash() =>
-    r'973f2de6a8e2d1b747990e1d068aa271f5ccba64';
+    r'0dfaed0e690b7616c742cf87765e49847cee131d';
 
 /// See also [syncNotificationsUseCase].
 @ProviderFor(syncNotificationsUseCase)
@@ -111,5 +90,47 @@ final syncNotificationsUseCaseProvider =
 // ignore: unused_element
 typedef SyncNotificationsUseCaseRef =
     AutoDisposeProviderRef<SyncNotificationsUseCase>;
+String _$rotationCalculationServiceHash() =>
+    r'7be1023d473cd126df50e228b1b5ed46581c2dbe';
+
+/// See also [rotationCalculationService].
+@ProviderFor(rotationCalculationService)
+final rotationCalculationServiceProvider =
+    AutoDisposeProvider<RotationCalculationService>.internal(
+      rotationCalculationService,
+      name: r'rotationCalculationServiceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$rotationCalculationServiceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RotationCalculationServiceRef =
+    AutoDisposeProviderRef<RotationCalculationService>;
+String _$calendarScheduleUseCaseHash() =>
+    r'8d73cf7d0f090dcbe36c9e085f39c0893b0d49d2';
+
+/// See also [calendarScheduleUseCase].
+@ProviderFor(calendarScheduleUseCase)
+final calendarScheduleUseCaseProvider =
+    AutoDisposeProvider<CalendarScheduleUseCase>.internal(
+      calendarScheduleUseCase,
+      name: r'calendarScheduleUseCaseProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$calendarScheduleUseCaseHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef CalendarScheduleUseCaseRef =
+    AutoDisposeProviderRef<CalendarScheduleUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

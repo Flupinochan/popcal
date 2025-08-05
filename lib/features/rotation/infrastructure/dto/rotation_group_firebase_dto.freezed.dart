@@ -4,7 +4,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'rotation_group_firebase_dto.dart';
+part of 'rotation_group_firebase_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -22,13 +22,13 @@ mixin _$RotationGroupFirebaseDto {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$RotationGroupFirebaseDtoCopyWith<RotationGroupFirebaseDto> get copyWith => _$RotationGroupFirebaseDtoCopyWithImpl<RotationGroupFirebaseDto>(this as RotationGroupFirebaseDto, _$identity);
+$RotationGroupFirebaseDtoCopyWith<RotationGroupFirebaseResponse> get copyWith => _$RotationGroupFirebaseDtoCopyWithImpl<RotationGroupFirebaseResponse>(this as RotationGroupFirebaseResponse, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RotationGroupFirebaseDto&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMembers, rotationMembers)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&const DeepCollectionEquality().equals(other.notificationTime, notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RotationGroupFirebaseResponse&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMembers, rotationMembers)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&const DeepCollectionEquality().equals(other.notificationTime, notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
@@ -45,7 +45,7 @@ String toString() {
 
 /// @nodoc
 abstract mixin class $RotationGroupFirebaseDtoCopyWith<$Res>  {
-  factory $RotationGroupFirebaseDtoCopyWith(RotationGroupFirebaseDto value, $Res Function(RotationGroupFirebaseDto) _then) = _$RotationGroupFirebaseDtoCopyWithImpl;
+  factory $RotationGroupFirebaseDtoCopyWith(RotationGroupFirebaseResponse value, $Res Function(RotationGroupFirebaseResponse) _then) = _$RotationGroupFirebaseDtoCopyWithImpl;
 @useResult
 $Res call({
  String? rotationGroupId, String userId, String rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
@@ -60,8 +60,8 @@ class _$RotationGroupFirebaseDtoCopyWithImpl<$Res>
     implements $RotationGroupFirebaseDtoCopyWith<$Res> {
   _$RotationGroupFirebaseDtoCopyWithImpl(this._self, this._then);
 
-  final RotationGroupFirebaseDto _self;
-  final $Res Function(RotationGroupFirebaseDto) _then;
+  final RotationGroupFirebaseResponse _self;
+  final $Res Function(RotationGroupFirebaseResponse) _then;
 
 /// Create a copy of RotationGroupFirebaseDto
 /// with the given fields replaced by the non-null parameter values.
@@ -86,7 +86,7 @@ as Timestamp,
 /// @nodoc
 
 
-class _RotationGroupFirebaseDto extends RotationGroupFirebaseDto {
+class _RotationGroupFirebaseDto extends RotationGroupFirebaseResponse {
   const _RotationGroupFirebaseDto({required this.rotationGroupId, required this.userId, required this.rotationName, required final  List<String> rotationMembers, required final  List<int> rotationDays, required final  Map<String, int> notificationTime, required this.currentRotationIndex, required this.createdAt, required this.updatedAt}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,_notificationTime = notificationTime,super._();
   
 

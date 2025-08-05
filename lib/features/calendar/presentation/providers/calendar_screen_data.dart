@@ -1,6 +1,6 @@
 import 'package:popcal/features/auth/providers/auth_provider.dart';
-import 'package:popcal/features/calendar/domain/use_cases/get_calendar_data_use_case.dart';
-import 'package:popcal/features/calendar/presentation/models/calendar_data_model.dart';
+import 'package:popcal/features/calendar/use_cases/get_calendar_data_use_case.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,12 +17,12 @@ GetCalendarDataUseCase getCalendarDataUseCase(Ref ref) {
   return GetCalendarDataUseCase(
     ref.watch(authRepositoryProvider),
     ref.watch(rotationRepositoryProvider),
-    ref.watch(scheduleCalculationServiceRepositoryProvider),
+    ref.watch(calendarScheduleUseCaseProvider),
   );
 }
 
 @riverpod
-Future<Result<CalendarDataModel>> calendarScreenData(
+Future<Result<CalendarResponse>> calendarScreenData(
   Ref ref,
   String rotationGroupId,
 ) async {

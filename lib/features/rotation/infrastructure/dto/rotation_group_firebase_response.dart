@@ -8,10 +8,10 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 part 'rotation_group_firebase_dto.freezed.dart';
 
 @freezed
-sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
-  const RotationGroupFirebaseDto._();
+sealed class RotationGroupFirebaseResponse with _$RotationGroupFirebaseDto {
+  const RotationGroupFirebaseResponse._();
 
-  const factory RotationGroupFirebaseDto({
+  const factory RotationGroupFirebaseResponse({
     required String? rotationGroupId,
     required String userId,
     required String rotationName,
@@ -26,8 +26,8 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
   }) = _RotationGroupFirebaseDto;
 
   // Entity => DTO (factory method)
-  factory RotationGroupFirebaseDto.fromEntity(RotationGroup entity) {
-    return RotationGroupFirebaseDto(
+  factory RotationGroupFirebaseResponse.fromEntity(RotationGroup entity) {
+    return RotationGroupFirebaseResponse(
       rotationGroupId:
           entity.rotationGroupId?.isNotEmpty == true
               ? entity.rotationGroupId
@@ -47,12 +47,12 @@ sealed class RotationGroupFirebaseDto with _$RotationGroupFirebaseDto {
   // Firestore => DTO (factory method)
   // ※Firestore カスタムオブジェクトを参照
   // https://firebase.google.com/docs/firestore/query-data/get-data?hl=ja#dart_4
-  factory RotationGroupFirebaseDto.fromFirestore(
+  factory RotationGroupFirebaseResponse.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data() as Map<String, dynamic>;
-    return RotationGroupFirebaseDto(
+    return RotationGroupFirebaseResponse(
       rotationGroupId: snapshot.id,
       userId: data['ownerUserId'] as String,
       rotationName: data['rotationName'] as String,

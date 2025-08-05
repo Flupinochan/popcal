@@ -31,7 +31,7 @@ String _$firebaseRotationDatasourceHash() =>
 /// See also [firebaseRotationDatasource].
 @ProviderFor(firebaseRotationDatasource)
 final firebaseRotationDatasourceProvider =
-    AutoDisposeProvider<FirebaseRotationDatasource>.internal(
+    AutoDisposeProvider<RotationRepositoryFirebase>.internal(
       firebaseRotationDatasource,
       name: r'firebaseRotationDatasourceProvider',
       debugGetCreateSourceHash:
@@ -45,7 +45,7 @@ final firebaseRotationDatasourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseRotationDatasourceRef =
-    AutoDisposeProviderRef<FirebaseRotationDatasource>;
+    AutoDisposeProviderRef<RotationRepositoryFirebase>;
 String _$rotationRepositoryHash() =>
     r'b8c7a6e1748745a3c542c6cb0016fbe473c9e0da';
 
@@ -67,7 +67,7 @@ final rotationRepositoryProvider =
 // ignore: unused_element
 typedef RotationRepositoryRef = AutoDisposeProviderRef<RotationRepository>;
 String _$createRotationGroupUseCaseHash() =>
-    r'ab499033916bc0fab3f3b596e953058686f88b92';
+    r'3186232e0b58e6ee3d06ea70c79ec3b8d86de6bf';
 
 /// See also [createRotationGroupUseCase].
 @ProviderFor(createRotationGroupUseCase)
@@ -88,7 +88,7 @@ final createRotationGroupUseCaseProvider =
 typedef CreateRotationGroupUseCaseRef =
     AutoDisposeProviderRef<CreateRotationGroupUseCase>;
 String _$updateRotationGroupUseCaseHash() =>
-    r'd12d65fb75d1c8ee7405d3061a90d6180cf0ea79';
+    r'd502e586ab9fa2bb84688a478bb8f7187ccb1366';
 
 /// See also [updateRotationGroupUseCase].
 @ProviderFor(updateRotationGroupUseCase)

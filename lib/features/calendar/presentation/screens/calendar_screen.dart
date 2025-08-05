@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/domain/use_cases/get_calendar_data_use_case.dart';
-import 'package:popcal/features/calendar/presentation/models/calendar_data_model.dart';
+import 'package:popcal/features/calendar/use_cases/get_calendar_data_use_case.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
 import 'package:popcal/features/calendar/presentation/providers/calendar_screen_data.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
@@ -39,7 +39,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarScreen(
     BuildContext context,
-    CalendarDataModel calendarDataDto,
+    CalendarResponse calendarDataDto,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
@@ -97,7 +97,7 @@ class CalendarScreen extends HookConsumerWidget {
   // 1. カレンダー
   Widget _buildCalendarContainer(
     BuildContext context,
-    CalendarDataModel calendarDataDto,
+    CalendarResponse calendarDataDto,
     ValueNotifier<DateTime> focusedDay,
     ValueNotifier<DateTime?> selectedDay,
   ) {
@@ -191,7 +191,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarCell(
     BuildContext context,
-    CalendarDataModel calendarDataDto,
+    CalendarResponse calendarDataDto,
     DateTime day,
     bool isToday,
     bool isSelected,
@@ -242,8 +242,10 @@ class CalendarScreen extends HookConsumerWidget {
                 memberName,
                 style: textTheme.labelMedium!.copyWith(
                   color:
-                      memberColors[dayInfo!.memberColorIndex %
-                          memberColors.length],
+                      dayInfo!.memberColorIndex != null
+                          ? memberColors[dayInfo.memberColorIndex! %
+                              memberColors.length]
+                          : Colors.white,
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
@@ -257,7 +259,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   // 2. 選択した曜日のローテーションメンバー名表示
   Widget _buildSelectedDayInfo(
-    CalendarDataModel calendarDataDto,
+    CalendarResponse calendarDataDto,
     DateTime? selectedDay,
     GlassTheme glass,
     TextTheme textTheme,
@@ -359,7 +361,7 @@ class CalendarScreen extends HookConsumerWidget {
   // 3. ローテーション情報
   Widget _buildRotationInfo(
     BuildContext context,
-    CalendarDataModel calendarDataDto,
+    CalendarResponse calendarDataDto,
   ) {
     final textTheme = Theme.of(context).textTheme;
 
