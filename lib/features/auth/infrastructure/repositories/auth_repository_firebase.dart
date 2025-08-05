@@ -1,94 +1,132 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/infrastructure/datasources/firebase_auth_datasource.dart';
-import 'package:popcal/features/auth/domain/entities/app_user.dart';
-import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
-import 'package:popcal/features/auth/domain/value_objects/email.dart';
-import 'package:popcal/features/auth/domain/value_objects/password.dart';
+import 'package:popcal/features/auth/infrastructure/dto/user_firebase_response.dart';
 
-class AuthRepositoryFirebase implements AuthRepository {
-  final FirebaseAuthDataSource _firebaseAuthDataSource;
+class FirebaseAuthDataSource {
+  final FirebaseAuth _firebaseAuth;
 
-  AuthRepositoryFirebase(this._firebaseAuthDataSource);
+  FirebaseAuthDataSource(this._firebaseAuth);
 
-  @override
-  Stream<Result<AppUser?>> get authStateChanges {
-    return _firebaseAuthDataSource.authStateChanges.asyncMap((dtoResult) async {
-      return dtoResult.when(
-        success: (dto) {
-          if (dto == null) {
-            return Results.success(null);
-          }
-          return dto.toEntity().when(
-            success: (entity) => Results.success(entity),
-            failure: (error) => Results.failure(error),
+  // 認証状態(認証済 or 未認証)を監視
+  Stream<Result<UserFirebaseResponse?>> get authStateChanges {
+    return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
+      try {
+        if (firebaseUser != null) {
+          final dtoResult = UserFirebaseResponse.fromFirebaseUser(firebaseUser);
+          return dtoResult.when(
+            success: (dto) => Results.success(dto),
+            failure: (error) => Results.failure(AuthFailure(error.message)),
           );
-        },
-        failure: (error) => Results.failure(error),
-      );
+        } else {
+          return Results.success(null);
+        }
+      } on FirebaseAuthException catch (error) {
+        return Results.failure(AuthFailure(_mapFirebaseError(error)));
+      } catch (error) {
+        return Results.failure(AuthFailure('認証状態の監視で、予期しないエラーが発生しました: $error'));
+      }
     });
   }
 
-  @override
-  Future<Result<AppUser?>> getUser() async {
-    final dtoResult = await _firebaseAuthDataSource.getUser();
-    return dtoResult.when(
-      success: (dto) {
-        if (dto == null) {
-          return Results.success(null);
-        }
-        return dto.toEntity().when(
-          success: (entity) => Results.success(entity),
-          failure: (error) => Results.failure(error),
-        );
-      },
-      failure: (error) => Results.failure(error),
-    );
+  // ユーザ情報を取得
+  Future<Result<UserFirebaseResponse?>> getUser() async {
+    try {
+      final firebaseUser = _firebaseAuth.currentUser;
+      if (firebaseUser == null) {
+        return Results.success(null);
+      }
+      final dtoResult = UserFirebaseResponse.fromFirebaseUser(firebaseUser);
+      return dtoResult.when(
+        success: (dto) => Results.success(dto),
+        failure: (error) => Results.failure(AuthFailure(error.message)),
+      );
+    } on FirebaseAuthException catch (error) {
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
+    } catch (error) {
+      return Results.failure(AuthFailure('ユーザ情報の取得で、予期しないエラーが発生しました: $error'));
+    }
   }
 
-  @override
-  Future<Result<AppUser>> signInWithEmailAndPassword(
-    Email email,
-    Password password,
+  // Email + Passwordでサインイン
+  Future<Result<UserFirebaseResponse>> signInWithEmailAndPassword(
+    String email,
+    String password,
   ) async {
-    final dtoResult = await _firebaseAuthDataSource.signInWithEmailAndPassword(
-      email.value,
-      password.value,
-    );
-
-    return dtoResult.when(
-      success: (dto) {
-        return dto.toEntity().when(
-          success: (entity) => Results.success(entity),
-          failure: (error) => Results.failure(error),
-        );
-      },
-      failure: (error) => Results.failure(error),
-    );
+    try {
+      final credential = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (credential.user == null) {
+        return Results.failure(AuthFailure('メールアドレス認証認証に失敗しました'));
+      }
+      final dtoResult = UserFirebaseResponse.fromFirebaseUser(credential.user!);
+      return dtoResult.when(
+        success: (dto) => Results.success(dto),
+        failure: (error) => Results.failure(AuthFailure(error.message)),
+      );
+    } on FirebaseAuthException catch (error) {
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
+    } catch (error) {
+      return Results.failure(AuthFailure('メールアドレス認証で、予期しないエラーが発生しました: $error'));
+    }
   }
 
-  @override
-  Future<Result<AppUser>> signUpWithEmailAndPassword(
-    Email email,
-    Password password,
+  // サインアップ
+  Future<Result<UserFirebaseResponse>> signUpWithEmailAndPassword(
+    String email,
+    String password,
   ) async {
-    final dtoResult = await _firebaseAuthDataSource.signUpWithEmailAndPassword(
-      email.value,
-      password.value,
-    );
-
-    return dtoResult.when(
-      success: (dto) {
-        return dto.toEntity().when(
-          success: (entity) => Results.success(entity),
-          failure: (error) => Results.failure(error),
-        );
-      },
-      failure: (error) => Results.failure(error),
-    );
+    try {
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (credential.user == null) {
+        return Results.failure(AuthFailure('サインアップに失敗しました'));
+      }
+      final dtoResult = UserFirebaseResponse.fromFirebaseUser(credential.user!);
+      return dtoResult.when(
+        success: (dto) => Results.success(dto),
+        failure: (error) => Results.failure(AuthFailure(error.message)),
+      );
+    } on FirebaseAuthException catch (error) {
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
+    } catch (error) {
+      return Results.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
+    }
   }
 
-  @override
+  // サインアウト
   Future<Result<void>> signOut() async {
-    return _firebaseAuthDataSource.signOut();
+    try {
+      await _firebaseAuth.signOut();
+      return Results.success(null);
+    } on FirebaseAuthException catch (error) {
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
+    } catch (error) {
+      return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
+    }
+  }
+
+  // エラーコードに対応する日本語のエラーメッセージを定義
+  String _mapFirebaseError(FirebaseAuthException error) {
+    switch (error.code) {
+      case 'user-not-found':
+        return 'ユーザーが見つかりません';
+      case 'wrong-password':
+        return 'パスワードが間違っています';
+      case 'email-already-in-use':
+        return 'このメールアドレスは既に使用されています';
+      case 'account-exists-with-different-credential':
+        return 'このメールアドレスは既に他のサービスで使用されています';
+      case 'invalid-credential':
+        return '無効な認証情報です';
+      case 'network-request-failed':
+        return 'ネットワークエラーが発生しました';
+      default:
+        return '予期しない認証エラーが発生しました: ${error.message}';
+    }
   }
 }

@@ -35,3 +35,8 @@ class CalendarData {
         CalendarDay(date: date, memberName: null, isRotationDay: false);
   }
 }
+
+// 判定: これらはビジネスロジックではなく、単純なデータアクセスヘルパーです。
+// そのためapplication layer
+// 複数entityにまたがる複雑な処理ではない
+// MapからCalendarDayを取得しているだけ

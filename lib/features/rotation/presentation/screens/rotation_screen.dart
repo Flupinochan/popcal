@@ -5,7 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/presentation/model/user_view_model.dart';
+import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_dto.dart';
@@ -152,7 +152,7 @@ Future<void> _handleSubmit(
   BuildContext context,
   WidgetRef ref,
   GlobalKey<FormBuilderState> formKey,
-  UserViewModel userDto,
+  UserResponse userDto,
   ViewRotationGroupDto? originalRotationGroup,
   bool isUpdateMode,
 ) async {

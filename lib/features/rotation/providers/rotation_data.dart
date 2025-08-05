@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/presentation/model/user_view_model.dart';
+import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/rotation/presentation/dto/view_rotation_group_dto.dart';
 import 'package:popcal/features/rotation/providers/rotation_detail_provider.dart';
@@ -39,7 +39,7 @@ Future<Result<RotationData>> rotationData(
 }
 
 class RotationData {
-  final UserViewModel userDto;
+  final UserResponse userDto;
   final ViewRotationGroupDto? rotationGroupDto;
 
   const RotationData(this.userDto, this.rotationGroupDto);

@@ -6,20 +6,20 @@ import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
-part 'user_firebase_model.freezed.dart'; // freezed
-part 'user_firebase_model.g.dart'; // json_serializable
+part 'user_firebase_response.freezed.dart'; // freezed
+part 'user_firebase_response.g.dart'; // json_serializable
 
 @freezed
-sealed class UserFirebaseModel with _$UserFirebaseModel {
-  const UserFirebaseModel._();
+sealed class UserFirebaseResponse with _$UserFirebaseResponse {
+  const UserFirebaseResponse._();
 
-  const factory UserFirebaseModel({
+  const factory UserFirebaseResponse({
     required UserId userId,
     required Email email,
-  }) = _UserFirebaseModel;
+  }) = _UserFirebaseResponse;
 
   // ★Firebase認証情報 => Dto
-  static Result<UserFirebaseModel> fromFirebaseUser(
+  static Result<UserFirebaseResponse> fromFirebaseUser(
     firebase_auth.User firebaseUser,
   ) {
     if (firebaseUser.email == null) {
@@ -33,18 +33,19 @@ sealed class UserFirebaseModel with _$UserFirebaseModel {
 
     return userIdResult.flatMap(
       (validUid) => emailResult.map(
-        (validEmail) => UserFirebaseModel(userId: validUid, email: validEmail),
+        (validEmail) =>
+            UserFirebaseResponse(userId: validUid, email: validEmail),
       ),
     );
   }
 
   // Json => Dto ※Dto => Jsonは自動生成
-  factory UserFirebaseModel.fromJson(Map<String, dynamic> json) =>
-      _$UserFirebaseModelFromJson(json);
+  factory UserFirebaseResponse.fromJson(Map<String, dynamic> json) =>
+      _$UserFirebaseResponseFromJson(json);
 
-  static Result<UserFirebaseModel> fromJsonSafe(Map<String, dynamic> json) {
+  static Result<UserFirebaseResponse> fromJsonSafe(Map<String, dynamic> json) {
     try {
-      final dto = UserFirebaseModel.fromJson(json);
+      final dto = UserFirebaseResponse.fromJson(json);
       return Results.success(dto);
     } catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
@@ -52,8 +53,8 @@ sealed class UserFirebaseModel with _$UserFirebaseModel {
   }
 
   // Entity => Dto
-  factory UserFirebaseModel.fromEntity(AppUser entity) {
-    return UserFirebaseModel(userId: entity.userId, email: entity.email);
+  factory UserFirebaseResponse.fromEntity(AppUser entity) {
+    return UserFirebaseResponse(userId: entity.userId, email: entity.email);
   }
 
   // Dto => Entity
@@ -63,7 +64,7 @@ sealed class UserFirebaseModel with _$UserFirebaseModel {
 }
 
 // UI表示用の拡張メソッド
-extension UserDtoDisplay on UserFirebaseModel {
+extension UserDtoDisplay on UserFirebaseResponse {
   String get displayName => toEntity().fold(
     (error) => 'Unknown User',
     (entity) => entity.displayName,
