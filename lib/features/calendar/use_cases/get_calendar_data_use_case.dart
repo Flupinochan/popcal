@@ -4,7 +4,6 @@ import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
 import 'package:popcal/features/notifications/use_cases/calendar_schedule_use_case.dart';
-import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 
@@ -52,7 +51,6 @@ class GetCalendarDataUseCase {
 
     // 3. カレンダー表示用通知情報を取得
     final now = DateTime.now().toLocal();
-    final startDate = now.subtract(const Duration(days: pastDays));
     final endDate = now.add(const Duration(days: futureDays));
 
     final notificationResult = _calendarScheduleUseCase.buildCalendarSchedule(
@@ -63,41 +61,11 @@ class GetCalendarDataUseCase {
       return Results.failure(notificationResult.failureOrNull!);
     }
 
-    // 4. Entityを作成
     final calendarData = CalendarResponse(
-      userViewModelDto: UserResponse.fromEntity(appUser),
-      rotationGroup: rotationGroup,
+      rotationGroupResponse: rotationGroupDto,
       dayInfoMap: notificationResult.valueOrNull!,
     );
 
-    // 5. 各日付表示用データを作成
-    // {各日付: 各日付表示用データ} のMap
-    final dayInfoMap = <String, CalendarDayViewModel>{};
-    for (
-      var checkDate = startDate;
-      checkDate.isBefore(endDate.add(const Duration(days: 1)));
-      checkDate = checkDate.add(const Duration(days: 1))
-    ) {
-      // Entityのビジネスロジックを実行
-      final calendarDay = calendarData.getCalendarDayForDate(checkDate);
-
-      // // メンバーインデックス取得
-      // final memberColorIndex =
-      //     calendarDay.memberName != null
-      //         ? rotationGroup.getMemberIndex(calendarDay.memberName!)
-      //         : 0;
-
-      final key = TimeUtils.createDateKey(checkDate);
-      dayInfoMap[key] = calendarDay;
-    }
-
-    // 6. DTOに変換して返却
-    return Results.success(
-      CalendarResponse(
-        dayInfoMap: dayInfoMap,
-        rotationGroup: rotationGroup,
-        userViewModelDto: UserResponse.fromEntity(appUser),
-      ),
-    );
+    return Results.success(calendarData);
   }
 }

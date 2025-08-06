@@ -2,7 +2,6 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
-import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 
 class CalendarScheduleUseCase {
@@ -18,8 +17,7 @@ class CalendarScheduleUseCase {
   /// [rotationGroupDto]
   /// [toDate] デフォルトは未来1年分
   /// 2. Calendar表示用スケジュールを生成 ※1年分
-  @override
-  Result<Map<String, CalendarDayViewModel>> buildCalendarSchedule({
+  Result<Map<DateKey, CalendarDayResponse>> buildCalendarSchedule({
     required RotationGroupResponse rotationGroupDto,
     DateTime? toDate,
   }) {
@@ -29,7 +27,7 @@ class CalendarScheduleUseCase {
           toDate ??
           DateTime(currentTime.year + 1, currentTime.month, currentTime.day);
 
-      final calendarDays = <String, CalendarDayViewModel>{};
+      final calendarDays = <DateKey, CalendarDayResponse>{};
       var currentIndex = rotationGroupDto.currentRotationIndex;
 
       // 指定期間をループしてカレンダー日を作成
@@ -76,19 +74,19 @@ class CalendarScheduleUseCase {
   }
 
   void _addCalendarDay({
-    required Map<String, CalendarDayViewModel> calendarDays,
+    required Map<DateKey, CalendarDayResponse> calendarDays,
     required DateTime date,
     String? memberName,
     required bool isRotationDay,
     int? calendarDayColorIndex,
   }) {
-    final calendarDay = CalendarDayViewModel(
+    final calendarDay = CalendarDayResponse(
       date: date,
       memberName: memberName,
       isRotationDay: isRotationDay,
       memberColorIndex: calendarDayColorIndex,
     );
-    final key = TimeUtils.createDateKey(date);
+    final key = DateKey.fromDateTime(date);
     calendarDays[key] = calendarDay;
   }
 }

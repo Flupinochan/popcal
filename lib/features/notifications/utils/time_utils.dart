@@ -6,9 +6,4 @@ class TimeUtils {
     if (a == null || b == null) return false;
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
-
-  /// Map用の日付キーを生成
-  static String createDateKey(DateTime date) {
-    return '${date.year}-${date.month}-${date.day}';
-  }
 }

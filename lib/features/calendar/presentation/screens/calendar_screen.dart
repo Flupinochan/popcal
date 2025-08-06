@@ -51,7 +51,7 @@ class CalendarScreen extends HookConsumerWidget {
       backgroundColor: glassTheme.backgroundColor,
       extendBodyBehindAppBar: true,
       appBar: GlassAppBar(
-        title: calendarDataDto.rotationGroup.rotationName,
+        title: calendarDataDto.rotationGroupResponse.rotationName,
         leadingIcon: Icons.arrow_back_ios_new,
         onLeadingPressed: () => Navigator.pop(context),
       ),
@@ -201,8 +201,8 @@ class CalendarScreen extends HookConsumerWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     final dayInfo = calendarDataDto.getDayInfo(day);
-    final memberName = dayInfo?.memberName;
-    final isRotationDay = dayInfo?.isRotationDay ?? false;
+    final memberName = dayInfo.memberName;
+    final isRotationDay = dayInfo.isRotationDay;
 
     return Container(
       width: double.infinity,
@@ -242,7 +242,7 @@ class CalendarScreen extends HookConsumerWidget {
                 memberName,
                 style: textTheme.labelMedium!.copyWith(
                   color:
-                      dayInfo!.memberColorIndex != null
+                      dayInfo.memberColorIndex != null
                           ? memberColors[dayInfo.memberColorIndex! %
                               memberColors.length]
                           : Colors.white,
@@ -269,8 +269,8 @@ class CalendarScreen extends HookConsumerWidget {
     }
 
     final dayInfo = calendarDataDto.getDayInfo(selectedDay);
-    final memberName = dayInfo?.memberName;
-    final isRotationDay = dayInfo?.isRotationDay ?? false;
+    final memberName = dayInfo.memberName;
+    final isRotationDay = dayInfo.isRotationDay;
 
     return GlassWrapper(
       child: Padding(
@@ -311,7 +311,7 @@ class CalendarScreen extends HookConsumerWidget {
                       const SizedBox(width: 8),
                       // 担当日/対象外
                       GlassChip(
-                        text: dayInfo?.displayText ?? "情報なし",
+                        text: dayInfo.displayText,
                         gradient:
                             isRotationDay
                                 ? glass.successGradient
@@ -383,21 +383,21 @@ class CalendarScreen extends HookConsumerWidget {
             // メンバー
             _rotationInfoItem(
               context,
-              'メンバー: ${calendarDataDto.rotationGroup.rotationMembers.join(', ')}',
+              'メンバー: ${calendarDataDto.rotationGroupResponse.rotationMembers.join(', ')}',
               Icons.group,
             ),
             const SizedBox(height: 12),
             // 曜日
             _rotationInfoItem(
               context,
-              '曜日: ${calendarDataDto.rotationGroup.rotationDays.map((w) => w.displayName).join(', ')}',
+              '曜日: ${calendarDataDto.rotationGroupResponse.rotationDays.map((w) => w.displayName).join(', ')}',
               Icons.calendar_today,
             ),
             const SizedBox(height: 12),
             // 通知時刻
             _rotationInfoItem(
               context,
-              '時刻: ${calendarDataDto.rotationGroup.notificationTime.hour.toString().padLeft(2, '0')}:${calendarDataDto.rotationGroup.notificationTime.minute.toString().padLeft(2, '0')}',
+              '時刻: ${calendarDataDto.rotationGroupResponse.notificationTime.hour.toString().padLeft(2, '0')}:${calendarDataDto.rotationGroupResponse.notificationTime.minute.toString().padLeft(2, '0')}',
               Icons.access_time,
             ),
           ],
