@@ -261,18 +261,25 @@ class NotificationGatewayLocal {
 
   /// 通知タップ時の共通処理
   void _handleNotificationTap(String? payload) {
-    if (payload != null) {
-      final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
-        payload,
-      );
-      dtoResult.when(
-        success:
-            (localNotificationSettingDto) => _router.push(
-              Routes.calendarPath(localNotificationSettingDto.rotationGroupId),
-            ),
-        failure: (error) => _router.push(Routes.home),
-      );
+    try {
+      if (payload != null) {
+        final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+          payload,
+        );
+        dtoResult.when(
+          success:
+              (localNotificationSettingDto) => _router.push(
+                Routes.calendarPath(
+                  localNotificationSettingDto.rotationGroupId,
+                ),
+              ),
+          failure: (error) => _router.push(Routes.home),
+        );
+      } else {
+        _router.push(Routes.home);
+      }
+    } catch (error) {
+      _router.push(Routes.home);
     }
-    _router.push(Routes.home);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
-import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
 import 'package:popcal/features/notifications/use_cases/calendar_schedule_use_case.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
