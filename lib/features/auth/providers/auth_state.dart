@@ -7,7 +7,8 @@ import 'package:popcal/features/auth/providers/auth_provider.dart';
 part 'auth_state.g.dart';
 
 // Stream Entity => Stream Dto
-// UIではDtoに変換して利用、直接Entityを扱わない
+// UIでStreamを受け取る際に直接Entityを受け取らないようにする
+// Dtoに変換して返却
 @riverpod
 Stream<Result<UserResponse?>> authStateForUI(Ref ref) {
   final entityStream = ref.watch(authRepositoryProvider).authStateChanges;

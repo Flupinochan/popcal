@@ -1,3 +1,5 @@
+import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
@@ -13,7 +15,7 @@ class RotationController extends _$RotationController {
   FutureOr<void> build() => null;
 
   // 作成
-  Future<Result<RotationGroup>> createRotationGroup(
+  Future<Result<RotationGroupResponse>> createRotationGroup(
     CreateRotationGroupRequest dto,
   ) async {
     state = const AsyncLoading();
@@ -22,7 +24,7 @@ class RotationController extends _$RotationController {
           .read(createRotationGroupUseCaseProvider)
           .execute(dto);
       state = const AsyncData(null);
-      return result;
+      return _convertEntityToDto(result);
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
       rethrow;
@@ -30,7 +32,7 @@ class RotationController extends _$RotationController {
   }
 
   // 更新
-  Future<Result<RotationGroup>> updateRotationGroup(
+  Future<Result<RotationGroupResponse>> updateRotationGroup(
     UpdateRotationGroupRequest dto,
   ) async {
     state = const AsyncLoading();
@@ -39,10 +41,21 @@ class RotationController extends _$RotationController {
           .read(updateRotationGroupUseCaseProvider)
           .execute(dto);
       state = const AsyncData(null);
-      return result;
+      return _convertEntityToDto(result);
     } catch (error, stackTrace) {
       state = AsyncError(error, stackTrace);
       rethrow;
     }
+  }
+
+  Result<RotationGroupResponse> _convertEntityToDto(
+    Result<RotationGroup> entityResult,
+  ) {
+    return entityResult.when(
+      success:
+          (appUser) =>
+              Results.success(RotationGroupResponse.fromEntity(appUser)),
+      failure: (error) => Results.failure(RotationGroupFailure(error.message)),
+    );
   }
 }

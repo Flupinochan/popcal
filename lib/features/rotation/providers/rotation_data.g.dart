@@ -6,7 +6,7 @@ part of 'rotation_data.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$rotationDataHash() => r'233a4a034c42e0e53184d138e0906efee11b1a91';
+String _$rotationDataHash() => r'7e459e0a3b562d9457e75e339d5b64ab46bd88fa';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,7 +34,8 @@ class _SystemHash {
 const rotationDataProvider = RotationDataFamily();
 
 /// See also [rotationData].
-class RotationDataFamily extends Family<AsyncValue<Result<RotationData>>> {
+class RotationDataFamily
+    extends Family<AsyncValue<Result<RotationDataResponse>>> {
   /// See also [rotationData].
   const RotationDataFamily();
 
@@ -67,7 +68,7 @@ class RotationDataFamily extends Family<AsyncValue<Result<RotationData>>> {
 
 /// See also [rotationData].
 class RotationDataProvider
-    extends AutoDisposeFutureProvider<Result<RotationData>> {
+    extends AutoDisposeFutureProvider<Result<RotationDataResponse>> {
   /// See also [rotationData].
   RotationDataProvider(String? rotationGroupId)
     : this._internal(
@@ -98,7 +99,8 @@ class RotationDataProvider
 
   @override
   Override overrideWith(
-    FutureOr<Result<RotationData>> Function(RotationDataRef provider) create,
+    FutureOr<Result<RotationDataResponse>> Function(RotationDataRef provider)
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -115,7 +117,8 @@ class RotationDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<Result<RotationData>> createElement() {
+  AutoDisposeFutureProviderElement<Result<RotationDataResponse>>
+  createElement() {
     return _RotationDataProviderElement(this);
   }
 
@@ -136,13 +139,14 @@ class RotationDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin RotationDataRef on AutoDisposeFutureProviderRef<Result<RotationData>> {
+mixin RotationDataRef
+    on AutoDisposeFutureProviderRef<Result<RotationDataResponse>> {
   /// The parameter `rotationGroupId` of this provider.
   String? get rotationGroupId;
 }
 
 class _RotationDataProviderElement
-    extends AutoDisposeFutureProviderElement<Result<RotationData>>
+    extends AutoDisposeFutureProviderElement<Result<RotationDataResponse>>
     with RotationDataRef {
   _RotationDataProviderElement(super.provider);
 

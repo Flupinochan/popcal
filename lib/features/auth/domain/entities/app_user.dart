@@ -7,7 +7,6 @@ class AppUser {
 
   const AppUser({required this.userId, required this.email});
 
-  // userDtoでnullチェックするため使用してない
   static bool isAuthenticated(AppUser? appUser) => appUser != null;
 
   String get displayName => email.localPart;

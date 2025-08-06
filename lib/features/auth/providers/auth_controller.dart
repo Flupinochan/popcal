@@ -52,6 +52,7 @@ class AuthController extends _$AuthController {
     return result;
   }
 
+  // T型で流用したいところ
   Result<UserResponse> _convertEntityToDto(Result<AppUser> entityResult) {
     return entityResult.when(
       success: (appUser) => Results.success(UserResponse.fromEntity(appUser)),

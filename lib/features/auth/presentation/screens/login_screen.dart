@@ -7,7 +7,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/email_sign_in_request.dart';
 import 'package:popcal/features/auth/presentation/enums/auth_mode.dart';
-import 'package:popcal/features/auth/presentation/enums/login_form_field.dart';
+import 'package:popcal/features/auth/presentation/enums/login_form_key.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 import 'package:popcal/features/auth/providers/auth_controller.dart';

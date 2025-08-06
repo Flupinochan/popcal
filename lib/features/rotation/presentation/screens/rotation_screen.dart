@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_request.dart';
@@ -47,7 +46,7 @@ class RotationScreen extends HookConsumerWidget {
   Widget _buildFormScreen(
     BuildContext context,
     WidgetRef ref,
-    RotationData rotationData,
+    RotationDataResponse rotationData,
   ) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
@@ -161,7 +160,7 @@ Future<void> _handleSubmit(
     final rotationController = ref.read(rotationControllerProvider.notifier);
 
     try {
-      final Result<RotationGroup> result;
+      final Result<RotationGroupResponse> result;
 
       if (isUpdateMode) {
         final dto = UpdateRotationGroupRequest(
