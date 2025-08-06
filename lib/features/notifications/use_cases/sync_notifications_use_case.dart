@@ -1,10 +1,10 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/presentation/dto/notification_plan_response.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
 
 /// home画面表示時に通知設定を同期するUseCase
 /// firebaseとの同期ではなく、現在時刻から30日分を計算、作成
@@ -49,10 +49,11 @@ class SyncNotificationsUseCase {
       final result = calculationResult.valueOrNull!;
 
       // 3-2. 通知作成を同期
+      final groupDto = RotationGroupResponse.fromEntity(group);
       final createResult = await createSync(
         result,
         currentLocalNotificationIds,
-        group,
+        groupDto,
       );
       if (createResult.isFailure) {
         errorMessage = createResult.failureOrNull!.message;
@@ -80,7 +81,7 @@ class SyncNotificationsUseCase {
   Future<Result<void>> createSync(
     NotificationPlanResponse result,
     Set<int> currentLocalNotificationIds,
-    RotationGroup group,
+    RotationGroupResponse group,
   ) async {
     String? errorMessage;
 
@@ -104,11 +105,15 @@ class SyncNotificationsUseCase {
 
     // ローテーション状態を更新
     if (missingNotifications.isNotEmpty) {
-      final updatedGroup = group.copyWith(
+      final updatedGroupDto = group.copyWith(
         currentRotationIndex: result.newCurrentRotationIndex,
       );
+      final updatedGroupResult = updatedGroupDto.toEntity();
+      if (updatedGroupResult.isFailure) {
+        errorMessage = updatedGroupResult.failureOrNull!.message;
+      }
       final updateResult = await _rotationRepository.updateRotationGroup(
-        updatedGroup,
+        updatedGroupResult.valueOrNull!,
       );
       if (updateResult.isFailure) {
         errorMessage = updateResult.failureOrNull!.message;

@@ -22,21 +22,6 @@ sealed class RotationGroupResponse with _$RotationGroupResponse {
     required DateTime updatedAt,
   }) = _RotationGroupResponse;
 
-  /// Entity => DTO
-  factory RotationGroupResponse.fromEntity(RotationGroup entity) {
-    return RotationGroupResponse(
-      rotationGroupId: entity.rotationGroupId!,
-      userId: entity.userId,
-      rotationName: entity.rotationName,
-      rotationMembers: entity.rotationMembers,
-      rotationDays: entity.rotationDays,
-      notificationTime: entity.notificationTime,
-      currentRotationIndex: entity.currentRotationIndex,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    );
-  }
-
   /// DTO => Entity
   Result<RotationGroup> toEntity() {
     return Results.success(
@@ -51,6 +36,21 @@ sealed class RotationGroupResponse with _$RotationGroupResponse {
         createdAt: createdAt,
         updatedAt: updatedAt,
       ),
+    );
+  }
+
+  /// Entity => DTO
+  factory RotationGroupResponse.fromEntity(RotationGroup entity) {
+    return RotationGroupResponse(
+      rotationGroupId: entity.rotationGroupId!,
+      userId: entity.userId,
+      rotationName: entity.rotationName,
+      rotationMembers: entity.rotationMembers,
+      rotationDays: entity.rotationDays,
+      notificationTime: entity.notificationTime,
+      currentRotationIndex: entity.currentRotationIndex,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     );
   }
 }
