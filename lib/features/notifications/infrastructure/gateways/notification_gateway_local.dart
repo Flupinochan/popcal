@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/local_notification_setting_response.dart';
@@ -7,11 +8,15 @@ import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationGatewayLocal {
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
   final GoRouter _router;
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+  final Logger _logger;
 
-  NotificationGatewayLocal(this._router);
+  NotificationGatewayLocal(
+    this._router,
+    this._flutterLocalNotificationsPlugin,
+    this._logger,
+  );
 
   /// 0-1. 初期化
   /// 通知アイコン設定
@@ -197,7 +202,6 @@ class NotificationGatewayLocal {
               try {
                 _flutterLocalNotificationsPlugin.cancel(notification.id);
                 deletedCount++;
-                print('通知削除: ID=${notification.id}, GroupId=$rotationGroupId');
               } catch (error) {
                 errorMessage = error.toString();
               }
@@ -207,7 +211,6 @@ class NotificationGatewayLocal {
         );
       }
     }
-    print('削除した通知数: $deletedCount (対象GroupId: $rotationGroupId)');
     if (errorMessage != null) {
       return Results.failure(NotificationFailure(errorMessage!));
     } else {
@@ -246,11 +249,13 @@ class NotificationGatewayLocal {
           // 復元に失敗した場合は日時不明のまま
         }
 
-        print('$dateTime | ${notification.title} | ${notification.body}');
+        _logger.fine(
+          '$dateTime | ${notification.title} | ${notification.body}',
+        );
       }
 
       if (pendingNotifications.isEmpty) {
-        print('設定済み通知はありません');
+        _logger.fine('設定済み通知はありません');
       }
 
       return Results.success(null);

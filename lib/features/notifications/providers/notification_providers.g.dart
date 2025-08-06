@@ -6,29 +6,50 @@ part of 'notification_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$localNotificationsDatasourceHash() =>
-    r'0e3700c35ecf96f36a8059fd5b761646d4e82693';
+String _$flutterLocalNotificationsPluginHash() =>
+    r'7ddacc6af7d67f7f1a34d7166a7d48420e7fa892';
 
-/// See also [localNotificationsDatasource].
-@ProviderFor(localNotificationsDatasource)
-final localNotificationsDatasourceProvider =
-    AutoDisposeProvider<NotificationGatewayLocal>.internal(
-      localNotificationsDatasource,
-      name: r'localNotificationsDatasourceProvider',
+/// See also [flutterLocalNotificationsPlugin].
+@ProviderFor(flutterLocalNotificationsPlugin)
+final flutterLocalNotificationsPluginProvider =
+    AutoDisposeProvider<FlutterLocalNotificationsPlugin>.internal(
+      flutterLocalNotificationsPlugin,
+      name: r'flutterLocalNotificationsPluginProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$localNotificationsDatasourceHash,
+              : _$flutterLocalNotificationsPluginHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef LocalNotificationsDatasourceRef =
+typedef FlutterLocalNotificationsPluginRef =
+    AutoDisposeProviderRef<FlutterLocalNotificationsPlugin>;
+String _$notificationGatewayLocalHash() =>
+    r'24253030ef701a34143f9db3f1c408d368b3ebf1';
+
+/// See also [notificationGatewayLocal].
+@ProviderFor(notificationGatewayLocal)
+final notificationGatewayLocalProvider =
+    AutoDisposeProvider<NotificationGatewayLocal>.internal(
+      notificationGatewayLocal,
+      name: r'notificationGatewayLocalProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$notificationGatewayLocalHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef NotificationGatewayLocalRef =
     AutoDisposeProviderRef<NotificationGatewayLocal>;
 String _$notificationRepositoryHash() =>
-    r'057962b2b1a262d1279b3a6f98048a664488d814';
+    r'd7c17aa49924e6718e3b6614952b727152574ca5';
 
 /// See also [notificationRepository].
 @ProviderFor(notificationRepository)

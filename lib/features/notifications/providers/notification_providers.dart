@@ -1,4 +1,6 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/features/notifications/use_cases/calendar_schedule_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -14,15 +16,22 @@ import 'package:popcal/router/router.dart';
 part 'notification_providers.g.dart';
 
 @riverpod
-NotificationGatewayLocal localNotificationsDatasource(Ref ref) {
-  return NotificationGatewayLocal(ref.watch(routerProvider));
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(Ref ref) {
+  return FlutterLocalNotificationsPlugin();
+}
+
+@riverpod
+NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
+  return NotificationGatewayLocal(
+    ref.watch(routerProvider),
+    ref.watch(flutterLocalNotificationsPluginProvider),
+    ref.watch(loggerProvider("NotificationGatewayLocal")),
+  );
 }
 
 @riverpod
 NotificationGateway notificationRepository(Ref ref) {
-  return NotificationGatewayImpl(
-    ref.watch(localNotificationsDatasourceProvider),
-  );
+  return NotificationGatewayImpl(ref.watch(notificationGatewayLocalProvider));
 }
 
 @riverpod
