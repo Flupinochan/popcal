@@ -6,7 +6,7 @@ import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_data_use_case.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
-import 'package:popcal/features/calendar/presentation/providers/calendar_screen_data.dart';
+import 'package:popcal/features/calendar/providers/calendar_screen_data.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';

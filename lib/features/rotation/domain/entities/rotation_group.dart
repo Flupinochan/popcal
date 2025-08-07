@@ -27,7 +27,6 @@ class RotationGroup {
     required this.updatedAt,
   });
 
-  // 更新処理で利用
   RotationGroup copyWith({
     String? rotationGroupId,
     String? userId,
