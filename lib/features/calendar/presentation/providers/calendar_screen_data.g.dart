@@ -28,7 +28,7 @@ final getCalendarDataUseCaseProvider =
 typedef GetCalendarDataUseCaseRef =
     AutoDisposeProviderRef<GetCalendarDataUseCase>;
 String _$calendarScreenDataHash() =>
-    r'30708ff3fbea4bc33a2107551f08f0d280e6765c';
+    r'aeb5670718d11d977f202c3d621bcf20d9046646';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -57,7 +57,7 @@ const calendarScreenDataProvider = CalendarScreenDataFamily();
 
 /// See also [calendarScreenData].
 class CalendarScreenDataFamily
-    extends Family<AsyncValue<Result<CalendarResponse>>> {
+    extends Family<AsyncValue<Result<CalendarDataResponse>>> {
   /// See also [calendarScreenData].
   const CalendarScreenDataFamily();
 
@@ -90,7 +90,7 @@ class CalendarScreenDataFamily
 
 /// See also [calendarScreenData].
 class CalendarScreenDataProvider
-    extends AutoDisposeFutureProvider<Result<CalendarResponse>> {
+    extends AutoDisposeFutureProvider<Result<CalendarDataResponse>> {
   /// See also [calendarScreenData].
   CalendarScreenDataProvider(String rotationGroupId)
     : this._internal(
@@ -122,7 +122,9 @@ class CalendarScreenDataProvider
 
   @override
   Override overrideWith(
-    FutureOr<Result<CalendarResponse>> Function(CalendarScreenDataRef provider)
+    FutureOr<Result<CalendarDataResponse>> Function(
+      CalendarScreenDataRef provider,
+    )
     create,
   ) {
     return ProviderOverride(
@@ -140,7 +142,8 @@ class CalendarScreenDataProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<Result<CalendarResponse>> createElement() {
+  AutoDisposeFutureProviderElement<Result<CalendarDataResponse>>
+  createElement() {
     return _CalendarScreenDataProviderElement(this);
   }
 
@@ -162,13 +165,13 @@ class CalendarScreenDataProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin CalendarScreenDataRef
-    on AutoDisposeFutureProviderRef<Result<CalendarResponse>> {
+    on AutoDisposeFutureProviderRef<Result<CalendarDataResponse>> {
   /// The parameter `rotationGroupId` of this provider.
   String get rotationGroupId;
 }
 
 class _CalendarScreenDataProviderElement
-    extends AutoDisposeFutureProviderElement<Result<CalendarResponse>>
+    extends AutoDisposeFutureProviderElement<Result<CalendarDataResponse>>
     with CalendarScreenDataRef {
   _CalendarScreenDataProviderElement(super.provider);
 

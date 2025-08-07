@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateRotationGroupRequest {
 
- String get userId; String get rotationGroupId; String get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime;
+ String get userId; String get rotationGroupId; String get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; DateTime get createdAt;
 /// Create a copy of UpdateRotationGroupRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $UpdateRotationGroupRequestCopyWith<UpdateRotationGroupRequest> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateRotationGroupRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMembers, rotationMembers)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateRotationGroupRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMembers, rotationMembers)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,rotationGroupId,rotationName,const DeepCollectionEquality().hash(rotationMembers),const DeepCollectionEquality().hash(rotationDays),notificationTime);
+int get hashCode => Object.hash(runtimeType,userId,rotationGroupId,rotationName,const DeepCollectionEquality().hash(rotationMembers),const DeepCollectionEquality().hash(rotationDays),notificationTime,createdAt);
 
 @override
 String toString() {
-  return 'UpdateRotationGroupRequest(userId: $userId, rotationGroupId: $rotationGroupId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime)';
+  return 'UpdateRotationGroupRequest(userId: $userId, rotationGroupId: $rotationGroupId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime, createdAt: $createdAt)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $UpdateRotationGroupRequestCopyWith<$Res>  {
   factory $UpdateRotationGroupRequestCopyWith(UpdateRotationGroupRequest value, $Res Function(UpdateRotationGroupRequest) _then) = _$UpdateRotationGroupRequestCopyWithImpl;
 @useResult
 $Res call({
- String userId, String rotationGroupId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
+ String userId, String rotationGroupId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
 });
 
 
@@ -63,7 +63,7 @@ class _$UpdateRotationGroupRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateRotationGroupRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? rotationGroupId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? rotationGroupId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,rotationGroupId: null == rotationGroupId ? _self.rotationGroupId : rotationGroupId // ignore: cast_nullable_to_non_nullable
@@ -71,7 +71,8 @@ as String,rotationName: null == rotationName ? _self.rotationName : rotationName
 as String,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,
+as TimeOfDay,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -82,7 +83,7 @@ as TimeOfDay,
 
 
 class _UpdateRotationGroupRequest extends UpdateRotationGroupRequest {
-  const _UpdateRotationGroupRequest({required this.userId, required this.rotationGroupId, required this.rotationName, required final  List<String> rotationMembers, required final  List<Weekday> rotationDays, required this.notificationTime}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,super._();
+  const _UpdateRotationGroupRequest({required this.userId, required this.rotationGroupId, required this.rotationName, required final  List<String> rotationMembers, required final  List<Weekday> rotationDays, required this.notificationTime, required this.createdAt}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,super._();
   
 
 @override final  String userId;
@@ -103,6 +104,7 @@ class _UpdateRotationGroupRequest extends UpdateRotationGroupRequest {
 }
 
 @override final  TimeOfDay notificationTime;
+@override final  DateTime createdAt;
 
 /// Create a copy of UpdateRotationGroupRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -114,16 +116,16 @@ _$UpdateRotationGroupRequestCopyWith<_UpdateRotationGroupRequest> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateRotationGroupRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other._rotationMembers, _rotationMembers)&&const DeepCollectionEquality().equals(other._rotationDays, _rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateRotationGroupRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other._rotationMembers, _rotationMembers)&&const DeepCollectionEquality().equals(other._rotationDays, _rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,rotationGroupId,rotationName,const DeepCollectionEquality().hash(_rotationMembers),const DeepCollectionEquality().hash(_rotationDays),notificationTime);
+int get hashCode => Object.hash(runtimeType,userId,rotationGroupId,rotationName,const DeepCollectionEquality().hash(_rotationMembers),const DeepCollectionEquality().hash(_rotationDays),notificationTime,createdAt);
 
 @override
 String toString() {
-  return 'UpdateRotationGroupRequest(userId: $userId, rotationGroupId: $rotationGroupId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime)';
+  return 'UpdateRotationGroupRequest(userId: $userId, rotationGroupId: $rotationGroupId, rotationName: $rotationName, rotationMembers: $rotationMembers, rotationDays: $rotationDays, notificationTime: $notificationTime, createdAt: $createdAt)';
 }
 
 
@@ -134,7 +136,7 @@ abstract mixin class _$UpdateRotationGroupRequestCopyWith<$Res> implements $Upda
   factory _$UpdateRotationGroupRequestCopyWith(_UpdateRotationGroupRequest value, $Res Function(_UpdateRotationGroupRequest) _then) = __$UpdateRotationGroupRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String userId, String rotationGroupId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
+ String userId, String rotationGroupId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
 });
 
 
@@ -151,7 +153,7 @@ class __$UpdateRotationGroupRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateRotationGroupRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? rotationGroupId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? rotationGroupId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? createdAt = null,}) {
   return _then(_UpdateRotationGroupRequest(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,rotationGroupId: null == rotationGroupId ? _self.rotationGroupId : rotationGroupId // ignore: cast_nullable_to_non_nullable
@@ -159,7 +161,8 @@ as String,rotationName: null == rotationName ? _self.rotationName : rotationName
 as String,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,
+as TimeOfDay,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

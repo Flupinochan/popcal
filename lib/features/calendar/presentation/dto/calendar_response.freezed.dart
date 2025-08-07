@@ -13,21 +13,20 @@ part of 'calendar_response.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$CalendarResponse {
+mixin _$CalendarDataResponse {
 
- RotationGroupResponse get rotationGroupResponse;// 各日付のkey: 各日付の表示用データValue
- Map<DateKey, CalendarDayResponse> get dayInfoMap;
-/// Create a copy of CalendarResponse
+ RotationGroupResponse get rotationGroupResponse; Map<DateKey, CalendarDayResponse> get dayInfoMap;
+/// Create a copy of CalendarDataResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$CalendarResponseCopyWith<CalendarResponse> get copyWith => _$CalendarResponseCopyWithImpl<CalendarResponse>(this as CalendarResponse, _$identity);
+$CalendarDataResponseCopyWith<CalendarDataResponse> get copyWith => _$CalendarDataResponseCopyWithImpl<CalendarDataResponse>(this as CalendarDataResponse, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarResponse&&(identical(other.rotationGroupResponse, rotationGroupResponse) || other.rotationGroupResponse == rotationGroupResponse)&&const DeepCollectionEquality().equals(other.dayInfoMap, dayInfoMap));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarDataResponse&&(identical(other.rotationGroupResponse, rotationGroupResponse) || other.rotationGroupResponse == rotationGroupResponse)&&const DeepCollectionEquality().equals(other.dayInfoMap, dayInfoMap));
 }
 
 
@@ -36,15 +35,15 @@ int get hashCode => Object.hash(runtimeType,rotationGroupResponse,const DeepColl
 
 @override
 String toString() {
-  return 'CalendarResponse(rotationGroupResponse: $rotationGroupResponse, dayInfoMap: $dayInfoMap)';
+  return 'CalendarDataResponse(rotationGroupResponse: $rotationGroupResponse, dayInfoMap: $dayInfoMap)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $CalendarResponseCopyWith<$Res>  {
-  factory $CalendarResponseCopyWith(CalendarResponse value, $Res Function(CalendarResponse) _then) = _$CalendarResponseCopyWithImpl;
+abstract mixin class $CalendarDataResponseCopyWith<$Res>  {
+  factory $CalendarDataResponseCopyWith(CalendarDataResponse value, $Res Function(CalendarDataResponse) _then) = _$CalendarDataResponseCopyWithImpl;
 @useResult
 $Res call({
  RotationGroupResponse rotationGroupResponse, Map<DateKey, CalendarDayResponse> dayInfoMap
@@ -55,14 +54,14 @@ $RotationGroupResponseCopyWith<$Res> get rotationGroupResponse;
 
 }
 /// @nodoc
-class _$CalendarResponseCopyWithImpl<$Res>
-    implements $CalendarResponseCopyWith<$Res> {
-  _$CalendarResponseCopyWithImpl(this._self, this._then);
+class _$CalendarDataResponseCopyWithImpl<$Res>
+    implements $CalendarDataResponseCopyWith<$Res> {
+  _$CalendarDataResponseCopyWithImpl(this._self, this._then);
 
-  final CalendarResponse _self;
-  final $Res Function(CalendarResponse) _then;
+  final CalendarDataResponse _self;
+  final $Res Function(CalendarDataResponse) _then;
 
-/// Create a copy of CalendarResponse
+/// Create a copy of CalendarDataResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? rotationGroupResponse = null,Object? dayInfoMap = null,}) {
   return _then(_self.copyWith(
@@ -71,7 +70,7 @@ as RotationGroupResponse,dayInfoMap: null == dayInfoMap ? _self.dayInfoMap : day
 as Map<DateKey, CalendarDayResponse>,
   ));
 }
-/// Create a copy of CalendarResponse
+/// Create a copy of CalendarDataResponse
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -87,14 +86,12 @@ $RotationGroupResponseCopyWith<$Res> get rotationGroupResponse {
 /// @nodoc
 
 
-class _CalendarResponse extends CalendarResponse {
-  const _CalendarResponse({required this.rotationGroupResponse, required final  Map<DateKey, CalendarDayResponse> dayInfoMap}): _dayInfoMap = dayInfoMap,super._();
+class _CalendarDataResponse extends CalendarDataResponse {
+  const _CalendarDataResponse({required this.rotationGroupResponse, required final  Map<DateKey, CalendarDayResponse> dayInfoMap}): _dayInfoMap = dayInfoMap,super._();
   
 
 @override final  RotationGroupResponse rotationGroupResponse;
-// 各日付のkey: 各日付の表示用データValue
  final  Map<DateKey, CalendarDayResponse> _dayInfoMap;
-// 各日付のkey: 各日付の表示用データValue
 @override Map<DateKey, CalendarDayResponse> get dayInfoMap {
   if (_dayInfoMap is EqualUnmodifiableMapView) return _dayInfoMap;
   // ignore: implicit_dynamic_type
@@ -102,17 +99,17 @@ class _CalendarResponse extends CalendarResponse {
 }
 
 
-/// Create a copy of CalendarResponse
+/// Create a copy of CalendarDataResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$CalendarResponseCopyWith<_CalendarResponse> get copyWith => __$CalendarResponseCopyWithImpl<_CalendarResponse>(this, _$identity);
+_$CalendarDataResponseCopyWith<_CalendarDataResponse> get copyWith => __$CalendarDataResponseCopyWithImpl<_CalendarDataResponse>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarResponse&&(identical(other.rotationGroupResponse, rotationGroupResponse) || other.rotationGroupResponse == rotationGroupResponse)&&const DeepCollectionEquality().equals(other._dayInfoMap, _dayInfoMap));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarDataResponse&&(identical(other.rotationGroupResponse, rotationGroupResponse) || other.rotationGroupResponse == rotationGroupResponse)&&const DeepCollectionEquality().equals(other._dayInfoMap, _dayInfoMap));
 }
 
 
@@ -121,15 +118,15 @@ int get hashCode => Object.hash(runtimeType,rotationGroupResponse,const DeepColl
 
 @override
 String toString() {
-  return 'CalendarResponse(rotationGroupResponse: $rotationGroupResponse, dayInfoMap: $dayInfoMap)';
+  return 'CalendarDataResponse(rotationGroupResponse: $rotationGroupResponse, dayInfoMap: $dayInfoMap)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$CalendarResponseCopyWith<$Res> implements $CalendarResponseCopyWith<$Res> {
-  factory _$CalendarResponseCopyWith(_CalendarResponse value, $Res Function(_CalendarResponse) _then) = __$CalendarResponseCopyWithImpl;
+abstract mixin class _$CalendarDataResponseCopyWith<$Res> implements $CalendarDataResponseCopyWith<$Res> {
+  factory _$CalendarDataResponseCopyWith(_CalendarDataResponse value, $Res Function(_CalendarDataResponse) _then) = __$CalendarDataResponseCopyWithImpl;
 @override @useResult
 $Res call({
  RotationGroupResponse rotationGroupResponse, Map<DateKey, CalendarDayResponse> dayInfoMap
@@ -140,24 +137,24 @@ $Res call({
 
 }
 /// @nodoc
-class __$CalendarResponseCopyWithImpl<$Res>
-    implements _$CalendarResponseCopyWith<$Res> {
-  __$CalendarResponseCopyWithImpl(this._self, this._then);
+class __$CalendarDataResponseCopyWithImpl<$Res>
+    implements _$CalendarDataResponseCopyWith<$Res> {
+  __$CalendarDataResponseCopyWithImpl(this._self, this._then);
 
-  final _CalendarResponse _self;
-  final $Res Function(_CalendarResponse) _then;
+  final _CalendarDataResponse _self;
+  final $Res Function(_CalendarDataResponse) _then;
 
-/// Create a copy of CalendarResponse
+/// Create a copy of CalendarDataResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? rotationGroupResponse = null,Object? dayInfoMap = null,}) {
-  return _then(_CalendarResponse(
+  return _then(_CalendarDataResponse(
 rotationGroupResponse: null == rotationGroupResponse ? _self.rotationGroupResponse : rotationGroupResponse // ignore: cast_nullable_to_non_nullable
 as RotationGroupResponse,dayInfoMap: null == dayInfoMap ? _self._dayInfoMap : dayInfoMap // ignore: cast_nullable_to_non_nullable
 as Map<DateKey, CalendarDayResponse>,
   ));
 }
 
-/// Create a copy of CalendarResponse
+/// Create a copy of CalendarDataResponse
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

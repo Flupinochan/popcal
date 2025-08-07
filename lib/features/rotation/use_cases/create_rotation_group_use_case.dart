@@ -4,7 +4,6 @@ import 'package:popcal/features/notifications/domain/services/rotation_calculati
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
-import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
 
 class CreateRotationGroupUseCase {
   final RotationRepository _rotationRepository;
@@ -17,17 +16,10 @@ class CreateRotationGroupUseCase {
     this._scheduleCalculationService,
   );
 
-  Future<Result<RotationGroup>> execute(CreateRotationGroupRequest dto) async {
-    // 1. Entityへの変換
-    final entityResult = dto.toEntity();
-    if (entityResult.isFailure) {
-      return Results.failure(RotationGroupFailure(entityResult.displayText));
-    }
-    final entity = entityResult.valueOrNull!;
-
-    // 2. ローテーショングループ作成
+  Future<Result<RotationGroup>> execute(RotationGroup rotationGroup) async {
+    // 1. ローテーショングループ作成
     final createRotationResult = await _rotationRepository.createRotationGroup(
-      entity,
+      rotationGroup,
     );
     if (createRotationResult.isFailure) {
       return Results.failure(

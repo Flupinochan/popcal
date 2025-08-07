@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -14,6 +13,5 @@ Future<PackageInfo> packageInfo(Ref ref) async {
 @riverpod
 Logger logger(Ref ref, String loggerName) {
   final logger = Logger(loggerName);
-  logger.level = kDebugMode ? Level.ALL : Level.WARNING;
   return logger;
 }

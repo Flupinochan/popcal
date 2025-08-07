@@ -39,7 +39,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarScreen(
     BuildContext context,
-    CalendarResponse calendarDataDto,
+    CalendarDataResponse calendarDataDto,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
@@ -97,7 +97,7 @@ class CalendarScreen extends HookConsumerWidget {
   // 1. カレンダー
   Widget _buildCalendarContainer(
     BuildContext context,
-    CalendarResponse calendarDataDto,
+    CalendarDataResponse calendarDataDto,
     ValueNotifier<DateTime> focusedDay,
     ValueNotifier<DateTime?> selectedDay,
   ) {
@@ -191,7 +191,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarCell(
     BuildContext context,
-    CalendarResponse calendarDataDto,
+    CalendarDataResponse calendarDataDto,
     DateTime day,
     bool isToday,
     bool isSelected,
@@ -259,7 +259,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   // 2. 選択した曜日のローテーションメンバー名表示
   Widget _buildSelectedDayInfo(
-    CalendarResponse calendarDataDto,
+    CalendarDataResponse calendarDataDto,
     DateTime? selectedDay,
     GlassTheme glass,
     TextTheme textTheme,
@@ -361,7 +361,7 @@ class CalendarScreen extends HookConsumerWidget {
   // 3. ローテーション情報
   Widget _buildRotationInfo(
     BuildContext context,
-    CalendarResponse calendarDataDto,
+    CalendarDataResponse calendarDataDto,
   ) {
     final textTheme = Theme.of(context).textTheme;
 

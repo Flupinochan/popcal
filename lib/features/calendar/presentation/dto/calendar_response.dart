@@ -4,14 +4,13 @@ import 'package:popcal/features/rotation/presentation/dto/rotation_group_respons
 part 'calendar_response.freezed.dart';
 
 @freezed
-sealed class CalendarResponse with _$CalendarResponse {
-  const CalendarResponse._();
+sealed class CalendarDataResponse with _$CalendarDataResponse {
+  const CalendarDataResponse._();
 
-  const factory CalendarResponse({
+  const factory CalendarDataResponse({
     required RotationGroupResponse rotationGroupResponse,
-    // 各日付のkey: 各日付の表示用データValue
     required Map<DateKey, CalendarDayResponse> dayInfoMap,
-  }) = _CalendarResponse;
+  }) = _CalendarDataResponse;
 
   // 指定した日付から表示用データを返却
   CalendarDayResponse getDayInfo(DateTime date) {

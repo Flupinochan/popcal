@@ -13,6 +13,7 @@ import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
+import 'package:popcal/features/rotation/providers/rotation_controller.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/features/rotation/providers/rotation_state.dart';
 import 'package:popcal/router/routes.dart';
@@ -201,7 +202,7 @@ class HomeScreen extends HookConsumerWidget {
     UserResponse userDto,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
-    final createUseCase = ref.read(createRotationGroupUseCaseProvider);
+    final rotationController = ref.read(rotationControllerProvider.notifier);
 
     // 削除処理
     final result = await rotationRepository.deleteRotationGroup(
@@ -224,7 +225,9 @@ class HomeScreen extends HookConsumerWidget {
               notificationTime: rotationGroup.notificationTime,
             );
 
-            final restoreResult = await createUseCase.execute(createDto);
+            final restoreResult = await rotationController.createRotationGroup(
+              createDto,
+            );
 
             // _buildRotationGroupEmpty から _buildRotationGroupList に戻る場合はcontextが異なるため戻れない
             // 以下のcontextが前の親のcontextのためエラー

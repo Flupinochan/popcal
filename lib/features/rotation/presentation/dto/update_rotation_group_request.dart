@@ -18,29 +18,25 @@ sealed class UpdateRotationGroupRequest with _$UpdateRotationGroupRequest {
     required List<String> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
+    required DateTime createdAt,
   }) = _UpdateRotationGroupRequest;
 
   // DTO => Entity
-  Result<RotationGroup> applyToEntity(RotationGroup rotationGroup) {
+  Result<RotationGroup> toEntity() {
     try {
-      if (rotationGroup.userId != userId) {
-        return Results.failure(AuthFailure('所有者が一致しません'));
-      }
-      if (rotationGroup.rotationGroupId != rotationGroupId) {
-        return Results.failure(ValidationFailure('ローテーションIDが一致しません'));
-      }
-
       final currentTime = DateTime.now().toLocal();
 
       return Results.success(
-        rotationGroup.copyWith(
+        RotationGroup(
+          userId: userId,
+          rotationGroupId: rotationGroupId,
           rotationName: rotationName,
           rotationMembers: rotationMembers,
           rotationDays: rotationDays,
           notificationTime: notificationTime,
-          currentRotationIndex: 0, // 更新時はリセット
+          createdAt: createdAt,
           updatedAt: currentTime,
-          createdAt: currentTime,
+          currentRotationIndex: 0, // 更新時は0にリセット
         ),
       );
     } catch (e) {
@@ -61,6 +57,7 @@ sealed class UpdateRotationGroupRequest with _$UpdateRotationGroupRequest {
       rotationMembers: entity.rotationMembers,
       rotationDays: entity.rotationDays,
       notificationTime: entity.notificationTime,
+      createdAt: entity.createdAt,
     );
   }
 }

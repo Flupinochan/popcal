@@ -9,6 +9,7 @@ import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 
 part 'rotation_controller.g.dart';
 
+// ControllerはViewModel相当であり、usecaseを実行し、EntityとDtoの変換処理を担当
 @riverpod
 class RotationController extends _$RotationController {
   @override
@@ -20,9 +21,15 @@ class RotationController extends _$RotationController {
   ) async {
     state = const AsyncLoading();
     try {
+      final entityResult = dto.toEntity();
+      if (entityResult.isFailure) {
+        state = AsyncError(entityResult.failureOrNull!, StackTrace.current);
+        return Results.failure(RotationGroupFailure(entityResult.displayText));
+      }
+
       final result = await ref
           .read(createRotationGroupUseCaseProvider)
-          .execute(dto);
+          .execute(entityResult.valueOrNull!);
       state = const AsyncData(null);
       return _convertEntityToDto(result);
     } catch (error, stackTrace) {
@@ -37,9 +44,14 @@ class RotationController extends _$RotationController {
   ) async {
     state = const AsyncLoading();
     try {
+      final entityResult = dto.toEntity();
+      if (entityResult.isFailure) {
+        state = AsyncError(entityResult.failureOrNull!, StackTrace.current);
+        return Results.failure(RotationGroupFailure(entityResult.displayText));
+      }
       final result = await ref
           .read(updateRotationGroupUseCaseProvider)
-          .execute(dto);
+          .execute(entityResult.valueOrNull!);
       state = const AsyncData(null);
       return _convertEntityToDto(result);
     } catch (error, stackTrace) {

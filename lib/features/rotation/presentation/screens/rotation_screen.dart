@@ -172,6 +172,7 @@ Future<void> _handleSubmit(
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,
           notificationTime: formData['notificationTime'] as TimeOfDay,
+          createdAt: originalRotationGroup.createdAt,
         );
         result = await rotationController.updateRotationGroup(dto);
       } else {

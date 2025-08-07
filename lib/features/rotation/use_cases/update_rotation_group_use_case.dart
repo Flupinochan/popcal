@@ -4,7 +4,6 @@ import 'package:popcal/features/notifications/domain/services/rotation_calculati
 import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
-import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_request.dart';
 
 class UpdateRotationGroupUseCase {
   final RotationRepository _rotationRepository;
@@ -18,39 +17,22 @@ class UpdateRotationGroupUseCase {
   );
 
   /// 更新処理は、既存のローテーショングループを削除し、再作成
-  Future<Result<RotationGroup>> execute(UpdateRotationGroupRequest dto) async {
-    // 1. 更新対象のローテーショングループ情報を取得
-    final existingResult = await _rotationRepository.getRotationGroup(
-      dto.userId,
-      dto.rotationGroupId,
-    );
-    if (existingResult.isFailure) {
-      return Results.failure(existingResult.failureOrNull!);
+  Future<Result<RotationGroup>> execute(RotationGroup rotationGroup) async {
+    if (rotationGroup.rotationGroupId == null) {
+      return Results.failure(ValidationFailure('ローテーショングループIDが指定されていません'));
     }
 
-    // 2. Entityへ変換
-    final existingEntity = existingResult.valueOrNull;
-    if (existingEntity == null) {
-      return Results.failure(ValidationFailure('ローテーショングループが見つかりませんでした'));
-    }
-
-    // 3. ローテーショングループを削除
+    // 1. ローテーショングループを削除
     final deleteResult = await _notificationRepository
-        .deleteNotificationsByRotationGroupId(existingEntity.rotationGroupId!);
+        .deleteNotificationsByRotationGroupId(rotationGroup.rotationGroupId!);
     if (deleteResult.isFailure) {
       return Results.failure(deleteResult.failureOrNull!);
     }
 
     // 4. ローテーショングループを再作成
     // ※メンバーの更新場所と同一箇所でindexやcreatedAtも更新しておくべき
-    final updatedEntityResult = dto.applyToEntity(existingEntity);
-    if (updatedEntityResult.isFailure) {
-      return Results.failure(updatedEntityResult.failureOrNull!);
-    }
-    final updatedRotationGroup = updatedEntityResult.valueOrNull!;
-
     final updateResult = await _rotationRepository.updateRotationGroup(
-      updatedRotationGroup,
+      rotationGroup,
     );
     if (updateResult.isFailure) {
       return Results.failure(updateResult.failureOrNull!);
