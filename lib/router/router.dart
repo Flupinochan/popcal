@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:popcal/features/auth/providers/auth_state.dart';
+import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';

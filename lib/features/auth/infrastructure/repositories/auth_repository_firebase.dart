@@ -3,10 +3,10 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/infrastructure/dto/user_firebase_response.dart';
 
-class FirebaseAuthDataSource {
+class AuthRepositoryFirebase {
   final FirebaseAuth _firebaseAuth;
 
-  FirebaseAuthDataSource(this._firebaseAuth);
+  AuthRepositoryFirebase(this._firebaseAuth);
 
   // 認証状態(認証済 or 未認証)を監視
   Stream<Result<UserFirebaseResponse?>> get authStateChanges {

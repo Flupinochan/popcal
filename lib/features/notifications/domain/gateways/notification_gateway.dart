@@ -1,5 +1,5 @@
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 
 /// 1. CRUD操作
 abstract class NotificationGateway {
@@ -12,9 +12,7 @@ abstract class NotificationGateway {
   Future<Result<void>> initializeNotificationLaunch();
 
   /// 1 通知スケジュールを作成
-  Future<Result<void>> createNotification(
-    NotificationSetting notificationSetting,
-  );
+  Future<Result<void>> createNotification(NotificationEntry notificationEntry);
 
   /// 2. 通知予定のスケジュールを一覧取得
   /// rotationIdのListを取得

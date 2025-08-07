@@ -37,7 +37,7 @@ class CreateRotationUseCase {
         final notificationPlan = calculationResult.valueOrNull!;
 
         // 3. 各通知を作成
-        for (final notification in notificationPlan.notificationSettings) {
+        for (final notification in notificationPlan.notificationEntry) {
           final createNotificationResult = await _notificationRepository
               .createNotification(notification);
           if (createNotificationResult.isFailure) {

@@ -8,7 +8,7 @@ import 'package:popcal/features/auth/infrastructure/repositories/auth_repository
 import 'package:popcal/features/auth/infrastructure/repositories/auth_repository_firebase.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 
-part 'auth_provider.g.dart';
+part 'auth_providers.g.dart';
 
 // DI
 @riverpod
@@ -17,13 +17,13 @@ FirebaseAuth firebaseAuth(Ref ref) {
 }
 
 @riverpod
-FirebaseAuthDataSource firebaseAuthDataSource(Ref ref) {
-  return FirebaseAuthDataSource(ref.watch(firebaseAuthProvider));
+AuthRepositoryFirebase firebaseAuthDataSource(Ref ref) {
+  return AuthRepositoryFirebase(ref.watch(firebaseAuthProvider));
 }
 
 @riverpod
 AuthRepository authRepository(Ref ref) {
-  return AuthRepositoryFirebase(ref.watch(firebaseAuthDataSourceProvider));
+  return AuthRepositoryImpl(ref.watch(firebaseAuthDataSourceProvider));
 }
 
 // 認証状態取得Stream => auth_state.dart で Dtoへ変換

@@ -1,5 +1,5 @@
 /// 通知設定
-class NotificationSetting {
+class NotificationEntry {
   final int notificationId;
   // rotationIdはポップアップをタップした際に、カレンダー画面を表示するさいに必要
   final String rotationId;
@@ -10,7 +10,7 @@ class NotificationSetting {
   final String memberName;
   final DateTime rotationStartDate;
 
-  const NotificationSetting({
+  const NotificationEntry({
     required this.notificationId,
     required this.rotationId,
     required this.userId,

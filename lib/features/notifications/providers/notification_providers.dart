@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/core/providers/core_provider.dart';
-import 'package:popcal/features/notifications/use_cases/calendar_schedule_use_case.dart';
+import 'package:popcal/features/calendar/use_cases/build_calendar_schedule_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_local.dart';
@@ -55,6 +55,8 @@ RotationCalculationService rotationCalculationService(Ref ref) {
 }
 
 @riverpod
-CalendarScheduleUseCase calendarScheduleUseCase(Ref ref) {
-  return CalendarScheduleUseCase(ref.watch(rotationCalculationServiceProvider));
+BuildCalendarScheduleUseCase calendarScheduleUseCase(Ref ref) {
+  return BuildCalendarScheduleUseCase(
+    ref.watch(rotationCalculationServiceProvider),
+  );
 }

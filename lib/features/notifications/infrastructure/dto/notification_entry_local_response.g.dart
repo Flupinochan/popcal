@@ -1,16 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'local_notification_setting_response.dart';
+part of 'notification_entry_local_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_LocalNotificationSettingDto _$LocalNotificationSettingDtoFromJson(
+_NotificationEntryLocalResponse _$NotificationEntryLocalResponseFromJson(
   Map<String, dynamic> json,
-) => _LocalNotificationSettingDto(
+) => _NotificationEntryLocalResponse(
   notificationId: (json['notificationId'] as num).toInt(),
-  rotationId: json['rotationGroupId'] as String,
+  rotationId: json['rotationId'] as String,
   userId: json['userId'] as String,
   rotationName: json['rotationName'] as String,
   notificationTime: DateTime.parse(json['notificationTime'] as String),
@@ -21,11 +21,11 @@ _LocalNotificationSettingDto _$LocalNotificationSettingDtoFromJson(
   content: json['content'] as String,
 );
 
-Map<String, dynamic> _$LocalNotificationSettingDtoToJson(
-  _LocalNotificationSettingDto instance,
+Map<String, dynamic> _$NotificationEntryLocalResponseToJson(
+  _NotificationEntryLocalResponse instance,
 ) => <String, dynamic>{
   'notificationId': instance.notificationId,
-  'rotationGroupId': instance.rotationId,
+  'rotationId': instance.rotationId,
   'userId': instance.userId,
   'rotationName': instance.rotationName,
   'notificationTime': instance.notificationTime.toIso8601String(),

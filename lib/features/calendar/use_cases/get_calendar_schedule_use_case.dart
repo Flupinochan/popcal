@@ -1,11 +1,11 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
-import 'package:popcal/features/calendar/domain/value_objects/calendar_data.dart';
-import 'package:popcal/features/notifications/use_cases/calendar_schedule_use_case.dart';
+import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
+import 'package:popcal/features/calendar/use_cases/build_calendar_schedule_use_case.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
-class GetCalendarDataUseCase {
+class GetCalendarScheduleUseCase {
   // UIで表示する期間かつUseCaseで計算に必要な値
   // ※過去1年and未来1年
   static const int pastDays = 365;
@@ -13,9 +13,9 @@ class GetCalendarDataUseCase {
 
   final AuthRepository _authRepository;
   final RotationRepository _rotationRepository;
-  final CalendarScheduleUseCase _calendarScheduleUseCase;
+  final BuildCalendarScheduleUseCase _calendarScheduleUseCase;
 
-  GetCalendarDataUseCase(
+  GetCalendarScheduleUseCase(
     this._authRepository,
     this._rotationRepository,
     this._calendarScheduleUseCase,
@@ -23,7 +23,7 @@ class GetCalendarDataUseCase {
 
   // CalendarScreen表示に必要な3つの情報を取得して返却
   // UseCaseは複数のビジネスロジックを実行するため、Entityを扱う
-  Future<Result<CalendarData>> execute(String rotationId) async {
+  Future<Result<CalendarSchedule>> execute(String rotationId) async {
     // 1. ユーザ情報を取得 ※.futureでstreamから1度だけ取得が可能
     final authResult = await _authRepository.getUser();
     if (authResult.isFailure) {
@@ -59,9 +59,9 @@ class GetCalendarDataUseCase {
       return Results.failure(notificationResult.failureOrNull!);
     }
 
-    final calendarData = CalendarData(
+    final calendarData = CalendarSchedule(
       rotation: rotation,
-      dayInfoMap: notificationResult.valueOrNull!,
+      scheduleMap: notificationResult.valueOrNull!,
     );
 
     return Results.success(calendarData);

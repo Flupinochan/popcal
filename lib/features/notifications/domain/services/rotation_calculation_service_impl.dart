@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_plan.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
   /// 1. 次回の通知予定日を計算
@@ -38,7 +38,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
 
   /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
   @override
-  Result<NotificationPlan> planUpcomingNotifications({
+  Result<NotificationSchedule> planUpcomingNotifications({
     required Rotation rotation,
     int futureDays = 30,
   }) {
@@ -47,7 +47,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       final currentTime = DateTime.now().toLocal();
       final toDate = currentTime.add(Duration(days: futureDays));
 
-      final notifications = <NotificationSetting>[];
+      final notifications = <NotificationEntry>[];
       var currentIndex = rotation.currentRotationIndex;
 
       // 指定期間をループして通知情報を作成
@@ -76,7 +76,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             rotation.notificationTime.minute,
           );
 
-          final notificationSetting = NotificationSetting(
+          final notificationSetting = NotificationEntry(
             notificationId: notificationId,
             rotationId: rotation.rotationId!,
             userId: rotation.userId,
@@ -92,8 +92,8 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       }
 
       return Results.success(
-        NotificationPlan(
-          notificationSettings: notifications,
+        NotificationSchedule(
+          notificationEntry: notifications,
           newCurrentRotationIndex: currentIndex,
         ),
       );

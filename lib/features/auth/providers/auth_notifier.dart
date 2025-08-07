@@ -5,14 +5,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/features/auth/presentation/dto/email_sign_in_request.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/providers/auth_provider.dart';
+import 'package:popcal/features/auth/providers/auth_providers.dart';
 
-part 'auth_controller.g.dart';
+part 'auth_notifier.g.dart';
 
 // シンプルなためUseCase層の役割も含めているが複雑化した場合は
 // PresentationのロジックとしてUseCase層に切り出す
 @riverpod
-class AuthController extends _$AuthController {
+class AuthNotifier extends _$AuthNotifier {
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   @override

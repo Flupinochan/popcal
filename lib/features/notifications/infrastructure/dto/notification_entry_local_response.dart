@@ -2,17 +2,17 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 
-part 'local_notification_setting_dto.freezed.dart';
-part 'local_notification_setting_dto.g.dart';
+part 'notification_entry_local_response.freezed.dart';
+part 'notification_entry_local_response.g.dart';
 
 @freezed
-sealed class LocalNotificationSettingResponse
-    with _$LocalNotificationSettingDto {
-  const LocalNotificationSettingResponse._();
+sealed class NotificationEntryLocalResponse
+    with _$NotificationEntryLocalResponse {
+  const NotificationEntryLocalResponse._();
 
-  const factory LocalNotificationSettingResponse({
+  const factory NotificationEntryLocalResponse({
     required int notificationId,
     required String rotationId,
     required String userId,
@@ -23,15 +23,15 @@ sealed class LocalNotificationSettingResponse
     required String title,
     required String description,
     required String content,
-  }) = _LocalNotificationSettingDto;
+  }) = _NotificationEntryLocalResponse;
 
   // Entity => DTO
-  static Result<LocalNotificationSettingResponse> fromEntity(
-    NotificationSetting notification,
+  static Result<NotificationEntryLocalResponse> fromEntity(
+    NotificationEntry notification,
   ) {
     try {
       return Results.success(
-        LocalNotificationSettingResponse(
+        NotificationEntryLocalResponse(
           notificationId: notification.notificationId,
           rotationId: notification.rotationId,
           userId: notification.userId,
@@ -52,10 +52,10 @@ sealed class LocalNotificationSettingResponse
   }
 
   // DTO => Entity
-  Result<NotificationSetting> toEntity() {
+  Result<NotificationEntry> toEntity() {
     try {
       return Results.success(
-        NotificationSetting(
+        NotificationEntry(
           notificationId: notificationId,
           rotationId: rotationId,
           userId: userId,
@@ -73,16 +73,15 @@ sealed class LocalNotificationSettingResponse
   }
 
   // JSON => DTO
-  factory LocalNotificationSettingResponse.fromJson(
-    Map<String, dynamic> json,
-  ) => _$LocalNotificationSettingDtoFromJson(json);
+  factory NotificationEntryLocalResponse.fromJson(Map<String, dynamic> json) =>
+      _$NotificationEntryLocalResponseFromJson(json);
 
   // JSON => DTO
-  static Result<LocalNotificationSettingResponse> fromJsonSafe(
+  static Result<NotificationEntryLocalResponse> fromJsonSafe(
     Map<String, dynamic> json,
   ) {
     try {
-      final dto = LocalNotificationSettingResponse.fromJson(json);
+      final dto = NotificationEntryLocalResponse.fromJson(json);
       return Results.success(dto);
     } catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
@@ -90,18 +89,18 @@ sealed class LocalNotificationSettingResponse
   }
 }
 
-extension LocalNotificationSettingDtoJsonX on LocalNotificationSettingResponse {
+extension LocalNotificationSettingDtoJsonX on NotificationEntryLocalResponse {
   // DTO => String(JSON)
   String toJsonString() => jsonEncode(toJson());
 
   // String(JSON) => DTO
-  static Result<LocalNotificationSettingResponse> fromJsonStringSafe(
+  static Result<NotificationEntryLocalResponse> fromJsonStringSafe(
     String jsonString,
   ) {
     try {
       final Map<String, dynamic> map =
           jsonDecode(jsonString) as Map<String, dynamic>;
-      return LocalNotificationSettingResponse.fromJsonSafe(map);
+      return NotificationEntryLocalResponse.fromJsonSafe(map);
     } catch (e) {
       return Results.failure(
         ValidationFailure('JSON string parsing failed: $e'),
@@ -110,9 +109,9 @@ extension LocalNotificationSettingDtoJsonX on LocalNotificationSettingResponse {
   }
 
   // String(JSON) => DTO
-  static LocalNotificationSettingResponse fromJsonString(String jsonString) {
+  static NotificationEntryLocalResponse fromJsonString(String jsonString) {
     final Map<String, dynamic> map =
         jsonDecode(jsonString) as Map<String, dynamic>;
-    return LocalNotificationSettingResponse.fromJson(map);
+    return NotificationEntryLocalResponse.fromJson(map);
   }
 }

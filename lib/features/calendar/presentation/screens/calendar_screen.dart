@@ -4,9 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/use_cases/get_calendar_data_use_case.dart';
-import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
-import 'package:popcal/features/calendar/providers/calendar_screen_data.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
+import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
+import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/notifications/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
@@ -23,7 +23,9 @@ class CalendarScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final calendarDataAsync = ref.watch(calendarScreenDataProvider(rotationId));
+    final calendarDataAsync = ref.watch(
+      calendarScheduleResponseProvider(rotationId),
+    );
     return calendarDataAsync.when(
       data:
           (result) => result.when(
@@ -37,7 +39,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarScreen(
     BuildContext context,
-    CalendarDataResponse calendarDataDto,
+    CalendarScheduleResponse calendarDataDto,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
@@ -95,7 +97,7 @@ class CalendarScreen extends HookConsumerWidget {
   // 1. カレンダー
   Widget _buildCalendarContainer(
     BuildContext context,
-    CalendarDataResponse calendarDataDto,
+    CalendarScheduleResponse calendarDataDto,
     ValueNotifier<DateTime> focusedDay,
     ValueNotifier<DateTime?> selectedDay,
   ) {
@@ -106,10 +108,10 @@ class CalendarScreen extends HookConsumerWidget {
     return GlassWrapper(
       child: TableCalendar<String>(
         firstDay: DateTime.now().toLocal().subtract(
-          const Duration(days: GetCalendarDataUseCase.pastDays),
+          const Duration(days: GetCalendarScheduleUseCase.pastDays),
         ),
         lastDay: DateTime.now().toLocal().add(
-          const Duration(days: GetCalendarDataUseCase.futureDays),
+          const Duration(days: GetCalendarScheduleUseCase.futureDays),
         ),
         focusedDay: focusedDay.value,
         selectedDayPredicate:
@@ -189,7 +191,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   Widget _buildCalendarCell(
     BuildContext context,
-    CalendarDataResponse calendarDataDto,
+    CalendarScheduleResponse calendarDataDto,
     DateTime day,
     bool isToday,
     bool isSelected,
@@ -257,7 +259,7 @@ class CalendarScreen extends HookConsumerWidget {
 
   // 2. 選択した曜日のローテーションメンバー名表示
   Widget _buildSelectedDayInfo(
-    CalendarDataResponse calendarDataDto,
+    CalendarScheduleResponse calendarDataDto,
     DateTime? selectedDay,
     GlassTheme glass,
     TextTheme textTheme,
@@ -359,7 +361,7 @@ class CalendarScreen extends HookConsumerWidget {
   // 3. ローテーション情報
   Widget _buildRotationInfo(
     BuildContext context,
-    CalendarDataResponse calendarDataDto,
+    CalendarScheduleResponse calendarDataDto,
   ) {
     final textTheme = Theme.of(context).textTheme;
 

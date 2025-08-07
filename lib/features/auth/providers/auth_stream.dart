@@ -2,9 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/providers/auth_provider.dart';
+import 'package:popcal/features/auth/providers/auth_providers.dart';
 
-part 'auth_state.g.dart';
+part 'auth_stream.g.dart';
 
 // Stream Entity => Stream Dto
 // UIでStreamを受け取る際に直接Entityを受け取らないようにする

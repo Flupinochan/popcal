@@ -2,7 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/auth/providers/auth_state.dart';
+import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

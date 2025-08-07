@@ -10,7 +10,7 @@ import 'package:popcal/features/auth/presentation/enums/auth_mode.dart';
 import 'package:popcal/features/auth/presentation/enums/login_form_key.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
-import 'package:popcal/features/auth/providers/auth_controller.dart';
+import 'package:popcal/features/auth/providers/auth_notifier.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_dialog.dart';
@@ -28,7 +28,7 @@ class LoginScreen extends HookConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final isLoading = ref.watch(authControllerProvider).isLoading;
+    final isLoading = ref.watch(authNotifierProvider).isLoading;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final selectedMode = useState(AuthMode.signIn);
 
@@ -288,7 +288,7 @@ class LoginScreen extends HookConsumerWidget {
     }
     final dto = dtoResult.valueOrNull!;
 
-    final authViewModel = ref.read(authControllerProvider.notifier);
+    final authViewModel = ref.read(authNotifierProvider.notifier);
     final authResult =
         selectedMode.value == AuthMode.signIn
             ? await authViewModel.signIn(dto)

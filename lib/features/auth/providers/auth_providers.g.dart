@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_provider.dart';
+part of 'auth_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -23,12 +23,12 @@ final firebaseAuthProvider = AutoDisposeProvider<FirebaseAuth>.internal(
 // ignore: unused_element
 typedef FirebaseAuthRef = AutoDisposeProviderRef<FirebaseAuth>;
 String _$firebaseAuthDataSourceHash() =>
-    r'889b9be1ec148b8ad5a262dd58a5dc159095cf53';
+    r'af8f5994206b241a826df15b532971752e2b48c2';
 
 /// See also [firebaseAuthDataSource].
 @ProviderFor(firebaseAuthDataSource)
 final firebaseAuthDataSourceProvider =
-    AutoDisposeProvider<FirebaseAuthDataSource>.internal(
+    AutoDisposeProvider<AuthRepositoryFirebase>.internal(
       firebaseAuthDataSource,
       name: r'firebaseAuthDataSourceProvider',
       debugGetCreateSourceHash:
@@ -42,8 +42,8 @@ final firebaseAuthDataSourceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseAuthDataSourceRef =
-    AutoDisposeProviderRef<FirebaseAuthDataSource>;
-String _$authRepositoryHash() => r'69216545fe3cacbf6fae9eff4ea736aaea870eb4';
+    AutoDisposeProviderRef<AuthRepositoryFirebase>;
+String _$authRepositoryHash() => r'17468c8d52d6bf94fafcf95ba6c26f3385c6f600';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)

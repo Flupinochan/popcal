@@ -7,7 +7,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
-import 'package:popcal/features/auth/providers/auth_state.dart';
+import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';

@@ -132,12 +132,12 @@ final rotationCalculationServiceProvider =
 typedef RotationCalculationServiceRef =
     AutoDisposeProviderRef<RotationCalculationService>;
 String _$calendarScheduleUseCaseHash() =>
-    r'8d73cf7d0f090dcbe36c9e085f39c0893b0d49d2';
+    r'b8955a699721f80f46a11f66b2c3e960107bab88';
 
 /// See also [calendarScheduleUseCase].
 @ProviderFor(calendarScheduleUseCase)
 final calendarScheduleUseCaseProvider =
-    AutoDisposeProvider<CalendarScheduleUseCase>.internal(
+    AutoDisposeProvider<BuildCalendarScheduleUseCase>.internal(
       calendarScheduleUseCase,
       name: r'calendarScheduleUseCaseProvider',
       debugGetCreateSourceHash:
@@ -151,6 +151,6 @@ final calendarScheduleUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CalendarScheduleUseCaseRef =
-    AutoDisposeProviderRef<CalendarScheduleUseCase>;
+    AutoDisposeProviderRef<BuildCalendarScheduleUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

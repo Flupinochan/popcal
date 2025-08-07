@@ -4,7 +4,7 @@ import 'package:popcal/features/notifications/domain/services/rotation_calculati
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_plan.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 
 /// home画面表示時に通知設定を同期するUseCase
 /// firebaseとの同期ではなく、現在時刻から30日分を計算、作成
@@ -76,7 +76,7 @@ class SyncNotificationsUseCase {
 
   // ローカル通知の作成を同期
   Future<Result<void>> createSync(
-    NotificationPlan result,
+    NotificationSchedule result,
     Set<int> currentLocalNotificationIds,
     Rotation rotation,
   ) async {
@@ -84,7 +84,7 @@ class SyncNotificationsUseCase {
 
     // 不足しているローカル通知設定を取得
     final missingNotifications =
-        result.notificationSettings.where((notification) {
+        result.notificationEntry.where((notification) {
           return !currentLocalNotificationIds.contains(
             notification.notificationId,
           );
@@ -123,14 +123,14 @@ class SyncNotificationsUseCase {
 
   // ローカル通知の削除を同期
   Future<Result<void>> deleteSync(
-    NotificationPlan result,
+    NotificationSchedule result,
     Set<int> currentLocalNotificationIds,
   ) async {
     String? errorMessage;
 
     // 計算結果の通知Idsを取得
     final validNotificationIds = <int>{};
-    for (final notification in result.notificationSettings) {
+    for (final notification in result.notificationEntry) {
       validNotificationIds.add(notification.notificationId);
     }
 

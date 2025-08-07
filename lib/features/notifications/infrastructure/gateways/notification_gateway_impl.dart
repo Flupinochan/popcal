@@ -1,8 +1,8 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_local.dart';
-import 'package:popcal/features/notifications/infrastructure/dto/local_notification_setting_response.dart';
+import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 
 class NotificationGatewayImpl implements NotificationGateway {
   final NotificationGatewayLocal _localNotificationsDatasource;
@@ -33,10 +33,10 @@ class NotificationGatewayImpl implements NotificationGateway {
   /// 1 通知スケジュールを作成
   @override
   Future<Result<void>> createNotification(
-    NotificationSetting notificationSetting,
+    NotificationEntry notificationEntry,
   ) async {
-    final dtoResult = LocalNotificationSettingResponse.fromEntity(
-      notificationSetting,
+    final dtoResult = NotificationEntryLocalResponse.fromEntity(
+      notificationEntry,
     );
     if (dtoResult.isFailure) {
       return Results.failure(dtoResult.failureOrNull!);

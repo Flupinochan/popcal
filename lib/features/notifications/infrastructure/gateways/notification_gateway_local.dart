@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/notifications/infrastructure/dto/local_notification_setting_response.dart';
+import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -114,7 +114,7 @@ class NotificationGatewayLocal {
 
   /// 1. 通知スケジュールを作成
   Future<Result<void>> createNotification(
-    LocalNotificationSettingResponse notificationSettingDto,
+    NotificationEntryLocalResponse notificationSettingDto,
   ) async {
     try {
       if (notificationSettingDto.notificationTime.isBefore(

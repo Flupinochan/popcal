@@ -1,14 +1,14 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/calendar/domain/value_objects/calendar_data.dart';
-import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
+import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 
-class CalendarScheduleUseCase {
+class BuildCalendarScheduleUseCase {
   final RotationCalculationService _rotationCalculationService;
 
-  CalendarScheduleUseCase(this._rotationCalculationService);
+  BuildCalendarScheduleUseCase(this._rotationCalculationService);
 
   // 2. カレンダー表示用DTO作成
   /// 表示用データの生成、これはapplication service
@@ -18,7 +18,7 @@ class CalendarScheduleUseCase {
   /// [rotation]
   /// [toDate] デフォルトは未来1年分
   /// 2. Calendar表示用スケジュールを生成 ※1年分
-  Result<Map<DateKey, CalendarDay>> buildCalendarSchedule({
+  Result<Map<DateKey, ScheduleDay>> buildCalendarSchedule({
     required Rotation rotation,
     DateTime? toDate,
   }) {
@@ -28,7 +28,7 @@ class CalendarScheduleUseCase {
           toDate ??
           DateTime(currentTime.year + 1, currentTime.month, currentTime.day);
 
-      final calendarDays = <DateKey, CalendarDay>{};
+      final calendarDays = <DateKey, ScheduleDay>{};
       var currentIndex = rotation.currentRotationIndex;
 
       // 指定期間をループしてカレンダー日を作成
@@ -74,13 +74,13 @@ class CalendarScheduleUseCase {
   }
 
   void _addCalendarDay({
-    required Map<DateKey, CalendarDay> calendarDays,
+    required Map<DateKey, ScheduleDay> calendarDays,
     required DateTime date,
     String? memberName,
     required bool isRotationDay,
     int? calendarDayColorIndex,
   }) {
-    final calendarDay = CalendarDay(
+    final calendarDay = ScheduleDay(
       date: date,
       memberName: memberName,
       isRotationDay: isRotationDay,

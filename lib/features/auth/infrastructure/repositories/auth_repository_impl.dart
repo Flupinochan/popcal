@@ -5,14 +5,14 @@ import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 
-class AuthRepositoryFirebase implements AuthRepository {
-  final FirebaseAuthDataSource _firebaseAuthDataSource;
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRepositoryFirebase _authRepositoryFirebase;
 
-  AuthRepositoryFirebase(this._firebaseAuthDataSource);
+  AuthRepositoryImpl(this._authRepositoryFirebase);
 
   @override
   Stream<Result<AppUser?>> get authStateChanges {
-    return _firebaseAuthDataSource.authStateChanges.asyncMap((dtoResult) async {
+    return _authRepositoryFirebase.authStateChanges.asyncMap((dtoResult) async {
       return dtoResult.when(
         success: (dto) {
           if (dto == null) {
@@ -30,7 +30,7 @@ class AuthRepositoryFirebase implements AuthRepository {
 
   @override
   Future<Result<AppUser?>> getUser() async {
-    final dtoResult = await _firebaseAuthDataSource.getUser();
+    final dtoResult = await _authRepositoryFirebase.getUser();
     return dtoResult.when(
       success: (dto) {
         if (dto == null) {
@@ -50,7 +50,7 @@ class AuthRepositoryFirebase implements AuthRepository {
     Email email,
     Password password,
   ) async {
-    final dtoResult = await _firebaseAuthDataSource.signInWithEmailAndPassword(
+    final dtoResult = await _authRepositoryFirebase.signInWithEmailAndPassword(
       email.value,
       password.value,
     );
@@ -71,7 +71,7 @@ class AuthRepositoryFirebase implements AuthRepository {
     Email email,
     Password password,
   ) async {
-    final dtoResult = await _firebaseAuthDataSource.signUpWithEmailAndPassword(
+    final dtoResult = await _authRepositoryFirebase.signUpWithEmailAndPassword(
       email.value,
       password.value,
     );
@@ -89,6 +89,6 @@ class AuthRepositoryFirebase implements AuthRepository {
 
   @override
   Future<Result<void>> signOut() async {
-    return _firebaseAuthDataSource.signOut();
+    return _authRepositoryFirebase.signOut();
   }
 }

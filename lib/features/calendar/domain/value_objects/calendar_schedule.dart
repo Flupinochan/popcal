@@ -1,17 +1,17 @@
-import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 
-class CalendarData {
+class CalendarSchedule {
   final Rotation rotation;
   // 各日付のkey: 各日付の表示用データValue
-  final Map<DateKey, CalendarDay> dayInfoMap;
+  final Map<DateKey, ScheduleDay> scheduleMap;
 
-  const CalendarData({required this.rotation, required this.dayInfoMap});
+  const CalendarSchedule({required this.rotation, required this.scheduleMap});
 
-  CalendarDay getDayInfo(DateTime date) {
+  ScheduleDay getDayInfo(DateTime date) {
     final key = DateKey.fromDateTime(date);
-    return dayInfoMap[key] ??
-        CalendarDay(
+    return scheduleMap[key] ??
+        ScheduleDay(
           date: date,
           memberName: null,
           isRotationDay: false,
@@ -20,13 +20,13 @@ class CalendarData {
   }
 }
 
-class CalendarDay {
+class ScheduleDay {
   final DateTime date;
   final String? memberName;
   final bool isRotationDay;
   final int? memberColorIndex;
 
-  const CalendarDay({
+  const ScheduleDay({
     required this.date,
     required this.memberName,
     required this.isRotationDay,
