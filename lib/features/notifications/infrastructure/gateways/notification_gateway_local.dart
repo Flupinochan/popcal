@@ -76,6 +76,7 @@ class NotificationGatewayLocal {
 
   /// 通知権限状態の確認
   /// Returns: 通知が可能な場合はtrueを返却
+  // ignore: unused_element
   Future<Result<bool>> _isAndroidPermissionGranted() async {
     try {
       final bool granted =
@@ -188,7 +189,6 @@ class NotificationGatewayLocal {
     final List<PendingNotificationRequest> pendingNotifications =
         await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
 
-    int deletedCount = 0;
     String? errorMessage;
     for (final notification in pendingNotifications) {
       if (notification.payload != null) {
@@ -200,7 +200,6 @@ class NotificationGatewayLocal {
             if (localNotificationSettingDto.rotationId == rotationId) {
               try {
                 _flutterLocalNotificationsPlugin.cancel(notification.id);
-                deletedCount++;
               } catch (error) {
                 errorMessage = error.toString();
               }
