@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'rotation_state.dart';
+part of 'rotation_stream.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$rotationGroupListStreamHash() =>
-    r'bf9757cce9f272c7112d097e1280022300a1aed6';
+String _$rotationResponsesStreamHash() =>
+    r'f9049b97d9d861ae613d82c9685bf13bb1c7b07f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,24 +30,24 @@ class _SystemHash {
   }
 }
 
-/// See also [rotationGroupListStream].
-@ProviderFor(rotationGroupListStream)
-const rotationGroupListStreamProvider = RotationGroupListStreamFamily();
+/// See also [rotationResponsesStream].
+@ProviderFor(rotationResponsesStream)
+const rotationResponsesStreamProvider = RotationResponsesStreamFamily();
 
-/// See also [rotationGroupListStream].
-class RotationGroupListStreamFamily
-    extends Family<AsyncValue<Result<List<RotationGroupResponse>>>> {
-  /// See also [rotationGroupListStream].
-  const RotationGroupListStreamFamily();
+/// See also [rotationResponsesStream].
+class RotationResponsesStreamFamily
+    extends Family<AsyncValue<Result<List<RotationResponse>>>> {
+  /// See also [rotationResponsesStream].
+  const RotationResponsesStreamFamily();
 
-  /// See also [rotationGroupListStream].
-  RotationGroupListStreamProvider call(String userId) {
-    return RotationGroupListStreamProvider(userId);
+  /// See also [rotationResponsesStream].
+  RotationResponsesStreamProvider call(String userId) {
+    return RotationResponsesStreamProvider(userId);
   }
 
   @override
-  RotationGroupListStreamProvider getProviderOverride(
-    covariant RotationGroupListStreamProvider provider,
+  RotationResponsesStreamProvider getProviderOverride(
+    covariant RotationResponsesStreamProvider provider,
   ) {
     return call(provider.userId);
   }
@@ -64,30 +64,30 @@ class RotationGroupListStreamFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'rotationGroupListStreamProvider';
+  String? get name => r'rotationResponsesStreamProvider';
 }
 
-/// See also [rotationGroupListStream].
-class RotationGroupListStreamProvider
-    extends AutoDisposeStreamProvider<Result<List<RotationGroupResponse>>> {
-  /// See also [rotationGroupListStream].
-  RotationGroupListStreamProvider(String userId)
+/// See also [rotationResponsesStream].
+class RotationResponsesStreamProvider
+    extends AutoDisposeStreamProvider<Result<List<RotationResponse>>> {
+  /// See also [rotationResponsesStream].
+  RotationResponsesStreamProvider(String userId)
     : this._internal(
         (ref) =>
-            rotationGroupListStream(ref as RotationGroupListStreamRef, userId),
-        from: rotationGroupListStreamProvider,
-        name: r'rotationGroupListStreamProvider',
+            rotationResponsesStream(ref as RotationResponsesStreamRef, userId),
+        from: rotationResponsesStreamProvider,
+        name: r'rotationResponsesStreamProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
-                : _$rotationGroupListStreamHash,
-        dependencies: RotationGroupListStreamFamily._dependencies,
+                : _$rotationResponsesStreamHash,
+        dependencies: RotationResponsesStreamFamily._dependencies,
         allTransitiveDependencies:
-            RotationGroupListStreamFamily._allTransitiveDependencies,
+            RotationResponsesStreamFamily._allTransitiveDependencies,
         userId: userId,
       );
 
-  RotationGroupListStreamProvider._internal(
+  RotationResponsesStreamProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -101,15 +101,15 @@ class RotationGroupListStreamProvider
 
   @override
   Override overrideWith(
-    Stream<Result<List<RotationGroupResponse>>> Function(
-      RotationGroupListStreamRef provider,
+    Stream<Result<List<RotationResponse>>> Function(
+      RotationResponsesStreamRef provider,
     )
     create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: RotationGroupListStreamProvider._internal(
-        (ref) => create(ref as RotationGroupListStreamRef),
+      override: RotationResponsesStreamProvider._internal(
+        (ref) => create(ref as RotationResponsesStreamRef),
         from: from,
         name: null,
         dependencies: null,
@@ -121,14 +121,14 @@ class RotationGroupListStreamProvider
   }
 
   @override
-  AutoDisposeStreamProviderElement<Result<List<RotationGroupResponse>>>
+  AutoDisposeStreamProviderElement<Result<List<RotationResponse>>>
   createElement() {
-    return _RotationGroupListStreamProviderElement(this);
+    return _RotationResponsesStreamProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is RotationGroupListStreamProvider && other.userId == userId;
+    return other is RotationResponsesStreamProvider && other.userId == userId;
   }
 
   @override
@@ -142,20 +142,19 @@ class RotationGroupListStreamProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin RotationGroupListStreamRef
-    on AutoDisposeStreamProviderRef<Result<List<RotationGroupResponse>>> {
+mixin RotationResponsesStreamRef
+    on AutoDisposeStreamProviderRef<Result<List<RotationResponse>>> {
   /// The parameter `userId` of this provider.
   String get userId;
 }
 
-class _RotationGroupListStreamProviderElement
-    extends
-        AutoDisposeStreamProviderElement<Result<List<RotationGroupResponse>>>
-    with RotationGroupListStreamRef {
-  _RotationGroupListStreamProviderElement(super.provider);
+class _RotationResponsesStreamProviderElement
+    extends AutoDisposeStreamProviderElement<Result<List<RotationResponse>>>
+    with RotationResponsesStreamRef {
+  _RotationResponsesStreamProviderElement(super.provider);
 
   @override
-  String get userId => (origin as RotationGroupListStreamProvider).userId;
+  String get userId => (origin as RotationResponsesStreamProvider).userId;
 }
 
 // ignore_for_file: type=lint

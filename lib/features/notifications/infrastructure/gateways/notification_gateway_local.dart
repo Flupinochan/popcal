@@ -137,7 +137,7 @@ class NotificationGatewayLocal {
         NotificationDetails(
           // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
           android: AndroidNotificationDetails(
-            notificationSettingDto.rotationGroupId,
+            notificationSettingDto.rotationId,
             notificationSettingDto.title,
             channelDescription: notificationSettingDto.description,
             priority: Priority.high,
@@ -181,9 +181,9 @@ class NotificationGatewayLocal {
     }
   }
 
-  /// 4-2 特定のrotationGroupIdの通知を削除
-  Future<Result<void>> deleteNotificationsByRotationGroupId(
-    String rotationGroupId,
+  /// 4-2 特定のrotationIdの通知を削除
+  Future<Result<void>> deleteNotificationsByRotationId(
+    String rotationId,
   ) async {
     final List<PendingNotificationRequest> pendingNotifications =
         await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
@@ -197,8 +197,7 @@ class NotificationGatewayLocal {
         );
         dtoResult.when(
           success: (localNotificationSettingDto) {
-            if (localNotificationSettingDto.rotationGroupId ==
-                rotationGroupId) {
+            if (localNotificationSettingDto.rotationId == rotationId) {
               try {
                 _flutterLocalNotificationsPlugin.cancel(notification.id);
                 deletedCount++;
@@ -274,9 +273,7 @@ class NotificationGatewayLocal {
         dtoResult.when(
           success:
               (localNotificationSettingDto) => _router.push(
-                Routes.calendarPath(
-                  localNotificationSettingDto.rotationGroupId,
-                ),
+                Routes.calendarPath(localNotificationSettingDto.rotationId),
               ),
           failure: (error) => _router.push(Routes.home),
         );

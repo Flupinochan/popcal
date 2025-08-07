@@ -28,7 +28,7 @@ final getCalendarDataUseCaseProvider =
 typedef GetCalendarDataUseCaseRef =
     AutoDisposeProviderRef<GetCalendarDataUseCase>;
 String _$calendarScreenDataHash() =>
-    r'aeb5670718d11d977f202c3d621bcf20d9046646';
+    r'6008e66ed7fa72378525bab251aa7cf2110d1719';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -62,15 +62,15 @@ class CalendarScreenDataFamily
   const CalendarScreenDataFamily();
 
   /// See also [calendarScreenData].
-  CalendarScreenDataProvider call(String rotationGroupId) {
-    return CalendarScreenDataProvider(rotationGroupId);
+  CalendarScreenDataProvider call(String rotationId) {
+    return CalendarScreenDataProvider(rotationId);
   }
 
   @override
   CalendarScreenDataProvider getProviderOverride(
     covariant CalendarScreenDataProvider provider,
   ) {
-    return call(provider.rotationGroupId);
+    return call(provider.rotationId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -92,10 +92,9 @@ class CalendarScreenDataFamily
 class CalendarScreenDataProvider
     extends AutoDisposeFutureProvider<Result<CalendarDataResponse>> {
   /// See also [calendarScreenData].
-  CalendarScreenDataProvider(String rotationGroupId)
+  CalendarScreenDataProvider(String rotationId)
     : this._internal(
-        (ref) =>
-            calendarScreenData(ref as CalendarScreenDataRef, rotationGroupId),
+        (ref) => calendarScreenData(ref as CalendarScreenDataRef, rotationId),
         from: calendarScreenDataProvider,
         name: r'calendarScreenDataProvider',
         debugGetCreateSourceHash:
@@ -105,7 +104,7 @@ class CalendarScreenDataProvider
         dependencies: CalendarScreenDataFamily._dependencies,
         allTransitiveDependencies:
             CalendarScreenDataFamily._allTransitiveDependencies,
-        rotationGroupId: rotationGroupId,
+        rotationId: rotationId,
       );
 
   CalendarScreenDataProvider._internal(
@@ -115,10 +114,10 @@ class CalendarScreenDataProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.rotationGroupId,
+    required this.rotationId,
   }) : super.internal();
 
-  final String rotationGroupId;
+  final String rotationId;
 
   @override
   Override overrideWith(
@@ -136,7 +135,7 @@ class CalendarScreenDataProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        rotationGroupId: rotationGroupId,
+        rotationId: rotationId,
       ),
     );
   }
@@ -150,13 +149,13 @@ class CalendarScreenDataProvider
   @override
   bool operator ==(Object other) {
     return other is CalendarScreenDataProvider &&
-        other.rotationGroupId == rotationGroupId;
+        other.rotationId == rotationId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, rotationGroupId.hashCode);
+    hash = _SystemHash.combine(hash, rotationId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -166,8 +165,8 @@ class CalendarScreenDataProvider
 // ignore: unused_element
 mixin CalendarScreenDataRef
     on AutoDisposeFutureProviderRef<Result<CalendarDataResponse>> {
-  /// The parameter `rotationGroupId` of this provider.
-  String get rotationGroupId;
+  /// The parameter `rotationId` of this provider.
+  String get rotationId;
 }
 
 class _CalendarScreenDataProviderElement
@@ -176,8 +175,7 @@ class _CalendarScreenDataProviderElement
   _CalendarScreenDataProviderElement(super.provider);
 
   @override
-  String get rotationGroupId =>
-      (origin as CalendarScreenDataProvider).rotationGroupId;
+  String get rotationId => (origin as CalendarScreenDataProvider).rotationId;
 }
 
 // ignore_for_file: type=lint

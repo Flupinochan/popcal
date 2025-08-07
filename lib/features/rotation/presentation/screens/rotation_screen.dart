@@ -7,11 +7,11 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
-import 'package:popcal/features/rotation/presentation/dto/update_rotation_group_request.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
-import 'package:popcal/features/rotation/providers/rotation_controller.dart';
-import 'package:popcal/features/rotation/providers/rotation_data.dart';
+import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
+import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
+import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
+import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
@@ -23,13 +23,15 @@ import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.da
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_weekday.dart';
 
 class RotationScreen extends HookConsumerWidget {
-  final String? rotationGroupId;
+  final String? rotationId;
 
-  const RotationScreen({super.key, this.rotationGroupId});
+  const RotationScreen({super.key, this.rotationId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final rotationDataAsync = ref.watch(rotationDataProvider(rotationGroupId));
+    final rotationDataAsync = ref.watch(
+      rotationDataResponseProvider(rotationId),
+    );
 
     return rotationDataAsync.when(
       data:
@@ -50,10 +52,10 @@ class RotationScreen extends HookConsumerWidget {
   ) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final isUpdateMode = rotationData.rotationGroupDto != null;
-    final initialRotationGroup = rotationData.rotationGroupDto;
+    final isUpdateMode = rotationData.rotationResponse != null;
+    final initialRotation = rotationData.rotationResponse;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
-    final isLoading = ref.watch(rotationControllerProvider).isLoading;
+    final isLoading = ref.watch(rotationNotifierProvider).isLoading;
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -86,7 +88,7 @@ class RotationScreen extends HookConsumerWidget {
                   // ローテーション名を入力
                   GlassFormText(
                     name: 'rotationName',
-                    initialValue: initialRotationGroup?.rotationName,
+                    initialValue: initialRotation?.rotationName,
                     hintText: 'ローテーション名を入力',
                     validator: FormBuilderValidators.required(
                       errorText: 'ローテーション名を入力してください',
@@ -97,7 +99,7 @@ class RotationScreen extends HookConsumerWidget {
                   GlassFormList(
                     name: 'rotationMembers',
                     hintText: 'メンバー名を入力',
-                    initialValue: initialRotationGroup?.rotationMembers,
+                    initialValue: initialRotation?.rotationMembers,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'メンバーを1つ以上追加してください';
@@ -112,15 +114,13 @@ class RotationScreen extends HookConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
-                  GlassFormWeekday(
-                    initialValue: initialRotationGroup?.rotationDays,
-                  ),
+                  GlassFormWeekday(initialValue: initialRotation?.rotationDays),
                   const SizedBox(height: 24),
                   // 通知時刻
                   Text('通知時刻', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 16),
                   GlassFormTime(
-                    initialValue: initialRotationGroup?.notificationTime,
+                    initialValue: initialRotation?.notificationTime,
                   ),
                 ],
               ),
@@ -139,7 +139,7 @@ class RotationScreen extends HookConsumerWidget {
               ref,
               formKey,
               rotationData.userDto,
-              initialRotationGroup,
+              initialRotation,
               isUpdateMode,
             ),
       ),
@@ -152,31 +152,31 @@ Future<void> _handleSubmit(
   WidgetRef ref,
   GlobalKey<FormBuilderState> formKey,
   UserResponse userDto,
-  RotationGroupResponse? originalRotationGroup,
+  RotationResponse? originalRotation,
   bool isUpdateMode,
 ) async {
   if (formKey.currentState!.saveAndValidate()) {
     final formData = formKey.currentState!.value;
-    final rotationController = ref.read(rotationControllerProvider.notifier);
+    final rotationController = ref.read(rotationNotifierProvider.notifier);
 
     try {
-      final Result<RotationGroupResponse> result;
+      final Result<RotationResponse> result;
 
       if (isUpdateMode) {
-        final dto = UpdateRotationGroupRequest(
+        final dto = UpdateRotationRequest(
           userId: userDto.userId.value,
-          rotationGroupId: originalRotationGroup!.rotationGroupId,
+          rotationId: originalRotation!.rotationId,
           rotationName: formData['rotationName'] as String,
           rotationMembers: List<String>.from(
             formData['rotationMembers'] as List,
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,
           notificationTime: formData['notificationTime'] as TimeOfDay,
-          createdAt: originalRotationGroup.createdAt,
+          createdAt: originalRotation.createdAt,
         );
-        result = await rotationController.updateRotationGroup(dto);
+        result = await rotationController.updateRotation(dto);
       } else {
-        final dto = CreateRotationGroupRequest(
+        final dto = CreateRotationRequest(
           userId: userDto.userId.value,
           rotationName: formData['rotationName'] as String,
           rotationMembers: List<String>.from(
@@ -185,7 +185,7 @@ Future<void> _handleSubmit(
           rotationDays: formData['rotationDays'] as List<Weekday>,
           notificationTime: formData['notificationTime'] as TimeOfDay,
         );
-        result = await rotationController.createRotationGroup(dto);
+        result = await rotationController.createRotation(dto);
       }
 
       final message = result.when(

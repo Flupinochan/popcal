@@ -11,11 +11,11 @@ import 'package:popcal/features/auth/providers/auth_state.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
-import 'package:popcal/features/rotation/presentation/dto/create_rotation_group_request.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
-import 'package:popcal/features/rotation/providers/rotation_controller.dart';
+import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
+import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
-import 'package:popcal/features/rotation/providers/rotation_state.dart';
+import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
@@ -69,8 +69,8 @@ class HomeScreen extends HookConsumerWidget {
   Widget _buildHome(BuildContext context, WidgetRef ref, UserResponse dto) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final rotationGroupsAsync = ref.watch(
-      rotationGroupListStreamProvider(dto.userId.value),
+    final rotationResponsesStream = ref.watch(
+      rotationResponsesStreamProvider(dto.userId.value),
     );
 
     return Scaffold(
@@ -90,18 +90,18 @@ class HomeScreen extends HookConsumerWidget {
         decoration: BoxDecoration(gradient: glassTheme.primaryGradient),
         child: SafeArea(
           // ローテーショングループ一覧表示 (StreamBuilderと同じ)
-          child: rotationGroupsAsync.when(
+          child: rotationResponsesStream.when(
             data:
                 (result) => result.when(
                   success:
-                      (rotationGroups) =>
-                          rotationGroups.isEmpty
-                              ? _buildRotationGroupEmpty(context)
-                              : _buildRotationGroupList(
+                      (rotationResponses) =>
+                          rotationResponses.isEmpty
+                              ? _buildRotationEmpty(context)
+                              : _buildRotations(
                                 context,
                                 ref,
                                 dto,
-                                rotationGroups,
+                                rotationResponses,
                               ),
                   failure:
                       (error) =>
@@ -118,7 +118,7 @@ class HomeScreen extends HookConsumerWidget {
   }
 
   // ローテーショングループが1つもない場合
-  Widget _buildRotationGroupEmpty(BuildContext context) {
+  Widget _buildRotationEmpty(BuildContext context) {
     return Center(
       child: GlassWrapper(
         width: 340,
@@ -158,11 +158,11 @@ class HomeScreen extends HookConsumerWidget {
   }
 
   // ローテーショングループを一覧表示
-  Widget _buildRotationGroupList(
+  Widget _buildRotations(
     BuildContext context,
     WidgetRef ref,
     UserResponse userDto,
-    List<RotationGroupResponse> rotationGroups,
+    List<RotationResponse> rotationResponses,
   ) {
     return CustomScrollView(
       slivers: [
@@ -171,23 +171,24 @@ class HomeScreen extends HookConsumerWidget {
           sliver: SliverList(
             // このcontextは使用しない ※ローカル内で扱うcontextの場合は使用してOK (scaffold messengerはNG)
             delegate: SliverChildBuilderDelegate((_, index) {
-              final rotationGroup = rotationGroups[index];
+              final rotationResponse = rotationResponses[index];
               return GlassListItem(
-                rotationGroup: rotationGroup,
+                rotationResponse: rotationResponse,
                 onTap: () {
                   context.push(
-                    Routes.calendarPath(rotationGroup.rotationGroupId),
+                    Routes.calendarPath(rotationResponse.rotationId),
                   );
                 },
                 onEdit: () {
                   context.push(
-                    Routes.rotationUpdatePath(rotationGroup.rotationGroupId),
+                    Routes.rotationUpdatePath(rotationResponse.rotationId),
                   );
                 },
                 onDelete:
-                    () => _handleDelete(context, ref, rotationGroup, userDto),
+                    () =>
+                        _handleDelete(context, ref, rotationResponse, userDto),
               );
-            }, childCount: rotationGroups.length),
+            }, childCount: rotationResponses.length),
           ),
         ),
       ],
@@ -198,44 +199,44 @@ class HomeScreen extends HookConsumerWidget {
   void _handleDelete(
     BuildContext context,
     WidgetRef ref,
-    RotationGroupResponse rotationGroup,
+    RotationResponse rotationResponse,
     UserResponse userDto,
   ) async {
     final rotationRepository = ref.read(rotationRepositoryProvider);
-    final rotationController = ref.read(rotationControllerProvider.notifier);
+    final rotationController = ref.read(rotationNotifierProvider.notifier);
 
     // 削除処理
-    final result = await rotationRepository.deleteRotationGroup(
+    final result = await rotationRepository.deleteRotation(
       userDto.userId.value,
-      rotationGroup.rotationGroupId,
+      rotationResponse.rotationId,
     );
 
     result.when(
       success: (_) {
         SnackBarUtils.showGlassSnackBarWithAction(
           context: context,
-          message: '${rotationGroup.rotationName}を削除しました',
+          message: '${rotationResponse.rotationName}を削除しました',
           onAction: () async {
             // 再作成処理
-            final createDto = CreateRotationGroupRequest(
-              userId: rotationGroup.userId,
-              rotationName: rotationGroup.rotationName,
-              rotationMembers: rotationGroup.rotationMembers,
-              rotationDays: rotationGroup.rotationDays,
-              notificationTime: rotationGroup.notificationTime,
+            final createDto = CreateRotationRequest(
+              userId: rotationResponse.userId,
+              rotationName: rotationResponse.rotationName,
+              rotationMembers: rotationResponse.rotationMembers,
+              rotationDays: rotationResponse.rotationDays,
+              notificationTime: rotationResponse.notificationTime,
             );
 
-            final restoreResult = await rotationController.createRotationGroup(
+            final restoreResult = await rotationController.createRotation(
               createDto,
             );
 
-            // _buildRotationGroupEmpty から _buildRotationGroupList に戻る場合はcontextが異なるため戻れない
+            // _buildRotationEmpty から _buildRotations に戻る場合はcontextが異なるため戻れない
             // 以下のcontextが前の親のcontextのためエラー
             restoreResult.when(
               success: (_) {
                 SnackBarUtils.showGlassSnackBar(
                   context: context,
-                  message: '${rotationGroup.rotationName}を元に戻しました',
+                  message: '${rotationResponse.rotationName}を元に戻しました',
                 );
               },
               failure: (error) {

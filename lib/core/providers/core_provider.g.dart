@@ -22,7 +22,7 @@ final packageInfoProvider = AutoDisposeFutureProvider<PackageInfo>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef PackageInfoRef = AutoDisposeFutureProviderRef<PackageInfo>;
-String _$loggerHash() => r'c79d619f59331b572ba3ea00734d28d122229033';
+String _$loggerHash() => r'ac8b78048e5ee9879c300e3d26c2956cc7ead3f0';
 
 /// Copied from Dart SDK
 class _SystemHash {

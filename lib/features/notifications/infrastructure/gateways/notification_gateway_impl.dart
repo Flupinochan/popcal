@@ -72,13 +72,13 @@ class NotificationGatewayImpl implements NotificationGateway {
     );
   }
 
-  /// 4-2 特定のrotationGroupIdの通知を削除
+  /// 4-2 特定のrotationIdの通知を削除
   @override
-  Future<Result<void>> deleteNotificationsByRotationGroupId(
-    String rotationGroupId,
+  Future<Result<void>> deleteNotificationsByRotationId(
+    String rotationId,
   ) async {
     final result = await _localNotificationsDatasource
-        .deleteNotificationsByRotationGroupId(rotationGroupId);
+        .deleteNotificationsByRotationId(rotationId);
     return result.when(
       success: (_) => Results.success(null),
       failure: (error) => Results.failure(error),

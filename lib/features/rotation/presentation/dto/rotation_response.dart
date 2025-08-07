@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
-part 'rotation_group_response.freezed.dart';
+part 'rotation_response.freezed.dart';
 
 @freezed
-sealed class RotationGroupResponse with _$RotationGroupResponse {
-  const RotationGroupResponse._();
+sealed class RotationResponse with _$RotationResponse {
+  const RotationResponse._();
 
-  const factory RotationGroupResponse({
-    required String rotationGroupId,
+  const factory RotationResponse({
+    required String rotationId,
     required String userId,
     required String rotationName,
     required List<String> rotationMembers,
@@ -20,13 +20,13 @@ sealed class RotationGroupResponse with _$RotationGroupResponse {
     required int currentRotationIndex,
     required DateTime createdAt,
     required DateTime updatedAt,
-  }) = _RotationGroupResponse;
+  }) = _RotationResponse;
 
   /// DTO => Entity
-  Result<RotationGroup> toEntity() {
+  Result<Rotation> toEntity() {
     return Results.success(
-      RotationGroup(
-        rotationGroupId: rotationGroupId,
+      Rotation(
+        rotationId: rotationId,
         userId: userId,
         rotationName: rotationName,
         rotationMembers: rotationMembers,
@@ -40,9 +40,9 @@ sealed class RotationGroupResponse with _$RotationGroupResponse {
   }
 
   /// Entity => DTO
-  factory RotationGroupResponse.fromEntity(RotationGroup entity) {
-    return RotationGroupResponse(
-      rotationGroupId: entity.rotationGroupId!,
+  factory RotationResponse.fromEntity(Rotation entity) {
+    return RotationResponse(
+      rotationId: entity.rotationId!,
       userId: entity.userId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,
@@ -56,7 +56,7 @@ sealed class RotationGroupResponse with _$RotationGroupResponse {
 }
 
 // UI表示用の拡張メソッド
-extension RotationGroupViewDtoDisplay on RotationGroupResponse {
+extension RotationViewDisplay on RotationResponse {
   String get membersDisplay => rotationMembers.join(', ');
   String get weekdaysDisplay =>
       rotationDays.map((w) => w.displayName).join(', ');

@@ -3,7 +3,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_data.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 
 class CalendarScheduleUseCase {
   final RotationCalculationService _rotationCalculationService;
@@ -15,11 +15,11 @@ class CalendarScheduleUseCase {
   /// 2. Calendar表示用スケジュールを生成 ※1年分
   /// ※1. 実際の通知設定は30日分だが、カレンダーは過去1年から未来1年まで表示
   /// ※2. 最初の通知予定日以降を表示、過去の表示は通知したことのある最初の通知予定日以降の過去のみ
-  /// [rotationGroup]
+  /// [rotation]
   /// [toDate] デフォルトは未来1年分
   /// 2. Calendar表示用スケジュールを生成 ※1年分
   Result<Map<DateKey, CalendarDay>> buildCalendarSchedule({
-    required RotationGroup rotationGroup,
+    required Rotation rotation,
     DateTime? toDate,
   }) {
     try {
@@ -29,23 +29,22 @@ class CalendarScheduleUseCase {
           DateTime(currentTime.year + 1, currentTime.month, currentTime.day);
 
       final calendarDays = <DateKey, CalendarDay>{};
-      var currentIndex = rotationGroup.currentRotationIndex;
+      var currentIndex = rotation.currentRotationIndex;
 
       // 指定期間をループしてカレンダー日を作成
       for (
-        var checkDate = rotationGroup.createdAt;
+        var checkDate = rotation.createdAt;
         checkDate.isBefore(defaultToDate);
         checkDate = checkDate.add(const Duration(days: 1))
       ) {
         if (_rotationCalculationService.isValidNotificationDate(
           checkDate: checkDate,
-          rotationDays: rotationGroup.rotationDays,
-          notificationTime: rotationGroup.notificationTime,
-          createdAt: rotationGroup.createdAt,
+          rotationDays: rotation.rotationDays,
+          notificationTime: rotation.notificationTime,
+          createdAt: rotation.createdAt,
         )) {
-          final memberIndex =
-              currentIndex % rotationGroup.rotationMembers.length;
-          final memberName = rotationGroup.rotationMembers[memberIndex];
+          final memberIndex = currentIndex % rotation.rotationMembers.length;
+          final memberName = rotation.rotationMembers[memberIndex];
 
           _addCalendarDay(
             calendarDays: calendarDays,

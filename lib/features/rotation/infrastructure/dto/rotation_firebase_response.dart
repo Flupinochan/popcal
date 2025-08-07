@@ -2,18 +2,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
-part 'rotation_group_firebase_response.freezed.dart';
+part 'rotation_firebase_response.freezed.dart';
 
 @freezed
-sealed class RotationGroupFirebaseResponse
-    with _$RotationGroupFirebaseResponse {
-  const RotationGroupFirebaseResponse._();
+sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
+  const RotationFirebaseResponse._();
 
-  const factory RotationGroupFirebaseResponse({
-    required String? rotationGroupId,
+  const factory RotationFirebaseResponse({
+    required String? rotationId,
     required String userId,
     required String rotationName,
     required List<String> rotationMembers,
@@ -24,15 +23,13 @@ sealed class RotationGroupFirebaseResponse
     // Widget(UI)はDateTimeが適切
     required Timestamp createdAt,
     required Timestamp updatedAt,
-  }) = _RotationGroupFirebaseResponse;
+  }) = _RotationFirebaseResponse;
 
   // Entity => DTO (factory method)
-  factory RotationGroupFirebaseResponse.fromEntity(RotationGroup entity) {
-    return RotationGroupFirebaseResponse(
-      rotationGroupId:
-          entity.rotationGroupId?.isNotEmpty == true
-              ? entity.rotationGroupId
-              : null,
+  factory RotationFirebaseResponse.fromEntity(Rotation entity) {
+    return RotationFirebaseResponse(
+      rotationId:
+          entity.rotationId?.isNotEmpty == true ? entity.rotationId : null,
       userId: entity.userId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,
@@ -48,13 +45,13 @@ sealed class RotationGroupFirebaseResponse
   // Firestore => DTO (factory method)
   // ※Firestore カスタムオブジェクトを参照
   // https://firebase.google.com/docs/firestore/query-data/get-data?hl=ja#dart_4
-  factory RotationGroupFirebaseResponse.fromFirestore(
+  factory RotationFirebaseResponse.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data() as Map<String, dynamic>;
-    return RotationGroupFirebaseResponse(
-      rotationGroupId: snapshot.id,
+    return RotationFirebaseResponse(
+      rotationId: snapshot.id,
       userId: data['userId'] as String,
       rotationName: data['rotationName'] as String,
       rotationMembers: List<String>.from(
@@ -71,9 +68,9 @@ sealed class RotationGroupFirebaseResponse
   }
 
   // DTO => Entity (instance method)
-  RotationGroup toEntity() {
-    return RotationGroup(
-      rotationGroupId: rotationGroupId,
+  Rotation toEntity() {
+    return Rotation(
+      rotationId: rotationId,
       userId: userId,
       rotationName: rotationName,
       rotationMembers: rotationMembers,

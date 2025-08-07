@@ -35,6 +35,6 @@ class NotificationFailure extends Failure {
   const NotificationFailure(super.message);
 }
 
-class RotationGroupFailure extends Failure {
-  const RotationGroupFailure(super.message);
+class RotationFailure extends Failure {
+  const RotationFailure(super.message);
 }

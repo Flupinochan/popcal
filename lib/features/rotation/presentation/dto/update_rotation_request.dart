@@ -2,34 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
-part 'update_rotation_group_request.freezed.dart';
+part 'update_rotation_request.freezed.dart';
 
 @freezed
-sealed class UpdateRotationGroupRequest with _$UpdateRotationGroupRequest {
-  const UpdateRotationGroupRequest._();
+sealed class UpdateRotationRequest with _$UpdateRotationRequest {
+  const UpdateRotationRequest._();
 
-  const factory UpdateRotationGroupRequest({
+  const factory UpdateRotationRequest({
     required String userId,
-    required String rotationGroupId,
+    required String rotationId,
     required String rotationName,
     required List<String> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
     required DateTime createdAt,
-  }) = _UpdateRotationGroupRequest;
+  }) = _UpdateRotationRequest;
 
   // DTO => Entity
-  Result<RotationGroup> toEntity() {
+  Result<Rotation> toEntity() {
     try {
       final currentTime = DateTime.now().toLocal();
 
       return Results.success(
-        RotationGroup(
+        Rotation(
           userId: userId,
-          rotationGroupId: rotationGroupId,
+          rotationId: rotationId,
           rotationName: rotationName,
           rotationMembers: rotationMembers,
           rotationDays: rotationDays,
@@ -41,18 +41,16 @@ sealed class UpdateRotationGroupRequest with _$UpdateRotationGroupRequest {
       );
     } catch (e) {
       return Results.failure(
-        ValidationFailure(
-          'UpdateRotationGroupDto to RotationGroup conversion failed: $e',
-        ),
+        ValidationFailure('UpdateRotation to Rotation conversion failed: $e'),
       );
     }
   }
 
   /// Entity => DTO
-  factory UpdateRotationGroupRequest.fromEntity(RotationGroup entity) {
-    return UpdateRotationGroupRequest(
+  factory UpdateRotationRequest.fromEntity(Rotation entity) {
+    return UpdateRotationRequest(
       userId: entity.userId,
-      rotationGroupId: entity.rotationGroupId!,
+      rotationId: entity.rotationId!,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,
       rotationDays: entity.rotationDays,

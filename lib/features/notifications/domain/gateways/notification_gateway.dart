@@ -17,7 +17,7 @@ abstract class NotificationGateway {
   );
 
   /// 2. 通知予定のスケジュールを一覧取得
-  /// rotationGroupIdのListを取得
+  /// rotationIdのListを取得
   Future<Result<List<int>>> getNotifications();
 
   /// 3. 通知を更新
@@ -26,10 +26,8 @@ abstract class NotificationGateway {
   /// 4-1. 特定の通知を削除
   Future<Result<void>> deleteNotification(int notificationId);
 
-  /// 4-2 特定のrotationGroupIdの通知を削除
-  Future<Result<void>> deleteNotificationsByRotationGroupId(
-    String rotationGroupId,
-  );
+  /// 4-2 特定のrotationIdの通知を削除
+  Future<Result<void>> deleteNotificationsByRotationId(String rotationId);
 
   /// 4-3. 全通知を削除
   Future<Result<void>> deleteAllNotifications();

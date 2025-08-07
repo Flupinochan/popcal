@@ -3,7 +3,7 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_plan.dart';
 
@@ -39,7 +39,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
   @override
   Result<NotificationPlan> planUpcomingNotifications({
-    required RotationGroup rotationGroup,
+    required Rotation rotation,
     int futureDays = 30,
   }) {
     try {
@@ -48,7 +48,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       final toDate = currentTime.add(Duration(days: futureDays));
 
       final notifications = <NotificationSetting>[];
-      var currentIndex = rotationGroup.currentRotationIndex;
+      var currentIndex = rotation.currentRotationIndex;
 
       // 指定期間をループして通知情報を作成
       for (
@@ -58,33 +58,32 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       ) {
         if (isValidNotificationDate(
           checkDate: checkDate,
-          rotationDays: rotationGroup.rotationDays,
-          notificationTime: rotationGroup.notificationTime,
+          rotationDays: rotation.rotationDays,
+          notificationTime: rotation.notificationTime,
           createdAt: currentTime,
         )) {
-          final memberIndex =
-              currentIndex % rotationGroup.rotationMembers.length;
-          final memberName = rotationGroup.rotationMembers[memberIndex];
+          final memberIndex = currentIndex % rotation.rotationMembers.length;
+          final memberName = rotation.rotationMembers[memberIndex];
           final notificationId = _generateNotificationId(
-            rotationGroup.rotationGroupId!,
+            rotation.rotationId!,
             checkDate,
           );
           final scheduledDateTime = DateTime(
             checkDate.year,
             checkDate.month,
             checkDate.day,
-            rotationGroup.notificationTime.hour,
-            rotationGroup.notificationTime.minute,
+            rotation.notificationTime.hour,
+            rotation.notificationTime.minute,
           );
 
           final notificationSetting = NotificationSetting(
             notificationId: notificationId,
-            rotationGroupId: rotationGroup.rotationGroupId!,
-            userId: rotationGroup.userId,
-            rotationName: rotationGroup.rotationName,
+            rotationId: rotation.rotationId!,
+            userId: rotation.userId,
+            rotationName: rotation.rotationName,
             notificationTime: scheduledDateTime,
             memberName: memberName,
-            rotationStartDate: rotationGroup.createdAt,
+            rotationStartDate: rotation.createdAt,
           );
 
           notifications.add(notificationSetting);
@@ -132,7 +131,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   }
 
   /// 通知IDを生成 ※日付ベース
-  int _generateNotificationId(String rotationGroupId, DateTime date) {
+  int _generateNotificationId(String rotationId, DateTime date) {
     return date.year * 10000 + date.month * 100 + date.day;
   }
 }

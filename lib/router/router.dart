@@ -60,15 +60,15 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: Routes.rotationUpdate,
         builder: (context, state) {
-          final rotationGroupId = state.pathParameters['id']!;
-          return RotationScreen(rotationGroupId: rotationGroupId);
+          final rotationId = state.pathParameters['id']!;
+          return RotationScreen(rotationId: rotationId);
         },
       ),
       GoRoute(
         path: Routes.calendar,
         builder: (context, state) {
-          final rotationGroupId = state.pathParameters['id']!;
-          return CalendarScreen(rotationGroupId: rotationGroupId);
+          final rotationId = state.pathParameters['id']!;
+          return CalendarScreen(rotationId: rotationId);
         },
       ),
     ],

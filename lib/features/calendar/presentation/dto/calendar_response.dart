@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 
 part 'calendar_response.freezed.dart';
 
@@ -8,7 +8,7 @@ sealed class CalendarDataResponse with _$CalendarDataResponse {
   const CalendarDataResponse._();
 
   const factory CalendarDataResponse({
-    required RotationGroupResponse rotationGroupResponse,
+    required RotationResponse rotationResponse,
     required Map<DateKey, CalendarDayResponse> dayInfoMap,
   }) = _CalendarDataResponse;
 

@@ -1,26 +1,25 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'rotation_state.g.dart';
+part 'rotation_stream.g.dart';
 
-// Stream EntityはDtoに変換して返却
 @riverpod
-Stream<Result<List<RotationGroupResponse>>> rotationGroupListStream(
+Stream<Result<List<RotationResponse>>> rotationResponsesStream(
   Ref ref,
   String userId,
 ) {
   final rotationRepository = ref.watch(rotationRepositoryProvider);
-  return rotationRepository.watchRotationGroups(userId).asyncMap((
+  return rotationRepository.watchRotations(userId).asyncMap((
     entityResult,
   ) async {
     return entityResult.when(
-      success: (rotationGroups) {
+      success: (rotations) {
         final dtoList =
-            rotationGroups
-                .map((entity) => RotationGroupResponse.fromEntity(entity))
+            rotations
+                .map((entity) => RotationResponse.fromEntity(entity))
                 .toList();
         return Results.success(dtoList);
       },

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LocalNotificationSettingDto {
 
- int get notificationId; String get rotationGroupId; String get userId; String get rotationName; DateTime get notificationTime; String get memberName; DateTime get rotationStartDate; String get title; String get description; String get content;
+ int get notificationId; String get rotationId; String get userId; String get rotationName; DateTime get notificationTime; String get memberName; DateTime get rotationStartDate; String get title; String get description; String get content;
 /// Create a copy of LocalNotificationSettingDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $LocalNotificationSettingDtoCopyWith<LocalNotificationSettingResponse> get copyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalNotificationSettingResponse&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LocalNotificationSettingResponse&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationId, rotationId) || other.rotationId == rotationId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.content, content) || other.content == content));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,notificationId,rotationGroupId,userId,rotationName,notificationTime,memberName,rotationStartDate,title,description,content);
+int get hashCode => Object.hash(runtimeType,notificationId,rotationId,userId,rotationName,notificationTime,memberName,rotationStartDate,title,description,content);
 
 @override
 String toString() {
-  return 'LocalNotificationSettingDto(notificationId: $notificationId, rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName, rotationStartDate: $rotationStartDate, title: $title, description: $description, content: $content)';
+  return 'LocalNotificationSettingDto(notificationId: $notificationId, rotationGroupId: $rotationId, userId: $userId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName, rotationStartDate: $rotationStartDate, title: $title, description: $description, content: $content)';
 }
 
 
@@ -69,7 +69,7 @@ class _$LocalNotificationSettingDtoCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? notificationId = null,Object? rotationGroupId = null,Object? userId = null,Object? rotationName = null,Object? notificationTime = null,Object? memberName = null,Object? rotationStartDate = null,Object? title = null,Object? description = null,Object? content = null,}) {
   return _then(_self.copyWith(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
-as int,rotationGroupId: null == rotationGroupId ? _self.rotationGroupId : rotationGroupId // ignore: cast_nullable_to_non_nullable
+as int,rotationGroupId: null == rotationGroupId ? _self.rotationId : rotationGroupId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
@@ -89,11 +89,11 @@ as String,
 @JsonSerializable()
 
 class _LocalNotificationSettingDto extends LocalNotificationSettingResponse {
-  const _LocalNotificationSettingDto({required this.notificationId, required this.rotationGroupId, required this.userId, required this.rotationName, required this.notificationTime, required this.memberName, required this.rotationStartDate, required this.title, required this.description, required this.content}): super._();
+  const _LocalNotificationSettingDto({required this.notificationId, required this.rotationId, required this.userId, required this.rotationName, required this.notificationTime, required this.memberName, required this.rotationStartDate, required this.title, required this.description, required this.content}): super._();
   factory _LocalNotificationSettingDto.fromJson(Map<String, dynamic> json) => _$LocalNotificationSettingDtoFromJson(json);
 
 @override final  int notificationId;
-@override final  String rotationGroupId;
+@override final  String rotationId;
 @override final  String userId;
 @override final  String rotationName;
 @override final  DateTime notificationTime;
@@ -116,16 +116,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalNotificationSettingDto&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationGroupId, rotationGroupId) || other.rotationGroupId == rotationGroupId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LocalNotificationSettingDto&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.rotationId, rotationId) || other.rotationId == rotationId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.rotationStartDate, rotationStartDate) || other.rotationStartDate == rotationStartDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.content, content) || other.content == content));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,notificationId,rotationGroupId,userId,rotationName,notificationTime,memberName,rotationStartDate,title,description,content);
+int get hashCode => Object.hash(runtimeType,notificationId,rotationId,userId,rotationName,notificationTime,memberName,rotationStartDate,title,description,content);
 
 @override
 String toString() {
-  return 'LocalNotificationSettingDto(notificationId: $notificationId, rotationGroupId: $rotationGroupId, userId: $userId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName, rotationStartDate: $rotationStartDate, title: $title, description: $description, content: $content)';
+  return 'LocalNotificationSettingDto(notificationId: $notificationId, rotationGroupId: $rotationId, userId: $userId, rotationName: $rotationName, notificationTime: $notificationTime, memberName: $memberName, rotationStartDate: $rotationStartDate, title: $title, description: $description, content: $content)';
 }
 
 
@@ -156,7 +156,7 @@ class __$LocalNotificationSettingDtoCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? notificationId = null,Object? rotationGroupId = null,Object? userId = null,Object? rotationName = null,Object? notificationTime = null,Object? memberName = null,Object? rotationStartDate = null,Object? title = null,Object? description = null,Object? content = null,}) {
   return _then(_LocalNotificationSettingDto(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
-as int,rotationGroupId: null == rotationGroupId ? _self.rotationGroupId : rotationGroupId // ignore: cast_nullable_to_non_nullable
+as int,rotationId: null == rotationGroupId ? _self.rotationId : rotationGroupId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable

@@ -10,7 +10,7 @@ _LocalNotificationSettingDto _$LocalNotificationSettingDtoFromJson(
   Map<String, dynamic> json,
 ) => _LocalNotificationSettingDto(
   notificationId: (json['notificationId'] as num).toInt(),
-  rotationGroupId: json['rotationGroupId'] as String,
+  rotationId: json['rotationGroupId'] as String,
   userId: json['userId'] as String,
   rotationName: json['rotationName'] as String,
   notificationTime: DateTime.parse(json['notificationTime'] as String),
@@ -25,7 +25,7 @@ Map<String, dynamic> _$LocalNotificationSettingDtoToJson(
   _LocalNotificationSettingDto instance,
 ) => <String, dynamic>{
   'notificationId': instance.notificationId,
-  'rotationGroupId': instance.rotationGroupId,
+  'rotationGroupId': instance.rotationId,
   'userId': instance.userId,
   'rotationName': instance.rotationName,
   'notificationTime': instance.notificationTime.toIso8601String(),

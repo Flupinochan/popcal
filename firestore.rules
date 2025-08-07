@@ -3,9 +3,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // 以降にCollection、Documentのパスに対するセキュリティルールを記載
-    // /users/{認証したユーザID}/rotations/{各RotationGroupIdのDocument}/
+    // /users/{認証したユーザID}/rotations/{各rotationIdのDocument}/
     // ※ワイルドカードで再帰的に許可することも可能
-    match /users/{userId}/rotationGroups/{rotationGroupId} {
+    match /users/{userId}/rotations/{rotationId} {
       allow read: if isAuthenticated(userId);
       allow create, update: if isAuthenticated(userId) && isValidData(request.resource.data);
       allow delete: if isAuthenticated(userId);

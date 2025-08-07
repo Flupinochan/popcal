@@ -1,7 +1,7 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_plan.dart';
@@ -21,13 +21,11 @@ class SyncNotificationsUseCase {
 
   Future<Result<void>> execute(String ownerUserId) async {
     // 1. Firebaseからローテーショングループ一覧を取得
-    final rotationGroupsResult = await _rotationRepository.getRotationGroups(
-      ownerUserId,
-    );
-    if (rotationGroupsResult.isFailure) {
-      return Results.failure(rotationGroupsResult.failureOrNull!);
+    final rotationsResult = await _rotationRepository.getRotations(ownerUserId);
+    if (rotationsResult.isFailure) {
+      return Results.failure(rotationsResult.failureOrNull!);
     }
-    final rotationGroups = rotationGroupsResult.valueOrNull!;
+    final rotations = rotationsResult.valueOrNull!;
 
     // 2. 現在設定されているローカル通知IDリストを取得
     final notificationResult = await _notificationRepository.getNotifications();
@@ -38,10 +36,10 @@ class SyncNotificationsUseCase {
 
     // 3. 各ローテーショングループの通知設定を現在時刻から再計算
     String? errorMessage;
-    for (final group in rotationGroups) {
+    for (final rotation in rotations) {
       // 3-1. 通知スケジュールを計算
       final calculationResult = _scheduleCalculationService
-          .planUpcomingNotifications(rotationGroup: group);
+          .planUpcomingNotifications(rotation: rotation);
       if (calculationResult.isFailure) {
         errorMessage = calculationResult.failureOrNull!.message;
         continue;
@@ -52,7 +50,7 @@ class SyncNotificationsUseCase {
       final createResult = await createSync(
         result,
         currentLocalNotificationIds,
-        group,
+        rotation,
       );
       if (createResult.isFailure) {
         errorMessage = createResult.failureOrNull!.message;
@@ -80,7 +78,7 @@ class SyncNotificationsUseCase {
   Future<Result<void>> createSync(
     NotificationPlan result,
     Set<int> currentLocalNotificationIds,
-    RotationGroup group,
+    Rotation rotation,
   ) async {
     String? errorMessage;
 
@@ -104,12 +102,12 @@ class SyncNotificationsUseCase {
 
     // ローテーション状態を更新
     if (missingNotifications.isNotEmpty) {
-      final updatedGroup = group.copyWith(
+      final updatedRotation = rotation.copyWith(
         currentRotationIndex: result.newCurrentRotationIndex,
       );
 
-      final updateResult = await _rotationRepository.updateRotationGroup(
-        updatedGroup,
+      final updateResult = await _rotationRepository.updateRotation(
+        updatedRotation,
       );
       if (updateResult.isFailure) {
         errorMessage = updateResult.failureOrNull!.message;

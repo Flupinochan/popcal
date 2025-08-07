@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'rotation_data.dart';
+part of 'rotation_loader.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$rotationDataHash() => r'7e459e0a3b562d9457e75e339d5b64ab46bd88fa';
+String _$rotationDataResponseHash() =>
+    r'7195e95dbcc165ebda4101beb8d058a07107bd45';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,26 +30,26 @@ class _SystemHash {
   }
 }
 
-/// See also [rotationData].
-@ProviderFor(rotationData)
-const rotationDataProvider = RotationDataFamily();
+/// See also [rotationDataResponse].
+@ProviderFor(rotationDataResponse)
+const rotationDataResponseProvider = RotationDataResponseFamily();
 
-/// See also [rotationData].
-class RotationDataFamily
+/// See also [rotationDataResponse].
+class RotationDataResponseFamily
     extends Family<AsyncValue<Result<RotationDataResponse>>> {
-  /// See also [rotationData].
-  const RotationDataFamily();
+  /// See also [rotationDataResponse].
+  const RotationDataResponseFamily();
 
-  /// See also [rotationData].
-  RotationDataProvider call(String? rotationGroupId) {
-    return RotationDataProvider(rotationGroupId);
+  /// See also [rotationDataResponse].
+  RotationDataResponseProvider call(String? rotationId) {
+    return RotationDataResponseProvider(rotationId);
   }
 
   @override
-  RotationDataProvider getProviderOverride(
-    covariant RotationDataProvider provider,
+  RotationDataResponseProvider getProviderOverride(
+    covariant RotationDataResponseProvider provider,
   ) {
-    return call(provider.rotationGroupId);
+    return call(provider.rotationId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -63,55 +64,58 @@ class RotationDataFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'rotationDataProvider';
+  String? get name => r'rotationDataResponseProvider';
 }
 
-/// See also [rotationData].
-class RotationDataProvider
+/// See also [rotationDataResponse].
+class RotationDataResponseProvider
     extends AutoDisposeFutureProvider<Result<RotationDataResponse>> {
-  /// See also [rotationData].
-  RotationDataProvider(String? rotationGroupId)
+  /// See also [rotationDataResponse].
+  RotationDataResponseProvider(String? rotationId)
     : this._internal(
-        (ref) => rotationData(ref as RotationDataRef, rotationGroupId),
-        from: rotationDataProvider,
-        name: r'rotationDataProvider',
+        (ref) =>
+            rotationDataResponse(ref as RotationDataResponseRef, rotationId),
+        from: rotationDataResponseProvider,
+        name: r'rotationDataResponseProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
-                : _$rotationDataHash,
-        dependencies: RotationDataFamily._dependencies,
+                : _$rotationDataResponseHash,
+        dependencies: RotationDataResponseFamily._dependencies,
         allTransitiveDependencies:
-            RotationDataFamily._allTransitiveDependencies,
-        rotationGroupId: rotationGroupId,
+            RotationDataResponseFamily._allTransitiveDependencies,
+        rotationId: rotationId,
       );
 
-  RotationDataProvider._internal(
+  RotationDataResponseProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.rotationGroupId,
+    required this.rotationId,
   }) : super.internal();
 
-  final String? rotationGroupId;
+  final String? rotationId;
 
   @override
   Override overrideWith(
-    FutureOr<Result<RotationDataResponse>> Function(RotationDataRef provider)
+    FutureOr<Result<RotationDataResponse>> Function(
+      RotationDataResponseRef provider,
+    )
     create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: RotationDataProvider._internal(
-        (ref) => create(ref as RotationDataRef),
+      override: RotationDataResponseProvider._internal(
+        (ref) => create(ref as RotationDataResponseRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        rotationGroupId: rotationGroupId,
+        rotationId: rotationId,
       ),
     );
   }
@@ -119,19 +123,19 @@ class RotationDataProvider
   @override
   AutoDisposeFutureProviderElement<Result<RotationDataResponse>>
   createElement() {
-    return _RotationDataProviderElement(this);
+    return _RotationDataResponseProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is RotationDataProvider &&
-        other.rotationGroupId == rotationGroupId;
+    return other is RotationDataResponseProvider &&
+        other.rotationId == rotationId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, rotationGroupId.hashCode);
+    hash = _SystemHash.combine(hash, rotationId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -139,20 +143,19 @@ class RotationDataProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin RotationDataRef
+mixin RotationDataResponseRef
     on AutoDisposeFutureProviderRef<Result<RotationDataResponse>> {
-  /// The parameter `rotationGroupId` of this provider.
-  String? get rotationGroupId;
+  /// The parameter `rotationId` of this provider.
+  String? get rotationId;
 }
 
-class _RotationDataProviderElement
+class _RotationDataResponseProviderElement
     extends AutoDisposeFutureProviderElement<Result<RotationDataResponse>>
-    with RotationDataRef {
-  _RotationDataProviderElement(super.provider);
+    with RotationDataResponseRef {
+  _RotationDataResponseProviderElement(super.provider);
 
   @override
-  String? get rotationGroupId =>
-      (origin as RotationDataProvider).rotationGroupId;
+  String? get rotationId => (origin as RotationDataResponseProvider).rotationId;
 }
 
 // ignore_for_file: type=lint

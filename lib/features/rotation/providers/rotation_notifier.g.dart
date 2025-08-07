@@ -1,28 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'rotation_controller.dart';
+part of 'rotation_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$rotationControllerHash() =>
-    r'0787fd5650d16aae0664e8624f3f2099d765a06a';
+String _$rotationNotifierHash() => r'641d60e9902570c6bb1c646d0e35f9a9d39473db';
 
-/// See also [RotationController].
-@ProviderFor(RotationController)
-final rotationControllerProvider =
-    AutoDisposeAsyncNotifierProvider<RotationController, void>.internal(
-      RotationController.new,
-      name: r'rotationControllerProvider',
+/// See also [RotationNotifier].
+@ProviderFor(RotationNotifier)
+final rotationNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<RotationNotifier, void>.internal(
+      RotationNotifier.new,
+      name: r'rotationNotifierProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$rotationControllerHash,
+              : _$rotationNotifierHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$RotationController = AutoDisposeAsyncNotifier<void>;
+typedef _$RotationNotifier = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

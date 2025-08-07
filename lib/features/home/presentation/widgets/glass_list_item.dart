@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassListItem extends StatelessWidget {
-  final RotationGroupResponse rotationGroup;
+  final RotationResponse rotationResponse;
   final VoidCallback? onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
   const GlassListItem({
     super.key,
-    required this.rotationGroup,
+    required this.rotationResponse,
     this.onTap,
     this.onEdit,
     this.onDelete,
@@ -26,7 +26,7 @@ class GlassListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Dismissible(
-        key: Key(rotationGroup.rotationGroupId),
+        key: Key(rotationResponse.rotationId),
         direction: DismissDirection.horizontal,
         // Dismissによる削除時の背景色
         background: GlassWrapper(
@@ -57,9 +57,9 @@ class GlassListItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // RotationGroupName
+                          // RotationName
                           Text(
-                            rotationGroup.rotationName,
+                            rotationResponse.rotationName,
                             style: Theme.of(context).textTheme.titleMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -67,7 +67,7 @@ class GlassListItem extends StatelessWidget {
                           const SizedBox(height: 4),
                           // MemberNameList
                           Text(
-                            rotationGroup.rotationMembers.join(', '),
+                            rotationResponse.rotationMembers.join(', '),
                             style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

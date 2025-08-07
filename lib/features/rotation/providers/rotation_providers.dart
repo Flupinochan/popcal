@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
-import 'package:popcal/features/rotation/use_cases/create_rotation_group_use_case.dart';
-import 'package:popcal/features/rotation/use_cases/update_rotation_group_use_case.dart';
+import 'package:popcal/features/rotation/use_cases/create_rotation_use_case.dart';
+import 'package:popcal/features/rotation/use_cases/update_rotation_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_firebase.dart';
 import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_impl.dart';
@@ -26,8 +26,8 @@ RotationRepository rotationRepository(Ref ref) {
 }
 
 @riverpod
-CreateRotationGroupUseCase createRotationGroupUseCase(Ref ref) {
-  return CreateRotationGroupUseCase(
+CreateRotationUseCase createRotationUseCase(Ref ref) {
+  return CreateRotationUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
     ref.watch(rotationCalculationServiceProvider),
@@ -35,8 +35,8 @@ CreateRotationGroupUseCase createRotationGroupUseCase(Ref ref) {
 }
 
 @riverpod
-UpdateRotationGroupUseCase updateRotationGroupUseCase(Ref ref) {
-  return UpdateRotationGroupUseCase(
+UpdateRotationUseCase updateRotationUseCase(Ref ref) {
+  return UpdateRotationUseCase(
     ref.watch(rotationRepositoryProvider),
     ref.watch(notificationRepositoryProvider),
     ref.watch(rotationCalculationServiceProvider),

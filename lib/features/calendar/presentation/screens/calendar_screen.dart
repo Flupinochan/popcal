@@ -17,15 +17,13 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
 class CalendarScreen extends HookConsumerWidget {
-  final String rotationGroupId;
+  final String rotationId;
 
-  const CalendarScreen({super.key, required this.rotationGroupId});
+  const CalendarScreen({super.key, required this.rotationId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final calendarDataAsync = ref.watch(
-      calendarScreenDataProvider(rotationGroupId),
-    );
+    final calendarDataAsync = ref.watch(calendarScreenDataProvider(rotationId));
     return calendarDataAsync.when(
       data:
           (result) => result.when(
@@ -51,7 +49,7 @@ class CalendarScreen extends HookConsumerWidget {
       backgroundColor: glassTheme.backgroundColor,
       extendBodyBehindAppBar: true,
       appBar: GlassAppBar(
-        title: calendarDataDto.rotationGroupResponse.rotationName,
+        title: calendarDataDto.rotationResponse.rotationName,
         leadingIcon: Icons.arrow_back_ios_new,
         onLeadingPressed: () => Navigator.pop(context),
       ),
@@ -383,21 +381,21 @@ class CalendarScreen extends HookConsumerWidget {
             // メンバー
             _rotationInfoItem(
               context,
-              'メンバー: ${calendarDataDto.rotationGroupResponse.rotationMembers.join(', ')}',
+              'メンバー: ${calendarDataDto.rotationResponse.rotationMembers.join(', ')}',
               Icons.group,
             ),
             const SizedBox(height: 12),
             // 曜日
             _rotationInfoItem(
               context,
-              '曜日: ${calendarDataDto.rotationGroupResponse.rotationDays.map((w) => w.displayName).join(', ')}',
+              '曜日: ${calendarDataDto.rotationResponse.rotationDays.map((w) => w.displayName).join(', ')}',
               Icons.calendar_today,
             ),
             const SizedBox(height: 12),
             // 通知時刻
             _rotationInfoItem(
               context,
-              '時刻: ${calendarDataDto.rotationGroupResponse.notificationTime.hour.toString().padLeft(2, '0')}:${calendarDataDto.rotationGroupResponse.notificationTime.minute.toString().padLeft(2, '0')}',
+              '時刻: ${calendarDataDto.rotationResponse.notificationTime.hour.toString().padLeft(2, '0')}:${calendarDataDto.rotationResponse.notificationTime.minute.toString().padLeft(2, '0')}',
               Icons.access_time,
             ),
           ],

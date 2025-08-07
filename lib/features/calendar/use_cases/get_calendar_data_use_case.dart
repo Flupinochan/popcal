@@ -23,7 +23,7 @@ class GetCalendarDataUseCase {
 
   // CalendarScreen表示に必要な3つの情報を取得して返却
   // UseCaseは複数のビジネスロジックを実行するため、Entityを扱う
-  Future<Result<CalendarData>> execute(String rotationGroupId) async {
+  Future<Result<CalendarData>> execute(String rotationId) async {
     // 1. ユーザ情報を取得 ※.futureでstreamから1度だけ取得が可能
     final authResult = await _authRepository.getUser();
     if (authResult.isFailure) {
@@ -35,15 +35,15 @@ class GetCalendarDataUseCase {
     }
 
     // 2. ローテーション情報取得
-    final rotationResult = await _rotationRepository.getRotationGroup(
+    final rotationResult = await _rotationRepository.getRotation(
       appUser.uidValue,
-      rotationGroupId,
+      rotationId,
     );
     if (rotationResult.isFailure) {
       return Results.failure(rotationResult.failureOrNull!);
     }
-    final rotationGroup = rotationResult.valueOrNull;
-    if (rotationGroup == null) {
+    final rotation = rotationResult.valueOrNull;
+    if (rotation == null) {
       return Results.failure(ValidationFailure('ローテーション情報が見つかりません'));
     }
 
@@ -52,7 +52,7 @@ class GetCalendarDataUseCase {
     final endDate = now.add(const Duration(days: futureDays));
 
     final notificationResult = _calendarScheduleUseCase.buildCalendarSchedule(
-      rotationGroup: rotationGroup,
+      rotation: rotation,
       toDate: endDate,
     );
     if (notificationResult.isFailure) {
@@ -60,7 +60,7 @@ class GetCalendarDataUseCase {
     }
 
     final calendarData = CalendarData(
-      rotationGroup: rotationGroup,
+      rotation: rotation,
       dayInfoMap: notificationResult.valueOrNull!,
     );
 

@@ -3,16 +3,16 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_state.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'rotation_data.g.dart';
+part 'rotation_loader.g.dart';
 
 @riverpod
-Future<Result<RotationDataResponse>> rotationData(
+Future<Result<RotationDataResponse>> rotationDataResponse(
   Ref ref,
-  String? rotationGroupId,
+  String? rotationId,
 ) async {
   // 1. ユーザ情報を取得
   final authResult = await ref.watch(authStateForUIProvider.future);
@@ -23,29 +23,29 @@ Future<Result<RotationDataResponse>> rotationData(
   if (userDto == null) {
     return Results.failure(AuthFailure('未認証です'));
   }
-  if (rotationGroupId == null) {
+  if (rotationId == null) {
     return Results.success(RotationDataResponse(userDto, null));
   }
 
   // 2. ローテーショングループ情報を取得
   final rotationRepository = ref.watch(rotationRepositoryProvider);
-  final rotationGroupResult = await rotationRepository.getRotationGroup(
+  final rotationResult = await rotationRepository.getRotation(
     userDto.userId.value,
-    rotationGroupId,
+    rotationId,
   );
-  if (rotationGroupResult.isFailure) {
-    return Results.failure(rotationGroupResult.failureOrNull!);
+  if (rotationResult.isFailure) {
+    return Results.failure(rotationResult.failureOrNull!);
   }
 
-  final rotationGroupDto = RotationGroupResponse.fromEntity(
-    rotationGroupResult.valueOrNull!,
+  final rotationResponse = RotationResponse.fromEntity(
+    rotationResult.valueOrNull!,
   );
-  return Results.success(RotationDataResponse(userDto, rotationGroupDto));
+  return Results.success(RotationDataResponse(userDto, rotationResponse));
 }
 
 class RotationDataResponse {
   final UserResponse userDto;
-  final RotationGroupResponse? rotationGroupDto;
+  final RotationResponse? rotationResponse;
 
-  const RotationDataResponse(this.userDto, this.rotationGroupDto);
+  const RotationDataResponse(this.userDto, this.rotationResponse);
 }

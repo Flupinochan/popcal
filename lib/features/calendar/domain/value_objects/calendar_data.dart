@@ -1,12 +1,12 @@
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 
 class CalendarData {
-  final RotationGroup rotationGroup;
+  final Rotation rotation;
   // 各日付のkey: 各日付の表示用データValue
   final Map<DateKey, CalendarDay> dayInfoMap;
 
-  const CalendarData({required this.rotationGroup, required this.dayInfoMap});
+  const CalendarData({required this.rotation, required this.dayInfoMap});
 
   CalendarDay getDayInfo(DateTime date) {
     final key = DateKey.fromDateTime(date);

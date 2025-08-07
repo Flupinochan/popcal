@@ -1,7 +1,7 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_firebase.dart';
-import 'package:popcal/features/rotation/infrastructure/dto/rotation_group_firebase_response.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_response.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
 class RotationRepositoryImpl implements RotationRepository {
@@ -11,10 +11,8 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 1. 自動ローテーショングループ一覧取得
   @override
-  Stream<Result<List<RotationGroup>>> watchRotationGroups(String userId) {
-    return _firebaseRotationDatasource.watchRotationGroups(userId).map((
-      result,
-    ) {
+  Stream<Result<List<Rotation>>> watchRotations(String userId) {
+    return _firebaseRotationDatasource.watchRotations(userId).map((result) {
       return result.when(
         success:
             (dtos) =>
@@ -26,8 +24,8 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 2. 手動ローテーショングループ一覧取得
   @override
-  Future<Result<List<RotationGroup>>> getRotationGroups(String userId) async {
-    final result = await _firebaseRotationDatasource.getRotationGroups(userId);
+  Future<Result<List<Rotation>>> getRotations(String userId) async {
+    final result = await _firebaseRotationDatasource.getRotations(userId);
     return result.when(
       success:
           (dtos) => Results.success(dtos.map((dto) => dto.toEntity()).toList()),
@@ -37,13 +35,13 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 3. 特定のローテーショングループを取得
   @override
-  Future<Result<RotationGroup?>> getRotationGroup(
+  Future<Result<Rotation?>> getRotation(
     String userId,
-    String rotationGroupId,
+    String rotationId,
   ) async {
-    final result = await _firebaseRotationDatasource.getRotationGroup(
+    final result = await _firebaseRotationDatasource.getRotation(
       userId,
-      rotationGroupId,
+      rotationId,
     );
     return result.when(
       success: (dto) => Results.success(dto?.toEntity()),
@@ -53,14 +51,12 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 4. ローテーショングループ作成
   @override
-  Future<Result<RotationGroup>> createRotationGroup(
-    RotationGroup rotationGroup,
-  ) async {
+  Future<Result<Rotation>> createRotation(Rotation rotation) async {
     // Entity => DTO
-    final dto = RotationGroupFirebaseResponse.fromEntity(rotationGroup);
+    final dto = RotationFirebaseResponse.fromEntity(rotation);
 
     // firestoreに作成
-    final result = await _firebaseRotationDatasource.createRotationGroup(dto);
+    final result = await _firebaseRotationDatasource.createRotation(dto);
     return result.when(
       success: (dto) => Results.success(dto.toEntity()),
       failure: (error) => Results.failure(error),
@@ -69,12 +65,10 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 5. ローテーショングループ更新
   @override
-  Future<Result<RotationGroup>> updateRotationGroup(
-    RotationGroup rotationGroup,
-  ) async {
-    final dto = RotationGroupFirebaseResponse.fromEntity(rotationGroup);
+  Future<Result<Rotation>> updateRotation(Rotation rotation) async {
+    final dto = RotationFirebaseResponse.fromEntity(rotation);
 
-    final result = await _firebaseRotationDatasource.updateRotationGroup(dto);
+    final result = await _firebaseRotationDatasource.updateRotation(dto);
     return result.when(
       success: (dto) => Results.success(dto.toEntity()),
       failure: (error) => Results.failure(error),
@@ -83,13 +77,10 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 6. ローテーショングループ削除
   @override
-  Future<Result<void>> deleteRotationGroup(
-    String userId,
-    String rotationGroupId,
-  ) async {
-    final result = await _firebaseRotationDatasource.deleteRotationGroup(
+  Future<Result<void>> deleteRotation(String userId, String rotationId) async {
+    final result = await _firebaseRotationDatasource.deleteRotation(
       userId,
-      rotationGroupId,
+      rotationId,
     );
     return result.when(
       success: (_) => Results.success(null),

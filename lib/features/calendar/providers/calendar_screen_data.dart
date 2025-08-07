@@ -2,7 +2,7 @@ import 'package:popcal/features/auth/providers/auth_provider.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_data.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_data_use_case.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_response.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_group_response.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,17 +26,15 @@ GetCalendarDataUseCase getCalendarDataUseCase(Ref ref) {
 @riverpod
 Future<Result<CalendarDataResponse>> calendarScreenData(
   Ref ref,
-  String rotationGroupId,
+  String rotationId,
 ) async {
   final useCase = ref.watch(getCalendarDataUseCaseProvider);
-  final domainResult = await useCase.execute(rotationGroupId);
+  final domainResult = await useCase.execute(rotationId);
 
   return domainResult.when(
     success: (calendarData) {
       final calendarResponseDto = CalendarDataResponse(
-        rotationGroupResponse: RotationGroupResponse.fromEntity(
-          calendarData.rotationGroup,
-        ),
+        rotationResponse: RotationResponse.fromEntity(calendarData.rotation),
         dayInfoMap: _convertDayInfoMapToDto(calendarData.dayInfoMap),
       );
       return Results.success(calendarResponseDto);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/domain/entities/rotation_group.dart';
+import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_plan.dart';
 
@@ -17,10 +17,10 @@ abstract class RotationCalculationService {
   });
 
   /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
-  /// [rotationGroup]
+  /// [rotation]
   /// [futureDays] デフォルトは今日から30日分
   Result<NotificationPlan> planUpcomingNotifications({
-    required RotationGroup rotationGroup,
+    required Rotation rotation,
     int futureDays = 30,
   });
 

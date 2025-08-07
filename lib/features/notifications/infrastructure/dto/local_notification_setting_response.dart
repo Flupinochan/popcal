@@ -14,7 +14,7 @@ sealed class LocalNotificationSettingResponse
 
   const factory LocalNotificationSettingResponse({
     required int notificationId,
-    required String rotationGroupId,
+    required String rotationId,
     required String userId,
     required String rotationName,
     required DateTime notificationTime,
@@ -33,7 +33,7 @@ sealed class LocalNotificationSettingResponse
       return Results.success(
         LocalNotificationSettingResponse(
           notificationId: notification.notificationId,
-          rotationGroupId: notification.rotationGroupId,
+          rotationId: notification.rotationId,
           userId: notification.userId,
           rotationName: notification.rotationName,
           notificationTime: notification.notificationTime,
@@ -57,7 +57,7 @@ sealed class LocalNotificationSettingResponse
       return Results.success(
         NotificationSetting(
           notificationId: notificationId,
-          rotationGroupId: rotationGroupId,
+          rotationId: rotationId,
           userId: userId,
           rotationName: rotationName,
           notificationTime: notificationTime,

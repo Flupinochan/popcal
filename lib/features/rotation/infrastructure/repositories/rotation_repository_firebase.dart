@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/rotation/infrastructure/dto/rotation_group_firebase_response.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_response.dart';
 
 class RotationRepositoryFirebase {
   final FirebaseFirestore _firebaseFirestore;
@@ -9,24 +9,20 @@ class RotationRepositoryFirebase {
   RotationRepositoryFirebase(this._firebaseFirestore);
 
   // 1. 自動ローテーショングループ一覧取得
-  Stream<Result<List<RotationGroupFirebaseResponse>>> watchRotationGroups(
-    String userId,
-  ) {
+  Stream<Result<List<RotationFirebaseResponse>>> watchRotations(String userId) {
     return _firebaseFirestore
         .collection('users')
         .doc(userId)
-        .collection('rotationGroups')
+        .collection('rotations')
         .withConverter(
-          fromFirestore: RotationGroupFirebaseResponse.fromFirestore,
-          toFirestore:
-              (RotationGroupFirebaseResponse dto, _) => dto.toFirestore(),
+          fromFirestore: RotationFirebaseResponse.fromFirestore,
+          toFirestore: (RotationFirebaseResponse dto, _) => dto.toFirestore(),
         )
         .snapshots()
         .map((docSnap) {
           try {
-            final rotationGroups =
-                docSnap.docs.map((doc) => doc.data()).toList();
-            return Results.success(rotationGroups);
+            final rotations = docSnap.docs.map((doc) => doc.data()).toList();
+            return Results.success(rotations);
           } catch (error) {
             return Results.failure(
               NetworkFailure('ローテーショングループの監視中にエラーが発生しました: $error'),
@@ -36,44 +32,42 @@ class RotationRepositoryFirebase {
   }
 
   // 2. 手動ローテーショングループ一覧取得
-  Future<Result<List<RotationGroupFirebaseResponse>>> getRotationGroups(
+  Future<Result<List<RotationFirebaseResponse>>> getRotations(
     String userId,
   ) async {
     try {
       final ref = _firebaseFirestore
           .collection('users')
           .doc(userId)
-          .collection('rotationGroups')
+          .collection('rotations')
           // withConverterで型安全に処理可能
           .withConverter(
-            fromFirestore: RotationGroupFirebaseResponse.fromFirestore,
-            toFirestore:
-                (RotationGroupFirebaseResponse dto, _) => dto.toFirestore(),
+            fromFirestore: RotationFirebaseResponse.fromFirestore,
+            toFirestore: (RotationFirebaseResponse dto, _) => dto.toFirestore(),
           );
       final docSnap = await ref.get();
       // doc.data()に型変換したデータが格納
-      final rotationGroups = docSnap.docs.map((doc) => doc.data()).toList();
-      return Results.success(rotationGroups);
+      final rotations = docSnap.docs.map((doc) => doc.data()).toList();
+      return Results.success(rotations);
     } catch (error) {
       return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
     }
   }
 
   // 3. 特定のローテーショングループを取得
-  Future<Result<RotationGroupFirebaseResponse?>> getRotationGroup(
+  Future<Result<RotationFirebaseResponse?>> getRotation(
     String userId,
-    String rotationGroupId,
+    String rotationId,
   ) async {
     try {
       final docRef = _firebaseFirestore
           .collection('users')
           .doc(userId)
-          .collection('rotationGroups')
-          .doc(rotationGroupId)
+          .collection('rotations')
+          .doc(rotationId)
           .withConverter(
-            fromFirestore: RotationGroupFirebaseResponse.fromFirestore,
-            toFirestore:
-                (RotationGroupFirebaseResponse dto, _) => dto.toFirestore(),
+            fromFirestore: RotationFirebaseResponse.fromFirestore,
+            toFirestore: (RotationFirebaseResponse dto, _) => dto.toFirestore(),
           );
 
       final docSnap = await docRef.get();
@@ -82,16 +76,16 @@ class RotationRepositoryFirebase {
         return Results.success(null);
       }
 
-      final rotationGroup = docSnap.data();
-      return Results.success(rotationGroup);
+      final rotations = docSnap.data();
+      return Results.success(rotations);
     } catch (error) {
       return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
     }
   }
 
   // 4. ローテーショングループ作成
-  Future<Result<RotationGroupFirebaseResponse>> createRotationGroup(
-    RotationGroupFirebaseResponse dto,
+  Future<Result<RotationFirebaseResponse>> createRotation(
+    RotationFirebaseResponse dto,
   ) async {
     try {
       // 作成するdocumentへのrefを作成 ※collectionとdocは交互にしなければならない
@@ -99,14 +93,14 @@ class RotationRepositoryFirebase {
           _firebaseFirestore
               .collection('users')
               .doc(dto.userId)
-              .collection('rotationGroups')
+              .collection('rotations')
               .doc();
 
       // Firestoreに保存
       await docRef.set(dto.toFirestore());
 
-      final result = RotationGroupFirebaseResponse(
-        rotationGroupId: docRef.id, // 生成されたdocument id
+      final result = RotationFirebaseResponse(
+        rotationId: docRef.id, // 生成されたdocument id
         userId: dto.userId,
         rotationName: dto.rotationName,
         rotationMembers: dto.rotationMembers,
@@ -124,19 +118,19 @@ class RotationRepositoryFirebase {
   }
 
   // 5. ローテーショングループ更新
-  Future<Result<RotationGroupFirebaseResponse>> updateRotationGroup(
-    RotationGroupFirebaseResponse dto,
+  Future<Result<RotationFirebaseResponse>> updateRotation(
+    RotationFirebaseResponse dto,
   ) async {
     try {
-      if (dto.rotationGroupId == null) {
+      if (dto.rotationId == null) {
         return Results.failure(ValidationFailure('ローテーションIDが未設定です'));
       }
 
       final docRef = _firebaseFirestore
           .collection('users')
           .doc(dto.userId)
-          .collection('rotationGroups')
-          .doc(dto.rotationGroupId);
+          .collection('rotations')
+          .doc(dto.rotationId);
 
       // updatedAtを現在時刻に更新
       final updatedDto = dto.copyWith(updatedAt: Timestamp.now());
@@ -150,16 +144,13 @@ class RotationRepositoryFirebase {
   }
 
   // 6. ローテーショングループ削除
-  Future<Result<void>> deleteRotationGroup(
-    String userId,
-    String rotationGroupId,
-  ) async {
+  Future<Result<void>> deleteRotation(String userId, String rotationId) async {
     try {
       final docRef = _firebaseFirestore
           .collection('users')
           .doc(userId)
-          .collection('rotationGroups')
-          .doc(rotationGroupId);
+          .collection('rotations')
+          .doc(rotationId);
 
       await docRef.delete();
 
