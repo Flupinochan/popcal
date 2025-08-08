@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
@@ -11,12 +12,12 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
 
   const factory CalendarScheduleResponse({
     required RotationResponse rotationResponse,
-    required Map<NotificationDateTime, ScheduleDayResponse> scheduleMap,
+    required Map<DateKey, ScheduleDayResponse> scheduleMap,
   }) = _CalendarScheduleResponse;
 
   // 指定した日付から表示用データを返却
   ScheduleDayResponse getDayInfo(DateTime date) {
-    return scheduleMap[NotificationDateTime(date)] ??
+    return scheduleMap[DateKey.fromDateTime(date)] ??
         ScheduleDayResponse(
           date: NotificationDateTime(date),
           memberName: null,

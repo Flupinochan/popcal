@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
 
 extension type NotificationTime(TimeOfDay value) {
   // 現在時刻取得用
   factory NotificationTime.now() {
-    final now = DateTime.now();
+    final now = TimeUtils.getLocalDateTime();
     return NotificationTime(TimeOfDay(hour: now.hour, minute: now.minute));
   }
 

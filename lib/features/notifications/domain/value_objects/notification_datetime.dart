@@ -1,9 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
 
 extension type NotificationDateTime(DateTime value) {
-  factory NotificationDateTime.now() => NotificationDateTime(DateTime.now());
+  factory NotificationDateTime.now() =>
+      NotificationDateTime(TimeUtils.getLocalDateTime());
 
   factory NotificationDateTime.fromDateAndTime({
     required DateTime date,

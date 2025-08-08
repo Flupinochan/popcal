@@ -8,6 +8,6 @@ class TimeUtils {
   }
 
   static DateTime getLocalDateTime() {
-    return TimeUtils.getLocalDateTime();
+    return DateTime.now().toLocal();
   }
 }

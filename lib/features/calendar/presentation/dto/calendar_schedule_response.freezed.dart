@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CalendarScheduleResponse {
 
- RotationResponse get rotationResponse; Map<NotificationDateTime, ScheduleDayResponse> get scheduleMap;
+ RotationResponse get rotationResponse; Map<DateKey, ScheduleDayResponse> get scheduleMap;
 /// Create a copy of CalendarScheduleResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ abstract mixin class $CalendarScheduleResponseCopyWith<$Res>  {
   factory $CalendarScheduleResponseCopyWith(CalendarScheduleResponse value, $Res Function(CalendarScheduleResponse) _then) = _$CalendarScheduleResponseCopyWithImpl;
 @useResult
 $Res call({
- RotationResponse rotationResponse, Map<NotificationDateTime, ScheduleDayResponse> scheduleMap
+ RotationResponse rotationResponse, Map<DateKey, ScheduleDayResponse> scheduleMap
 });
 
 
@@ -67,7 +67,7 @@ class _$CalendarScheduleResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 rotationResponse: null == rotationResponse ? _self.rotationResponse : rotationResponse // ignore: cast_nullable_to_non_nullable
 as RotationResponse,scheduleMap: null == scheduleMap ? _self.scheduleMap : scheduleMap // ignore: cast_nullable_to_non_nullable
-as Map<NotificationDateTime, ScheduleDayResponse>,
+as Map<DateKey, ScheduleDayResponse>,
   ));
 }
 /// Create a copy of CalendarScheduleResponse
@@ -87,12 +87,12 @@ $RotationResponseCopyWith<$Res> get rotationResponse {
 
 
 class _CalendarScheduleResponse extends CalendarScheduleResponse {
-  const _CalendarScheduleResponse({required this.rotationResponse, required final  Map<NotificationDateTime, ScheduleDayResponse> scheduleMap}): _scheduleMap = scheduleMap,super._();
+  const _CalendarScheduleResponse({required this.rotationResponse, required final  Map<DateKey, ScheduleDayResponse> scheduleMap}): _scheduleMap = scheduleMap,super._();
   
 
 @override final  RotationResponse rotationResponse;
- final  Map<NotificationDateTime, ScheduleDayResponse> _scheduleMap;
-@override Map<NotificationDateTime, ScheduleDayResponse> get scheduleMap {
+ final  Map<DateKey, ScheduleDayResponse> _scheduleMap;
+@override Map<DateKey, ScheduleDayResponse> get scheduleMap {
   if (_scheduleMap is EqualUnmodifiableMapView) return _scheduleMap;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_scheduleMap);
@@ -129,7 +129,7 @@ abstract mixin class _$CalendarScheduleResponseCopyWith<$Res> implements $Calend
   factory _$CalendarScheduleResponseCopyWith(_CalendarScheduleResponse value, $Res Function(_CalendarScheduleResponse) _then) = __$CalendarScheduleResponseCopyWithImpl;
 @override @useResult
 $Res call({
- RotationResponse rotationResponse, Map<NotificationDateTime, ScheduleDayResponse> scheduleMap
+ RotationResponse rotationResponse, Map<DateKey, ScheduleDayResponse> scheduleMap
 });
 
 
@@ -150,7 +150,7 @@ class __$CalendarScheduleResponseCopyWithImpl<$Res>
   return _then(_CalendarScheduleResponse(
 rotationResponse: null == rotationResponse ? _self.rotationResponse : rotationResponse // ignore: cast_nullable_to_non_nullable
 as RotationResponse,scheduleMap: null == scheduleMap ? _self._scheduleMap : scheduleMap // ignore: cast_nullable_to_non_nullable
-as Map<NotificationDateTime, ScheduleDayResponse>,
+as Map<DateKey, ScheduleDayResponse>,
   ));
 }
 

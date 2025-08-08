@@ -338,7 +338,7 @@ class CalendarScreen extends HookConsumerWidget {
                       const SizedBox(width: 10),
                       // メンバー名
                       Text(
-                        memberName == null ? memberName!.value : 'ローテーション対象外',
+                        memberName != null ? memberName!.value : 'ローテーション対象外',
                         style: textTheme.titleMedium!.copyWith(
                           color:
                               isRotationDay

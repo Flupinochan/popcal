@@ -1,6 +1,7 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -20,12 +21,13 @@ class BuildCalendarScheduleUseCase {
   /// [rotation]
   /// [toDate] デフォルトは未来1年分
   /// 2. Calendar表示用スケジュールを生成 ※1年分
-  Result<Map<NotificationDateTime, ScheduleDay>> buildCalendarSchedule({
+  Result<Map<DateKey, ScheduleDay>> buildCalendarSchedule({
     required Rotation rotation,
     NotificationDateTime? toDate,
   }) {
     try {
-      final calendarDays = <NotificationDateTime, ScheduleDay>{};
+      var currentIndex = rotation.currentRotationIndex;
+      final calendarDays = <DateKey, ScheduleDay>{};
       // 指定期間をループしてカレンダー日を作成
       for (
         var checkDate = rotation.createdAt;
@@ -47,8 +49,8 @@ class BuildCalendarScheduleUseCase {
           notificationTime: notificationTime,
           rotationDateTime: RotationDateTime.createdAt(rotation.createdAt),
         )) {
-          final memberIndex = rotation.getCurrentRotationMemberIndex();
-          final memberName = rotation.getCurrentRotationMemberName();
+          final memberName = rotation.getRotationMemberName(currentIndex);
+          final memberIndex = rotation.getRotationMemberIndex(memberName);
 
           _addCalendarDay(
             calendarDays: calendarDays,
@@ -76,18 +78,20 @@ class BuildCalendarScheduleUseCase {
   }
 
   void _addCalendarDay({
-    required Map<NotificationDateTime, ScheduleDay> calendarDays,
+    required Map<DateKey, ScheduleDay> calendarDays,
     required NotificationDateTime date,
     RotationMemberName? memberName,
     required bool isRotationDay,
     int? calendarDayColorIndex,
   }) {
+    final dateKey = DateKey.fromDateTime(date.value);
+
     final calendarDay = ScheduleDay(
       date: date,
       memberName: memberName,
       isRotationDay: isRotationDay,
       memberColorIndex: calendarDayColorIndex,
     );
-    calendarDays[date] = calendarDay;
+    calendarDays[dateKey] = calendarDay;
   }
 }

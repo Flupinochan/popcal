@@ -68,7 +68,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           notificationTime: rotation.notificationTime,
           rotationDateTime: RotationDateTime.updatedAt(rotation.updatedAt),
         )) {
-          final memberName = rotation.getCurrentRotationMemberName();
+          final memberName = rotation.getRotationMemberName(currentIndex);
           final notificationId = NotificationId.create(
             rotation.rotationId!.value,
             checkDate,

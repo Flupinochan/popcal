@@ -1,7 +1,7 @@
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/providers/calendar_providers.dart';
-import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -29,8 +29,8 @@ Future<Result<CalendarScheduleResponse>> calendarScheduleResponse(
   );
 }
 
-Map<NotificationDateTime, ScheduleDayResponse> _convertDayInfoMapToDto(
-  Map<NotificationDateTime, ScheduleDay> domainMap,
+Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
+  Map<DateKey, ScheduleDay> domainMap,
 ) {
   return domainMap.map(
     (key, domainDay) => MapEntry(

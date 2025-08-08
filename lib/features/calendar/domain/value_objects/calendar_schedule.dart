@@ -1,3 +1,4 @@
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
@@ -5,7 +6,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_member_na
 class CalendarSchedule {
   final Rotation rotation;
   // 各日付のkey: 各日付の表示用データValue
-  final Map<NotificationDateTime, ScheduleDay> scheduleMap;
+  final Map<DateKey, ScheduleDay> scheduleMap;
 
   const CalendarSchedule({required this.rotation, required this.scheduleMap});
 

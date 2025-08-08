@@ -58,14 +58,8 @@ class Rotation {
     );
   }
 
-  RotationMemberName getCurrentRotationMemberName() {
-    return rotationMemberNames[currentRotationIndex.value];
-  }
-
-  int getCurrentRotationMemberIndex() {
-    return getRotationMemberIndex(
-      rotationMemberNames[currentRotationIndex.value],
-    );
+  RotationMemberName getRotationMemberName(RotationIndex rotationIndex) {
+    return rotationMemberNames[rotationIndex.value % getRotationMembersCount()];
   }
 
   int getRotationMemberIndex(RotationMemberName rotationMemberName) {
