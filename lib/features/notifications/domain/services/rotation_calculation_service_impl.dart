@@ -62,8 +62,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           notificationTime: rotation.notificationTime,
           createdAt: currentTime,
         )) {
-          final memberIndex = currentIndex % rotation.rotationMembers.length;
-          final memberName = rotation.rotationMembers[memberIndex];
+          final memberIndex =
+              currentIndex % rotation.rotationMemberNames.length;
+          final memberName = rotation.rotationMemberNames[memberIndex];
           final notificationId = _generateNotificationId(
             rotation.rotationId!.value,
             checkDate,
@@ -82,7 +83,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             userId: rotation.userId,
             rotationName: rotation.rotationName.value,
             notificationTime: scheduledDateTime,
-            memberName: memberName,
+            memberName: memberName.value,
             rotationStartDate: rotation.createdAt,
           );
 

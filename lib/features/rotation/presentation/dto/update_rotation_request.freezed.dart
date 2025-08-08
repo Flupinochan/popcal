@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateRotationRequest {
 
- UserId get userId; RotationId get rotationId; RotationName get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; DateTime get createdAt;
+ UserId get userId; RotationId get rotationId; RotationName get rotationName; List<RotationMemberName> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; DateTime get createdAt;
 /// Create a copy of UpdateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ abstract mixin class $UpdateRotationRequestCopyWith<$Res>  {
   factory $UpdateRotationRequestCopyWith(UpdateRotationRequest value, $Res Function(UpdateRotationRequest) _then) = _$UpdateRotationRequestCopyWithImpl;
 @useResult
 $Res call({
- UserId userId, RotationId rotationId, RotationName rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
+ UserId userId, RotationId rotationId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
 });
 
 
@@ -69,7 +69,7 @@ userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_n
 as UserId,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
-as List<String>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
+as List<RotationMemberName>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -92,14 +92,14 @@ $UserIdCopyWith<$Res> get userId {
 
 
 class _UpdateRotationRequest extends UpdateRotationRequest {
-  const _UpdateRotationRequest({required this.userId, required this.rotationId, required this.rotationName, required final  List<String> rotationMembers, required final  List<Weekday> rotationDays, required this.notificationTime, required this.createdAt}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,super._();
+  const _UpdateRotationRequest({required this.userId, required this.rotationId, required this.rotationName, required final  List<RotationMemberName> rotationMembers, required final  List<Weekday> rotationDays, required this.notificationTime, required this.createdAt}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,super._();
   
 
 @override final  UserId userId;
 @override final  RotationId rotationId;
 @override final  RotationName rotationName;
- final  List<String> _rotationMembers;
-@override List<String> get rotationMembers {
+ final  List<RotationMemberName> _rotationMembers;
+@override List<RotationMemberName> get rotationMembers {
   if (_rotationMembers is EqualUnmodifiableListView) return _rotationMembers;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_rotationMembers);
@@ -145,7 +145,7 @@ abstract mixin class _$UpdateRotationRequestCopyWith<$Res> implements $UpdateRot
   factory _$UpdateRotationRequestCopyWith(_UpdateRotationRequest value, $Res Function(_UpdateRotationRequest) _then) = __$UpdateRotationRequestCopyWithImpl;
 @override @useResult
 $Res call({
- UserId userId, RotationId rotationId, RotationName rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
+ UserId userId, RotationId rotationId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
 });
 
 
@@ -168,7 +168,7 @@ userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_n
 as UserId,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as RotationName,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
-as List<String>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
+as List<RotationMemberName>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,

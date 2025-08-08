@@ -5,6 +5,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'create_rotation_request.freezed.dart';
@@ -16,7 +17,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
   const factory CreateRotationRequest({
     required UserId userId,
     required RotationName rotationName,
-    required List<String> rotationMembers,
+    required List<RotationMemberName> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
   }) = _CreateRotationRequest;
@@ -31,7 +32,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
           rotationId: null, // 作成時は未設定
           userId: userId,
           rotationName: rotationName,
-          rotationMembers: rotationMembers,
+          rotationMemberNames: rotationMembers,
           rotationDays: rotationDays,
           notificationTime: notificationTime,
           currentRotationIndex: 0, // 作成時は0
@@ -53,7 +54,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
     return CreateRotationRequest(
       userId: entity.userId,
       rotationName: entity.rotationName,
-      rotationMembers: entity.rotationMembers,
+      rotationMembers: entity.rotationMemberNames,
       rotationDays: entity.rotationDays,
       notificationTime: entity.notificationTime,
     );

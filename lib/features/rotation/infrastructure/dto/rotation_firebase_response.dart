@@ -6,6 +6,7 @@ import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'rotation_firebase_response.freezed.dart';
@@ -18,7 +19,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     required RotationId? rotationId,
     required UserId userId,
     required RotationName rotationName,
-    required List<String> rotationMembers,
+    required List<RotationMemberName> rotationMemberNames,
     required List<int> rotationDays,
     required Map<String, int> notificationTime,
     required int currentRotationIndex,
@@ -34,7 +35,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       rotationId: entity.rotationId,
       userId: entity.userId,
       rotationName: entity.rotationName,
-      rotationMembers: entity.rotationMembers,
+      rotationMemberNames: entity.rotationMemberNames,
       rotationDays:
           entity.rotationDays.map((weekday) => weekday.value).toList(),
       notificationTime: _timeOfDayToMap(entity.notificationTime),
@@ -56,9 +57,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       rotationId: RotationId(snapshot.id),
       userId: UserId(data['userId'] as String),
       rotationName: RotationName(data['rotationName'] as String),
-      rotationMembers: List<String>.from(
-        data['rotationMembers'] as List<dynamic>,
-      ),
+      rotationMemberNames: _parseRotationMembers(data['rotationMemberNames']),
       rotationDays: List<int>.from(data['rotationDays'] as List<dynamic>),
       notificationTime: Map<String, int>.from(
         data['notificationTime'] as Map<String, dynamic>,
@@ -75,7 +74,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       rotationId: rotationId,
       userId: userId,
       rotationName: rotationName,
-      rotationMembers: rotationMembers,
+      rotationMemberNames: rotationMemberNames,
       rotationDays:
           rotationDays.map((value) => Weekday.fromInt(value)).toList(),
       notificationTime: _mapToTimeOfDay(notificationTime),
@@ -91,7 +90,8 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     return {
       'userId': userId.value,
       'rotationName': rotationName.value,
-      'rotationMembers': rotationMembers,
+      'rotationMemberNames':
+          rotationMemberNames.map((member) => member.value).toList(),
       'rotationDays': rotationDays,
       'notificationTime': notificationTime,
       'currentRotationIndex': currentRotationIndex,
@@ -108,5 +108,20 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   // Map => TimeOfDay
   static TimeOfDay _mapToTimeOfDay(Map<String, int> map) {
     return TimeOfDay(hour: map['hour'] ?? 0, minute: map['minute'] ?? 0);
+  }
+
+  static List<RotationMemberName> _parseRotationMembers(dynamic data) {
+    if (data == null) return [];
+
+    if (data is! List) {
+      throw FormatException(
+        'rotationMemberNames must be a List, got ${data.runtimeType}',
+      );
+    }
+
+    return data
+        .whereType<String>()
+        .map((name) => RotationMemberName(name))
+        .toList();
   }
 }

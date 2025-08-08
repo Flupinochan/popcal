@@ -104,7 +104,7 @@ class RotationRepositoryFirebase {
         rotationId: RotationId(docRef.id), // 生成されたdocument id
         userId: dto.userId,
         rotationName: dto.rotationName,
-        rotationMembers: dto.rotationMembers,
+        rotationMemberNames: dto.rotationMemberNames,
         rotationDays: dto.rotationDays,
         notificationTime: dto.notificationTime,
         currentRotationIndex: dto.currentRotationIndex,

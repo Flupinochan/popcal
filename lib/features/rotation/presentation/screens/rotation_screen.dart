@@ -7,6 +7,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
@@ -100,7 +101,10 @@ class RotationScreen extends HookConsumerWidget {
                   GlassFormList(
                     name: 'rotationMembers',
                     hintText: 'メンバー名を入力',
-                    initialValue: initialRotation?.rotationMembers,
+                    initialValue:
+                        initialRotation?.rotationMembers
+                            .map((member) => member.value)
+                            .toList(),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'メンバーを1つ以上追加してください';
@@ -168,7 +172,7 @@ Future<void> _handleSubmit(
           userId: userDto.userId,
           rotationId: originalRotation!.rotationId,
           rotationName: RotationName(formData['rotationName'] as String),
-          rotationMembers: List<String>.from(
+          rotationMembers: List<RotationMemberName>.from(
             formData['rotationMembers'] as List,
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,
@@ -180,7 +184,7 @@ Future<void> _handleSubmit(
         final dto = CreateRotationRequest(
           userId: userDto.userId,
           rotationName: RotationName(formData['rotationName'] as String),
-          rotationMembers: List<String>.from(
+          rotationMembers: List<RotationMemberName>.from(
             formData['rotationMembers'] as List,
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,

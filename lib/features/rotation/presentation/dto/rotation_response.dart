@@ -5,6 +5,7 @@ import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'rotation_response.freezed.dart';
@@ -17,7 +18,7 @@ sealed class RotationResponse with _$RotationResponse {
     required RotationId rotationId,
     required UserId userId,
     required RotationName rotationName,
-    required List<String> rotationMembers,
+    required List<RotationMemberName> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
     required int currentRotationIndex,
@@ -32,7 +33,7 @@ sealed class RotationResponse with _$RotationResponse {
         rotationId: rotationId,
         userId: userId,
         rotationName: rotationName,
-        rotationMembers: rotationMembers,
+        rotationMemberNames: rotationMembers,
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         currentRotationIndex: currentRotationIndex,
@@ -48,7 +49,7 @@ sealed class RotationResponse with _$RotationResponse {
       rotationId: entity.rotationId!,
       userId: entity.userId,
       rotationName: entity.rotationName,
-      rotationMembers: entity.rotationMembers,
+      rotationMembers: entity.rotationMemberNames,
       rotationDays: entity.rotationDays,
       notificationTime: entity.notificationTime,
       currentRotationIndex: entity.currentRotationIndex,

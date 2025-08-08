@@ -23,7 +23,7 @@ service cloud.firestore {
 
     // スキーマチェック (以下のフィールドをすべて含んだデータの場合のみOK)
     function hasValidSchema(data) {
-      let requiredFields = ['userId', 'rotationName', 'rotationMembers', 
+      let requiredFields = ['userId', 'rotationName', 'rotationMemberNames', 
                            'rotationDays', 'notificationTime', 'currentRotationIndex',
                            'createdAt', 'updatedAt'];
       return data.keys().hasOnly(requiredFields);

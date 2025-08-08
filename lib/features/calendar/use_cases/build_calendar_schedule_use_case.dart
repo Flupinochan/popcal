@@ -43,13 +43,14 @@ class BuildCalendarScheduleUseCase {
           notificationTime: rotation.notificationTime,
           createdAt: rotation.createdAt,
         )) {
-          final memberIndex = currentIndex % rotation.rotationMembers.length;
-          final memberName = rotation.rotationMembers[memberIndex];
+          final memberIndex =
+              currentIndex % rotation.rotationMemberNames.length;
+          final memberName = rotation.rotationMemberNames[memberIndex];
 
           _addCalendarDay(
             calendarDays: calendarDays,
             date: checkDate,
-            memberName: memberName,
+            memberName: memberName.value,
             isRotationDay: true,
             calendarDayColorIndex: memberIndex,
           );
