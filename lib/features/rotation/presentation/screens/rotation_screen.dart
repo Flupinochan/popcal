@@ -12,7 +12,7 @@ import 'package:popcal/features/rotation/presentation/dto/update_rotation_reques
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
-import 'package:popcal/features/rotation/presentation/widgets/glass_button_action_bar.dart';
+import 'package:popcal/features/rotation/presentation/widgets/glass_bottom_action_bar.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
@@ -164,7 +164,7 @@ Future<void> _handleSubmit(
 
       if (isUpdateMode) {
         final dto = UpdateRotationRequest(
-          userId: userDto.userId.value,
+          userId: userDto.userId,
           rotationId: originalRotation!.rotationId,
           rotationName: formData['rotationName'] as String,
           rotationMembers: List<String>.from(
@@ -177,7 +177,7 @@ Future<void> _handleSubmit(
         result = await rotationController.updateRotation(dto);
       } else {
         final dto = CreateRotationRequest(
-          userId: userDto.userId.value,
+          userId: userDto.userId,
           rotationName: formData['rotationName'] as String,
           rotationMembers: List<String>.from(
             formData['rotationMembers'] as List,

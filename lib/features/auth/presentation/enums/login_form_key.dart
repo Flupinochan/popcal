@@ -1,8 +1,8 @@
 // Form Key用
-enum LoginFormField {
+enum LoginFormKey {
   email('email'),
   password('password');
 
-  const LoginFormField(this.key);
+  const LoginFormKey(this.key);
   final String key;
 }

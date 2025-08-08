@@ -19,13 +19,13 @@ class RotationRepositoryFirebase {
           toFirestore: (RotationFirebaseResponse dto, _) => dto.toFirestore(),
         )
         .snapshots()
-        .map((docSnap) {
+        .asyncMap((docSnap) async {
           try {
             final rotations = docSnap.docs.map((doc) => doc.data()).toList();
             return Results.success(rotations);
           } catch (error) {
             return Results.failure(
-              NetworkFailure('ローテーショングループの監視中にエラーが発生しました: $error'),
+              RotationFailure('ローテーショングループの監視中にエラーが発生しました: $error'),
             );
           }
         });
@@ -50,7 +50,7 @@ class RotationRepositoryFirebase {
       final rotations = docSnap.docs.map((doc) => doc.data()).toList();
       return Results.success(rotations);
     } catch (error) {
-      return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
+      return Results.failure(RotationFailure('ローテーショングループの取得に失敗しました: $error'));
     }
   }
 
@@ -79,7 +79,7 @@ class RotationRepositoryFirebase {
       final rotations = docSnap.data();
       return Results.success(rotations);
     } catch (error) {
-      return Results.failure(NetworkFailure('ローテーショングループの取得に失敗しました: $error'));
+      return Results.failure(RotationFailure('ローテーショングループの取得に失敗しました: $error'));
     }
   }
 
@@ -92,7 +92,7 @@ class RotationRepositoryFirebase {
       final docRef =
           _firebaseFirestore
               .collection('users')
-              .doc(dto.userId)
+              .doc(dto.userId.toString())
               .collection('rotations')
               .doc();
 
@@ -113,7 +113,7 @@ class RotationRepositoryFirebase {
 
       return Results.success(result);
     } catch (error) {
-      return Results.failure(NetworkFailure('ローテーショングループの作成に失敗しました: $error'));
+      return Results.failure(RotationFailure('ローテーショングループの作成に失敗しました: $error'));
     }
   }
 
@@ -128,7 +128,7 @@ class RotationRepositoryFirebase {
 
       final docRef = _firebaseFirestore
           .collection('users')
-          .doc(dto.userId)
+          .doc(dto.userId.toString())
           .collection('rotations')
           .doc(dto.rotationId);
 
@@ -139,7 +139,7 @@ class RotationRepositoryFirebase {
 
       return Results.success(updatedDto);
     } catch (error) {
-      return Results.failure(NetworkFailure('ローテーショングループの更新に失敗しました: $error'));
+      return Results.failure(RotationFailure('ローテーショングループの更新に失敗しました: $error'));
     }
   }
 
@@ -156,7 +156,7 @@ class RotationRepositoryFirebase {
 
       return Results.success(null);
     } catch (error) {
-      return Results.failure(NetworkFailure('ローテーショングループの削除に失敗しました: $error'));
+      return Results.failure(RotationFailure('ローテーショングループの削除に失敗しました: $error'));
     }
   }
 }

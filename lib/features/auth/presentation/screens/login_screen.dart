@@ -114,14 +114,14 @@ class LoginScreen extends HookConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  LoginFormField.email.key,
+                                  LoginFormKey.email.key,
                                   style: textTheme.titleMedium,
                                 ),
                                 SizedBox(height: 8),
                                 GlassFormText(
-                                  name: LoginFormField.email.key,
+                                  name: LoginFormKey.email.key,
                                   hintText:
-                                      'Enter your ${LoginFormField.email.key}',
+                                      'Enter your ${LoginFormKey.email.key}',
                                   prefixIcon: Icons.email_outlined,
                                   validator: (value) {
                                     final result = Email.create(value);
@@ -139,14 +139,14 @@ class LoginScreen extends HookConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  LoginFormField.password.key,
+                                  LoginFormKey.password.key,
                                   style: textTheme.titleMedium,
                                 ),
                                 SizedBox(height: 8),
                                 GlassFormPassword(
-                                  name: LoginFormField.password.key,
+                                  name: LoginFormKey.password.key,
                                   hintText:
-                                      'Enter your ${LoginFormField.password.key}',
+                                      'Enter your ${LoginFormKey.password.key}',
                                   prefixIcon: Icons.lock_outline,
                                   validator: (value) {
                                     final result = Password.create(value);
@@ -273,8 +273,8 @@ class LoginScreen extends HookConsumerWidget {
     if (!formKey.currentState!.saveAndValidate()) return;
 
     final formData = formKey.currentState!.value;
-    final email = formData[LoginFormField.email.key] as String;
-    final password = formData[LoginFormField.password.key] as String;
+    final email = formData[LoginFormKey.email.key] as String;
+    final password = formData[LoginFormKey.password.key] as String;
 
     final dtoResult = EmailSignInRequest.create(
       email: email,

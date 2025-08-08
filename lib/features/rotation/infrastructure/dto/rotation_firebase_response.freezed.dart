@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RotationFirebaseResponse {
 
- String? get rotationId; String get userId; String get rotationName; List<String> get rotationMembers; List<int> get rotationDays; Map<String, int> get notificationTime; int get currentRotationIndex;// firestoreに保存する際はTimestampが適切
+ String? get rotationId; UserId get userId; String get rotationName; List<String> get rotationMembers; List<int> get rotationDays; Map<String, int> get notificationTime; int get currentRotationIndex;// firestoreに保存する際はTimestampが適切
 // Widget(UI)はDateTimeが適切
  Timestamp get createdAt; Timestamp get updatedAt;
 /// Create a copy of RotationFirebaseResponse
@@ -48,11 +48,11 @@ abstract mixin class $RotationFirebaseResponseCopyWith<$Res>  {
   factory $RotationFirebaseResponseCopyWith(RotationFirebaseResponse value, $Res Function(RotationFirebaseResponse) _then) = _$RotationFirebaseResponseCopyWithImpl;
 @useResult
 $Res call({
- String? rotationId, String userId, String rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
+ String? rotationId, UserId userId, String rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
 });
 
 
-
+$UserIdCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -69,7 +69,7 @@ class _$RotationFirebaseResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 rotationId: freezed == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as String?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<int>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
@@ -79,7 +79,16 @@ as Timestamp,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignor
 as Timestamp,
   ));
 }
-
+/// Create a copy of RotationFirebaseResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserIdCopyWith<$Res> get userId {
+  
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
+  });
+}
 }
 
 
@@ -91,7 +100,7 @@ class _RotationFirebaseResponse extends RotationFirebaseResponse {
   
 
 @override final  String? rotationId;
-@override final  String userId;
+@override final  UserId userId;
 @override final  String rotationName;
  final  List<String> _rotationMembers;
 @override List<String> get rotationMembers {
@@ -150,11 +159,11 @@ abstract mixin class _$RotationFirebaseResponseCopyWith<$Res> implements $Rotati
   factory _$RotationFirebaseResponseCopyWith(_RotationFirebaseResponse value, $Res Function(_RotationFirebaseResponse) _then) = __$RotationFirebaseResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String? rotationId, String userId, String rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
+ String? rotationId, UserId userId, String rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
 });
 
 
-
+@override $UserIdCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -171,7 +180,7 @@ class __$RotationFirebaseResponseCopyWithImpl<$Res>
   return _then(_RotationFirebaseResponse(
 rotationId: freezed == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as String?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<int>,notificationTime: null == notificationTime ? _self._notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
@@ -182,7 +191,16 @@ as Timestamp,
   ));
 }
 
-
+/// Create a copy of RotationFirebaseResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserIdCopyWith<$Res> get userId {
+  
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
+  });
+}
 }
 
 // dart format on

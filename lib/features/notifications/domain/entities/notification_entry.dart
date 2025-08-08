@@ -1,9 +1,11 @@
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
+
 /// 通知設定
 class NotificationEntry {
   final int notificationId;
   // rotationIdはポップアップをタップした際に、カレンダー画面を表示するさいに必要
   final String rotationId;
-  final String userId;
+  final UserId userId;
   // 以下ポップアップの通知情報
   final String rotationName;
   final DateTime notificationTime;

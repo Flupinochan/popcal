@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 
 part 'notification_entry_local_response.freezed.dart';
@@ -15,7 +16,7 @@ sealed class NotificationEntryLocalResponse
   const factory NotificationEntryLocalResponse({
     required int notificationId,
     required String rotationId,
-    required String userId,
+    required UserId userId,
     required String rotationName,
     required DateTime notificationTime,
     required String memberName,

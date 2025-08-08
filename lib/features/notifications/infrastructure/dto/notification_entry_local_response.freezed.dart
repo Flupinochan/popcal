@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationEntryLocalResponse {
 
- int get notificationId; String get rotationId; String get userId; String get rotationName; DateTime get notificationTime; String get memberName; DateTime get rotationStartDate; String get title; String get description; String get content;
+ int get notificationId; String get rotationId; UserId get userId; String get rotationName; DateTime get notificationTime; String get memberName; DateTime get rotationStartDate; String get title; String get description; String get content;
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,11 +49,11 @@ abstract mixin class $NotificationEntryLocalResponseCopyWith<$Res>  {
   factory $NotificationEntryLocalResponseCopyWith(NotificationEntryLocalResponse value, $Res Function(NotificationEntryLocalResponse) _then) = _$NotificationEntryLocalResponseCopyWithImpl;
 @useResult
 $Res call({
- int notificationId, String rotationId, String userId, String rotationName, DateTime notificationTime, String memberName, DateTime rotationStartDate, String title, String description, String content
+ int notificationId, String rotationId, UserId userId, String rotationName, DateTime notificationTime, String memberName, DateTime rotationStartDate, String title, String description, String content
 });
 
 
-
+$UserIdCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ class _$NotificationEntryLocalResponseCopyWithImpl<$Res>
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
 as int,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as DateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as String,rotationStartDate: null == rotationStartDate ? _self.rotationStartDate : rotationStartDate // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,16 @@ as String,content: null == content ? _self.content : content // ignore: cast_nul
 as String,
   ));
 }
-
+/// Create a copy of NotificationEntryLocalResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserIdCopyWith<$Res> get userId {
+  
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
+  });
+}
 }
 
 
@@ -94,7 +103,7 @@ class _NotificationEntryLocalResponse extends NotificationEntryLocalResponse {
 
 @override final  int notificationId;
 @override final  String rotationId;
-@override final  String userId;
+@override final  UserId userId;
 @override final  String rotationName;
 @override final  DateTime notificationTime;
 @override final  String memberName;
@@ -136,11 +145,11 @@ abstract mixin class _$NotificationEntryLocalResponseCopyWith<$Res> implements $
   factory _$NotificationEntryLocalResponseCopyWith(_NotificationEntryLocalResponse value, $Res Function(_NotificationEntryLocalResponse) _then) = __$NotificationEntryLocalResponseCopyWithImpl;
 @override @useResult
 $Res call({
- int notificationId, String rotationId, String userId, String rotationName, DateTime notificationTime, String memberName, DateTime rotationStartDate, String title, String description, String content
+ int notificationId, String rotationId, UserId userId, String rotationName, DateTime notificationTime, String memberName, DateTime rotationStartDate, String title, String description, String content
 });
 
 
-
+@override $UserIdCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -158,7 +167,7 @@ class __$NotificationEntryLocalResponseCopyWithImpl<$Res>
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
 as int,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as DateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as String,rotationStartDate: null == rotationStartDate ? _self.rotationStartDate : rotationStartDate // ignore: cast_nullable_to_non_nullable
@@ -169,7 +178,16 @@ as String,
   ));
 }
 
-
+/// Create a copy of NotificationEntryLocalResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserIdCopyWith<$Res> get userId {
+  
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
+  });
+}
 }
 
 // dart format on

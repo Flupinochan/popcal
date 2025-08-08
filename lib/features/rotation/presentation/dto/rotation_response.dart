@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
@@ -12,7 +13,7 @@ sealed class RotationResponse with _$RotationResponse {
 
   const factory RotationResponse({
     required String rotationId,
-    required String userId,
+    required UserId userId,
     required String rotationName,
     required List<String> rotationMembers,
     required List<Weekday> rotationDays,

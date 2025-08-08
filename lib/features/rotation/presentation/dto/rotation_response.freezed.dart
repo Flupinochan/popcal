@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RotationResponse {
 
- String get rotationId; String get userId; String get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; int get currentRotationIndex; DateTime get createdAt; DateTime get updatedAt;
+ String get rotationId; UserId get userId; String get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; int get currentRotationIndex; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of RotationResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,11 +46,11 @@ abstract mixin class $RotationResponseCopyWith<$Res>  {
   factory $RotationResponseCopyWith(RotationResponse value, $Res Function(RotationResponse) _then) = _$RotationResponseCopyWithImpl;
 @useResult
 $Res call({
- String rotationId, String userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
+ String rotationId, UserId userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
 });
 
 
-
+$UserIdCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -67,7 +67,7 @@ class _$RotationResponseCopyWithImpl<$Res>
   return _then(_self.copyWith(
 rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,16 @@ as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore
 as DateTime,
   ));
 }
-
+/// Create a copy of RotationResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserIdCopyWith<$Res> get userId {
+  
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
+  });
+}
 }
 
 
@@ -89,7 +98,7 @@ class _RotationResponse extends RotationResponse {
   
 
 @override final  String rotationId;
-@override final  String userId;
+@override final  UserId userId;
 @override final  String rotationName;
  final  List<String> _rotationMembers;
 @override List<String> get rotationMembers {
@@ -140,11 +149,11 @@ abstract mixin class _$RotationResponseCopyWith<$Res> implements $RotationRespon
   factory _$RotationResponseCopyWith(_RotationResponse value, $Res Function(_RotationResponse) _then) = __$RotationResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String rotationId, String userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
+ String rotationId, UserId userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
 });
 
 
-
+@override $UserIdCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -161,7 +170,7 @@ class __$RotationResponseCopyWithImpl<$Res>
   return _then(_RotationResponse(
 rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as String,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
@@ -172,7 +181,16 @@ as DateTime,
   ));
 }
 
-
+/// Create a copy of RotationResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserIdCopyWith<$Res> get userId {
+  
+  return $UserIdCopyWith<$Res>(_self.userId, (value) {
+    return _then(_self.copyWith(userId: value));
+  });
+}
 }
 
 // dart format on

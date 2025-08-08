@@ -168,7 +168,7 @@ class NotificationGatewayLocal {
               .toList();
       return Results.success(notificationIds);
     } catch (error) {
-      return Results.failure(NetworkFailure('通知の取得に失敗しました: $error'));
+      return Results.failure(NotificationFailure('通知の取得に失敗しました: $error'));
     }
   }
 
@@ -186,33 +186,37 @@ class NotificationGatewayLocal {
   Future<Result<void>> deleteNotificationsByRotationId(
     String rotationId,
   ) async {
-    final List<PendingNotificationRequest> pendingNotifications =
-        await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    try {
+      final List<PendingNotificationRequest> pendingNotifications =
+          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
 
-    String? errorMessage;
-    for (final notification in pendingNotifications) {
-      if (notification.payload != null) {
-        final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
-          notification.payload!,
-        );
-        dtoResult.when(
-          success: (localNotificationSettingDto) {
-            if (localNotificationSettingDto.rotationId == rotationId) {
-              try {
-                _flutterLocalNotificationsPlugin.cancel(notification.id);
-              } catch (error) {
-                errorMessage = error.toString();
+      String? errorMessage;
+      for (final notification in pendingNotifications) {
+        if (notification.payload != null) {
+          final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+            notification.payload!,
+          );
+          dtoResult.when(
+            success: (localNotificationSettingDto) {
+              if (localNotificationSettingDto.rotationId == rotationId) {
+                try {
+                  _flutterLocalNotificationsPlugin.cancel(notification.id);
+                } catch (error) {
+                  errorMessage = error.toString();
+                }
               }
-            }
-          },
-          failure: (error) => errorMessage = error.message,
-        );
+            },
+            failure: (error) => errorMessage = error.message,
+          );
+        }
       }
-    }
-    if (errorMessage != null) {
-      return Results.failure(NotificationFailure(errorMessage!));
-    } else {
-      return Results.success(null);
+      if (errorMessage != null) {
+        return Results.failure(NotificationFailure(errorMessage!));
+      } else {
+        return Results.success(null);
+      }
+    } catch (error) {
+      return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
     }
   }
 

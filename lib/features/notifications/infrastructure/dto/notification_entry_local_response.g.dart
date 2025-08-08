@@ -11,7 +11,7 @@ _NotificationEntryLocalResponse _$NotificationEntryLocalResponseFromJson(
 ) => _NotificationEntryLocalResponse(
   notificationId: (json['notificationId'] as num).toInt(),
   rotationId: json['rotationId'] as String,
-  userId: json['userId'] as String,
+  userId: UserId.fromJson(json['userId'] as String),
   rotationName: json['rotationName'] as String,
   notificationTime: DateTime.parse(json['notificationTime'] as String),
   memberName: json['memberName'] as String,

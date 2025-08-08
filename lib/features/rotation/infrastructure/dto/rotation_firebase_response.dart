@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
@@ -13,7 +14,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
 
   const factory RotationFirebaseResponse({
     required String? rotationId,
-    required String userId,
+    required UserId userId,
     required String rotationName,
     required List<String> rotationMembers,
     required List<int> rotationDays,
@@ -52,7 +53,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     final data = snapshot.data() as Map<String, dynamic>;
     return RotationFirebaseResponse(
       rotationId: snapshot.id,
-      userId: data['userId'] as String,
+      userId: data['userId'] as UserId,
       rotationName: data['rotationName'] as String,
       rotationMembers: List<String>.from(
         data['rotationMembers'] as List<dynamic>,
