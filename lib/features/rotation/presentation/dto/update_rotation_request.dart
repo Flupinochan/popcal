@@ -42,7 +42,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
           rotationMemberNames: rotationMembers,
           rotationDays: rotationDays,
           notificationTime: notificationTime,
-          createdAt: createdAt,
+          createdAt: RotationCreatedAt(currentTime),
           updatedAt: RotationUpdatedAt(currentTime),
           currentRotationIndex: RotationIndex(0), // 更新時は0にリセット
         ),
