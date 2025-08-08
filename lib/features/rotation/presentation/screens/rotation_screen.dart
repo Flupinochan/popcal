@@ -7,6 +7,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
@@ -125,7 +126,7 @@ class RotationScreen extends HookConsumerWidget {
                   Text('通知時刻', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 16),
                   GlassFormTime(
-                    initialValue: initialRotation?.notificationTime,
+                    initialValue: initialRotation?.notificationTime.value,
                   ),
                 ],
               ),
@@ -176,7 +177,9 @@ Future<void> _handleSubmit(
             formData['rotationMembers'] as List,
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,
-          notificationTime: formData['notificationTime'] as TimeOfDay,
+          notificationTime: NotificationTime(
+            formData['notificationTime'] as TimeOfDay,
+          ),
           createdAt: originalRotation.createdAt,
         );
         result = await rotationController.updateRotation(dto);
@@ -188,7 +191,9 @@ Future<void> _handleSubmit(
             formData['rotationMembers'] as List,
           ),
           rotationDays: formData['rotationDays'] as List<Weekday>,
-          notificationTime: formData['notificationTime'] as TimeOfDay,
+          notificationTime: NotificationTime(
+            formData['notificationTime'] as TimeOfDay,
+          ),
         );
         result = await rotationController.createRotation(dto);
       }

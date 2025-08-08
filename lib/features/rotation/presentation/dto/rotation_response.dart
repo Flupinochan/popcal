@@ -1,12 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 
 part 'rotation_response.freezed.dart';
 
@@ -20,10 +23,10 @@ sealed class RotationResponse with _$RotationResponse {
     required RotationName rotationName,
     required List<RotationMemberName> rotationMembers,
     required List<Weekday> rotationDays,
-    required TimeOfDay notificationTime,
-    required int currentRotationIndex,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    required NotificationTime notificationTime,
+    required RotationIndex currentRotationIndex,
+    required RotationCreatedAt createdAt,
+    required RotationUpdatedAt updatedAt,
   }) = _RotationResponse;
 
   /// DTO => Entity
@@ -64,10 +67,7 @@ extension RotationViewDisplay on RotationResponse {
   String get membersDisplay => rotationMembers.join(', ');
   String get weekdaysDisplay =>
       rotationDays.map((w) => w.displayName).join(', ');
-  String get timeDisplay =>
-      '${notificationTime.hour.toString().padLeft(2, '0')}:${notificationTime.minute.toString().padLeft(2, '0')}';
-
   String get createdAtDisplay {
-    return '${createdAt.year}/${createdAt.month}/${createdAt.day}';
+    return '${createdAt.value.year}/${createdAt.value.month}/${createdAt.value.day}';
   }
 }

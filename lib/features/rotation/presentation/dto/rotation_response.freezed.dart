@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RotationResponse {
 
- RotationId get rotationId; UserId get userId; RotationName get rotationName; List<RotationMemberName> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; int get currentRotationIndex; DateTime get createdAt; DateTime get updatedAt;
+ RotationId get rotationId; UserId get userId; RotationName get rotationName; List<RotationMemberName> get rotationMembers; List<Weekday> get rotationDays; NotificationTime get notificationTime; RotationIndex get currentRotationIndex; RotationCreatedAt get createdAt; RotationUpdatedAt get updatedAt;
 /// Create a copy of RotationResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,11 +46,11 @@ abstract mixin class $RotationResponseCopyWith<$Res>  {
   factory $RotationResponseCopyWith(RotationResponse value, $Res Function(RotationResponse) _then) = _$RotationResponseCopyWithImpl;
 @useResult
 $Res call({
- RotationId rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
+ RotationId rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, NotificationTime notificationTime, RotationIndex currentRotationIndex, RotationCreatedAt createdAt, RotationUpdatedAt updatedAt
 });
 
 
-$UserIdCopyWith<$Res> get userId;
+$UserIdCopyWith<$Res> get userId;$RotationIndexCopyWith<$Res> get currentRotationIndex;
 
 }
 /// @nodoc
@@ -71,10 +71,10 @@ as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName
 as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<RotationMemberName>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as NotificationTime,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
+as RotationIndex,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as RotationCreatedAt,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as RotationUpdatedAt,
   ));
 }
 /// Create a copy of RotationResponse
@@ -85,6 +85,15 @@ $UserIdCopyWith<$Res> get userId {
   
   return $UserIdCopyWith<$Res>(_self.userId, (value) {
     return _then(_self.copyWith(userId: value));
+  });
+}/// Create a copy of RotationResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RotationIndexCopyWith<$Res> get currentRotationIndex {
+  
+  return $RotationIndexCopyWith<$Res>(_self.currentRotationIndex, (value) {
+    return _then(_self.copyWith(currentRotationIndex: value));
   });
 }
 }
@@ -114,10 +123,10 @@ class _RotationResponse extends RotationResponse {
   return EqualUnmodifiableListView(_rotationDays);
 }
 
-@override final  TimeOfDay notificationTime;
-@override final  int currentRotationIndex;
-@override final  DateTime createdAt;
-@override final  DateTime updatedAt;
+@override final  NotificationTime notificationTime;
+@override final  RotationIndex currentRotationIndex;
+@override final  RotationCreatedAt createdAt;
+@override final  RotationUpdatedAt updatedAt;
 
 /// Create a copy of RotationResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -149,11 +158,11 @@ abstract mixin class _$RotationResponseCopyWith<$Res> implements $RotationRespon
   factory _$RotationResponseCopyWith(_RotationResponse value, $Res Function(_RotationResponse) _then) = __$RotationResponseCopyWithImpl;
 @override @useResult
 $Res call({
- RotationId rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, int currentRotationIndex, DateTime createdAt, DateTime updatedAt
+ RotationId rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, NotificationTime notificationTime, RotationIndex currentRotationIndex, RotationCreatedAt createdAt, RotationUpdatedAt updatedAt
 });
 
 
-@override $UserIdCopyWith<$Res> get userId;
+@override $UserIdCopyWith<$Res> get userId;@override $RotationIndexCopyWith<$Res> get currentRotationIndex;
 
 }
 /// @nodoc
@@ -174,10 +183,10 @@ as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName
 as RotationName,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<RotationMemberName>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as NotificationTime,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
+as RotationIndex,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as RotationCreatedAt,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as RotationUpdatedAt,
   ));
 }
 
@@ -189,6 +198,15 @@ $UserIdCopyWith<$Res> get userId {
   
   return $UserIdCopyWith<$Res>(_self.userId, (value) {
     return _then(_self.copyWith(userId: value));
+  });
+}/// Create a copy of RotationResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RotationIndexCopyWith<$Res> get currentRotationIndex {
+  
+  return $RotationIndexCopyWith<$Res>(_self.currentRotationIndex, (value) {
+    return _then(_self.copyWith(currentRotationIndex: value));
   });
 }
 }

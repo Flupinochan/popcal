@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_response.dart';
 
 class RotationRepositoryFirebase {
@@ -134,7 +135,9 @@ class RotationRepositoryFirebase {
           .doc(dto.rotationId!.value);
 
       // updatedAtを現在時刻に更新
-      final updatedDto = dto.copyWith(updatedAt: Timestamp.now());
+      final updatedDto = dto.copyWith(
+        updatedAt: RotationUpdatedAt(DateTime.now().toLocal()),
+      );
 
       await docRef.update(updatedDto.toFirestore());
 

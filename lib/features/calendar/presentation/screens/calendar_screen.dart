@@ -397,7 +397,7 @@ class CalendarScreen extends HookConsumerWidget {
             // 通知時刻
             _rotationInfoItem(
               context,
-              '時刻: ${calendarDataDto.rotationResponse.notificationTime.hour.toString().padLeft(2, '0')}:${calendarDataDto.rotationResponse.notificationTime.minute.toString().padLeft(2, '0')}',
+              '時刻: ${calendarDataDto.rotationResponse.notificationTime.display24hour}',
               Icons.access_time,
             ),
           ],

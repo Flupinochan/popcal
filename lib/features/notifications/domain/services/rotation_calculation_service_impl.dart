@@ -6,6 +6,7 @@ import 'package:popcal/features/notifications/domain/services/rotation_calculati
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
   /// 1. 次回の通知予定日を計算
@@ -48,7 +49,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       final toDate = currentTime.add(Duration(days: futureDays));
 
       final notifications = <NotificationEntry>[];
-      var currentIndex = rotation.currentRotationIndex;
+      var currentIndex = rotation.currentRotationIndex.value;
 
       // 指定期間をループして通知情報を作成
       for (
@@ -59,7 +60,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         if (isValidNotificationDate(
           checkDate: checkDate,
           rotationDays: rotation.rotationDays,
-          notificationTime: rotation.notificationTime,
+          notificationTime: rotation.notificationTime.value,
           createdAt: currentTime,
         )) {
           final memberIndex =
@@ -73,8 +74,8 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             checkDate.year,
             checkDate.month,
             checkDate.day,
-            rotation.notificationTime.hour,
-            rotation.notificationTime.minute,
+            rotation.notificationTime.value.hour,
+            rotation.notificationTime.value.minute,
           );
 
           final notificationSetting = NotificationEntry(
@@ -84,7 +85,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             rotationName: rotation.rotationName.value,
             notificationTime: scheduledDateTime,
             memberName: memberName.value,
-            rotationStartDate: rotation.createdAt,
+            rotationStartDate: rotation.createdAt.value,
           );
 
           notifications.add(notificationSetting);
@@ -95,7 +96,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       return Results.success(
         NotificationSchedule(
           notificationEntry: notifications,
-          newCurrentRotationIndex: currentIndex,
+          newCurrentRotationIndex: RotationIndex(currentIndex),
         ),
       );
     } catch (error) {

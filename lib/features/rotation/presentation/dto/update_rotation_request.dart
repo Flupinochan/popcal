@@ -5,9 +5,13 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 
 part 'update_rotation_request.freezed.dart';
 
@@ -21,8 +25,8 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
     required RotationName rotationName,
     required List<RotationMemberName> rotationMembers,
     required List<Weekday> rotationDays,
-    required TimeOfDay notificationTime,
-    required DateTime createdAt,
+    required NotificationTime notificationTime,
+    required RotationCreatedAt createdAt,
   }) = _UpdateRotationRequest;
 
   // DTO => Entity
@@ -39,8 +43,8 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
           rotationDays: rotationDays,
           notificationTime: notificationTime,
           createdAt: createdAt,
-          updatedAt: currentTime,
-          currentRotationIndex: 0, // 更新時は0にリセット
+          updatedAt: RotationUpdatedAt(currentTime),
+          currentRotationIndex: RotationIndex(0), // 更新時は0にリセット
         ),
       );
     } catch (e) {

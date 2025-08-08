@@ -1,12 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 
 part 'create_rotation_request.freezed.dart';
 
@@ -19,7 +22,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
     required RotationName rotationName,
     required List<RotationMemberName> rotationMembers,
     required List<Weekday> rotationDays,
-    required TimeOfDay notificationTime,
+    required NotificationTime notificationTime,
   }) = _CreateRotationRequest;
 
   /// DTO => Entity
@@ -35,9 +38,9 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
           rotationMemberNames: rotationMembers,
           rotationDays: rotationDays,
           notificationTime: notificationTime,
-          currentRotationIndex: 0, // 作成時は0
-          createdAt: currentTime,
-          updatedAt: currentTime,
+          currentRotationIndex: RotationIndex(0), // 作成時は0
+          createdAt: RotationCreatedAt(currentTime),
+          updatedAt: RotationUpdatedAt(currentTime),
         ),
       );
     } catch (error) {

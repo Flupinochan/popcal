@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateRotationRequest {
 
- UserId get userId; RotationId get rotationId; RotationName get rotationName; List<RotationMemberName> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; DateTime get createdAt;
+ UserId get userId; RotationId get rotationId; RotationName get rotationName; List<RotationMemberName> get rotationMembers; List<Weekday> get rotationDays; NotificationTime get notificationTime; RotationCreatedAt get createdAt;
 /// Create a copy of UpdateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ abstract mixin class $UpdateRotationRequestCopyWith<$Res>  {
   factory $UpdateRotationRequestCopyWith(UpdateRotationRequest value, $Res Function(UpdateRotationRequest) _then) = _$UpdateRotationRequestCopyWithImpl;
 @useResult
 $Res call({
- UserId userId, RotationId rotationId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
+ UserId userId, RotationId rotationId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, NotificationTime notificationTime, RotationCreatedAt createdAt
 });
 
 
@@ -71,8 +71,8 @@ as RotationId,rotationName: null == rotationName ? _self.rotationName : rotation
 as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<RotationMemberName>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as NotificationTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as RotationCreatedAt,
   ));
 }
 /// Create a copy of UpdateRotationRequest
@@ -112,8 +112,8 @@ class _UpdateRotationRequest extends UpdateRotationRequest {
   return EqualUnmodifiableListView(_rotationDays);
 }
 
-@override final  TimeOfDay notificationTime;
-@override final  DateTime createdAt;
+@override final  NotificationTime notificationTime;
+@override final  RotationCreatedAt createdAt;
 
 /// Create a copy of UpdateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -145,7 +145,7 @@ abstract mixin class _$UpdateRotationRequestCopyWith<$Res> implements $UpdateRot
   factory _$UpdateRotationRequestCopyWith(_UpdateRotationRequest value, $Res Function(_UpdateRotationRequest) _then) = __$UpdateRotationRequestCopyWithImpl;
 @override @useResult
 $Res call({
- UserId userId, RotationId rotationId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, DateTime createdAt
+ UserId userId, RotationId rotationId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, NotificationTime notificationTime, RotationCreatedAt createdAt
 });
 
 
@@ -170,8 +170,8 @@ as RotationId,rotationName: null == rotationName ? _self.rotationName : rotation
 as RotationName,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<RotationMemberName>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as NotificationTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as RotationCreatedAt,
   ));
 }
 

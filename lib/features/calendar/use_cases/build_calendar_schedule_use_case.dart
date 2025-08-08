@@ -29,19 +29,19 @@ class BuildCalendarScheduleUseCase {
           DateTime(currentTime.year + 1, currentTime.month, currentTime.day);
 
       final calendarDays = <DateKey, ScheduleDay>{};
-      var currentIndex = rotation.currentRotationIndex;
+      var currentIndex = rotation.currentRotationIndex.value;
 
       // 指定期間をループしてカレンダー日を作成
       for (
-        var checkDate = rotation.createdAt;
+        var checkDate = rotation.createdAt.value;
         checkDate.isBefore(defaultToDate);
         checkDate = checkDate.add(const Duration(days: 1))
       ) {
         if (_rotationCalculationService.isValidNotificationDate(
           checkDate: checkDate,
           rotationDays: rotation.rotationDays,
-          notificationTime: rotation.notificationTime,
-          createdAt: rotation.createdAt,
+          notificationTime: rotation.notificationTime.value,
+          createdAt: rotation.createdAt.value,
         )) {
           final memberIndex =
               currentIndex % rotation.rotationMemberNames.length;

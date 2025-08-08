@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateRotationRequest {
 
- UserId get userId; RotationName get rotationName; List<RotationMemberName> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime;
+ UserId get userId; RotationName get rotationName; List<RotationMemberName> get rotationMembers; List<Weekday> get rotationDays; NotificationTime get notificationTime;
 /// Create a copy of CreateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ abstract mixin class $CreateRotationRequestCopyWith<$Res>  {
   factory $CreateRotationRequestCopyWith(CreateRotationRequest value, $Res Function(CreateRotationRequest) _then) = _$CreateRotationRequestCopyWithImpl;
 @useResult
 $Res call({
- UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
+ UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, NotificationTime notificationTime
 });
 
 
@@ -70,7 +70,7 @@ as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName
 as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<RotationMemberName>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,
+as NotificationTime,
   ));
 }
 /// Create a copy of CreateRotationRequest
@@ -109,7 +109,7 @@ class _CreateRotationRequest extends CreateRotationRequest {
   return EqualUnmodifiableListView(_rotationDays);
 }
 
-@override final  TimeOfDay notificationTime;
+@override final  NotificationTime notificationTime;
 
 /// Create a copy of CreateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -141,7 +141,7 @@ abstract mixin class _$CreateRotationRequestCopyWith<$Res> implements $CreateRot
   factory _$CreateRotationRequestCopyWith(_CreateRotationRequest value, $Res Function(_CreateRotationRequest) _then) = __$CreateRotationRequestCopyWithImpl;
 @override @useResult
 $Res call({
- UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
+ UserId userId, RotationName rotationName, List<RotationMemberName> rotationMembers, List<Weekday> rotationDays, NotificationTime notificationTime
 });
 
 
@@ -165,7 +165,7 @@ as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName
 as RotationName,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<RotationMemberName>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as TimeOfDay,
+as NotificationTime,
   ));
 }
 

@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 
 // ローテーション設定
 class Rotation {
@@ -13,11 +16,11 @@ class Rotation {
   final RotationName rotationName;
   final List<RotationMemberName> rotationMemberNames;
   final List<Weekday> rotationDays;
-  final TimeOfDay notificationTime;
+  final NotificationTime notificationTime;
   // ローテーションした回数
-  final int currentRotationIndex;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final RotationIndex currentRotationIndex;
+  final RotationCreatedAt createdAt;
+  final RotationUpdatedAt updatedAt;
 
   const Rotation({
     this.rotationId,
@@ -26,7 +29,7 @@ class Rotation {
     required this.rotationMemberNames,
     required this.rotationDays,
     required this.notificationTime,
-    this.currentRotationIndex = 0,
+    required this.currentRotationIndex,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -37,10 +40,10 @@ class Rotation {
     RotationName? rotationName,
     List<RotationMemberName>? rotationMemberNames,
     List<Weekday>? rotationDays,
-    TimeOfDay? notificationTime,
-    int? currentRotationIndex,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    NotificationTime? notificationTime,
+    RotationIndex? currentRotationIndex,
+    RotationCreatedAt? createdAt,
+    RotationUpdatedAt? updatedAt,
   }) {
     return Rotation(
       rotationId: rotationId ?? this.rotationId,
@@ -55,7 +58,7 @@ class Rotation {
     );
   }
 
-  // メンバーの順番を取得
+  // メンバーの順番を取得 (entityに記載すべきかvalue objectから取得すべきか)
   int getMemberIndex(RotationMemberName rotationMemberName) {
     final index = rotationMemberNames.indexOf(rotationMemberName);
     return index >= 0 ? index : 0;
