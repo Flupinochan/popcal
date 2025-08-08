@@ -14,7 +14,7 @@ class CalendarSchedule {
     return scheduleMap[NotificationDateTime(date)] ??
         ScheduleDay(
           date: NotificationDateTime(date),
-          memberName: null,
+          memberName: RotationMemberName('ローテーション対象外'),
           isRotationDay: false,
           memberColorIndex: null,
         );
@@ -23,7 +23,7 @@ class CalendarSchedule {
 
 class ScheduleDay {
   final NotificationDateTime date;
-  final RotationMemberName? memberName;
+  final RotationMemberName memberName;
   final bool isRotationDay;
   final int? memberColorIndex;
 

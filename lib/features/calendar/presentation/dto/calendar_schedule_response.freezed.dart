@@ -169,7 +169,7 @@ $RotationResponseCopyWith<$Res> get rotationResponse {
 /// @nodoc
 mixin _$ScheduleDayResponse {
 
- NotificationDateTime get date; RotationMemberName? get memberName; bool get isRotationDay; int? get memberColorIndex;
+ NotificationDateTime get date; RotationMemberName get memberName; bool get isRotationDay; int? get memberColorIndex;
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -200,7 +200,7 @@ abstract mixin class $ScheduleDayResponseCopyWith<$Res>  {
   factory $ScheduleDayResponseCopyWith(ScheduleDayResponse value, $Res Function(ScheduleDayResponse) _then) = _$ScheduleDayResponseCopyWithImpl;
 @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName? memberName, bool isRotationDay, int? memberColorIndex
+ NotificationDateTime date, RotationMemberName memberName, bool isRotationDay, int? memberColorIndex
 });
 
 
@@ -217,11 +217,11 @@ class _$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = freezed,Object? isRotationDay = null,Object? memberColorIndex = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? isRotationDay = null,Object? memberColorIndex = freezed,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as NotificationDateTime,memberName: freezed == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
-as RotationMemberName?,isRotationDay: null == isRotationDay ? _self.isRotationDay : isRotationDay // ignore: cast_nullable_to_non_nullable
+as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
+as RotationMemberName,isRotationDay: null == isRotationDay ? _self.isRotationDay : isRotationDay // ignore: cast_nullable_to_non_nullable
 as bool,memberColorIndex: freezed == memberColorIndex ? _self.memberColorIndex : memberColorIndex // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
@@ -238,7 +238,7 @@ class _ScheduleDayResponse extends ScheduleDayResponse {
   
 
 @override final  NotificationDateTime date;
-@override final  RotationMemberName? memberName;
+@override final  RotationMemberName memberName;
 @override final  bool isRotationDay;
 @override final  int? memberColorIndex;
 
@@ -272,7 +272,7 @@ abstract mixin class _$ScheduleDayResponseCopyWith<$Res> implements $ScheduleDay
   factory _$ScheduleDayResponseCopyWith(_ScheduleDayResponse value, $Res Function(_ScheduleDayResponse) _then) = __$ScheduleDayResponseCopyWithImpl;
 @override @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName? memberName, bool isRotationDay, int? memberColorIndex
+ NotificationDateTime date, RotationMemberName memberName, bool isRotationDay, int? memberColorIndex
 });
 
 
@@ -289,11 +289,11 @@ class __$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = freezed,Object? isRotationDay = null,Object? memberColorIndex = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? isRotationDay = null,Object? memberColorIndex = freezed,}) {
   return _then(_ScheduleDayResponse(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as NotificationDateTime,memberName: freezed == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
-as RotationMemberName?,isRotationDay: null == isRotationDay ? _self.isRotationDay : isRotationDay // ignore: cast_nullable_to_non_nullable
+as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
+as RotationMemberName,isRotationDay: null == isRotationDay ? _self.isRotationDay : isRotationDay // ignore: cast_nullable_to_non_nullable
 as bool,memberColorIndex: freezed == memberColorIndex ? _self.memberColorIndex : memberColorIndex // ignore: cast_nullable_to_non_nullable
 as int?,
   ));

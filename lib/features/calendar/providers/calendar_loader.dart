@@ -33,13 +33,13 @@ Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
   Map<DateKey, ScheduleDay> domainMap,
 ) {
   return domainMap.map(
-    (key, domainDay) => MapEntry(
+    (key, scheduleDay) => MapEntry(
       key,
       ScheduleDayResponse(
-        date: domainDay.date,
-        memberName: domainDay.memberName,
-        isRotationDay: domainDay.isRotationDay,
-        memberColorIndex: domainDay.memberColorIndex,
+        date: scheduleDay.date,
+        memberName: scheduleDay.memberName,
+        isRotationDay: scheduleDay.isRotationDay,
+        memberColorIndex: scheduleDay.memberColorIndex,
       ),
     ),
   );

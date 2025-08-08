@@ -20,7 +20,7 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
     return scheduleMap[DateKey.fromDateTime(date)] ??
         ScheduleDayResponse(
           date: NotificationDateTime(date),
-          memberName: null,
+          memberName: RotationMemberName('ローテーション対象外'),
           isRotationDay: false,
           memberColorIndex: null,
         );
@@ -34,7 +34,7 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
 
   const factory ScheduleDayResponse({
     required NotificationDateTime date,
-    required RotationMemberName? memberName,
+    required RotationMemberName memberName,
     required bool isRotationDay,
     required int? memberColorIndex,
   }) = _ScheduleDayResponse;

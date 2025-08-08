@@ -64,7 +64,7 @@ class BuildCalendarScheduleUseCase {
           _addCalendarDay(
             calendarDays: calendarDays,
             date: notificationDateTime,
-            memberName: null,
+            memberName: RotationMemberName('ローテーション対象外'),
             isRotationDay: false,
             calendarDayColorIndex: null,
           );
@@ -80,7 +80,7 @@ class BuildCalendarScheduleUseCase {
   void _addCalendarDay({
     required Map<DateKey, ScheduleDay> calendarDays,
     required NotificationDateTime date,
-    RotationMemberName? memberName,
+    required RotationMemberName memberName,
     required bool isRotationDay,
     int? calendarDayColorIndex,
   }) {
