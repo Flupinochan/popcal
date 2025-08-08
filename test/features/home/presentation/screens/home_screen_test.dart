@@ -6,12 +6,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/auth/providers/auth_notifier.dart';
+import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 
-// モック ※デフォルトでは全てエラーがスローされる
 class MockAuthNotifier extends Mock implements AuthNotifier {}
 
 void main() {
-  // WidgetでRiverPodのref.watch()を使用している場合はモックする必要がある
   late MockAuthNotifier mockNotifier;
   setUp(() async {
     mockNotifier = MockAuthNotifier();
@@ -19,22 +18,18 @@ void main() {
   });
 
   final screenSize = Size(411, 914);
-  final testScreen = LoginScreen();
+  final testScreen = HomeScreen();
 
   testWidgets('LoginScreen1', (tester) async {
-    // 画面サイズ設定
     await tester.binding.setSurfaceSize(screenSize);
     await tester.pumpAndSettle();
     await tester.pumpWidget(
-      // RiverPodのscopeをmockでoverride
       ProviderScope(
         overrides: [authNotifierProvider.overrideWith(() => mockNotifier)],
         child: MaterialApp(theme: AppTheme.lightTheme, home: testScreen),
       ),
     );
-    // アニメーション完了待機
     await tester.pumpAndSettle();
-    // Golden Test
     await expectLater(
       find.byType(LoginScreen),
       matchesGoldenFile('goldens/login_screen1.png'),

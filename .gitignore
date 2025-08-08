@@ -1,3 +1,6 @@
+# Failure GoldenTest Image
+**/failures/*.png
+
 # Firebase config files and generated build artifacts
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
