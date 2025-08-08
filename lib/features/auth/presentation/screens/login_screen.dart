@@ -241,13 +241,20 @@ class LoginScreen extends HookConsumerWidget {
                         SizedBox(height: 24),
                         // Contact Support
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('Need help? ', style: textTheme.bodyMedium),
+                            Flexible(
+                              child: Text(
+                                'Need help? ',
+                                style: textTheme.bodyMedium,
+                              ),
+                            ),
                             SizedBox(width: 4),
-                            Text(
-                              'Contact Support',
-                              style: textTheme.labelLarge,
+                            Flexible(
+                              child: Text(
+                                'Contact Support',
+                                style: textTheme.labelLarge,
+                              ),
                             ),
                           ],
                         ),
