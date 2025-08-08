@@ -8,9 +8,4 @@ class AppUser {
   const AppUser({required this.userId, required this.email});
 
   static bool isAuthenticated(AppUser? appUser) => appUser != null;
-
-  String get displayName => email.localPart;
-  String get emailDomain => email.domain;
-  String get uidValue => userId.value;
-  String get emailValue => email.value;
 }

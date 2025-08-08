@@ -134,7 +134,10 @@ class NotificationGatewayLocal {
         notificationSettingDto.notificationId,
         notificationSettingDto.title,
         notificationSettingDto.content,
-        tz.TZDateTime.from(notificationSettingDto.notificationTime, tz.local),
+        tz.TZDateTime.from(
+          notificationSettingDto.notificationTime.value,
+          tz.local,
+        ),
         NotificationDetails(
           // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
           android: AndroidNotificationDetails(

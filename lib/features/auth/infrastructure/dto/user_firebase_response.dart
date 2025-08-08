@@ -67,14 +67,14 @@ sealed class UserFirebaseResponse with _$UserFirebaseResponse {
 extension UserDtoDisplay on UserFirebaseResponse {
   String get displayName => toEntity().fold(
     (error) => 'Unknown User',
-    (entity) => entity.displayName,
+    (entity) => entity.email.localPart,
   );
   String get emailDomain => toEntity().fold(
     (error) => 'Unknown Domain',
-    (entity) => entity.emailDomain,
+    (entity) => entity.email.domain,
   );
   String get email => toEntity().fold(
     (error) => 'Unknown Email',
-    (entity) => entity.emailValue,
+    (entity) => entity.email.value,
   );
 }

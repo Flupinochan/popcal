@@ -36,7 +36,7 @@ class GetCalendarScheduleUseCase {
 
     // 2. ローテーション情報取得
     final rotationResult = await _rotationRepository.getRotation(
-      appUser.uidValue,
+      appUser.userId.value,
       rotationId,
     );
     if (rotationResult.isFailure) {

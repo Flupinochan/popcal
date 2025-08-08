@@ -70,22 +70,14 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             rotation.rotationId!.value,
             checkDate,
           );
-          final scheduledDateTime = DateTime(
-            checkDate.year,
-            checkDate.month,
-            checkDate.day,
-            rotation.notificationTime.value.hour,
-            rotation.notificationTime.value.minute,
-          );
 
           final notificationSetting = NotificationEntry(
             notificationId: notificationId,
-            rotationId: rotation.rotationId!.value,
+            rotationId: rotation.rotationId!,
             userId: rotation.userId,
-            rotationName: rotation.rotationName.value,
-            notificationTime: scheduledDateTime,
-            memberName: memberName.value,
-            rotationStartDate: rotation.createdAt.value,
+            rotationName: rotation.rotationName,
+            notificationTime: rotation.notificationTime,
+            memberName: memberName,
           );
 
           notifications.add(notificationSetting);

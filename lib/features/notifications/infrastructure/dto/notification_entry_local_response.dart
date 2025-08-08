@@ -4,9 +4,12 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_date.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'notification_entry_local_response.freezed.dart';
-part 'notification_entry_local_response.g.dart';
 
 @freezed
 sealed class NotificationEntryLocalResponse
@@ -15,12 +18,11 @@ sealed class NotificationEntryLocalResponse
 
   const factory NotificationEntryLocalResponse({
     required int notificationId,
-    required String rotationId,
+    required RotationId rotationId,
     required UserId userId,
-    required String rotationName,
-    required DateTime notificationTime,
-    required String memberName,
-    required DateTime rotationStartDate,
+    required NotificationDate notificationDate,
+    required RotationName rotationName,
+    required RotationMemberName memberName,
     required String title,
     required String description,
     required String content,
@@ -36,10 +38,9 @@ sealed class NotificationEntryLocalResponse
           notificationId: notification.notificationId,
           rotationId: notification.rotationId,
           userId: notification.userId,
+          notificationDate: notification.notificationDate,
           rotationName: notification.rotationName,
-          notificationTime: notification.notificationTime,
           memberName: notification.memberName,
-          rotationStartDate: notification.rotationStartDate,
           title: notification.title,
           description: notification.description,
           content: notification.content,
@@ -61,9 +62,8 @@ sealed class NotificationEntryLocalResponse
           rotationId: rotationId,
           userId: userId,
           rotationName: rotationName,
-          notificationTime: notificationTime,
+          notificationDate: notificationDate,
           memberName: memberName,
-          rotationStartDate: rotationStartDate,
         ),
       );
     } catch (e) {
