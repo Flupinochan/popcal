@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -66,7 +65,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           final memberIndex = currentIndex % rotation.rotationMembers.length;
           final memberName = rotation.rotationMembers[memberIndex];
           final notificationId = _generateNotificationId(
-            rotation.rotationId!,
+            rotation.rotationId!.value,
             checkDate,
           );
           final scheduledDateTime = DateTime(
@@ -79,9 +78,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
 
           final notificationSetting = NotificationEntry(
             notificationId: notificationId,
-            rotationId: rotation.rotationId!,
+            rotationId: rotation.rotationId!.value,
             userId: rotation.userId,
-            rotationName: rotation.rotationName,
+            rotationName: rotation.rotationName.value,
             notificationTime: scheduledDateTime,
             memberName: memberName,
             rotationStartDate: rotation.createdAt,

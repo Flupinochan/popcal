@@ -5,6 +5,8 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'update_rotation_request.freezed.dart';
 
@@ -14,8 +16,8 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
 
   const factory UpdateRotationRequest({
     required UserId userId,
-    required String rotationId,
-    required String rotationName,
+    required RotationId rotationId,
+    required RotationName rotationName,
     required List<String> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,

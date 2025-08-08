@@ -7,6 +7,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
@@ -88,7 +89,7 @@ class RotationScreen extends HookConsumerWidget {
                   // ローテーション名を入力
                   GlassFormText(
                     name: 'rotationName',
-                    initialValue: initialRotation?.rotationName,
+                    initialValue: initialRotation?.rotationName.value,
                     hintText: 'ローテーション名を入力',
                     validator: FormBuilderValidators.required(
                       errorText: 'ローテーション名を入力してください',
@@ -166,7 +167,7 @@ Future<void> _handleSubmit(
         final dto = UpdateRotationRequest(
           userId: userDto.userId,
           rotationId: originalRotation!.rotationId,
-          rotationName: formData['rotationName'] as String,
+          rotationName: RotationName(formData['rotationName'] as String),
           rotationMembers: List<String>.from(
             formData['rotationMembers'] as List,
           ),
@@ -178,7 +179,7 @@ Future<void> _handleSubmit(
       } else {
         final dto = CreateRotationRequest(
           userId: userDto.userId,
-          rotationName: formData['rotationName'] as String,
+          rotationName: RotationName(formData['rotationName'] as String),
           rotationMembers: List<String>.from(
             formData['rotationMembers'] as List,
           ),

@@ -5,6 +5,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'rotation_firebase_response.freezed.dart';
 
@@ -13,9 +15,9 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   const RotationFirebaseResponse._();
 
   const factory RotationFirebaseResponse({
-    required String? rotationId,
+    required RotationId? rotationId,
     required UserId userId,
-    required String rotationName,
+    required RotationName rotationName,
     required List<String> rotationMembers,
     required List<int> rotationDays,
     required Map<String, int> notificationTime,
@@ -29,8 +31,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   // Entity => DTO (factory method)
   factory RotationFirebaseResponse.fromEntity(Rotation entity) {
     return RotationFirebaseResponse(
-      rotationId:
-          entity.rotationId?.isNotEmpty == true ? entity.rotationId : null,
+      rotationId: entity.rotationId,
       userId: entity.userId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMembers,
@@ -52,9 +53,9 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   ) {
     final data = snapshot.data() as Map<String, dynamic>;
     return RotationFirebaseResponse(
-      rotationId: snapshot.id,
-      userId: data['userId'] as UserId,
-      rotationName: data['rotationName'] as String,
+      rotationId: RotationId(snapshot.id),
+      userId: UserId(data['userId'] as String),
+      rotationName: RotationName(data['rotationName'] as String),
       rotationMembers: List<String>.from(
         data['rotationMembers'] as List<dynamic>,
       ),
@@ -88,8 +89,8 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   // Security Ruleでバリデーションされている
   Map<String, dynamic> toFirestore() {
     return {
-      'userId': userId,
-      'rotationName': rotationName,
+      'userId': userId.value,
+      'rotationName': rotationName.value,
       'rotationMembers': rotationMembers,
       'rotationDays': rotationDays,
       'notificationTime': notificationTime,

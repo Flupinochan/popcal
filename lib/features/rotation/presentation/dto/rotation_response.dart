@@ -4,6 +4,8 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'rotation_response.freezed.dart';
 
@@ -12,9 +14,9 @@ sealed class RotationResponse with _$RotationResponse {
   const RotationResponse._();
 
   const factory RotationResponse({
-    required String rotationId,
+    required RotationId rotationId,
     required UserId userId,
-    required String rotationName,
+    required RotationName rotationName,
     required List<String> rotationMembers,
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,

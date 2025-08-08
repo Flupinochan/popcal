@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 // ローテーション設定
 class Rotation {
   // Firestoreに保存した後に付与されるためオプショナル
-  final String? rotationId;
+  final RotationId? rotationId;
   final UserId userId;
-  final String rotationName;
+  final RotationName rotationName;
   final List<String> rotationMembers;
   final List<Weekday> rotationDays;
   final TimeOfDay notificationTime;
@@ -29,9 +31,9 @@ class Rotation {
   });
 
   Rotation copyWith({
-    String? rotationId,
+    RotationId? rotationId,
     UserId? userId,
-    String? rotationName,
+    RotationName? rotationName,
     List<String>? rotationMembers,
     List<Weekday>? rotationDays,
     TimeOfDay? notificationTime,

@@ -51,7 +51,7 @@ class CalendarScreen extends HookConsumerWidget {
       backgroundColor: glassTheme.backgroundColor,
       extendBodyBehindAppBar: true,
       appBar: GlassAppBar(
-        title: calendarDataDto.rotationResponse.rotationName,
+        title: calendarDataDto.rotationResponse.rotationName.value,
         leadingIcon: Icons.arrow_back_ios_new,
         onLeadingPressed: () => Navigator.pop(context),
       ),

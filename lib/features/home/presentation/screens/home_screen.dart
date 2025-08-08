@@ -176,12 +176,14 @@ class HomeScreen extends HookConsumerWidget {
                 rotationResponse: rotationResponse,
                 onTap: () {
                   context.push(
-                    Routes.calendarPath(rotationResponse.rotationId),
+                    Routes.calendarPath(rotationResponse.rotationId.value),
                   );
                 },
                 onEdit: () {
                   context.push(
-                    Routes.rotationUpdatePath(rotationResponse.rotationId),
+                    Routes.rotationUpdatePath(
+                      rotationResponse.rotationId.value,
+                    ),
                   );
                 },
                 onDelete:
@@ -208,7 +210,7 @@ class HomeScreen extends HookConsumerWidget {
     // 削除処理
     final result = await rotationRepository.deleteRotation(
       userDto.userId.value,
-      rotationResponse.rotationId,
+      rotationResponse.rotationId.value,
     );
 
     result.when(

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateRotationRequest {
 
- UserId get userId; String get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime;
+ UserId get userId; RotationName get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime;
 /// Create a copy of CreateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -46,7 +46,7 @@ abstract mixin class $CreateRotationRequestCopyWith<$Res>  {
   factory $CreateRotationRequestCopyWith(CreateRotationRequest value, $Res Function(CreateRotationRequest) _then) = _$CreateRotationRequestCopyWithImpl;
 @useResult
 $Res call({
- UserId userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
+ UserId userId, RotationName rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
 });
 
 
@@ -67,7 +67,7 @@ class _$CreateRotationRequestCopyWithImpl<$Res>
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
-as String,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
+as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,
@@ -94,7 +94,7 @@ class _CreateRotationRequest extends CreateRotationRequest {
   
 
 @override final  UserId userId;
-@override final  String rotationName;
+@override final  RotationName rotationName;
  final  List<String> _rotationMembers;
 @override List<String> get rotationMembers {
   if (_rotationMembers is EqualUnmodifiableListView) return _rotationMembers;
@@ -141,7 +141,7 @@ abstract mixin class _$CreateRotationRequestCopyWith<$Res> implements $CreateRot
   factory _$CreateRotationRequestCopyWith(_CreateRotationRequest value, $Res Function(_CreateRotationRequest) _then) = __$CreateRotationRequestCopyWithImpl;
 @override @useResult
 $Res call({
- UserId userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
+ UserId userId, RotationName rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime
 });
 
 
@@ -162,7 +162,7 @@ class __$CreateRotationRequestCopyWithImpl<$Res>
   return _then(_CreateRotationRequest(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
-as String,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
+as RotationName,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,

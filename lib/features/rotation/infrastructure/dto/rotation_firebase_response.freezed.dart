@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RotationFirebaseResponse {
 
- String? get rotationId; UserId get userId; String get rotationName; List<String> get rotationMembers; List<int> get rotationDays; Map<String, int> get notificationTime; int get currentRotationIndex;// firestoreに保存する際はTimestampが適切
+ RotationId? get rotationId; UserId get userId; RotationName get rotationName; List<String> get rotationMembers; List<int> get rotationDays; Map<String, int> get notificationTime; int get currentRotationIndex;// firestoreに保存する際はTimestampが適切
 // Widget(UI)はDateTimeが適切
  Timestamp get createdAt; Timestamp get updatedAt;
 /// Create a copy of RotationFirebaseResponse
@@ -48,7 +48,7 @@ abstract mixin class $RotationFirebaseResponseCopyWith<$Res>  {
   factory $RotationFirebaseResponseCopyWith(RotationFirebaseResponse value, $Res Function(RotationFirebaseResponse) _then) = _$RotationFirebaseResponseCopyWithImpl;
 @useResult
 $Res call({
- String? rotationId, UserId userId, String rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
+ RotationId? rotationId, UserId userId, RotationName rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
 });
 
 
@@ -68,9 +68,9 @@ class _$RotationFirebaseResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? rotationId = freezed,Object? userId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 rotationId: freezed == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
-as String?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as RotationId?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
-as String,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
+as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<int>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
@@ -99,9 +99,9 @@ class _RotationFirebaseResponse extends RotationFirebaseResponse {
   const _RotationFirebaseResponse({required this.rotationId, required this.userId, required this.rotationName, required final  List<String> rotationMembers, required final  List<int> rotationDays, required final  Map<String, int> notificationTime, required this.currentRotationIndex, required this.createdAt, required this.updatedAt}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,_notificationTime = notificationTime,super._();
   
 
-@override final  String? rotationId;
+@override final  RotationId? rotationId;
 @override final  UserId userId;
-@override final  String rotationName;
+@override final  RotationName rotationName;
  final  List<String> _rotationMembers;
 @override List<String> get rotationMembers {
   if (_rotationMembers is EqualUnmodifiableListView) return _rotationMembers;
@@ -159,7 +159,7 @@ abstract mixin class _$RotationFirebaseResponseCopyWith<$Res> implements $Rotati
   factory _$RotationFirebaseResponseCopyWith(_RotationFirebaseResponse value, $Res Function(_RotationFirebaseResponse) _then) = __$RotationFirebaseResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String? rotationId, UserId userId, String rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
+ RotationId? rotationId, UserId userId, RotationName rotationName, List<String> rotationMembers, List<int> rotationDays, Map<String, int> notificationTime, int currentRotationIndex, Timestamp createdAt, Timestamp updatedAt
 });
 
 
@@ -179,9 +179,9 @@ class __$RotationFirebaseResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? rotationId = freezed,Object? userId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_RotationFirebaseResponse(
 rotationId: freezed == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
-as String?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as RotationId?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
-as String,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
+as RotationName,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
 as List<String>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
 as List<int>,notificationTime: null == notificationTime ? _self._notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
