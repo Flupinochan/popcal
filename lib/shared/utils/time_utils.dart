@@ -6,4 +6,8 @@ class TimeUtils {
     if (a == null || b == null) return false;
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
+
+  static DateTime getLocalDateTime() {
+    return TimeUtils.getLocalDateTime();
+  }
 }

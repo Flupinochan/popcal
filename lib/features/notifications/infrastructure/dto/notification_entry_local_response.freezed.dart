@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationEntryLocalResponse {
 
-@NotificationIdConverter() NotificationId get notificationId;@RotationIdConverter() RotationId get rotationId; UserId get userId;@NotificationDateConverter() NotificationDate get notificationDate;@RotationNameConverter() RotationName get rotationName;@RotationMemberNameConverter() RotationMemberName get memberName; String get title; String get description; String get content;
+@NotificationIdConverter() NotificationId get notificationId;@RotationIdConverter() RotationId get rotationId; UserId get userId;@NotificationDateConverter() NotificationDateTime get notificationDate;@RotationNameConverter() RotationName get rotationName;@RotationMemberNameConverter() RotationMemberName get memberName; String get title; String get description; String get content;
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $NotificationEntryLocalResponseCopyWith<$Res>  {
   factory $NotificationEntryLocalResponseCopyWith(NotificationEntryLocalResponse value, $Res Function(NotificationEntryLocalResponse) _then) = _$NotificationEntryLocalResponseCopyWithImpl;
 @useResult
 $Res call({
-@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDate notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
+@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
 });
 
 
@@ -72,7 +72,7 @@ notificationId: null == notificationId ? _self.notificationId : notificationId /
 as NotificationId,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,notificationDate: null == notificationDate ? _self.notificationDate : notificationDate // ignore: cast_nullable_to_non_nullable
-as NotificationDate,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as NotificationDateTime,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as RotationName,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as RotationMemberName,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -103,7 +103,7 @@ class _NotificationEntryLocalResponse extends NotificationEntryLocalResponse {
 @override@NotificationIdConverter() final  NotificationId notificationId;
 @override@RotationIdConverter() final  RotationId rotationId;
 @override final  UserId userId;
-@override@NotificationDateConverter() final  NotificationDate notificationDate;
+@override@NotificationDateConverter() final  NotificationDateTime notificationDate;
 @override@RotationNameConverter() final  RotationName rotationName;
 @override@RotationMemberNameConverter() final  RotationMemberName memberName;
 @override final  String title;
@@ -143,7 +143,7 @@ abstract mixin class _$NotificationEntryLocalResponseCopyWith<$Res> implements $
   factory _$NotificationEntryLocalResponseCopyWith(_NotificationEntryLocalResponse value, $Res Function(_NotificationEntryLocalResponse) _then) = __$NotificationEntryLocalResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDate notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
+@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
 });
 
 
@@ -166,7 +166,7 @@ notificationId: null == notificationId ? _self.notificationId : notificationId /
 as NotificationId,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,notificationDate: null == notificationDate ? _self.notificationDate : notificationDate // ignore: cast_nullable_to_non_nullable
-as NotificationDate,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as NotificationDateTime,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
 as RotationName,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as RotationMemberName,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable

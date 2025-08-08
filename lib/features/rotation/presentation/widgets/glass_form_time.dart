@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassFormTime extends StatelessWidget {
@@ -13,7 +14,7 @@ class GlassFormTime extends StatelessWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     // ローカル日時で指定
-    final now = DateTime.now().toLocal();
+    final now = TimeUtils.getLocalDateTime();
     final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
 
     return GlassWrapper(

@@ -4,7 +4,7 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
-import 'package:popcal/features/notifications/domain/value_objects/notification_date.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
@@ -22,7 +22,7 @@ sealed class NotificationEntryLocalResponse
     @NotificationIdConverter() required NotificationId notificationId,
     @RotationIdConverter() required RotationId rotationId,
     required UserId userId,
-    @NotificationDateConverter() required NotificationDate notificationDate,
+    @NotificationDateConverter() required NotificationDateTime notificationDate,
     @RotationNameConverter() required RotationName rotationName,
     @RotationMemberNameConverter() required RotationMemberName memberName,
     required String title,

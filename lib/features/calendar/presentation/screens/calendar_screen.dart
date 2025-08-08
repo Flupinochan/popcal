@@ -44,8 +44,8 @@ class CalendarScreen extends HookConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final focusedDay = useState(DateTime.now().toLocal());
-    final selectedDay = useState<DateTime?>(DateTime.now().toLocal());
+    final focusedDay = useState(TimeUtils.getLocalDateTime());
+    final selectedDay = useState<DateTime?>(TimeUtils.getLocalDateTime());
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -107,10 +107,10 @@ class CalendarScreen extends HookConsumerWidget {
 
     return GlassWrapper(
       child: TableCalendar<String>(
-        firstDay: DateTime.now().toLocal().subtract(
+        firstDay: TimeUtils.getLocalDateTime().subtract(
           const Duration(days: GetCalendarScheduleUseCase.pastDays),
         ),
-        lastDay: DateTime.now().toLocal().add(
+        lastDay: TimeUtils.getLocalDateTime().add(
           const Duration(days: GetCalendarScheduleUseCase.futureDays),
         ),
         focusedDay: focusedDay.value,
@@ -239,12 +239,11 @@ class CalendarScreen extends HookConsumerWidget {
           ),
           isRotationDay && memberName != null
               ? Text(
-                memberName,
+                memberName.value,
                 style: textTheme.labelMedium!.copyWith(
                   color:
                       dayInfo.memberColorIndex != null
-                          ? memberColors[dayInfo.memberColorIndex! %
-                              memberColors.length]
+                          ? memberColors[dayInfo.memberColorIndex!]
                           : Colors.white,
                 ),
                 textAlign: TextAlign.center,
@@ -339,7 +338,7 @@ class CalendarScreen extends HookConsumerWidget {
                       const SizedBox(width: 10),
                       // メンバー名
                       Text(
-                        memberName ?? 'ローテーション対象外',
+                        memberName == null ? memberName!.value : 'ローテーション対象外',
                         style: textTheme.titleMedium!.copyWith(
                           color:
                               isRotationDay

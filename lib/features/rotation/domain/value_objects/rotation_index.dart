@@ -17,6 +17,24 @@ sealed class RotationIndex with _$RotationIndex {
     return Results.success(RotationIndex(input));
   }
 
+  int getMemberIndex(int memberCount) {
+    if (memberCount <= 0) {
+      throw ArgumentError('メンバー数は1以上である必要があります');
+    }
+    return value % memberCount;
+  }
+
+  RotationIndex increment() {
+    return RotationIndex(value + 1);
+  }
+
+  RotationIndex incrementBy(int count) {
+    if (count < 0) {
+      throw ArgumentError('インクリメント数は0以上である必要があります');
+    }
+    return RotationIndex(value + count);
+  }
+
   @override
   String toString() => value.toString();
 }

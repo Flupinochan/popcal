@@ -1,5 +1,5 @@
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
-import 'package:popcal/features/notifications/domain/value_objects/notification_date.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
@@ -11,7 +11,7 @@ class NotificationEntry {
   // rotationIdはポップアップをタップした際に、カレンダー画面を表示するために必要
   final RotationId rotationId;
   final UserId userId;
-  final NotificationDate notificationDate;
+  final NotificationDateTime notificationDate;
   final RotationName rotationName;
   final RotationMemberName memberName;
 

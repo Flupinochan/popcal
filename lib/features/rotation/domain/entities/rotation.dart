@@ -58,9 +58,21 @@ class Rotation {
     );
   }
 
-  // メンバーの順番を取得 (entityに記載すべきかvalue objectから取得すべきか)
-  int getMemberIndex(RotationMemberName rotationMemberName) {
-    final index = rotationMemberNames.indexOf(rotationMemberName);
-    return index >= 0 ? index : 0;
+  RotationMemberName getCurrentRotationMemberName() {
+    return rotationMemberNames[currentRotationIndex.value];
+  }
+
+  int getCurrentRotationMemberIndex() {
+    return getRotationMemberIndex(
+      rotationMemberNames[currentRotationIndex.value],
+    );
+  }
+
+  int getRotationMemberIndex(RotationMemberName rotationMemberName) {
+    return rotationMemberNames.indexOf(rotationMemberName);
+  }
+
+  int getRotationMembersCount() {
+    return rotationMemberNames.length;
   }
 }

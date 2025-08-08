@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 
 class GlassFormWeekday extends StatelessWidget {
@@ -17,7 +18,7 @@ class GlassFormWeekday extends StatelessWidget {
     return FormBuilderField<List<Weekday>>(
       name: 'rotationDays',
       initialValue:
-          initialValue ?? [Weekday.fromDateTime(DateTime.now().toLocal())],
+          initialValue ?? [Weekday.fromDateTime(TimeUtils.getLocalDateTime())],
       validator: (value) {
         if (value == null || value.isEmpty) {
           return '曜日を1つ以上選択してください';

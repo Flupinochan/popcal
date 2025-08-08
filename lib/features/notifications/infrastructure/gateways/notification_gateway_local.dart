@@ -5,6 +5,7 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
 import 'package:popcal/router/routes.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationGatewayLocal {
@@ -118,8 +119,8 @@ class NotificationGatewayLocal {
     NotificationEntryLocalResponse notificationSettingDto,
   ) async {
     try {
-      if (notificationSettingDto.notificationDate.isBefore(
-        DateTime.now().toLocal(),
+      if (notificationSettingDto.notificationDate.isBeforeDateTime(
+        TimeUtils.getLocalDateTime(),
       )) {
         return Results.failure(
           NotificationFailure(
