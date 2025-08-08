@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
@@ -20,9 +21,9 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
     return scheduleMap[DateKey.fromDateTime(date)] ??
         ScheduleDayResponse(
           date: NotificationDateTime(date),
-          memberName: RotationMemberName('ローテーション対象外'),
+          memberName: RotationMemberName.notApplicable,
           isRotationDay: false,
-          memberColorIndex: null,
+          memberColor: MemberColor.notApplicable,
         );
   }
 }
@@ -36,7 +37,7 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
     required NotificationDateTime date,
     required RotationMemberName memberName,
     required bool isRotationDay,
-    required int? memberColorIndex,
+    required MemberColor memberColor,
   }) = _ScheduleDayResponse;
 
   String get displayText => isRotationDay ? "担当日" : "対象外";

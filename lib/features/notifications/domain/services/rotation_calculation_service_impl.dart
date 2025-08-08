@@ -54,7 +54,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       final toDate = currentTime.add(Duration(days: futureDays));
 
       final notifications = <NotificationEntry>[];
-      var currentIndex = rotation.currentRotationIndex;
+      var newCurrentRotationIndex = rotation.currentRotationIndex;
 
       // 指定期間をループして通知情報を作成
       for (
@@ -68,7 +68,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           notificationTime: rotation.notificationTime,
           rotationDateTime: RotationDateTime.updatedAt(rotation.updatedAt),
         )) {
-          final memberName = rotation.getRotationMemberName(currentIndex);
+          final memberName = rotation.getRotationMemberName(
+            newCurrentRotationIndex,
+          );
           final notificationId = NotificationId.create(
             rotation.rotationId!.value,
             checkDate,
@@ -91,14 +93,14 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           );
 
           notifications.add(notificationSetting);
-          currentIndex.increment();
+          newCurrentRotationIndex = newCurrentRotationIndex.increment();
         }
       }
 
       return Results.success(
         NotificationSchedule(
           notificationEntry: notifications,
-          newCurrentRotationIndex: currentIndex,
+          newCurrentRotationIndex: newCurrentRotationIndex,
         ),
       );
     } catch (error) {

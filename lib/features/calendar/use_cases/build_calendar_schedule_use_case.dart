@@ -2,10 +2,12 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 
 class BuildCalendarScheduleUseCase {
@@ -26,7 +28,7 @@ class BuildCalendarScheduleUseCase {
     NotificationDateTime? toDate,
   }) {
     try {
-      var currentIndex = rotation.currentRotationIndex;
+      var newCurrentRotationIndex = RotationIndex(0);
       final calendarDays = <DateKey, ScheduleDay>{};
       // 指定期間をループしてカレンダー日を作成
       for (
@@ -49,24 +51,30 @@ class BuildCalendarScheduleUseCase {
           notificationTime: notificationTime,
           rotationDateTime: RotationDateTime.createdAt(rotation.createdAt),
         )) {
-          final memberName = rotation.getRotationMemberName(currentIndex);
-          final memberIndex = rotation.getRotationMemberIndex(memberName);
+          final memberName = rotation.getRotationMemberName(
+            newCurrentRotationIndex,
+          );
+          final memberIndex = rotation.getRotationMemberIndex(
+            newCurrentRotationIndex,
+          );
 
           _addCalendarDay(
             calendarDays: calendarDays,
             date: notificationDateTime,
             memberName: memberName,
             isRotationDay: true,
-            calendarDayColorIndex: memberIndex,
+            memberColor: MemberColor.fromIndex(memberIndex),
           );
+
+          newCurrentRotationIndex = newCurrentRotationIndex.increment();
         } else {
           // ローテーション対象外の日
           _addCalendarDay(
             calendarDays: calendarDays,
             date: notificationDateTime,
-            memberName: RotationMemberName('ローテーション対象外'),
+            memberName: RotationMemberName.notApplicable,
             isRotationDay: false,
-            calendarDayColorIndex: null,
+            memberColor: MemberColor.notApplicable,
           );
         }
       }
@@ -82,7 +90,7 @@ class BuildCalendarScheduleUseCase {
     required NotificationDateTime date,
     required RotationMemberName memberName,
     required bool isRotationDay,
-    int? calendarDayColorIndex,
+    required MemberColor memberColor,
   }) {
     final dateKey = DateKey.fromDateTime(date.value);
 
@@ -90,7 +98,7 @@ class BuildCalendarScheduleUseCase {
       date: date,
       memberName: memberName,
       isRotationDay: isRotationDay,
-      memberColorIndex: calendarDayColorIndex,
+      memberColor: memberColor,
     );
     calendarDays[dateKey] = calendarDay;
   }

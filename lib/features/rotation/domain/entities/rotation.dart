@@ -59,11 +59,11 @@ class Rotation {
   }
 
   RotationMemberName getRotationMemberName(RotationIndex rotationIndex) {
-    return rotationMemberNames[rotationIndex.value % getRotationMembersCount()];
+    return rotationMemberNames[getRotationMemberIndex(rotationIndex)];
   }
 
-  int getRotationMemberIndex(RotationMemberName rotationMemberName) {
-    return rotationMemberNames.indexOf(rotationMemberName);
+  int getRotationMemberIndex(RotationIndex rotationIndex) {
+    return rotationIndex.value % getRotationMembersCount();
   }
 
   int getRotationMembersCount() {

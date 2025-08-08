@@ -169,7 +169,7 @@ $RotationResponseCopyWith<$Res> get rotationResponse {
 /// @nodoc
 mixin _$ScheduleDayResponse {
 
- NotificationDateTime get date; RotationMemberName get memberName; bool get isRotationDay; int? get memberColorIndex;
+ NotificationDateTime get date; RotationMemberName get memberName; bool get isRotationDay; MemberColor get memberColor;
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -180,16 +180,16 @@ $ScheduleDayResponseCopyWith<ScheduleDayResponse> get copyWith => _$ScheduleDayR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.isRotationDay, isRotationDay) || other.isRotationDay == isRotationDay)&&(identical(other.memberColorIndex, memberColorIndex) || other.memberColorIndex == memberColorIndex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.isRotationDay, isRotationDay) || other.isRotationDay == isRotationDay)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,memberName,isRotationDay,memberColorIndex);
+int get hashCode => Object.hash(runtimeType,date,memberName,isRotationDay,memberColor);
 
 @override
 String toString() {
-  return 'ScheduleDayResponse(date: $date, memberName: $memberName, isRotationDay: $isRotationDay, memberColorIndex: $memberColorIndex)';
+  return 'ScheduleDayResponse(date: $date, memberName: $memberName, isRotationDay: $isRotationDay, memberColor: $memberColor)';
 }
 
 
@@ -200,7 +200,7 @@ abstract mixin class $ScheduleDayResponseCopyWith<$Res>  {
   factory $ScheduleDayResponseCopyWith(ScheduleDayResponse value, $Res Function(ScheduleDayResponse) _then) = _$ScheduleDayResponseCopyWithImpl;
 @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, bool isRotationDay, int? memberColorIndex
+ NotificationDateTime date, RotationMemberName memberName, bool isRotationDay, MemberColor memberColor
 });
 
 
@@ -217,13 +217,13 @@ class _$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? isRotationDay = null,Object? memberColorIndex = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? isRotationDay = null,Object? memberColor = null,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as RotationMemberName,isRotationDay: null == isRotationDay ? _self.isRotationDay : isRotationDay // ignore: cast_nullable_to_non_nullable
-as bool,memberColorIndex: freezed == memberColorIndex ? _self.memberColorIndex : memberColorIndex // ignore: cast_nullable_to_non_nullable
-as int?,
+as bool,memberColor: null == memberColor ? _self.memberColor : memberColor // ignore: cast_nullable_to_non_nullable
+as MemberColor,
   ));
 }
 
@@ -234,13 +234,13 @@ as int?,
 
 
 class _ScheduleDayResponse extends ScheduleDayResponse {
-  const _ScheduleDayResponse({required this.date, required this.memberName, required this.isRotationDay, required this.memberColorIndex}): super._();
+  const _ScheduleDayResponse({required this.date, required this.memberName, required this.isRotationDay, required this.memberColor}): super._();
   
 
 @override final  NotificationDateTime date;
 @override final  RotationMemberName memberName;
 @override final  bool isRotationDay;
-@override final  int? memberColorIndex;
+@override final  MemberColor memberColor;
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -252,16 +252,16 @@ _$ScheduleDayResponseCopyWith<_ScheduleDayResponse> get copyWith => __$ScheduleD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.isRotationDay, isRotationDay) || other.isRotationDay == isRotationDay)&&(identical(other.memberColorIndex, memberColorIndex) || other.memberColorIndex == memberColorIndex));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.isRotationDay, isRotationDay) || other.isRotationDay == isRotationDay)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,memberName,isRotationDay,memberColorIndex);
+int get hashCode => Object.hash(runtimeType,date,memberName,isRotationDay,memberColor);
 
 @override
 String toString() {
-  return 'ScheduleDayResponse(date: $date, memberName: $memberName, isRotationDay: $isRotationDay, memberColorIndex: $memberColorIndex)';
+  return 'ScheduleDayResponse(date: $date, memberName: $memberName, isRotationDay: $isRotationDay, memberColor: $memberColor)';
 }
 
 
@@ -272,7 +272,7 @@ abstract mixin class _$ScheduleDayResponseCopyWith<$Res> implements $ScheduleDay
   factory _$ScheduleDayResponseCopyWith(_ScheduleDayResponse value, $Res Function(_ScheduleDayResponse) _then) = __$ScheduleDayResponseCopyWithImpl;
 @override @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, bool isRotationDay, int? memberColorIndex
+ NotificationDateTime date, RotationMemberName memberName, bool isRotationDay, MemberColor memberColor
 });
 
 
@@ -289,13 +289,13 @@ class __$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? isRotationDay = null,Object? memberColorIndex = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? isRotationDay = null,Object? memberColor = null,}) {
   return _then(_ScheduleDayResponse(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as RotationMemberName,isRotationDay: null == isRotationDay ? _self.isRotationDay : isRotationDay // ignore: cast_nullable_to_non_nullable
-as bool,memberColorIndex: freezed == memberColorIndex ? _self.memberColorIndex : memberColorIndex // ignore: cast_nullable_to_non_nullable
-as int?,
+as bool,memberColor: null == memberColor ? _self.memberColor : memberColor // ignore: cast_nullable_to_non_nullable
+as MemberColor,
   ));
 }
 

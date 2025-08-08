@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/themes/member_color.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
@@ -241,10 +240,7 @@ class CalendarScreen extends HookConsumerWidget {
               ? Text(
                 memberName.value,
                 style: textTheme.labelMedium!.copyWith(
-                  color:
-                      dayInfo.memberColorIndex != null
-                          ? memberColors[dayInfo.memberColorIndex!]
-                          : Colors.white,
+                  color: dayInfo.memberColor.value,
                 ),
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
@@ -338,7 +334,7 @@ class CalendarScreen extends HookConsumerWidget {
                       const SizedBox(width: 10),
                       // メンバー名
                       Text(
-                        memberName != null ? memberName!.value : 'ローテーション対象外',
+                        memberName.value,
                         style: textTheme.titleMedium!.copyWith(
                           color:
                               isRotationDay
