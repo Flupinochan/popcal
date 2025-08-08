@@ -3,6 +3,8 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_date.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
@@ -66,9 +68,16 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           final memberIndex =
               currentIndex % rotation.rotationMemberNames.length;
           final memberName = rotation.rotationMemberNames[memberIndex];
-          final notificationId = _generateNotificationId(
+          final notificationId = NotificationId.create(
             rotation.rotationId!.value,
             checkDate,
+          );
+          final scheduledDateTime = DateTime(
+            checkDate.year,
+            checkDate.month,
+            checkDate.day,
+            rotation.notificationTime.value.hour,
+            rotation.notificationTime.value.minute,
           );
 
           final notificationSetting = NotificationEntry(
@@ -76,7 +85,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             rotationId: rotation.rotationId!,
             userId: rotation.userId,
             rotationName: rotation.rotationName,
-            notificationTime: rotation.notificationTime,
+            notificationDate: NotificationDate(scheduledDateTime),
             memberName: memberName,
           );
 
@@ -122,10 +131,5 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       }
     }
     return false;
-  }
-
-  /// 通知IDを生成 ※日付ベース
-  int _generateNotificationId(String rotationId, DateTime date) {
-    return date.year * 10000 + date.month * 100 + date.day;
   }
 }

@@ -5,11 +5,13 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_date.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
 part 'notification_entry_local_response.freezed.dart';
+part 'notification_entry_local_response.g.dart';
 
 @freezed
 sealed class NotificationEntryLocalResponse
@@ -17,12 +19,12 @@ sealed class NotificationEntryLocalResponse
   const NotificationEntryLocalResponse._();
 
   const factory NotificationEntryLocalResponse({
-    required int notificationId,
-    required RotationId rotationId,
+    @NotificationIdConverter() required NotificationId notificationId,
+    @RotationIdConverter() required RotationId rotationId,
     required UserId userId,
-    required NotificationDate notificationDate,
-    required RotationName rotationName,
-    required RotationMemberName memberName,
+    @NotificationDateConverter() required NotificationDate notificationDate,
+    @RotationNameConverter() required RotationName rotationName,
+    @RotationMemberNameConverter() required RotationMemberName memberName,
     required String title,
     required String description,
     required String content,

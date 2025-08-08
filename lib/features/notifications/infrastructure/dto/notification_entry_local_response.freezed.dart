@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationEntryLocalResponse {
 
- int get notificationId; RotationId get rotationId; UserId get userId; NotificationDate get notificationDate; RotationName get rotationName; RotationMemberName get memberName; String get title; String get description; String get content;
+@NotificationIdConverter() NotificationId get notificationId;@RotationIdConverter() RotationId get rotationId; UserId get userId;@NotificationDateConverter() NotificationDate get notificationDate;@RotationNameConverter() RotationName get rotationName;@RotationMemberNameConverter() RotationMemberName get memberName; String get title; String get description; String get content;
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $NotificationEntryLocalResponseCopyWith<$Res>  {
   factory $NotificationEntryLocalResponseCopyWith(NotificationEntryLocalResponse value, $Res Function(NotificationEntryLocalResponse) _then) = _$NotificationEntryLocalResponseCopyWithImpl;
 @useResult
 $Res call({
- int notificationId, RotationId rotationId, UserId userId, NotificationDate notificationDate, RotationName rotationName, RotationMemberName memberName, String title, String description, String content
+@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDate notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
 });
 
 
@@ -69,7 +69,7 @@ class _$NotificationEntryLocalResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? notificationId = null,Object? rotationId = null,Object? userId = null,Object? notificationDate = null,Object? rotationName = null,Object? memberName = null,Object? title = null,Object? description = null,Object? content = null,}) {
   return _then(_self.copyWith(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
-as int,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
+as NotificationId,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,notificationDate: null == notificationDate ? _self.notificationDate : notificationDate // ignore: cast_nullable_to_non_nullable
 as NotificationDate,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
@@ -97,15 +97,15 @@ $UserIdCopyWith<$Res> get userId {
 @JsonSerializable()
 
 class _NotificationEntryLocalResponse extends NotificationEntryLocalResponse {
-  const _NotificationEntryLocalResponse({required this.notificationId, required this.rotationId, required this.userId, required this.notificationDate, required this.rotationName, required this.memberName, required this.title, required this.description, required this.content}): super._();
+  const _NotificationEntryLocalResponse({@NotificationIdConverter() required this.notificationId, @RotationIdConverter() required this.rotationId, required this.userId, @NotificationDateConverter() required this.notificationDate, @RotationNameConverter() required this.rotationName, @RotationMemberNameConverter() required this.memberName, required this.title, required this.description, required this.content}): super._();
   factory _NotificationEntryLocalResponse.fromJson(Map<String, dynamic> json) => _$NotificationEntryLocalResponseFromJson(json);
 
-@override final  int notificationId;
-@override final  RotationId rotationId;
+@override@NotificationIdConverter() final  NotificationId notificationId;
+@override@RotationIdConverter() final  RotationId rotationId;
 @override final  UserId userId;
-@override final  NotificationDate notificationDate;
-@override final  RotationName rotationName;
-@override final  RotationMemberName memberName;
+@override@NotificationDateConverter() final  NotificationDate notificationDate;
+@override@RotationNameConverter() final  RotationName rotationName;
+@override@RotationMemberNameConverter() final  RotationMemberName memberName;
 @override final  String title;
 @override final  String description;
 @override final  String content;
@@ -143,7 +143,7 @@ abstract mixin class _$NotificationEntryLocalResponseCopyWith<$Res> implements $
   factory _$NotificationEntryLocalResponseCopyWith(_NotificationEntryLocalResponse value, $Res Function(_NotificationEntryLocalResponse) _then) = __$NotificationEntryLocalResponseCopyWithImpl;
 @override @useResult
 $Res call({
- int notificationId, RotationId rotationId, UserId userId, NotificationDate notificationDate, RotationName rotationName, RotationMemberName memberName, String title, String description, String content
+@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDate notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
 });
 
 
@@ -163,7 +163,7 @@ class __$NotificationEntryLocalResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? notificationId = null,Object? rotationId = null,Object? userId = null,Object? notificationDate = null,Object? rotationName = null,Object? memberName = null,Object? title = null,Object? description = null,Object? content = null,}) {
   return _then(_NotificationEntryLocalResponse(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
-as int,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
+as NotificationId,rotationId: null == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as UserId,notificationDate: null == notificationDate ? _self.notificationDate : notificationDate // ignore: cast_nullable_to_non_nullable
 as NotificationDate,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable

@@ -131,7 +131,7 @@ class SyncNotificationsUseCase {
     // 計算結果の通知Idsを取得
     final validNotificationIds = <int>{};
     for (final notification in result.notificationEntry) {
-      validNotificationIds.add(notification.notificationId);
+      validNotificationIds.add(notification.notificationId.value);
     }
 
     // 計算結果の通知Idsに含まれていない現在設定されている通知Idsは削除対象

@@ -118,12 +118,12 @@ class NotificationGatewayLocal {
     NotificationEntryLocalResponse notificationSettingDto,
   ) async {
     try {
-      if (notificationSettingDto.notificationTime.isBefore(
+      if (notificationSettingDto.notificationDate.isBefore(
         DateTime.now().toLocal(),
       )) {
         return Results.failure(
           NotificationFailure(
-            '警告: 過去の通知作成が要求されました - ${notificationSettingDto.notificationTime} - ${notificationSettingDto.memberName}',
+            '警告: 過去の通知作成が要求されました - ${notificationSettingDto.notificationDate} - ${notificationSettingDto.memberName}',
           ),
         );
       }
@@ -131,17 +131,17 @@ class NotificationGatewayLocal {
       final payloadJson = notificationSettingDto.toJsonString();
 
       await _flutterLocalNotificationsPlugin.zonedSchedule(
-        notificationSettingDto.notificationId,
+        notificationSettingDto.notificationId.value,
         notificationSettingDto.title,
         notificationSettingDto.content,
         tz.TZDateTime.from(
-          notificationSettingDto.notificationTime.value,
+          notificationSettingDto.notificationDate.value,
           tz.local,
         ),
         NotificationDetails(
           // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
           android: AndroidNotificationDetails(
-            notificationSettingDto.rotationId,
+            notificationSettingDto.rotationId.value,
             notificationSettingDto.title,
             channelDescription: notificationSettingDto.description,
             priority: Priority.high,
@@ -279,7 +279,9 @@ class NotificationGatewayLocal {
         dtoResult.when(
           success:
               (localNotificationSettingDto) => _router.push(
-                Routes.calendarPath(localNotificationSettingDto.rotationId),
+                Routes.calendarPath(
+                  localNotificationSettingDto.rotationId.value,
+                ),
               ),
           failure: (error) => _router.push(Routes.home),
         );
