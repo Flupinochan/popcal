@@ -9,6 +9,7 @@ import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/router/router.dart';
+import 'package:popcal/router/routes.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:timezone/data/latest_all.dart';
 import 'firebase_options.dart';
@@ -67,7 +68,7 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
+    final router = ref.watch(routerProvider(initialLocation: Routes.home));
 
     // 通知初期化
     ref.listen(notificationInitializationProvider, (previous, next) {
