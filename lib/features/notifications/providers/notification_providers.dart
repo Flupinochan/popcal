@@ -27,6 +27,7 @@ NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
     ref.watch(routerProvider(initialLocation: Routes.home)),
     ref.watch(flutterLocalNotificationsPluginProvider),
     ref.watch(loggerProvider("NotificationGatewayLocal")),
+    ref.watch(nowProvider),
   );
 }
 

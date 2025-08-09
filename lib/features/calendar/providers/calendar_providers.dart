@@ -1,3 +1,4 @@
+import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
@@ -16,5 +17,6 @@ GetCalendarScheduleUseCase getCalendarScheduleUseCase(Ref ref) {
     ref.watch(authRepositoryProvider),
     ref.watch(rotationRepositoryProvider),
     ref.watch(buildCalendarScheduleUseCaseProvider),
+    ref.watch(nowProvider),
   );
 }

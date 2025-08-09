@@ -5,18 +5,19 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
 import 'package:popcal/router/routes.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationGatewayLocal {
   final GoRouter _router;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   final Logger _logger;
+  final DateTime _now;
 
   NotificationGatewayLocal(
     this._router,
     this._flutterLocalNotificationsPlugin,
     this._logger,
+    this._now,
   );
 
   /// 0-1. 初期化
@@ -119,9 +120,7 @@ class NotificationGatewayLocal {
     NotificationEntryLocalResponse notificationSettingDto,
   ) async {
     try {
-      if (notificationSettingDto.notificationDate.isBeforeDateTime(
-        TimeUtils.getLocalDateTime(),
-      )) {
+      if (notificationSettingDto.notificationDate.isBeforeDateTime(_now)) {
         return Results.failure(
           NotificationFailure(
             '警告: 過去の通知作成が要求されました - ${notificationSettingDto.notificationDate} - ${notificationSettingDto.memberName}',

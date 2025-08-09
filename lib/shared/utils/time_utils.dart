@@ -7,6 +7,8 @@ class TimeUtils {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
+  // coreにnowProviderがあるため、テストする場合はそちらを利用すること
+  // Domain層やDtoはDIしないため、以下を利用してよい
   static DateTime getLocalDateTime() {
     return DateTime.now().toLocal();
   }

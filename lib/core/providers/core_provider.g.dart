@@ -156,5 +156,21 @@ class _LoggerProviderElement extends AutoDisposeProviderElement<Logger>
   String get loggerName => (origin as LoggerProvider).loggerName;
 }
 
+String _$nowHash() => r'd84dee611cbfb4616a95a7675cee917a5b7bdc22';
+
+/// See also [now].
+@ProviderFor(now)
+final nowProvider = AutoDisposeProvider<DateTime>.internal(
+  now,
+  name: r'nowProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$nowHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef NowRef = AutoDisposeProviderRef<DateTime>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassFormTime extends StatelessWidget {
   final TimeOfDay? initialValue;
+  final DateTime now;
 
-  const GlassFormTime({super.key, this.initialValue});
+  const GlassFormTime({super.key, this.initialValue, required this.now});
 
   @override
   Widget build(BuildContext context) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     // ローカル日時で指定
-    final now = TimeUtils.getLocalDateTime();
     final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
 
     return GlassWrapper(

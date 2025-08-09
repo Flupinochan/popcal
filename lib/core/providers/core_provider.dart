@@ -15,3 +15,8 @@ Logger logger(Ref ref, String loggerName) {
   final logger = Logger(loggerName);
   return logger;
 }
+
+@riverpod
+DateTime now(Ref ref) {
+  return DateTime.now().toLocal();
+}

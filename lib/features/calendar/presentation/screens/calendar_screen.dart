@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
@@ -22,13 +23,14 @@ class CalendarScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final now = ref.watch(nowProvider);
     final calendarDataAsync = ref.watch(
       calendarScheduleResponseProvider(rotationId),
     );
     return calendarDataAsync.when(
       data:
           (result) => result.when(
-            success: (dto) => _buildCalendarScreen(context, dto),
+            success: (dto) => _buildCalendarScreen(context, dto, now),
             failure: (error) => customErrorWidget(context, error.message),
           ),
       loading: () => customLoadingWidget(context),
@@ -39,12 +41,13 @@ class CalendarScreen extends HookConsumerWidget {
   Widget _buildCalendarScreen(
     BuildContext context,
     CalendarScheduleResponse calendarDataDto,
+    DateTime now,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final focusedDay = useState(TimeUtils.getLocalDateTime());
-    final selectedDay = useState<DateTime?>(TimeUtils.getLocalDateTime());
+    final focusedDay = useState(now);
+    final selectedDay = useState<DateTime?>(now);
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -71,6 +74,7 @@ class CalendarScreen extends HookConsumerWidget {
                         calendarDataDto,
                         focusedDay,
                         selectedDay,
+                        now,
                       ),
                       const SizedBox(height: 16),
                       _buildSelectedDayInfo(
@@ -99,6 +103,7 @@ class CalendarScreen extends HookConsumerWidget {
     CalendarScheduleResponse calendarDataDto,
     ValueNotifier<DateTime> focusedDay,
     ValueNotifier<DateTime?> selectedDay,
+    DateTime now,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
@@ -106,10 +111,10 @@ class CalendarScreen extends HookConsumerWidget {
 
     return GlassWrapper(
       child: TableCalendar<String>(
-        firstDay: TimeUtils.getLocalDateTime().subtract(
+        firstDay: now.subtract(
           const Duration(days: GetCalendarScheduleUseCase.pastDays),
         ),
-        lastDay: TimeUtils.getLocalDateTime().add(
+        lastDay: now.add(
           const Duration(days: GetCalendarScheduleUseCase.futureDays),
         ),
         focusedDay: focusedDay.value,

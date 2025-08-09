@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -59,6 +60,7 @@ class RotationScreen extends HookConsumerWidget {
     final initialRotation = rotationData.rotationResponse;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final isLoading = ref.watch(rotationNotifierProvider).isLoading;
+    final now = ref.watch(nowProvider);
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -120,13 +122,17 @@ class RotationScreen extends HookConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
-                  GlassFormWeekday(initialValue: initialRotation?.rotationDays),
+                  GlassFormWeekday(
+                    initialValue: initialRotation?.rotationDays,
+                    now: now,
+                  ),
                   const SizedBox(height: 24),
                   // 通知時刻
                   Text('通知時刻', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 16),
                   GlassFormTime(
                     initialValue: initialRotation?.notificationTime.value,
+                    now: now,
                   ),
                 ],
               ),

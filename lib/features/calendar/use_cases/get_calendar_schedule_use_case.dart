@@ -5,7 +5,6 @@ import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.
 import 'package:popcal/features/calendar/use_cases/build_calendar_schedule_use_case.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 
 class GetCalendarScheduleUseCase {
   // UIで表示する期間かつUseCaseで計算に必要な値
@@ -16,11 +15,13 @@ class GetCalendarScheduleUseCase {
   final AuthRepository _authRepository;
   final RotationRepository _rotationRepository;
   final BuildCalendarScheduleUseCase _buildCalendarScheduleUseCase;
+  final DateTime _now;
 
   GetCalendarScheduleUseCase(
     this._authRepository,
     this._rotationRepository,
     this._buildCalendarScheduleUseCase,
+    this._now,
   );
 
   // CalendarScreen表示に必要な3つの情報を取得して返却
@@ -50,8 +51,7 @@ class GetCalendarScheduleUseCase {
     }
 
     // 3. カレンダー表示用通知情報を取得
-    final now = TimeUtils.getLocalDateTime();
-    final toDate = now.add(const Duration(days: futureDays));
+    final toDate = _now.add(const Duration(days: futureDays));
 
     final notificationResult = _buildCalendarScheduleUseCase
         .buildCalendarSchedule(
