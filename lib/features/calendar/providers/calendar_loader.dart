@@ -14,7 +14,7 @@ Future<Result<CalendarScheduleResponse>> calendarScheduleResponse(
   Ref ref,
   String rotationId,
 ) async {
-  final useCase = ref.watch(getCalendarDataUseCaseProvider);
+  final useCase = ref.watch(getCalendarScheduleUseCaseProvider);
   final domainResult = await useCase.execute(rotationId);
 
   return domainResult.when(

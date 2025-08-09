@@ -35,13 +35,13 @@ class HomeScreen extends HookConsumerWidget {
     // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)
     useEffect(() {
       // useEffect内はref.watchは使用不可
-      final notificationProvider = ref.read(notificationRepositoryProvider);
+      final notificationProvider = ref.read(notificationGatewayProvider);
       notificationProvider.initializeNotificationLaunch();
       return null;
     }, []);
 
     // ユーザ情報取得
-    final authState = ref.watch(authStateForUIProvider);
+    final authState = ref.watch(authStateChangesForUIProvider);
     return authState.when(
       data:
           (dtoResult) => dtoResult.when(

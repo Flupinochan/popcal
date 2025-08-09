@@ -45,7 +45,9 @@ class DrawerScreen extends HookConsumerWidget {
                     // name & email
                     Consumer(
                       builder: (context, ref, child) {
-                        final authResult = ref.watch(authStateForUIProvider);
+                        final authResult = ref.watch(
+                          authStateChangesForUIProvider,
+                        );
                         return authResult.when(
                           data:
                               (result) => result.when(

@@ -15,7 +15,7 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
   String? rotationId,
 ) async {
   // 1. ユーザ情報を取得
-  final authResult = await ref.watch(authStateForUIProvider.future);
+  final authResult = await ref.watch(authStateChangesForUIProvider.future);
   if (authResult.isFailure) {
     return Results.failure(authResult.failureOrNull!);
   }

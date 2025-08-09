@@ -25,29 +25,29 @@ final firebaseFirestoreProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseFirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
-String _$firebaseRotationDatasourceHash() =>
-    r'7da790650ea9175682c6794a74d84b3e0b74cf57';
+String _$rotationRepositoryFirebaseHash() =>
+    r'439022bf695eda61a3416640592a4ca945d5362a';
 
-/// See also [firebaseRotationDatasource].
-@ProviderFor(firebaseRotationDatasource)
-final firebaseRotationDatasourceProvider =
+/// See also [rotationRepositoryFirebase].
+@ProviderFor(rotationRepositoryFirebase)
+final rotationRepositoryFirebaseProvider =
     AutoDisposeProvider<RotationRepositoryFirebase>.internal(
-      firebaseRotationDatasource,
-      name: r'firebaseRotationDatasourceProvider',
+      rotationRepositoryFirebase,
+      name: r'rotationRepositoryFirebaseProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$firebaseRotationDatasourceHash,
+              : _$rotationRepositoryFirebaseHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef FirebaseRotationDatasourceRef =
+typedef RotationRepositoryFirebaseRef =
     AutoDisposeProviderRef<RotationRepositoryFirebase>;
 String _$rotationRepositoryHash() =>
-    r'74f6682545c4de8c6d31881753fe0263fb06d428';
+    r'20ed4a98b5ead5d6429690534a0c18e65149d7a3';
 
 /// See also [rotationRepository].
 @ProviderFor(rotationRepository)
@@ -67,7 +67,7 @@ final rotationRepositoryProvider =
 // ignore: unused_element
 typedef RotationRepositoryRef = AutoDisposeProviderRef<RotationRepository>;
 String _$createRotationUseCaseHash() =>
-    r'f96eb72977106a46d74e36c6077ed4e8311d4a13';
+    r'739247cef3d333dd410f9dbb168e3cbdd0fec662';
 
 /// See also [createRotationUseCase].
 @ProviderFor(createRotationUseCase)
@@ -88,7 +88,7 @@ final createRotationUseCaseProvider =
 typedef CreateRotationUseCaseRef =
     AutoDisposeProviderRef<CreateRotationUseCase>;
 String _$updateRotationUseCaseHash() =>
-    r'892586d6da806f38fd62f99b6c4f2c7bc90aba0f';
+    r'001d3f408a238a7f2ebaddb2aba6c7c11d06cc8c';
 
 /// See also [updateRotationUseCase].
 @ProviderFor(updateRotationUseCase)

@@ -22,28 +22,28 @@ final firebaseAuthProvider = AutoDisposeProvider<FirebaseAuth>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FirebaseAuthRef = AutoDisposeProviderRef<FirebaseAuth>;
-String _$firebaseAuthDataSourceHash() =>
-    r'af8f5994206b241a826df15b532971752e2b48c2';
+String _$authRepositoryFirebaseHash() =>
+    r'6cc9a1650f3aa8bbb9fbcd67b51f1cebe56e47aa';
 
-/// See also [firebaseAuthDataSource].
-@ProviderFor(firebaseAuthDataSource)
-final firebaseAuthDataSourceProvider =
+/// See also [authRepositoryFirebase].
+@ProviderFor(authRepositoryFirebase)
+final authRepositoryFirebaseProvider =
     AutoDisposeProvider<AuthRepositoryFirebase>.internal(
-      firebaseAuthDataSource,
-      name: r'firebaseAuthDataSourceProvider',
+      authRepositoryFirebase,
+      name: r'authRepositoryFirebaseProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$firebaseAuthDataSourceHash,
+              : _$authRepositoryFirebaseHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef FirebaseAuthDataSourceRef =
+typedef AuthRepositoryFirebaseRef =
     AutoDisposeProviderRef<AuthRepositoryFirebase>;
-String _$authRepositoryHash() => r'17468c8d52d6bf94fafcf95ba6c26f3385c6f600';
+String _$authRepositoryHash() => r'c7406fd9e88be2ac21dd784e5a85c25db25e6274';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)

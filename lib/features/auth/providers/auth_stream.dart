@@ -10,7 +10,7 @@ part 'auth_stream.g.dart';
 // UIでStreamを受け取る際に直接Entityを受け取らないようにする
 // Dtoに変換して返却
 @riverpod
-Stream<Result<UserResponse?>> authStateForUI(Ref ref) {
+Stream<Result<UserResponse?>> authStateChangesForUI(Ref ref) {
   final entityStream = ref.watch(authRepositoryProvider).authStateChanges;
 
   return entityStream.asyncMap((entityResult) async {

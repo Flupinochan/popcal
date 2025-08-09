@@ -11,57 +11,62 @@ import 'package:popcal/features/auth/providers/auth_notifier.dart';
 class MockAuthNotifier extends Mock implements AuthNotifier {}
 
 void main() {
-  // WidgetでRiverPodのref.watch()を使用している場合はモックする必要がある
-  late MockAuthNotifier mockNotifier;
-  setUp(() async {
-    mockNotifier = MockAuthNotifier();
-    when(() => mockNotifier.state).thenReturn(const AsyncData(null));
-  });
+  group('LoginScreen', () {
+    // すべてのtestWidgetsで1度だけ初期化
+    final screenSize = Size(411, 914);
+    final testScreen = LoginScreen();
 
-  final screenSize = Size(411, 914);
-  final testScreen = LoginScreen();
+    // WidgetでRiverPodのref.watch()を使用している場合はモックする必要がある
+    late MockAuthNotifier mockNotifier;
 
-  testWidgets('LoginScreen1', (tester) async {
-    // 画面サイズ設定
-    await tester.binding.setSurfaceSize(screenSize);
-    await tester.pumpAndSettle();
-    await tester.pumpWidget(
-      // RiverPodのscopeをmockでoverride
-      ProviderScope(
-        overrides: [authNotifierProvider.overrideWith(() => mockNotifier)],
-        child: MaterialApp(theme: AppTheme.lightTheme, home: testScreen),
-      ),
-    );
-    // アニメーション完了待機
-    await tester.pumpAndSettle();
-    // Golden Test
-    await expectLater(
-      find.byType(LoginScreen),
-      matchesGoldenFile('goldens/login_screen1.png'),
-    );
-  });
+    // setUpはtestWidgetsごとに初期化される
+    // testWidgetsごとに初期状態にしたい場合、可変な変数を定義する場合に利用
+    setUp(() async {
+      mockNotifier = MockAuthNotifier();
+    });
 
-  goldenTest(
-    'LoginScreen2',
-    fileName: 'login_screen2',
-    pumpBeforeTest: (tester) async {
+    testWidgets('login_screen1', (tester) async {
+      // 画面サイズ設定
       await tester.binding.setSurfaceSize(screenSize);
       await tester.pumpAndSettle();
-    },
-    pumpWidget: (tester, builder) async {
-      await tester.pumpWidget(builder);
-      await tester.pumpAndSettle();
-    },
-    builder: () {
-      return ProviderScope(
-        // ignore: scoped_providers_should_specify_dependencies
-        overrides: [authNotifierProvider.overrideWith(() => mockNotifier)],
-        child: GoldenTestScenario(
-          name: 'LoginScreen2',
-          constraints: BoxConstraints.tight(screenSize),
-          child: testScreen,
+      await tester.pumpWidget(
+        // RiverPodのscopeをmockでoverride
+        ProviderScope(
+          overrides: [authNotifierProvider.overrideWith(() => mockNotifier)],
+          child: MaterialApp(theme: AppTheme.lightTheme, home: testScreen),
         ),
       );
-    },
-  );
+      // アニメーション完了待機
+      await tester.pumpAndSettle();
+      // Golden Test
+      await expectLater(
+        find.byType(LoginScreen),
+        matchesGoldenFile('goldens/login_screen1.png'),
+      );
+    });
+
+    goldenTest(
+      'login_screen2',
+      fileName: 'login_screen2',
+      pumpBeforeTest: (tester) async {
+        await tester.binding.setSurfaceSize(screenSize);
+        await tester.pumpAndSettle();
+      },
+      pumpWidget: (tester, builder) async {
+        await tester.pumpWidget(builder);
+        await tester.pumpAndSettle();
+      },
+      builder: () {
+        return ProviderScope(
+          // ignore: scoped_providers_should_specify_dependencies
+          overrides: [authNotifierProvider.overrideWith(() => mockNotifier)],
+          child: GoldenTestScenario(
+            name: 'login_screen2',
+            constraints: BoxConstraints.tight(screenSize),
+            child: testScreen,
+          ),
+        );
+      },
+    );
+  });
 }

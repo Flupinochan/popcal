@@ -17,13 +17,13 @@ FirebaseAuth firebaseAuth(Ref ref) {
 }
 
 @riverpod
-AuthRepositoryFirebase firebaseAuthDataSource(Ref ref) {
+AuthRepositoryFirebase authRepositoryFirebase(Ref ref) {
   return AuthRepositoryFirebase(ref.watch(firebaseAuthProvider));
 }
 
 @riverpod
 AuthRepository authRepository(Ref ref) {
-  return AuthRepositoryImpl(ref.watch(firebaseAuthDataSourceProvider));
+  return AuthRepositoryImpl(ref.watch(authRepositoryFirebaseProvider));
 }
 
 // 認証状態取得Stream => auth_state.dart で Dtoへ変換

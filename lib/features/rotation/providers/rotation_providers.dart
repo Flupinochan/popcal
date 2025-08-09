@@ -16,20 +16,20 @@ FirebaseFirestore firebaseFirestore(Ref ref) {
 }
 
 @riverpod
-RotationRepositoryFirebase firebaseRotationDatasource(Ref ref) {
+RotationRepositoryFirebase rotationRepositoryFirebase(Ref ref) {
   return RotationRepositoryFirebase(ref.watch(firebaseFirestoreProvider));
 }
 
 @riverpod
 RotationRepository rotationRepository(Ref ref) {
-  return RotationRepositoryImpl(ref.watch(firebaseRotationDatasourceProvider));
+  return RotationRepositoryImpl(ref.watch(rotationRepositoryFirebaseProvider));
 }
 
 @riverpod
 CreateRotationUseCase createRotationUseCase(Ref ref) {
   return CreateRotationUseCase(
     ref.watch(rotationRepositoryProvider),
-    ref.watch(notificationRepositoryProvider),
+    ref.watch(notificationGatewayProvider),
     ref.watch(rotationCalculationServiceProvider),
   );
 }
@@ -38,7 +38,7 @@ CreateRotationUseCase createRotationUseCase(Ref ref) {
 UpdateRotationUseCase updateRotationUseCase(Ref ref) {
   return UpdateRotationUseCase(
     ref.watch(rotationRepositoryProvider),
-    ref.watch(notificationRepositoryProvider),
+    ref.watch(notificationGatewayProvider),
     ref.watch(rotationCalculationServiceProvider),
   );
 }

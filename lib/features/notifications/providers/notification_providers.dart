@@ -30,13 +30,13 @@ NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
 }
 
 @riverpod
-NotificationGateway notificationRepository(Ref ref) {
+NotificationGateway notificationGateway(Ref ref) {
   return NotificationGatewayImpl(ref.watch(notificationGatewayLocalProvider));
 }
 
 @riverpod
 Future<Result<void>> notificationInitialization(Ref ref) async {
-  final notificationRepository = ref.watch(notificationRepositoryProvider);
+  final notificationRepository = ref.watch(notificationGatewayProvider);
   return await notificationRepository.initializeNotification();
 }
 
@@ -44,7 +44,7 @@ Future<Result<void>> notificationInitialization(Ref ref) async {
 SyncNotificationsUseCase syncNotificationsUseCase(Ref ref) {
   return SyncNotificationsUseCase(
     ref.watch(rotationRepositoryProvider),
-    ref.watch(notificationRepositoryProvider),
+    ref.watch(notificationGatewayProvider),
     ref.watch(rotationCalculationServiceProvider),
   );
 }
@@ -55,7 +55,7 @@ RotationCalculationService rotationCalculationService(Ref ref) {
 }
 
 @riverpod
-BuildCalendarScheduleUseCase calendarScheduleUseCase(Ref ref) {
+BuildCalendarScheduleUseCase buildCalendarScheduleUseCase(Ref ref) {
   return BuildCalendarScheduleUseCase(
     ref.watch(rotationCalculationServiceProvider),
   );
