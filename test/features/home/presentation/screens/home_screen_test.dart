@@ -64,10 +64,10 @@ void main() {
         RotationMemberName('tester1-2'),
       ],
       rotationDays: [Weekday.monday, Weekday.sunday],
-      notificationTime: NotificationTime.now(),
+      notificationTime: NotificationTime(TimeOfDay(hour: 15, minute: 0)),
       currentRotationIndex: RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime.now()),
-      updatedAt: RotationUpdatedAt(DateTime.now()),
+      createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9, 0)),
+      updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9, 0)),
     ),
     RotationResponse(
       rotationId: RotationId('test-rotation-id-2'),
@@ -78,10 +78,10 @@ void main() {
         RotationMemberName('tester2-2'),
       ],
       rotationDays: [Weekday.monday, Weekday.sunday],
-      notificationTime: NotificationTime.now(),
+      notificationTime: NotificationTime(TimeOfDay(hour: 16, minute: 0)),
       currentRotationIndex: RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime.now()),
-      updatedAt: RotationUpdatedAt(DateTime.now()),
+      createdAt: RotationCreatedAt(DateTime(2025, 9, 1, 9, 0)),
+      updatedAt: RotationUpdatedAt(DateTime(2025, 9, 1, 9, 0)),
     ),
   ];
 

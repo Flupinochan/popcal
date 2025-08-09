@@ -9,6 +9,15 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
+import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
@@ -20,6 +29,18 @@ void main() {
   final mockUser = UserResponse(
     userId: UserId('test-user-id'),
     email: Email('test@example.com'),
+  );
+  final rotationId = RotationId('test-rotation-id');
+  final rotationResponse = RotationResponse(
+    rotationId: rotationId,
+    userId: mockUser.userId,
+    rotationName: RotationName('test-rotation-name'),
+    rotationMembers: [RotationMemberName('user1'), RotationMemberName('user2')],
+    rotationDays: [Weekday.monday, Weekday.friday],
+    notificationTime: NotificationTime(TimeOfDay(hour: 9, minute: 0)),
+    currentRotationIndex: RotationIndex(0),
+    createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9, 0)),
+    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9, 0)),
   );
 
   group('RotationScreen', () {
@@ -58,6 +79,35 @@ void main() {
           }),
           rotationNotifierProvider.overrideWith(() => MockRotationNotifier()),
           nowProvider.overrideWith((ref) => DateTime(2025, 8, 31, 9, 0)),
+        ]);
+      },
+    );
+
+    goldenTest(
+      'update_rotation_screen',
+      fileName: 'update_rotation_screen',
+      pumpBeforeTest: (tester) async {
+        await tester.binding.setSurfaceSize(screenSize);
+        await tester.pumpAndSettle();
+      },
+      pumpWidget: (tester, builder) async {
+        await tester.pumpWidget(builder);
+        await tester.pumpAndSettle();
+      },
+      builder: () {
+        return buildTestWidget([
+          rotationDataResponseProvider(null).overrideWith((_) {
+            return Future.value(
+              Results.success(RotationDataResponse(mockUser, null)),
+            );
+          }),
+          rotationNotifierProvider.overrideWith(() => MockRotationNotifier()),
+          nowProvider.overrideWith((ref) => DateTime(2025, 8, 31, 9, 0)),
+          rotationDataResponseProvider(null).overrideWith((ref) {
+            return Future.value(
+              Results.success(RotationDataResponse(mockUser, rotationResponse)),
+            );
+          }),
         ]);
       },
     );
