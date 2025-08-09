@@ -12,11 +12,13 @@ import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
@@ -73,41 +75,31 @@ void main() {
     email: Email('test@example.com'),
   );
 
-  group('HomeScreenEmpty', () {
-    final testScreen = HomeScreen();
-    // RiverPodのmock
-    final mockNotificationGateway = MockNotificationGateway();
-    final container = ProviderContainer(
-      overrides: [
-        notificationGatewayProvider.overrideWith((ref) {
-          return mockNotificationGateway;
-        }),
-        authStateChangesForUIProvider.overrideWith(
-          (ref) => Stream.value(Results.success(mockUser)),
+  group('HomeScreen', () {
+    Widget buildTestWidget(List<Override> otherOverrides) {
+      final container = ProviderContainer(
+        overrides: [
+          notificationGatewayProvider.overrideWith((ref) {
+            return MockNotificationGateway();
+          }),
+          authStateChangesForUIProvider.overrideWith(
+            (ref) => Stream.value(Results.success(mockUser)),
+          ),
+          syncNotificationsUseCaseProvider.overrideWith((ref) {
+            return MockSyncNotificationsUseCase();
+          }),
+          ...otherOverrides,
+        ],
+      );
+      return UncontrolledProviderScope(
+        container: container,
+        child: GoldenTestScenario(
+          name: 'home_screen',
+          constraints: BoxConstraints.tight(screenSize),
+          child: HomeScreen(),
         ),
-        rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
-          ref,
-        ) {
-          return Stream.value(Results.success([]));
-        }),
-        syncNotificationsUseCaseProvider.overrideWith((ref) {
-          return MockSyncNotificationsUseCase();
-        }),
-        rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
-          ref,
-        ) {
-          return Stream.value(Results.success([]));
-        }),
-      ],
-    );
-    final testWidget = UncontrolledProviderScope(
-      container: container,
-      child: GoldenTestScenario(
-        name: 'home_screen_empty',
-        constraints: BoxConstraints.tight(screenSize),
-        child: testScreen,
-      ),
-    );
+      );
+    }
 
     goldenTest(
       'home_screen_empty',
@@ -121,7 +113,66 @@ void main() {
         await tester.pumpAndSettle();
       },
       builder: () {
-        return testWidget;
+        return buildTestWidget([
+          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
+            ref,
+          ) {
+            return Stream.value(Results.success([]));
+          }),
+        ]);
+      },
+    );
+
+    goldenTest(
+      'home_screen',
+      fileName: 'home_screen',
+      pumpBeforeTest: (tester) async {
+        await tester.binding.setSurfaceSize(screenSize);
+        await tester.pumpAndSettle();
+      },
+      pumpWidget: (tester, builder) async {
+        await tester.pumpWidget(builder);
+        await tester.pumpAndSettle();
+      },
+      builder: () {
+        List<RotationResponse> rotations = [
+          RotationResponse(
+            rotationId: RotationId('test-rotation-id-1'),
+            userId: UserId('test-user-id-1'),
+            rotationName: RotationName('test-rotation-name-1'),
+            rotationMembers: [
+              RotationMemberName('tester1-1'),
+              RotationMemberName('tester1-2'),
+            ],
+            rotationDays: [Weekday.monday, Weekday.sunday],
+            notificationTime: NotificationTime.now(),
+            currentRotationIndex: RotationIndex(0),
+            createdAt: RotationCreatedAt(DateTime.now()),
+            updatedAt: RotationUpdatedAt(DateTime.now()),
+          ),
+          RotationResponse(
+            rotationId: RotationId('test-rotation-id-2'),
+            userId: UserId('test-user-id-2'),
+            rotationName: RotationName('test-rotation-name-2'),
+            rotationMembers: [
+              RotationMemberName('tester2-1'),
+              RotationMemberName('tester2-2'),
+            ],
+            rotationDays: [Weekday.monday, Weekday.sunday],
+            notificationTime: NotificationTime.now(),
+            currentRotationIndex: RotationIndex(0),
+            createdAt: RotationCreatedAt(DateTime.now()),
+            updatedAt: RotationUpdatedAt(DateTime.now()),
+          ),
+        ];
+
+        return buildTestWidget([
+          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
+            ref,
+          ) {
+            return Stream.value(Results.success(rotations));
+          }),
+        ]);
       },
     );
   });

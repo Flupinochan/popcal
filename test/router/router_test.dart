@@ -96,11 +96,6 @@ void main() {
           syncNotificationsUseCaseProvider.overrideWith((ref) {
             return MockSyncNotificationsUseCase();
           }),
-          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
-            ref,
-          ) {
-            return Stream.value(Results.success([]));
-          }),
           ...otherOverrides,
         ],
       );
