@@ -17,8 +17,8 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
       ),
       ciGoldensConfig: CiGoldensConfig(
         enabled: true,
-        obscureText: false,
-        renderShadows: true,
+        obscureText: true,
+        renderShadows: false,
         theme: AppTheme.lightTheme,
       ),
     ),

@@ -2,13 +2,16 @@ import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
+import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
@@ -24,6 +27,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_a
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
+import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 
 class MockNotificationGateway extends Mock implements NotificationGateway {
@@ -48,32 +52,42 @@ class MockRotationRepository extends Mock implements RotationRepository {
   }
 }
 
-class MockRotationNotifier extends Mock implements RotationNotifier {
-  @override
-  Future<Result<RotationResponse>> createRotation(
-    CreateRotationRequest dto,
-  ) async {
-    final rotation = RotationResponse(
-      rotationId: RotationId('test-rotation-id'),
-      userId: UserId('test-user-id'),
-      rotationName: RotationName('test-rotation-name'),
-      rotationMembers: [],
-      rotationDays: [],
-      notificationTime: NotificationTime.now(),
-      currentRotationIndex: RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime.now()),
-      updatedAt: RotationUpdatedAt(DateTime.now()),
-    );
-    return Results.success(rotation);
-  }
-}
-
 void main() {
   final screenSize = Size(411, 914);
   final mockUser = UserResponse(
     userId: UserId('test-user-id'),
     email: Email('test@example.com'),
   );
+  List<RotationResponse> rotations = [
+    RotationResponse(
+      rotationId: RotationId('test-rotation-id-1'),
+      userId: UserId('test-user-id-1'),
+      rotationName: RotationName('test-rotation-name-1'),
+      rotationMembers: [
+        RotationMemberName('tester1-1'),
+        RotationMemberName('tester1-2'),
+      ],
+      rotationDays: [Weekday.monday, Weekday.sunday],
+      notificationTime: NotificationTime.now(),
+      currentRotationIndex: RotationIndex(0),
+      createdAt: RotationCreatedAt(DateTime.now()),
+      updatedAt: RotationUpdatedAt(DateTime.now()),
+    ),
+    RotationResponse(
+      rotationId: RotationId('test-rotation-id-2'),
+      userId: UserId('test-user-id-2'),
+      rotationName: RotationName('test-rotation-name-2'),
+      rotationMembers: [
+        RotationMemberName('tester2-1'),
+        RotationMemberName('tester2-2'),
+      ],
+      rotationDays: [Weekday.monday, Weekday.sunday],
+      notificationTime: NotificationTime.now(),
+      currentRotationIndex: RotationIndex(0),
+      createdAt: RotationCreatedAt(DateTime.now()),
+      updatedAt: RotationUpdatedAt(DateTime.now()),
+    ),
+  ];
 
   group('HomeScreen', () {
     Widget buildTestWidget(List<Override> otherOverrides) {
@@ -93,10 +107,14 @@ void main() {
       );
       return UncontrolledProviderScope(
         container: container,
-        child: GoldenTestScenario(
-          name: 'home_screen',
-          constraints: BoxConstraints.tight(screenSize),
-          child: HomeScreen(),
+        // Scaffold Messengerを利用するにはMaterialAppでWrapが必要
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: GoldenTestScenario(
+            name: 'home_screen',
+            constraints: BoxConstraints.tight(screenSize),
+            child: HomeScreen(),
+          ),
         ),
       );
     }
@@ -135,37 +153,6 @@ void main() {
         await tester.pumpAndSettle();
       },
       builder: () {
-        List<RotationResponse> rotations = [
-          RotationResponse(
-            rotationId: RotationId('test-rotation-id-1'),
-            userId: UserId('test-user-id-1'),
-            rotationName: RotationName('test-rotation-name-1'),
-            rotationMembers: [
-              RotationMemberName('tester1-1'),
-              RotationMemberName('tester1-2'),
-            ],
-            rotationDays: [Weekday.monday, Weekday.sunday],
-            notificationTime: NotificationTime.now(),
-            currentRotationIndex: RotationIndex(0),
-            createdAt: RotationCreatedAt(DateTime.now()),
-            updatedAt: RotationUpdatedAt(DateTime.now()),
-          ),
-          RotationResponse(
-            rotationId: RotationId('test-rotation-id-2'),
-            userId: UserId('test-user-id-2'),
-            rotationName: RotationName('test-rotation-name-2'),
-            rotationMembers: [
-              RotationMemberName('tester2-1'),
-              RotationMemberName('tester2-2'),
-            ],
-            rotationDays: [Weekday.monday, Weekday.sunday],
-            notificationTime: NotificationTime.now(),
-            currentRotationIndex: RotationIndex(0),
-            createdAt: RotationCreatedAt(DateTime.now()),
-            updatedAt: RotationUpdatedAt(DateTime.now()),
-          ),
-        ];
-
         return buildTestWidget([
           rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
             ref,
@@ -173,6 +160,46 @@ void main() {
             return Stream.value(Results.success(rotations));
           }),
         ]);
+      },
+    );
+
+    goldenTest(
+      'dismissible_delete_rotation',
+      fileName: 'dismissible_delete_rotation',
+      pumpBeforeTest: (tester) async {
+        await tester.binding.setSurfaceSize(screenSize);
+        await tester.pumpAndSettle();
+      },
+      pumpWidget: (tester, builder) async {
+        await tester.pumpWidget(builder);
+        await tester.pumpAndSettle();
+      },
+      builder: () {
+        return buildTestWidget([
+          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
+            ref,
+          ) {
+            return Stream.value(Results.success(rotations));
+          }),
+          rotationRepositoryProvider.overrideWith((ref) {
+            return MockRotationRepository();
+          }),
+        ]);
+      },
+      // Golden Test前のユーザ操作
+      whilePerforming: (tester) async {
+        await tester.pumpAndSettle();
+
+        // DismissibleをスライドしてRotationを削除
+        final dismissible = find.byType(Dismissible).first;
+        expect(dismissible, findsOneWidget);
+        await tester.drag(dismissible, const Offset(500, 0));
+        await tester.pumpAndSettle();
+
+        // SnackBarの存在確認
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('元に戻す'), findsOneWidget);
+        return;
       },
     );
   });

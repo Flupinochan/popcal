@@ -16,16 +16,6 @@ import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
-import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
-import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
-import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 import 'package:popcal/router/router.dart';
 import 'package:popcal/router/routes.dart';
@@ -42,33 +32,6 @@ class MockSyncNotificationsUseCase extends Mock
   @override
   Future<Result<void>> execute(String ownerUserId) async {
     return Results.success(null);
-  }
-}
-
-class MockRotationRepository extends Mock implements RotationRepository {
-  @override
-  Future<Result<void>> deleteRotation(String userId, String rotationId) async {
-    return Results.success(null);
-  }
-}
-
-class MockRotationNotifier extends Mock implements RotationNotifier {
-  @override
-  Future<Result<RotationResponse>> createRotation(
-    CreateRotationRequest dto,
-  ) async {
-    final rotation = RotationResponse(
-      rotationId: RotationId('test-rotation-id'),
-      userId: UserId('test-user-id'),
-      rotationName: RotationName('test-rotation-name'),
-      rotationMembers: [],
-      rotationDays: [],
-      notificationTime: NotificationTime.now(),
-      currentRotationIndex: RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime.now()),
-      updatedAt: RotationUpdatedAt(DateTime.now()),
-    );
-    return Results.success(rotation);
   }
 }
 

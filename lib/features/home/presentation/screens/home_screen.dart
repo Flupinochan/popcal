@@ -217,7 +217,8 @@ class HomeScreen extends HookConsumerWidget {
       success: (_) {
         SnackBarUtils.showGlassSnackBarWithAction(
           context: context,
-          message: '${rotationResponse.rotationName}を削除しました',
+          flexibleMessage: rotationResponse.rotationName.value,
+          fixedMessage: 'を削除しました',
           onAction: () async {
             // 再作成処理
             final createDto = CreateRotationRequest(
@@ -238,13 +239,14 @@ class HomeScreen extends HookConsumerWidget {
               success: (_) {
                 SnackBarUtils.showGlassSnackBar(
                   context: context,
-                  message: '${rotationResponse.rotationName}を元に戻しました',
+                  flexibleMessage: rotationResponse.rotationName.value,
+                  fixedMessage: 'を元に戻しました',
                 );
               },
               failure: (error) {
                 SnackBarUtils.showGlassSnackBar(
                   context: context,
-                  message: '復元に失敗しました: $error',
+                  flexibleMessage: '復元に失敗しました',
                 );
               },
             );
@@ -255,7 +257,7 @@ class HomeScreen extends HookConsumerWidget {
       failure: (error) {
         SnackBarUtils.showGlassSnackBar(
           context: context,
-          message: '削除に失敗しました: $error',
+          flexibleMessage: '削除に失敗しました',
         );
       },
     );

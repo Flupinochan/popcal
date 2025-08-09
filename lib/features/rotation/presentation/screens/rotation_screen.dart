@@ -208,14 +208,17 @@ Future<void> _handleSubmit(
       );
 
       if (context.mounted) {
-        SnackBarUtils.showGlassSnackBar(context: context, message: message);
+        SnackBarUtils.showGlassSnackBar(
+          context: context,
+          flexibleMessage: message,
+        );
         Navigator.pop(context);
       }
     } catch (error) {
       if (context.mounted) {
         SnackBarUtils.showGlassSnackBar(
           context: context,
-          message: 'エラーが発生しました: $error',
+          flexibleMessage: 'エラーが発生しました',
         );
       }
     }
