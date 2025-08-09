@@ -1,8 +1,10 @@
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_local.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 
 class NotificationGatewayImpl implements NotificationGateway {
   final NotificationGatewayLocal _localNotificationsDatasource;
@@ -52,19 +54,22 @@ class NotificationGatewayImpl implements NotificationGateway {
 
   /// 2. 通知予定のスケジュールを一覧取得
   @override
-  Future<Result<List<int>>> getNotifications() async {
+  Future<Result<List<NotificationId>>> getNotifications() async {
     final result = await _localNotificationsDatasource.getNotifications();
     return result.when(
-      success: (notificationIds) => Results.success(notificationIds),
+      success:
+          (notificationIds) => Results.success(
+            notificationIds.map((id) => NotificationId(id)).toList(),
+          ),
       failure: (error) => Results.failure(error),
     );
   }
 
   /// 4-1. 特定の通知を削除
   @override
-  Future<Result<void>> deleteNotification(int notificationId) async {
+  Future<Result<void>> deleteNotification(NotificationId notificationId) async {
     final result = await _localNotificationsDatasource.deleteNotification(
-      notificationId,
+      notificationId.value,
     );
     return result.when(
       success: (_) => Results.success(null),
@@ -75,10 +80,10 @@ class NotificationGatewayImpl implements NotificationGateway {
   /// 4-2 特定のrotationIdの通知を削除
   @override
   Future<Result<void>> deleteNotificationsByRotationId(
-    String rotationId,
+    RotationId rotationId,
   ) async {
     final result = await _localNotificationsDatasource
-        .deleteNotificationsByRotationId(rotationId);
+        .deleteNotificationsByRotationId(rotationId.value);
     return result.when(
       success: (_) => Results.success(null),
       failure: (error) => Results.failure(error),

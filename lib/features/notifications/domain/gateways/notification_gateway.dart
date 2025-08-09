@@ -1,5 +1,7 @@
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 
 /// 1. CRUD操作
 abstract class NotificationGateway {
@@ -15,17 +17,16 @@ abstract class NotificationGateway {
   Future<Result<void>> createNotification(NotificationEntry notificationEntry);
 
   /// 2. 通知予定のスケジュールを一覧取得
-  /// rotationIdのListを取得
-  Future<Result<List<int>>> getNotifications();
+  Future<Result<List<NotificationId>>> getNotifications();
 
   /// 3. 通知を更新
   /// ※local notificationにupdateは存在しないため UseCase層を作成し delete + create で実装する
 
   /// 4-1. 特定の通知を削除
-  Future<Result<void>> deleteNotification(int notificationId);
+  Future<Result<void>> deleteNotification(NotificationId notificationId);
 
   /// 4-2 特定のrotationIdの通知を削除
-  Future<Result<void>> deleteNotificationsByRotationId(String rotationId);
+  Future<Result<void>> deleteNotificationsByRotationId(RotationId rotationId);
 
   /// 4-3. 全通知を削除
   Future<Result<void>> deleteAllNotifications();

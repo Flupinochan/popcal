@@ -24,7 +24,7 @@ class UpdateRotationUseCase {
 
     // 1. ローテーショングループを削除
     final deleteResult = await _notificationRepository
-        .deleteNotificationsByRotationId(rotation.rotationId!.value);
+        .deleteNotificationsByRotationId(rotation.rotationId!);
     if (deleteResult.isFailure) {
       return Results.failure(deleteResult.failureOrNull!);
     }

@@ -2,6 +2,7 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -33,7 +34,7 @@ class SyncNotificationsUseCase {
     if (notificationResult.isFailure) {
       return Results.failure(notificationResult.failureOrNull!);
     }
-    final currentLocalNotificationIds = notificationResult.valueOrNull!.toSet();
+    final currentLocalRotationIds = notificationResult.valueOrNull!.toSet();
 
     // 3. 各ローテーショングループの通知設定を現在時刻から再計算
     String? errorMessage;
@@ -50,7 +51,7 @@ class SyncNotificationsUseCase {
       // 3-2. 通知作成を同期
       final createResult = await createSync(
         result,
-        currentLocalNotificationIds,
+        currentLocalRotationIds,
         rotation,
       );
       if (createResult.isFailure) {
@@ -59,10 +60,7 @@ class SyncNotificationsUseCase {
       }
 
       // 3.3 通知削除を同期
-      final deleteResult = await deleteSync(
-        result,
-        currentLocalNotificationIds,
-      );
+      final deleteResult = await deleteSync(result, currentLocalRotationIds);
       if (deleteResult.isFailure) {
         errorMessage = deleteResult.failureOrNull!.message;
         continue;
@@ -78,7 +76,7 @@ class SyncNotificationsUseCase {
   // ローカル通知の作成を同期
   Future<Result<void>> createSync(
     NotificationSchedule result,
-    Set<int> currentLocalNotificationIds,
+    Set<NotificationId> currentLocalRotationIds,
     Rotation rotation,
   ) async {
     String? errorMessage;
@@ -86,9 +84,7 @@ class SyncNotificationsUseCase {
     // 不足しているローカル通知設定を取得
     final missingNotifications =
         result.notificationEntry.where((notification) {
-          return !currentLocalNotificationIds.contains(
-            notification.notificationId,
-          );
+          return !currentLocalRotationIds.contains(notification.notificationId);
         }).toList();
 
     // 不足分の通知を作成
@@ -125,18 +121,18 @@ class SyncNotificationsUseCase {
   // ローカル通知の削除を同期
   Future<Result<void>> deleteSync(
     NotificationSchedule result,
-    Set<int> currentLocalNotificationIds,
+    Set<NotificationId> currentLocalRotationIds,
   ) async {
     String? errorMessage;
 
     // 計算結果の通知Idsを取得
-    final validNotificationIds = <int>{};
+    final validNotificationIds = <NotificationId>{};
     for (final notification in result.notificationEntry) {
-      validNotificationIds.add(notification.notificationId.value);
+      validNotificationIds.add(notification.notificationId);
     }
 
     // 計算結果の通知Idsに含まれていない現在設定されている通知Idsは削除対象
-    final deleteTargetIds = currentLocalNotificationIds.where(
+    final deleteTargetIds = currentLocalRotationIds.where(
       (id) => !validNotificationIds.contains(id),
     );
 
