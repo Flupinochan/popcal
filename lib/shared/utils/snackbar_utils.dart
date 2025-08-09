@@ -59,12 +59,14 @@ class SnackBarUtils {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTwoPartMessage(
-                flexibleMessage: flexibleMessage,
-                fixedMessage: fixedMessage,
-                style: textTheme.bodyLarge!,
+              Expanded(
+                child: _buildTwoPartMessage(
+                  flexibleMessage: flexibleMessage,
+                  fixedMessage: fixedMessage,
+                  style: textTheme.bodyLarge!,
+                ),
               ),
-              const SizedBox(width: 24),
+              const SizedBox(width: 12),
               GlassButton(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 gradient: glassTheme.backgroundGradientStrong,
@@ -95,28 +97,29 @@ class SnackBarUtils {
     String? fixedMessage, // 右側の固定幅メッセージ
     required TextStyle style,
   }) {
-    return Expanded(
-      child:
-          fixedMessage == null
-              ? Text(
+    return fixedMessage == null
+        ? Flexible(
+          child: Text(
+            flexibleMessage,
+            style: style,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        )
+        : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
                 flexibleMessage,
                 style: style,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
-              )
-              : Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      flexibleMessage,
-                      style: style,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                  Text(fixedMessage, style: style, maxLines: 1),
-                ],
               ),
-    );
+            ),
+            Text(fixedMessage, style: style, maxLines: 1),
+          ],
+        );
   }
 }

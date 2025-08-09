@@ -205,19 +205,11 @@ Future<void> _handleSubmit(
         result = await rotationController.createRotation(dto);
       }
 
-      final message = result.when(
-        success:
-            (_) =>
-                isUpdateMode
-                    ? '${formData['rotationName']}を更新しました'
-                    : '${formData['rotationName']}を作成しました',
-        failure: (error) => error.message,
-      );
-
       if (context.mounted) {
         SnackBarUtils.showGlassSnackBar(
           context: context,
-          flexibleMessage: message,
+          flexibleMessage: formData['rotationName'].toString(),
+          fixedMessage: isUpdateMode ? 'を更新しました' : 'を作成しました',
         );
         Navigator.pop(context);
       }
