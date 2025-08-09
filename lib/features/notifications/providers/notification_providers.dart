@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/features/calendar/use_cases/build_calendar_schedule_use_case.dart';
 import 'package:popcal/router/routes.dart';
+import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_local.dart';
@@ -27,7 +28,7 @@ NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
     ref.watch(routerProvider(initialLocation: Routes.home)),
     ref.watch(flutterLocalNotificationsPluginProvider),
     ref.watch(loggerProvider("NotificationGatewayLocal")),
-    ref.watch(nowProvider),
+    ref.watch(timeUtilsProvider),
   );
 }
 
@@ -53,7 +54,7 @@ SyncNotificationsUseCase syncNotificationsUseCase(Ref ref) {
 
 @riverpod
 RotationCalculationService rotationCalculationService(Ref ref) {
-  return RotationCalculationServiceImpl();
+  return RotationCalculationServiceImpl(ref.watch(timeUtilsProvider));
 }
 
 @riverpod

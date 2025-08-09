@@ -32,7 +32,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
   // DTO => Entity
   Result<Rotation> toEntity() {
     try {
-      final currentTime = TimeUtils.getLocalDateTime();
+      final currentTime = TimeUtilsImpl.getLocalDateTime();
 
       return Results.success(
         Rotation(

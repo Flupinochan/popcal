@@ -1,7 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'core_provider.g.dart';
@@ -15,9 +14,4 @@ Future<PackageInfo> packageInfo(Ref ref) async {
 Logger logger(Ref ref, String loggerName) {
   final logger = Logger(loggerName);
   return logger;
-}
-
-@riverpod
-DateTime now(Ref ref) {
-  return TimeUtils.getLocalDateTime();
 }

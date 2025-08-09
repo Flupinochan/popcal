@@ -28,7 +28,7 @@ final flutterLocalNotificationsPluginProvider =
 typedef FlutterLocalNotificationsPluginRef =
     AutoDisposeProviderRef<FlutterLocalNotificationsPlugin>;
 String _$notificationGatewayLocalHash() =>
-    r'd2b30baa2e0cd9ff29d7d8012355e59bd9255d74';
+    r'e98a8127dc863649fbcb1071c2a9c48ac86b7943';
 
 /// See also [notificationGatewayLocal].
 @ProviderFor(notificationGatewayLocal)
@@ -111,7 +111,7 @@ final syncNotificationsUseCaseProvider =
 typedef SyncNotificationsUseCaseRef =
     AutoDisposeProviderRef<SyncNotificationsUseCase>;
 String _$rotationCalculationServiceHash() =>
-    r'7be1023d473cd126df50e228b1b5ed46581c2dbe';
+    r'c67900665e819a4717af3ff37ef0e8e8d7228593';
 
 /// See also [rotationCalculationService].
 @ProviderFor(rotationCalculationService)

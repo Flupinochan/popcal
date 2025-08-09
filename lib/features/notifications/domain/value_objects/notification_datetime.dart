@@ -5,7 +5,7 @@ import 'package:popcal/shared/utils/time_utils.dart';
 
 extension type NotificationDateTime(DateTime value) {
   factory NotificationDateTime.now() =>
-      NotificationDateTime(TimeUtils.getLocalDateTime());
+      NotificationDateTime(TimeUtilsImpl.getLocalDateTime());
 
   factory NotificationDateTime.fromDateAndTime({
     required DateTime date,

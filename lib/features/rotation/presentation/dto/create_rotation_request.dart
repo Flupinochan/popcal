@@ -29,7 +29,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
   /// DTO => Entity
   Result<Rotation> toEntity() {
     try {
-      final currentTime = TimeUtils.getLocalDateTime();
+      final currentTime = TimeUtilsImpl.getLocalDateTime();
 
       return Results.success(
         Rotation(

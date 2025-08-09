@@ -12,6 +12,10 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.
 import 'package:popcal/shared/utils/time_utils.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
+  final TimeUtils _timeUtils;
+
+  RotationCalculationServiceImpl(this._timeUtils);
+
   /// 1. 次回の通知予定日を計算
   @override
   Result<DateTime> findNextRotationDate({
@@ -50,7 +54,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   }) {
     try {
       // 現在時刻をベース
-      final currentTime = TimeUtils.getLocalDateTime();
+      final currentTime = _timeUtils.now();
       final toDate = currentTime.add(Duration(days: futureDays));
 
       final notifications = <NotificationEntry>[];

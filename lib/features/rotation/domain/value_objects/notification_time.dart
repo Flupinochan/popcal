@@ -6,7 +6,7 @@ import 'package:popcal/shared/utils/time_utils.dart';
 extension type NotificationTime(TimeOfDay value) {
   // 現在時刻取得用
   factory NotificationTime.now() {
-    final now = TimeUtils.getLocalDateTime();
+    final now = TimeUtilsImpl.getLocalDateTime();
     return NotificationTime(TimeOfDay(hour: now.hour, minute: now.minute));
   }
 

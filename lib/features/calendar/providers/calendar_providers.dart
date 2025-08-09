@@ -1,8 +1,8 @@
-import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
+import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,6 +17,6 @@ GetCalendarScheduleUseCase getCalendarScheduleUseCase(Ref ref) {
     ref.watch(authRepositoryProvider),
     ref.watch(rotationRepositoryProvider),
     ref.watch(buildCalendarScheduleUseCaseProvider),
-    ref.watch(nowProvider),
+    ref.watch(timeUtilsProvider),
   );
 }

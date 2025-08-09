@@ -2,7 +2,7 @@ import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:popcal/core/providers/core_provider.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
@@ -23,6 +23,15 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_member_na
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
+import 'package:popcal/shared/providers/utils_providers.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
+
+class MockTimeUtilsImpl extends Mock implements TimeUtils {
+  @override
+  DateTime now() {
+    return DateTime(2025, 8, 31, 9, 0);
+  }
+}
 
 void main() {
   final screenSize = Size(411, 914);
@@ -84,7 +93,7 @@ void main() {
       },
       builder: () {
         return buildTestWidget([
-          nowProvider.overrideWith((ref) => DateTime(2025, 8, 31, 9, 0)),
+          timeUtilsProvider.overrideWith((ref) => MockTimeUtilsImpl()),
           calendarScheduleResponseProvider(rotationId).overrideWith((ref) {
             return Results.success(calendarScheduleResponse);
           }),

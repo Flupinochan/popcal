@@ -26,7 +26,7 @@ final firebaseFirestoreProvider =
 // ignore: unused_element
 typedef FirebaseFirestoreRef = AutoDisposeProviderRef<FirebaseFirestore>;
 String _$rotationRepositoryFirebaseHash() =>
-    r'439022bf695eda61a3416640592a4ca945d5362a';
+    r'c95615a7a72240abfc6b8c9f511cae388a27e18c';
 
 /// See also [rotationRepositoryFirebase].
 @ProviderFor(rotationRepositoryFirebase)

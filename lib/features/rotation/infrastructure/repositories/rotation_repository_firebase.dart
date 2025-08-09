@@ -8,8 +8,9 @@ import 'package:popcal/shared/utils/time_utils.dart';
 
 class RotationRepositoryFirebase {
   final FirebaseFirestore _firebaseFirestore;
+  final TimeUtils _timeUtils;
 
-  RotationRepositoryFirebase(this._firebaseFirestore);
+  RotationRepositoryFirebase(this._firebaseFirestore, this._timeUtils);
 
   // 1. 自動ローテーショングループ一覧取得
   Stream<Result<List<RotationFirebaseResponse>>> watchRotations(String userId) {
@@ -137,7 +138,7 @@ class RotationRepositoryFirebase {
 
       // updatedAtを現在時刻に更新
       final updatedDto = dto.copyWith(
-        updatedAt: RotationUpdatedAt(TimeUtils.getLocalDateTime()),
+        updatedAt: RotationUpdatedAt(_timeUtils.now()),
       );
 
       await docRef.update(updatedDto.toFirestore());

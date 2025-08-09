@@ -59,12 +59,10 @@ class SnackBarUtils {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: _buildTwoPartMessage(
-                  flexibleMessage: flexibleMessage,
-                  fixedMessage: fixedMessage,
-                  style: textTheme.bodyLarge!,
-                ),
+              _buildTwoPartMessage(
+                flexibleMessage: flexibleMessage,
+                fixedMessage: fixedMessage,
+                style: textTheme.bodyLarge!,
               ),
               const SizedBox(width: 12),
               GlassButton(
@@ -97,29 +95,30 @@ class SnackBarUtils {
     String? fixedMessage, // 右側の固定幅メッセージ
     required TextStyle style,
   }) {
-    return fixedMessage == null
-        ? Flexible(
-          child: Text(
-            flexibleMessage,
-            style: style,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        )
-        : Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: Text(
+    return Flexible(
+      child:
+          fixedMessage == null
+              ? Text(
                 flexibleMessage,
                 style: style,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
+              )
+              : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      flexibleMessage,
+                      style: style,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  Text(fixedMessage, style: style, maxLines: 1),
+                ],
               ),
-            ),
-            Text(fixedMessage, style: style, maxLines: 1),
-          ],
-        );
+    );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
@@ -24,7 +24,8 @@ class CalendarScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final now = ref.watch(nowProvider);
+    final timeUtils = ref.watch(timeUtilsProvider);
+    final now = timeUtils.now();
     final calendarDataAsync = ref.watch(
       calendarScheduleResponseProvider(rotationId),
     );
@@ -120,7 +121,7 @@ class CalendarScreen extends HookConsumerWidget {
         ),
         focusedDay: focusedDay.value,
         selectedDayPredicate:
-            (day) => TimeUtils.isSameDay(selectedDay.value, day),
+            (day) => TimeUtilsImpl.isSameDay(selectedDay.value, day),
         calendarFormat: CalendarFormat.month,
         startingDayOfWeek: StartingDayOfWeek.monday,
         sixWeekMonthsEnforced: true,

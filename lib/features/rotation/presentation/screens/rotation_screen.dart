@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -18,6 +17,7 @@ import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_bottom_action_bar.dart';
+import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
@@ -61,7 +61,8 @@ class RotationScreen extends HookConsumerWidget {
     final initialRotation = rotationData.rotationResponse;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
     final isLoading = ref.watch(rotationNotifierProvider).isLoading;
-    final now = ref.watch(nowProvider);
+    final timeUtils = ref.watch(timeUtilsProvider);
+    final now = timeUtils.now();
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -173,8 +174,6 @@ Future<void> _handleSubmit(
     final rotationController = ref.read(rotationNotifierProvider.notifier);
 
     try {
-      final Result<RotationResponse> result;
-
       if (isUpdateMode) {
         final dto = UpdateRotationRequest(
           userId: userDto.userId,
@@ -189,7 +188,7 @@ Future<void> _handleSubmit(
           ),
           createdAt: originalRotation.createdAt,
         );
-        result = await rotationController.updateRotation(dto);
+        await rotationController.updateRotation(dto);
       } else {
         final dto = CreateRotationRequest(
           userId: userDto.userId,
@@ -202,7 +201,7 @@ Future<void> _handleSubmit(
             formData['notificationTime'] as TimeOfDay,
           ),
         );
-        result = await rotationController.createRotation(dto);
+        await rotationController.createRotation(dto);
       }
 
       if (context.mounted) {
