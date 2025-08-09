@@ -7,7 +7,7 @@ part of 'calendar_loader.dart';
 // **************************************************************************
 
 String _$calendarScheduleResponseHash() =>
-    r'077637ef8abd9bef52782b584a3e6cbc6af56e66';
+    r'9a8fbf9a7bb78eb1ef3a1cdd708daf8e9174523f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,7 +41,7 @@ class CalendarScheduleResponseFamily
   const CalendarScheduleResponseFamily();
 
   /// See also [calendarScheduleResponse].
-  CalendarScheduleResponseProvider call(String rotationId) {
+  CalendarScheduleResponseProvider call(RotationId rotationId) {
     return CalendarScheduleResponseProvider(rotationId);
   }
 
@@ -71,7 +71,7 @@ class CalendarScheduleResponseFamily
 class CalendarScheduleResponseProvider
     extends AutoDisposeFutureProvider<Result<CalendarScheduleResponse>> {
   /// See also [calendarScheduleResponse].
-  CalendarScheduleResponseProvider(String rotationId)
+  CalendarScheduleResponseProvider(RotationId rotationId)
     : this._internal(
         (ref) => calendarScheduleResponse(
           ref as CalendarScheduleResponseRef,
@@ -99,7 +99,7 @@ class CalendarScheduleResponseProvider
     required this.rotationId,
   }) : super.internal();
 
-  final String rotationId;
+  final RotationId rotationId;
 
   @override
   Override overrideWith(
@@ -148,7 +148,7 @@ class CalendarScheduleResponseProvider
 mixin CalendarScheduleResponseRef
     on AutoDisposeFutureProviderRef<Result<CalendarScheduleResponse>> {
   /// The parameter `rotationId` of this provider.
-  String get rotationId;
+  RotationId get rotationId;
 }
 
 class _CalendarScheduleResponseProviderElement
@@ -157,7 +157,7 @@ class _CalendarScheduleResponseProviderElement
   _CalendarScheduleResponseProviderElement(super.provider);
 
   @override
-  String get rotationId =>
+  RotationId get rotationId =>
       (origin as CalendarScheduleResponseProvider).rotationId;
 }
 

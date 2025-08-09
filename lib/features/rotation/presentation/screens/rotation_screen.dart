@@ -9,6 +9,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
@@ -27,7 +28,7 @@ import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.da
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_weekday.dart';
 
 class RotationScreen extends HookConsumerWidget {
-  final String? rotationId;
+  final RotationId? rotationId;
 
   const RotationScreen({super.key, this.rotationId});
 

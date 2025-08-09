@@ -36,14 +36,17 @@ class MockNotificationGateway extends Mock implements NotificationGateway {
 class MockSyncNotificationsUseCase extends Mock
     implements SyncNotificationsUseCase {
   @override
-  Future<Result<void>> execute(String ownerUserId) async {
+  Future<Result<void>> execute(UserId userId) async {
     return Results.success(null);
   }
 }
 
 class MockRotationRepository extends Mock implements RotationRepository {
   @override
-  Future<Result<void>> deleteRotation(String userId, String rotationId) async {
+  Future<Result<void>> deleteRotation(
+    UserId userId,
+    RotationId rotationId,
+  ) async {
     return Results.success(null);
   }
 }
@@ -128,9 +131,7 @@ void main() {
       },
       builder: () {
         return buildTestWidget([
-          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
-            ref,
-          ) {
+          rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
             return Stream.value(Results.success([]));
           }),
         ]);
@@ -150,9 +151,7 @@ void main() {
       },
       builder: () {
         return buildTestWidget([
-          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
-            ref,
-          ) {
+          rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
             return Stream.value(Results.success(rotations));
           }),
         ]);
@@ -172,9 +171,7 @@ void main() {
       },
       builder: () {
         return buildTestWidget([
-          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
-            ref,
-          ) {
+          rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
             return Stream.value(Results.success(rotations));
           }),
           rotationRepositoryProvider.overrideWith((ref) {

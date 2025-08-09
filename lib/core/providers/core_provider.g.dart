@@ -156,7 +156,7 @@ class _LoggerProviderElement extends AutoDisposeProviderElement<Logger>
   String get loggerName => (origin as LoggerProvider).loggerName;
 }
 
-String _$nowHash() => r'd84dee611cbfb4616a95a7675cee917a5b7bdc22';
+String _$nowHash() => r'd0548a55e44770fcec7c89ea89cf65cc56e8b96e';
 
 /// See also [now].
 @ProviderFor(now)

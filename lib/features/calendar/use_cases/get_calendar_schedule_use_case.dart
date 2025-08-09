@@ -5,6 +5,7 @@ import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.
 import 'package:popcal/features/calendar/use_cases/build_calendar_schedule_use_case.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 
 class GetCalendarScheduleUseCase {
   // UIで表示する期間かつUseCaseで計算に必要な値
@@ -26,7 +27,7 @@ class GetCalendarScheduleUseCase {
 
   // CalendarScreen表示に必要な3つの情報を取得して返却
   // UseCaseは複数のビジネスロジックを実行するため、Entityを扱う
-  Future<Result<CalendarSchedule>> execute(String rotationId) async {
+  Future<Result<CalendarSchedule>> execute(RotationId rotationId) async {
     // 1. ユーザ情報を取得 ※.futureでstreamから1度だけ取得が可能
     final authResult = await _authRepository.getUser();
     if (authResult.isFailure) {
@@ -39,7 +40,7 @@ class GetCalendarScheduleUseCase {
 
     // 2. ローテーション情報取得
     final rotationResult = await _rotationRepository.getRotation(
-      appUser.userId.value,
+      appUser.userId,
       rotationId,
     );
     if (rotationResult.isFailure) {

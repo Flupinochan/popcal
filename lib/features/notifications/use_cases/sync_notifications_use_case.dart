@@ -1,4 +1,5 @@
 import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -19,9 +20,9 @@ class SyncNotificationsUseCase {
     this._scheduleCalculationService,
   );
 
-  Future<Result<void>> execute(String ownerUserId) async {
+  Future<Result<void>> execute(UserId userId) async {
     // 1. Firebaseからローテーショングループ一覧を取得
-    final rotationsResult = await _rotationRepository.getRotations(ownerUserId);
+    final rotationsResult = await _rotationRepository.getRotations(userId);
     if (rotationsResult.isFailure) {
       return Results.failure(rotationsResult.failureOrNull!);
     }

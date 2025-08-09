@@ -30,7 +30,7 @@ class MockNotificationGateway extends Mock implements NotificationGateway {
 class MockSyncNotificationsUseCase extends Mock
     implements SyncNotificationsUseCase {
   @override
-  Future<Result<void>> execute(String ownerUserId) async {
+  Future<Result<void>> execute(UserId userId) async {
     return Results.success(null);
   }
 }
@@ -51,9 +51,7 @@ void main() {
           notificationGatewayProvider.overrideWith((ref) {
             return MockNotificationGateway();
           }),
-          rotationResponsesStreamProvider(mockUser.userId.value).overrideWith((
-            ref,
-          ) {
+          rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
             return Stream.value(Results.success([]));
           }),
           syncNotificationsUseCaseProvider.overrideWith((ref) {

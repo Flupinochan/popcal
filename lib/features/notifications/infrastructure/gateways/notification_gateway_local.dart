@@ -279,9 +279,7 @@ class NotificationGatewayLocal {
         dtoResult.when(
           success:
               (localNotificationSettingDto) => _router.push(
-                Routes.calendarPath(
-                  localNotificationSettingDto.rotationId.value,
-                ),
+                Routes.calendarPath(localNotificationSettingDto.rotationId),
               ),
           failure: (error) => _router.push(Routes.home),
         );

@@ -7,6 +7,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:popcal/shared/widgets/custom_loading_widget.dart';
@@ -17,7 +18,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
 class CalendarScreen extends HookConsumerWidget {
-  final String rotationId;
+  final RotationId rotationId;
 
   const CalendarScreen({super.key, required this.rotationId});
 

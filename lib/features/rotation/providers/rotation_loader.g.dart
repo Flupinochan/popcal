@@ -7,7 +7,7 @@ part of 'rotation_loader.dart';
 // **************************************************************************
 
 String _$rotationDataResponseHash() =>
-    r'377a524edf0cc7276b0c920fa978e0cfb28ccd85';
+    r'd3c8e56c689caafc3e63565aac7a1c2894392905';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,7 +41,7 @@ class RotationDataResponseFamily
   const RotationDataResponseFamily();
 
   /// See also [rotationDataResponse].
-  RotationDataResponseProvider call(String? rotationId) {
+  RotationDataResponseProvider call(RotationId? rotationId) {
     return RotationDataResponseProvider(rotationId);
   }
 
@@ -71,7 +71,7 @@ class RotationDataResponseFamily
 class RotationDataResponseProvider
     extends AutoDisposeFutureProvider<Result<RotationDataResponse>> {
   /// See also [rotationDataResponse].
-  RotationDataResponseProvider(String? rotationId)
+  RotationDataResponseProvider(RotationId? rotationId)
     : this._internal(
         (ref) =>
             rotationDataResponse(ref as RotationDataResponseRef, rotationId),
@@ -97,7 +97,7 @@ class RotationDataResponseProvider
     required this.rotationId,
   }) : super.internal();
 
-  final String? rotationId;
+  final RotationId? rotationId;
 
   @override
   Override overrideWith(
@@ -146,7 +146,7 @@ class RotationDataResponseProvider
 mixin RotationDataResponseRef
     on AutoDisposeFutureProviderRef<Result<RotationDataResponse>> {
   /// The parameter `rotationId` of this provider.
-  String? get rotationId;
+  RotationId? get rotationId;
 }
 
 class _RotationDataResponseProviderElement
@@ -155,7 +155,8 @@ class _RotationDataResponseProviderElement
   _RotationDataResponseProviderElement(super.provider);
 
   @override
-  String? get rotationId => (origin as RotationDataResponseProvider).rotationId;
+  RotationId? get rotationId =>
+      (origin as RotationDataResponseProvider).rotationId;
 }
 
 // ignore_for_file: type=lint

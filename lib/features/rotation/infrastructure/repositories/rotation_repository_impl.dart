@@ -1,4 +1,6 @@
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_firebase.dart';
 import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_response.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -11,8 +13,10 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 1. 自動ローテーショングループ一覧取得
   @override
-  Stream<Result<List<Rotation>>> watchRotations(String userId) {
-    return _firebaseRotationDatasource.watchRotations(userId).map((result) {
+  Stream<Result<List<Rotation>>> watchRotations(UserId userId) {
+    return _firebaseRotationDatasource.watchRotations(userId.value).map((
+      result,
+    ) {
       return result.when(
         success:
             (dtos) =>
@@ -24,8 +28,8 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 2. 手動ローテーショングループ一覧取得
   @override
-  Future<Result<List<Rotation>>> getRotations(String userId) async {
-    final result = await _firebaseRotationDatasource.getRotations(userId);
+  Future<Result<List<Rotation>>> getRotations(UserId userId) async {
+    final result = await _firebaseRotationDatasource.getRotations(userId.value);
     return result.when(
       success:
           (dtos) => Results.success(dtos.map((dto) => dto.toEntity()).toList()),
@@ -36,12 +40,12 @@ class RotationRepositoryImpl implements RotationRepository {
   // 3. 特定のローテーショングループを取得
   @override
   Future<Result<Rotation?>> getRotation(
-    String userId,
-    String rotationId,
+    UserId userId,
+    RotationId rotationId,
   ) async {
     final result = await _firebaseRotationDatasource.getRotation(
-      userId,
-      rotationId,
+      userId.value,
+      rotationId.value,
     );
     return result.when(
       success: (dto) => Results.success(dto?.toEntity()),
@@ -77,10 +81,13 @@ class RotationRepositoryImpl implements RotationRepository {
 
   // 6. ローテーショングループ削除
   @override
-  Future<Result<void>> deleteRotation(String userId, String rotationId) async {
+  Future<Result<void>> deleteRotation(
+    UserId userId,
+    RotationId rotationId,
+  ) async {
     final result = await _firebaseRotationDatasource.deleteRotation(
-      userId,
-      rotationId,
+      userId.value,
+      rotationId.value,
     );
     return result.when(
       success: (_) => Results.success(null),

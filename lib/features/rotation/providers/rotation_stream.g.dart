@@ -7,7 +7,7 @@ part of 'rotation_stream.dart';
 // **************************************************************************
 
 String _$rotationResponsesStreamHash() =>
-    r'f9049b97d9d861ae613d82c9685bf13bb1c7b07f';
+    r'6b5ea9d84d82dbfb0600909bfba69688e77b98f1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,7 +41,7 @@ class RotationResponsesStreamFamily
   const RotationResponsesStreamFamily();
 
   /// See also [rotationResponsesStream].
-  RotationResponsesStreamProvider call(String userId) {
+  RotationResponsesStreamProvider call(UserId userId) {
     return RotationResponsesStreamProvider(userId);
   }
 
@@ -71,7 +71,7 @@ class RotationResponsesStreamFamily
 class RotationResponsesStreamProvider
     extends AutoDisposeStreamProvider<Result<List<RotationResponse>>> {
   /// See also [rotationResponsesStream].
-  RotationResponsesStreamProvider(String userId)
+  RotationResponsesStreamProvider(UserId userId)
     : this._internal(
         (ref) =>
             rotationResponsesStream(ref as RotationResponsesStreamRef, userId),
@@ -97,7 +97,7 @@ class RotationResponsesStreamProvider
     required this.userId,
   }) : super.internal();
 
-  final String userId;
+  final UserId userId;
 
   @override
   Override overrideWith(
@@ -145,7 +145,7 @@ class RotationResponsesStreamProvider
 mixin RotationResponsesStreamRef
     on AutoDisposeStreamProviderRef<Result<List<RotationResponse>>> {
   /// The parameter `userId` of this provider.
-  String get userId;
+  UserId get userId;
 }
 
 class _RotationResponsesStreamProviderElement
@@ -154,7 +154,7 @@ class _RotationResponsesStreamProviderElement
   _RotationResponsesStreamProviderElement(super.provider);
 
   @override
-  String get userId => (origin as RotationResponsesStreamProvider).userId;
+  UserId get userId => (origin as RotationResponsesStreamProvider).userId;
 }
 
 // ignore_for_file: type=lint

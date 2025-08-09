@@ -51,7 +51,7 @@ class HomeScreen extends HookConsumerWidget {
               // バックグラウンドで通知同期処理
               useEffect(() {
                 final syncUseCase = ref.read(syncNotificationsUseCaseProvider);
-                syncUseCase.execute(dto.userId.value);
+                syncUseCase.execute(dto.userId);
                 return null;
               }, [dto.userId]);
 
@@ -70,7 +70,7 @@ class HomeScreen extends HookConsumerWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final rotationResponsesStream = ref.watch(
-      rotationResponsesStreamProvider(dto.userId.value),
+      rotationResponsesStreamProvider(dto.userId),
     );
 
     return Scaffold(
@@ -176,14 +176,12 @@ class HomeScreen extends HookConsumerWidget {
                 rotationResponse: rotationResponse,
                 onTap: () {
                   context.push(
-                    Routes.calendarPath(rotationResponse.rotationId.value),
+                    Routes.calendarPath(rotationResponse.rotationId),
                   );
                 },
                 onEdit: () {
                   context.push(
-                    Routes.rotationUpdatePath(
-                      rotationResponse.rotationId.value,
-                    ),
+                    Routes.rotationUpdatePath(rotationResponse.rotationId),
                   );
                 },
                 onDelete:
@@ -209,8 +207,8 @@ class HomeScreen extends HookConsumerWidget {
 
     // 削除処理
     final result = await rotationRepository.deleteRotation(
-      userDto.userId.value,
-      rotationResponse.rotationId.value,
+      userDto.userId,
+      rotationResponse.rotationId,
     );
 
     result.when(

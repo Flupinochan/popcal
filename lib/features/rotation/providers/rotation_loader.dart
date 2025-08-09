@@ -3,6 +3,7 @@ import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,7 +13,7 @@ part 'rotation_loader.g.dart';
 @riverpod
 Future<Result<RotationDataResponse>> rotationDataResponse(
   Ref ref,
-  String? rotationId,
+  RotationId? rotationId,
 ) async {
   // 1. ユーザ情報を取得
   final authResult = await ref.watch(authStateChangesForUIProvider.future);
@@ -30,7 +31,7 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
   // 2. ローテーショングループ情報を取得
   final rotationRepository = ref.watch(rotationRepositoryProvider);
   final rotationResult = await rotationRepository.getRotation(
-    userDto.userId.value,
+    userDto.userId,
     rotationId,
   );
   if (rotationResult.isFailure) {

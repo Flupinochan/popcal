@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 
@@ -60,14 +61,14 @@ GoRouter router(Ref ref, {required String initialLocation}) {
       GoRoute(
         path: Routes.rotationUpdate,
         builder: (context, state) {
-          final rotationId = state.pathParameters['id']!;
+          final rotationId = RotationId(state.pathParameters['id']!);
           return RotationScreen(rotationId: rotationId);
         },
       ),
       GoRoute(
         path: Routes.calendar,
         builder: (context, state) {
-          final rotationId = state.pathParameters['id']!;
+          final rotationId = RotationId(state.pathParameters['id']!);
           return CalendarScreen(rotationId: rotationId);
         },
       ),

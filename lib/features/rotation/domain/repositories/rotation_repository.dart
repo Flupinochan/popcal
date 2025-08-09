@@ -1,15 +1,17 @@
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 
 abstract class RotationRepository {
   // 1. 自動ローテーショングループ一覧取得
-  Stream<Result<List<Rotation>>> watchRotations(String userId);
+  Stream<Result<List<Rotation>>> watchRotations(UserId userId);
 
   // 2. 手動ローテーショングループ一覧取得
-  Future<Result<List<Rotation>>> getRotations(String userId);
+  Future<Result<List<Rotation>>> getRotations(UserId userId);
 
   // 3. 特定のローテーショングループを取得
-  Future<Result<Rotation?>> getRotation(String userId, String rotationId);
+  Future<Result<Rotation?>> getRotation(UserId userId, RotationId rotationId);
 
   // 4. ローテーショングループ作成
   Future<Result<Rotation>> createRotation(Rotation rotation);
@@ -18,5 +20,5 @@ abstract class RotationRepository {
   Future<Result<Rotation>> updateRotation(Rotation rotation);
 
   // 6. ローテーショングループ削除
-  Future<Result<void>> deleteRotation(String userId, String rotationId);
+  Future<Result<void>> deleteRotation(UserId userId, RotationId rotationId);
 }

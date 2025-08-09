@@ -1,3 +1,5 @@
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+
 /// 画面ルーティング用パス定義
 abstract final class Routes {
   static const home = '/';
@@ -6,6 +8,8 @@ abstract final class Routes {
   static const rotationUpdate = '/rotation/:id';
   static const calendar = '/calendar/:id';
 
-  static String rotationUpdatePath(String id) => '/rotation/$id';
-  static String calendarPath(String id) => '/calendar/$id';
+  static String rotationUpdatePath(RotationId rotationId) =>
+      '/rotation/${rotationId.value}';
+  static String calendarPath(RotationId rotationId) =>
+      '/calendar/${rotationId.value}';
 }
