@@ -46,12 +46,15 @@ class UpdateRotationUseCase {
     final result = calculationResult.valueOrNull!;
 
     // 6. 新しい通知を作成
-    for (final notification in result.notificationEntry) {
-      final createResult = await _notificationRepository.createNotification(
-        notification,
-      );
+    final createResults = await Future.wait(
+      result.notificationEntry.map(
+        (notification) =>
+            _notificationRepository.createNotification(notification),
+      ),
+    );
+    for (final createResult in createResults) {
       if (createResult.isFailure) {
-        return Results.failure(createResult.failureOrNull!);
+        return Results.failure(NotificationFailure(createResult.displayText));
       }
     }
 

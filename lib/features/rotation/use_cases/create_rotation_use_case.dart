@@ -37,11 +37,15 @@ class CreateRotationUseCase {
         final notificationPlan = calculationResult.valueOrNull!;
 
         // 3. 各通知を作成
-        for (final notification in notificationPlan.notificationEntry) {
-          final createNotificationResult = await _notificationRepository
-              .createNotification(notification);
+        final createResults = await Future.wait(
+          notificationPlan.notificationEntry.map(
+            (notification) =>
+                _notificationRepository.createNotification(notification),
+          ),
+        );
+        for (final createNotificationResult in createResults) {
           if (createNotificationResult.isFailure) {
-            return Results.failure<Rotation>(
+            return Results.failure(
               NotificationFailure(createNotificationResult.displayText),
             );
           }

@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -201,7 +202,8 @@ class NotificationGatewayLocal {
           );
           dtoResult.when(
             success: (localNotificationSettingDto) {
-              if (localNotificationSettingDto.rotationId == rotationId) {
+              if (localNotificationSettingDto.rotationId ==
+                  RotationId(rotationId)) {
                 try {
                   _flutterLocalNotificationsPlugin.cancel(notification.id);
                 } catch (error) {

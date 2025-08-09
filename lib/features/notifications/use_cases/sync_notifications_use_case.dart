@@ -79,8 +79,6 @@ class SyncNotificationsUseCase {
     Set<NotificationId> currentLocalRotationIds,
     Rotation rotation,
   ) async {
-    String? errorMessage;
-
     // 不足しているローカル通知設定を取得
     final missingNotifications =
         result.notificationEntry.where((notification) {
@@ -88,12 +86,15 @@ class SyncNotificationsUseCase {
         }).toList();
 
     // 不足分の通知を作成
-    for (final notification in missingNotifications) {
-      final createResult = await _notificationRepository.createNotification(
-        notification,
-      );
+    final createResult = await Future.wait(
+      missingNotifications.map(
+        (notificationEntry) =>
+            _notificationRepository.createNotification(notificationEntry),
+      ),
+    );
+    for (final createResult in createResult) {
       if (createResult.isFailure) {
-        errorMessage = createResult.failureOrNull!.message;
+        return Results.failure(NotificationFailure(createResult.displayText));
       }
     }
 
@@ -107,15 +108,11 @@ class SyncNotificationsUseCase {
         updatedRotation,
       );
       if (updateResult.isFailure) {
-        errorMessage = updateResult.failureOrNull!.message;
+        return Results.failure(NotificationFailure(updateResult.displayText));
       }
     }
 
-    if (errorMessage != null) {
-      return Results.failure(NotificationFailure(errorMessage));
-    } else {
-      return Results.success(null);
-    }
+    return Results.success(null);
   }
 
   // ローカル通知の削除を同期
@@ -123,30 +120,28 @@ class SyncNotificationsUseCase {
     NotificationSchedule result,
     Set<NotificationId> currentLocalRotationIds,
   ) async {
-    String? errorMessage;
-
     // 計算結果の通知Idsを取得
-    final validNotificationIds = <NotificationId>{};
-    for (final notification in result.notificationEntry) {
-      validNotificationIds.add(notification.notificationId);
-    }
+    final validNotificationIds =
+        result.notificationEntry
+            .map((notificationEntry) => notificationEntry.notificationId)
+            .toSet();
 
     // 計算結果の通知Idsに含まれていない現在設定されている通知Idsは削除対象
     final deleteTargetIds = currentLocalRotationIds.where(
       (id) => !validNotificationIds.contains(id),
     );
-
-    for (final id in deleteTargetIds) {
-      final result = await _notificationRepository.deleteNotification(id);
-      if (result.isFailure) {
-        errorMessage = result.failureOrNull!.message;
+    final deleteResults = await Future.wait(
+      deleteTargetIds.map(
+        (notificationId) =>
+            _notificationRepository.deleteNotification(notificationId),
+      ),
+    );
+    for (final deleteResult in deleteResults) {
+      if (deleteResult.isFailure) {
+        return Results.failure(NotificationFailure(deleteResult.displayText));
       }
     }
 
-    if (errorMessage != null) {
-      return Results.failure(NotificationFailure(errorMessage));
-    } else {
-      return Results.success(null);
-    }
+    return Results.success(null);
   }
 }
