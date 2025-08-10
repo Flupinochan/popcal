@@ -118,6 +118,7 @@ class HomeScreen extends HookConsumerWidget {
 
   // ローテーショングループが1つもない場合
   Widget _buildRotationEmpty(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Center(
       child: GlassWrapper(
         width: 340,
@@ -132,14 +133,14 @@ class HomeScreen extends HookConsumerWidget {
             // Text1
             Text(
               'ローテーションがありません',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             // Text2
             Text(
               '新しいローテーションを作成してみましょう',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),

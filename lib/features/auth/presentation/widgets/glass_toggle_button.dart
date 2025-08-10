@@ -23,6 +23,7 @@ class GlassToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return GlassWrapper(
       width: width,
@@ -39,10 +40,10 @@ class GlassToggleButton extends StatelessWidget {
               text,
               style:
                   isSelected
-                      ? Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      ? textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       )
-                      : Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      : textTheme.bodyLarge?.copyWith(
                         color: Colors.white.withValues(alpha: 0.75),
                       ),
             ),

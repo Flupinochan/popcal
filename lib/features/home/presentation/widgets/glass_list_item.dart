@@ -22,6 +22,7 @@ class GlassListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -60,7 +61,7 @@ class GlassListItem extends StatelessWidget {
                           // RotationName
                           Text(
                             rotationResponse.rotationName.value,
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: textTheme.titleMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -68,7 +69,7 @@ class GlassListItem extends StatelessWidget {
                           // MemberNameList
                           Text(
                             rotationResponse.rotationMembers.join(', '),
-                            style: Theme.of(context).textTheme.bodySmall,
+                            style: textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

@@ -13,6 +13,7 @@ class GlassFormTime extends StatelessWidget {
   Widget build(BuildContext context) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final textTheme = Theme.of(context).textTheme;
     // ローカル日時で指定
     final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
 
@@ -111,12 +112,7 @@ class GlassFormTime extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   // Time Text
-                  Expanded(
-                    child: Text(
-                      timeText,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
+                  Expanded(child: Text(timeText, style: textTheme.bodyLarge)),
                 ],
               ),
             ),

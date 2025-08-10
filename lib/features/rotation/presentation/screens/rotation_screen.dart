@@ -58,6 +58,7 @@ class RotationScreen extends HookConsumerWidget {
   ) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final textTheme = Theme.of(context).textTheme;
     final isUpdateMode = rotationData.rotationResponse != null;
     final initialRotation = rotationData.rotationResponse;
     final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
@@ -88,10 +89,7 @@ class RotationScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ローテーション名
-                  Text(
-                    'ローテーション名',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+                  Text('ローテーション名', style: textTheme.titleLarge),
                   const SizedBox(height: 16),
                   // ローテーション名を入力
                   GlassFormText(
@@ -120,10 +118,7 @@ class RotationScreen extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 24),
                   // ローテーション曜日
-                  Text(
-                    'ローテーション曜日',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  Text('ローテーション曜日', style: textTheme.titleMedium),
                   const SizedBox(height: 16),
                   GlassFormWeekday(
                     initialValue: initialRotation?.rotationDays,
@@ -131,7 +126,7 @@ class RotationScreen extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 24),
                   // 通知時刻
-                  Text('通知時刻', style: Theme.of(context).textTheme.titleMedium),
+                  Text('通知時刻', style: textTheme.titleMedium),
                   const SizedBox(height: 16),
                   GlassFormTime(
                     initialValue: initialRotation?.notificationTime.value,

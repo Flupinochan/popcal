@@ -9,11 +9,12 @@ class GlassChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return GlassWrapper(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       showBorder: false,
       gradient: gradient,
-      child: Text(text, style: Theme.of(context).textTheme.labelMedium),
+      child: Text(text, style: textTheme.labelMedium),
     );
   }
 }

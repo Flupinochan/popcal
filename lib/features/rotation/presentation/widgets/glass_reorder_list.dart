@@ -70,6 +70,7 @@ class _GlassReorderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     // reorder時はスタイル変更
     return Transform.scale(
@@ -97,17 +98,12 @@ class _GlassReorderItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
-                child: Text(
-                  '${index + 1}',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                child: Text('${index + 1}', style: textTheme.titleMedium),
               ),
             ),
             SizedBox(width: 16),
             // メンバー名
-            Expanded(
-              child: Text(item, style: Theme.of(context).textTheme.bodyLarge),
-            ),
+            Expanded(child: Text(item, style: textTheme.bodyLarge)),
             // 削除ボタン
             IconButton(
               icon: Icon(Icons.close, color: glassTheme.iconColor, size: 20),

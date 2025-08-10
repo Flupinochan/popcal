@@ -21,11 +21,12 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return AppBar(
       backgroundColor: glassTheme.backgroundColor,
       elevation: 0,
-      title: Text(title, style: Theme.of(context).textTheme.titleLarge),
+      title: Text(title, style: textTheme.titleLarge),
       leading:
           leadingIcon == null
               ? null
