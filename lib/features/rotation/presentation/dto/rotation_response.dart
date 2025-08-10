@@ -61,13 +61,3 @@ sealed class RotationResponse with _$RotationResponse {
     );
   }
 }
-
-// UI表示用の拡張メソッド
-extension RotationViewDisplay on RotationResponse {
-  String get membersDisplay => rotationMembers.join(', ');
-  String get weekdaysDisplay =>
-      rotationDays.map((w) => w.displayName).join(', ');
-  String get createdAtDisplay {
-    return '${createdAt.value.year}/${createdAt.value.month}/${createdAt.value.day}';
-  }
-}

@@ -25,6 +25,7 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
           memberName: RotationMemberName.notApplicable,
           isRotationDay: false,
           memberColor: MemberColor.notApplicable,
+          displayText: "対象外",
         );
   }
 }
@@ -39,7 +40,6 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
     required RotationMemberName memberName,
     required bool isRotationDay,
     required MemberColor memberColor,
+    required String displayText,
   }) = _ScheduleDayResponse;
-
-  String get displayText => isRotationDay ? "担当日" : "対象外";
 }

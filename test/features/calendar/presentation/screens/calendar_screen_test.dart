@@ -63,6 +63,7 @@ void main() {
       memberName: RotationMemberName('user1'),
       isRotationDay: true,
       memberColor: MemberColor.member1,
+      displayText: "担当日",
     ),
   };
   final calendarScheduleResponse = CalendarScheduleResponse(

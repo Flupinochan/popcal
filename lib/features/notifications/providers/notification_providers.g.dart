@@ -132,7 +132,7 @@ final rotationCalculationServiceProvider =
 typedef RotationCalculationServiceRef =
     AutoDisposeProviderRef<RotationCalculationService>;
 String _$buildCalendarScheduleUseCaseHash() =>
-    r'e4bce3f0587dfe83302e0894c9fac87d19d41151';
+    r'018f2265528f0cedc97dd3b530330b454afda980';
 
 /// See also [buildCalendarScheduleUseCase].
 @ProviderFor(buildCalendarScheduleUseCase)

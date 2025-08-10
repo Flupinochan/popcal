@@ -23,19 +23,3 @@ sealed class UserResponse with _$UserResponse {
     return Results.success(AppUser(userId: userId, email: email));
   }
 }
-
-// UI表示用の拡張メソッド
-extension UserDtoDisplay on UserResponse {
-  String get displayName => toEntity().fold(
-    (error) => 'Unknown User',
-    (entity) => entity.email.localPart,
-  );
-  String get emailDomain => toEntity().fold(
-    (error) => 'Unknown Domain',
-    (entity) => entity.email.domain,
-  );
-  String get email => toEntity().fold(
-    (error) => 'Unknown Email',
-    (entity) => entity.email.value,
-  );
-}
