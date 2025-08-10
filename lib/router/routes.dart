@@ -1,16 +1,74 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
+import 'package:popcal/features/home/presentation/screens/home_screen.dart';
+import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
+import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/shared/widgets/custom_error_widget.dart';
 
-/// 画面ルーティング用パス定義
-abstract final class Routes {
-  static const home = '/';
-  static const auth = '/auth';
-  static const rotation = '/rotation';
-  static const rotationUpdate = '/rotation/:id';
-  static const calendar = '/calendar/:id';
-  static const error = '/error';
+part 'routes.g.dart';
 
-  static String rotationUpdatePath(RotationId rotationId) =>
-      '/rotation/${rotationId.value}';
-  static String calendarPath(RotationId rotationId) =>
-      '/calendar/${rotationId.value}';
+@TypedGoRoute<HomeRoute>(path: '/')
+class HomeRoute extends GoRouteData with _$HomeRoute {
+  const HomeRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => HomeScreen();
+}
+
+@TypedGoRoute<LoginRoute>(path: '/login')
+class LoginRoute extends GoRouteData with _$LoginRoute {
+  const LoginRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const LoginScreen();
+  }
+}
+
+@TypedGoRoute<RotationCreateRoute>(path: '/rotation')
+class RotationCreateRoute extends GoRouteData with _$RotationCreateRoute {
+  const RotationCreateRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const RotationScreen();
+  }
+}
+
+@TypedGoRoute<RotationUpdateRoute>(path: '/rotation/:id')
+class RotationUpdateRoute extends GoRouteData with _$RotationUpdateRoute {
+  const RotationUpdateRoute({required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final rotationId = RotationId(id);
+    return RotationScreen(rotationId: rotationId);
+  }
+}
+
+@TypedGoRoute<CalendarRoute>(path: '/calendar/:id')
+class CalendarRoute extends GoRouteData with _$CalendarRoute {
+  const CalendarRoute({required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final rotationId = RotationId(id);
+    return CalendarScreen(rotationId: rotationId);
+  }
+}
+
+@TypedGoRoute<ErrorRoute>(path: '/error')
+class ErrorRoute extends GoRouteData with _$ErrorRoute {
+  const ErrorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const CustomErrorScreen();
+  }
 }

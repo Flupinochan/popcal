@@ -98,7 +98,7 @@ void main() {
             authStateChangesForUIProvider.overrideWith(
               (ref) => Stream.value(Results.success(mockUser)),
             ),
-          ], Routes.auth),
+          ], LoginRoute().location),
     );
 
     goldenTest(
@@ -120,7 +120,7 @@ void main() {
             authStateChangesForUIProvider.overrideWith(
               (ref) => Stream.value(Results.success(null)),
             ),
-          ], Routes.home),
+          ], HomeRoute().location),
     );
 
     goldenTest(
@@ -142,7 +142,7 @@ void main() {
             authStateChangesForUIProvider.overrideWith(
               (ref) => Stream.value(Results.success(mockUser)),
             ),
-          ], Routes.home),
+          ], HomeRoute().location),
     );
 
     goldenTest(
@@ -164,7 +164,7 @@ void main() {
             authStateChangesForUIProvider.overrideWith(
               (ref) => Stream.value(Results.failure(AuthFailure('認証エラー'))),
             ),
-          ], Routes.home),
+          ], HomeRoute().location),
     );
   });
 }

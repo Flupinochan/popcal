@@ -68,7 +68,9 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider(initialLocation: Routes.home));
+    final router = ref.watch(
+      routerProvider(initialLocation: HomeRoute().location),
+    );
 
     // 通知初期化
     ref.listen(notificationInitializationProvider, (previous, next) {

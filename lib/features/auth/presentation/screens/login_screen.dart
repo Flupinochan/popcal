@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -303,7 +302,7 @@ class LoginScreen extends HookConsumerWidget {
     if (!context.mounted) return;
     authResult.when(
       success: (user) {
-        context.go(Routes.home);
+        HomeRoute().go(context);
       },
       failure: (error) {
         showErrorDialog(context, error.message);

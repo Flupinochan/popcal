@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
@@ -82,7 +81,7 @@ class HomeScreen extends HookConsumerWidget {
         width: 56,
         height: 56,
         iconData: Icons.add,
-        onPressed: () => context.push(Routes.rotation),
+        onPressed: () => RotationCreateRoute().push<void>(context),
       ),
       body: Container(
         height: double.infinity,
@@ -149,7 +148,7 @@ class HomeScreen extends HookConsumerWidget {
               width: 120,
               height: 40,
               text: '作成',
-              onPressed: () => context.push(Routes.rotation),
+              onPressed: () => RotationCreateRoute().push<void>(context),
             ),
           ],
         ),
@@ -175,14 +174,14 @@ class HomeScreen extends HookConsumerWidget {
               return GlassListItem(
                 rotationResponse: rotationResponse,
                 onTap: () {
-                  context.push(
-                    Routes.calendarPath(rotationResponse.rotationId),
-                  );
+                  CalendarRoute(
+                    id: rotationResponse.rotationId.value,
+                  ).push<void>(context);
                 },
                 onEdit: () {
-                  context.push(
-                    Routes.rotationUpdatePath(rotationResponse.rotationId),
-                  );
+                  RotationUpdateRoute(
+                    id: rotationResponse.rotationId.value,
+                  ).push<void>(context);
                 },
                 onDelete:
                     () =>

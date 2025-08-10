@@ -79,7 +79,7 @@ class DrawerScreen extends HookConsumerWidget {
                         title: 'ホーム',
                         onTap: () {
                           context.pop();
-                          context.go(Routes.home);
+                          HomeRoute().go(context);
                         },
                       ),
                     ],

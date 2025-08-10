@@ -1,15 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
-import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
-
-import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
-import 'package:popcal/features/home/presentation/screens/home_screen.dart';
-import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/router/routes.dart';
 
 part 'router.g.dart';
@@ -24,15 +17,15 @@ GoRouter router(Ref ref, {required String initialLocation}) {
     redirect: (context, state) {
       return authState.when(
         data: (result) {
-          final isAuthPage = state.uri.path == Routes.auth;
+          final isAuthPage = state.matchedLocation == LoginRoute().location;
           return result.when(
             success: (user) {
               if (user != null && isAuthPage) {
                 // 1. 認証済かつ認証画面にいる => ホーム画面へ
-                return Routes.home;
+                return HomeRoute().location;
                 // 2. 未認証かつ認証画面にいない => 認証画面へ
               } else if (user == null && !isAuthPage) {
-                return Routes.auth;
+                return LoginRoute().location;
                 // 3. 認証済かつ認証画面にいない => 画面遷移しない
               } else {
                 return null;
@@ -41,7 +34,7 @@ GoRouter router(Ref ref, {required String initialLocation}) {
             failure: (error) {
               if (!isAuthPage) {
                 // 4. 認証エラー時に認証画面にいない => 認証画面へ
-                return Routes.auth;
+                return LoginRoute().location;
               } else {
                 return null;
               }
@@ -49,34 +42,9 @@ GoRouter router(Ref ref, {required String initialLocation}) {
           );
         },
         loading: () => null,
-        error: (_, __) => Routes.auth,
+        error: (_, __) => LoginRoute().location,
       );
     },
-    routes: [
-      GoRoute(
-        path: Routes.error,
-        builder: (context, state) => CustomErrorScreen(),
-      ),
-      GoRoute(path: Routes.home, builder: (context, state) => HomeScreen()),
-      GoRoute(path: Routes.auth, builder: (context, state) => LoginScreen()),
-      GoRoute(
-        path: Routes.rotation,
-        builder: (context, state) => RotationScreen(),
-      ),
-      GoRoute(
-        path: Routes.rotationUpdate,
-        builder: (context, state) {
-          final rotationId = RotationId(state.pathParameters['id']!);
-          return RotationScreen(rotationId: rotationId);
-        },
-      ),
-      GoRoute(
-        path: Routes.calendar,
-        builder: (context, state) {
-          final rotationId = RotationId(state.pathParameters['id']!);
-          return CalendarScreen(rotationId: rotationId);
-        },
-      ),
-    ],
+    routes: $appRoutes,
   );
 }

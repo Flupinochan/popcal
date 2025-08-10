@@ -28,7 +28,7 @@ final flutterLocalNotificationsPluginProvider =
 typedef FlutterLocalNotificationsPluginRef =
     AutoDisposeProviderRef<FlutterLocalNotificationsPlugin>;
 String _$notificationGatewayLocalHash() =>
-    r'e98a8127dc863649fbcb1071c2a9c48ac86b7943';
+    r'5ebc511a5392b2030b64908de46f7e74167c6bb4';
 
 /// See also [notificationGatewayLocal].
 @ProviderFor(notificationGatewayLocal)

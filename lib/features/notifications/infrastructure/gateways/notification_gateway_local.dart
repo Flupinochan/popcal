@@ -282,18 +282,19 @@ class NotificationGatewayLocal {
         );
         dtoResult.when(
           success: (localNotificationSettingDto) {
-            final calendarPath = Routes.calendarPath(
-              localNotificationSettingDto.rotationId,
+            _router.push(
+              CalendarRoute(
+                id: localNotificationSettingDto.rotationId.value,
+              ).location,
             );
-            _router.push(calendarPath);
           },
-          failure: (error) => _router.go(Routes.error),
+          failure: (error) => _router.go(ErrorRoute().location),
         );
       } else {
-        _router.go(Routes.error);
+        _router.go(ErrorRoute().location);
       }
     } catch (error) {
-      _router.go(Routes.error);
+      _router.go(ErrorRoute().location);
     }
   }
 }

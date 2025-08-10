@@ -25,7 +25,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(Ref ref) {
 @riverpod
 NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
   return NotificationGatewayLocal(
-    ref.watch(routerProvider(initialLocation: Routes.home)),
+    ref.watch(routerProvider(initialLocation: HomeRoute().location)),
     ref.watch(flutterLocalNotificationsPluginProvider),
     ref.watch(loggerProvider("NotificationGatewayLocal")),
     ref.watch(timeUtilsProvider),

@@ -65,6 +65,7 @@ dependencies:
   mocktail: ^1.0.4
   alchemist: ^0.12.1
   firebase_auth_mocks: ^0.14.2
+  go_router_builder: ^3.0.0
 
 dev_dependencies:
   flutter_test:

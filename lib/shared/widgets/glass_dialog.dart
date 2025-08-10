@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
@@ -56,7 +55,7 @@ class GlassDialog extends StatelessWidget {
               GlassButton(
                 text: 'OK',
                 height: 44,
-                onPressed: () => context.pushReplacement(Routes.home),
+                onPressed: () => HomeRoute().pushReplacement(context),
               ),
             ],
           ),
