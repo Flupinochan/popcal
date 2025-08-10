@@ -35,4 +35,6 @@ class ScheduleDay {
     required this.isRotationDay,
     required this.memberColor,
   });
+
+  String get displayText => isRotationDay ? "担当日" : "対象外";
 }

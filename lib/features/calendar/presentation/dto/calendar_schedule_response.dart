@@ -18,7 +18,8 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
 
   // 指定した日付から表示用データを返却
   ScheduleDayResponse getDayInfo(DateTime date) {
-    return scheduleMap[DateKey.fromDateTime(date)] ??
+    final dateKey = DateKey.fromDateTime(date);
+    return scheduleMap[dateKey] ??
         ScheduleDayResponse(
           date: NotificationDateTime(date),
           memberName: RotationMemberName.notApplicable,
