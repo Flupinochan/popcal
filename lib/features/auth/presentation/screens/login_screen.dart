@@ -107,16 +107,17 @@ class LoginScreen extends HookConsumerWidget {
                         SizedBox(height: 20),
                         // Form (Email & Password)
                         Column(
+                          spacing: 20,
                           children: [
                             // Email フィールド
                             Column(
+                              spacing: 8,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   LoginFormKey.email.key,
                                   style: textTheme.titleMedium,
                                 ),
-                                SizedBox(height: 8),
                                 GlassFormText(
                                   name: LoginFormKey.email.key,
                                   hintText:
@@ -132,16 +133,15 @@ class LoginScreen extends HookConsumerWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20),
                             // Password フィールド
                             Column(
+                              spacing: 8,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   LoginFormKey.password.key,
                                   style: textTheme.titleMedium,
                                 ),
-                                SizedBox(height: 8),
                                 GlassFormPassword(
                                   name: LoginFormKey.password.key,
                                   hintText:

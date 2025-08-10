@@ -34,6 +34,7 @@ class GlassDialog extends StatelessWidget {
           width: 300,
           padding: const EdgeInsets.all(24),
           child: Column(
+            spacing: 20,
             mainAxisSize: MainAxisSize.min,
             children: [
               GlassIcon(
@@ -45,13 +46,11 @@ class GlassDialog extends StatelessWidget {
                 backgroundGradient: backgroundGradient,
                 borderColor: borderColor,
               ),
-              const SizedBox(height: 20),
               Text(
                 message,
                 style: textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
               GlassButton(
                 text: 'OK',
                 height: 44,

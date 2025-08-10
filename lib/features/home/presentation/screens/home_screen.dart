@@ -125,31 +125,32 @@ class HomeScreen extends HookConsumerWidget {
         height: 240,
         padding: EdgeInsets.all(24),
         child: Column(
+          spacing: 16,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Icon
             GlassIcon(iconData: Icons.group_add),
-            const SizedBox(height: 16),
             // Text1
             Text(
               'ローテーションがありません',
               style: textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
             // Text2
             Text(
               '新しいローテーションを作成してみましょう',
               style: textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
             // 作成Button
-            GlassButton(
-              width: 120,
-              height: 40,
-              text: '作成',
-              onPressed: () => RotationCreateRoute().push<void>(context),
+            Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: GlassButton(
+                width: 120,
+                height: 40,
+                text: '作成',
+                onPressed: () => RotationCreateRoute().push<void>(context),
+              ),
             ),
           ],
         ),

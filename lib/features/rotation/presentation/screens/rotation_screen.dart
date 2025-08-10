@@ -86,11 +86,11 @@ class RotationScreen extends HookConsumerWidget {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
+                spacing: 16,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ローテーション名
                   Text('ローテーション名', style: textTheme.titleLarge),
-                  const SizedBox(height: 16),
                   // ローテーション名を入力
                   GlassFormText(
                     name: 'rotationName',
@@ -100,34 +100,38 @@ class RotationScreen extends HookConsumerWidget {
                       errorText: 'ローテーション名を入力してください',
                     ),
                   ),
-                  const SizedBox(height: 24),
                   // メンバー名を入力
-                  GlassFormList(
-                    name: 'rotationMembers',
-                    hintText: 'メンバー名を入力',
-                    initialValue:
-                        initialRotation?.rotationMembers
-                            .map((member) => member.value)
-                            .toList(),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'メンバーを1つ以上追加してください';
-                      }
-                      return null;
-                    },
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: GlassFormList(
+                      name: 'rotationMembers',
+                      hintText: 'メンバー名を入力',
+                      initialValue:
+                          initialRotation?.rotationMembers
+                              .map((member) => member.value)
+                              .toList(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'メンバーを1つ以上追加してください';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  const SizedBox(height: 24),
                   // ローテーション曜日
-                  Text('ローテーション曜日', style: textTheme.titleMedium),
-                  const SizedBox(height: 16),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text('ローテーション曜日', style: textTheme.titleMedium),
+                  ),
                   GlassFormWeekday(
                     initialValue: initialRotation?.rotationDays,
                     now: now,
                   ),
-                  const SizedBox(height: 24),
                   // 通知時刻
-                  Text('通知時刻', style: textTheme.titleMedium),
-                  const SizedBox(height: 16),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text('通知時刻', style: textTheme.titleMedium),
+                  ),
                   GlassFormTime(
                     initialValue: initialRotation?.notificationTime.value,
                     now: now,

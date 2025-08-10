@@ -55,6 +55,7 @@ class GlassListItem extends StatelessWidget {
                     // テキスト情報
                     Expanded(
                       child: Column(
+                        spacing: 4,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -65,7 +66,6 @@ class GlassListItem extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 4),
                           // MemberNameList
                           Text(
                             rotationResponse.rotationMembers.join(', '),

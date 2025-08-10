@@ -34,6 +34,7 @@ class DrawerScreen extends HookConsumerWidget {
             child: Column(
               children: [
                 Column(
+                  spacing: 8,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon
@@ -42,7 +43,6 @@ class DrawerScreen extends HookConsumerWidget {
                       iconSize: 40,
                       backgroundSize: 60,
                     ),
-                    SizedBox(height: 8),
                     // Consumerで以下の部分だけ再レンダリング
                     // name & email
                     Consumer(
@@ -67,9 +67,9 @@ class DrawerScreen extends HookConsumerWidget {
                         );
                       },
                     ),
-                    SizedBox(height: 16),
                   ],
                 ),
+                SizedBox(height: 16),
                 // Menu
                 Expanded(
                   child: ListView(

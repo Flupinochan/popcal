@@ -74,6 +74,7 @@ class CalendarScreen extends HookConsumerWidget {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: Column(
+                    spacing: 16,
                     children: [
                       _buildCalendarContainer(
                         context,
@@ -83,16 +84,13 @@ class CalendarScreen extends HookConsumerWidget {
                         now,
                         timeUtils,
                       ),
-                      const SizedBox(height: 16),
                       _buildSelectedDayInfo(
                         calendarDataDto,
                         selectedDay.value,
                         glassTheme,
                         textTheme,
                       ),
-                      const SizedBox(height: 16),
                       _buildRotationInfo(context, calendarDataDto),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -301,6 +299,7 @@ class CalendarScreen extends HookConsumerWidget {
             ),
             Expanded(
               child: Column(
+                spacing: 8,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -327,7 +326,6 @@ class CalendarScreen extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
                   Row(
                     spacing: 10,
                     children: [
@@ -377,6 +375,7 @@ class CalendarScreen extends HookConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          spacing: 12,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ローテーション情報
@@ -387,21 +386,18 @@ class CalendarScreen extends HookConsumerWidget {
               iconSize: 20,
               textStyle: textTheme.titleMedium,
             ),
-            const SizedBox(height: 14),
             // メンバー
             _rotationInfoItem(
               context,
               'メンバー: ${calendarDataDto.rotationResponse.rotationMembers.join(', ')}',
               Icons.group,
             ),
-            const SizedBox(height: 12),
             // 曜日
             _rotationInfoItem(
               context,
               '曜日: ${calendarDataDto.rotationResponse.rotationDays.map((w) => w.displayName).join(', ')}',
               Icons.calendar_today,
             ),
-            const SizedBox(height: 12),
             // 通知時刻
             _rotationInfoItem(
               context,

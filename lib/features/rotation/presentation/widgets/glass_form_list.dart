@@ -75,14 +75,11 @@ class GlassFormList extends HookWidget {
               },
             ),
             if (field.hasError)
-              Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  field.errorText!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                    fontSize: 12,
-                  ),
+              Text(
+                field.errorText!,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                  fontSize: 12,
                 ),
               ),
           ],
