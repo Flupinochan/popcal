@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -43,10 +44,10 @@ class RotationScreen extends HookConsumerWidget {
           (result) => result.when(
             success:
                 (rotationData) => _buildFormScreen(context, ref, rotationData),
-            failure: (error) => customErrorWidget(context, error.message),
+            failure: (error) => CustomErrorScreen(message: error.message),
           ),
-      loading: () => customLoadingWidget(context),
-      error: (error, stack) => customErrorWidget(context, error.toString()),
+      loading: () => CustomLoadingScreen(),
+      error: (error, stack) => CustomErrorScreen(),
     );
   }
 
@@ -71,7 +72,7 @@ class RotationScreen extends HookConsumerWidget {
       appBar: GlassAppBar(
         title: isUpdateMode ? 'ローテーションを編集' : 'ローテーションを追加',
         leadingIcon: Icons.close,
-        onLeadingPressed: () => Navigator.pop(context),
+        onLeadingPressed: () => context.pop(),
       ),
       body: Container(
         height: double.infinity,
@@ -146,7 +147,7 @@ class RotationScreen extends HookConsumerWidget {
       bottomNavigationBar: GlassBottomActionBar(
         isLoading: isLoading,
         isUpdateMode: isUpdateMode,
-        onCancel: () => Navigator.pop(context),
+        onCancel: () => context.pop(),
         onSubmit:
             () => _handleSubmit(
               context,
@@ -210,7 +211,7 @@ Future<void> _handleSubmit(
           flexibleMessage: formData['rotationName'].toString(),
           fixedMessage: isUpdateMode ? 'を更新しました' : 'を作成しました',
         );
-        Navigator.pop(context);
+        context.pop();
       }
     } catch (error) {
       if (context.mounted) {

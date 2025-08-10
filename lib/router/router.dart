@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/shared/widgets/custom_error_widget.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 
@@ -52,6 +53,10 @@ GoRouter router(Ref ref, {required String initialLocation}) {
       );
     },
     routes: [
+      GoRoute(
+        path: Routes.error,
+        builder: (context, state) => CustomErrorScreen(),
+      ),
       GoRoute(path: Routes.home, builder: (context, state) => HomeScreen()),
       GoRoute(path: Routes.auth, builder: (context, state) => LoginScreen()),
       GoRoute(

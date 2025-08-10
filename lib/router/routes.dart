@@ -7,6 +7,7 @@ abstract final class Routes {
   static const rotation = '/rotation';
   static const rotationUpdate = '/rotation/:id';
   static const calendar = '/calendar/:id';
+  static const error = '/error';
 
   static String rotationUpdatePath(RotationId rotationId) =>
       '/rotation/${rotationId.value}';

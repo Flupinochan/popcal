@@ -58,11 +58,11 @@ class HomeScreen extends HookConsumerWidget {
               return _buildHome(context, ref, dto);
             },
             failure: (error) {
-              return customErrorWidget(context, error.message);
+              return CustomErrorScreen(message: error.message);
             },
           ),
-      loading: () => customLoadingWidget(context),
-      error: (error, stack) => customErrorWidget(context, error.toString()),
+      loading: () => CustomLoadingScreen(),
+      error: (error, stack) => CustomErrorScreen(),
     );
   }
 

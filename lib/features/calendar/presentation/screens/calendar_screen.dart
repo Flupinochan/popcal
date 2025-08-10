@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/result.dart';
@@ -35,10 +36,10 @@ class CalendarScreen extends HookConsumerWidget {
           (result) => result.when(
             success:
                 (dto) => _buildCalendarScreen(context, dto, now, timeUtils),
-            failure: (error) => customErrorWidget(context, error.message),
+            failure: (error) => CustomErrorScreen(message: error.message),
           ),
-      loading: () => customLoadingWidget(context),
-      error: (error, stack) => customErrorWidget(context, error.toString()),
+      loading: () => CustomLoadingScreen(),
+      error: (error, stack) => CustomErrorScreen(),
     );
   }
 
@@ -60,7 +61,7 @@ class CalendarScreen extends HookConsumerWidget {
       appBar: GlassAppBar(
         title: calendarDataDto.rotationResponse.rotationName.value,
         leadingIcon: Icons.arrow_back_ios_new,
-        onLeadingPressed: () => Navigator.pop(context),
+        onLeadingPressed: () => context.pop(),
       ),
       body: Container(
         height: double.infinity,
