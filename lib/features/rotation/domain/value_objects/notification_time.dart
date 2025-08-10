@@ -1,15 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 
+// Mockできないextenstionやdtoでstatic methodは利用しない
 extension type NotificationTime(TimeOfDay value) {
-  // 現在時刻取得用
-  factory NotificationTime.now() {
-    final now = TimeUtilsImpl.getLocalDateTime();
-    return NotificationTime(TimeOfDay(hour: now.hour, minute: now.minute));
-  }
-
   // 表示用
   String get display24hour =>
       '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';

@@ -1,5 +1,6 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
@@ -31,11 +32,13 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       checkDate.isBefore(
         rotationDateTime.dateTime.add(const Duration(days: 365)),
       );
-      // checkDate.isBefore(fromDate.add(const Duration(days: 8)));
       checkDate = checkDate.add(const Duration(days: 1))
     ) {
+      // 日付のみに変換
+      final dateKey = DateKey.fromDateTime(checkDate);
+
       if (isValidNotificationDate(
-        checkDate: checkDate,
+        checkDate: dateKey,
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
@@ -66,8 +69,11 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         checkDate.isBefore(toDate);
         checkDate = checkDate.add(const Duration(days: 1))
       ) {
+        // 日付のみに変換
+        final dateKey = DateKey.fromDateTime(checkDate);
+
         if (isValidNotificationDate(
-          checkDate: checkDate,
+          checkDate: dateKey,
           rotationDays: rotation.rotationDays,
           notificationTime: rotation.notificationTime,
           rotationDateTime: RotationDateTime.updatedAt(rotation.updatedAt),
@@ -115,12 +121,12 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   /// ローテーション日判定
   @override
   bool isValidNotificationDate({
-    required DateTime checkDate,
+    required DateKey checkDate,
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationDateTime rotationDateTime,
   }) {
-    final checkDay = Weekday.fromDateTime(checkDate);
+    final checkDay = Weekday.fromDateTime(checkDate.value);
 
     // ローテーション曜日の場合
     if (rotationDays.contains(checkDay)) {

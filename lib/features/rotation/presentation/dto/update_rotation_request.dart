@@ -30,21 +30,19 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
   }) = _UpdateRotationRequest;
 
   // DTO => Entity
-  Result<Rotation> toEntity() {
+  Result<Rotation> toEntity({required DateTime currentTime}) {
     try {
-      final currentTime = TimeUtilsImpl.getLocalDateTime();
-
       return Results.success(
         Rotation(
-          userId: userId,
           rotationId: rotationId,
+          userId: userId,
           rotationName: rotationName,
           rotationMemberNames: rotationMembers,
           rotationDays: rotationDays,
           notificationTime: notificationTime,
-          createdAt: RotationCreatedAt(currentTime),
+          currentRotationIndex: RotationIndex(0),
+          createdAt: createdAt,
           updatedAt: RotationUpdatedAt(currentTime),
-          currentRotationIndex: RotationIndex(0), // 更新時は0にリセット
         ),
       );
     } catch (e) {
@@ -57,8 +55,8 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
   /// Entity => DTO
   factory UpdateRotationRequest.fromEntity(Rotation entity) {
     return UpdateRotationRequest(
-      userId: entity.userId,
       rotationId: entity.rotationId!,
+      userId: entity.userId,
       rotationName: entity.rotationName,
       rotationMembers: entity.rotationMemberNames,
       rotationDays: entity.rotationDays,

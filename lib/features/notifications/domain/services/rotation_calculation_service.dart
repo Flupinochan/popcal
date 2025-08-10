@@ -1,4 +1,5 @@
 import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
@@ -27,7 +28,7 @@ abstract class RotationCalculationService {
 
   /// [checkDate] がローテーション曜日か判定
   bool isValidNotificationDate({
-    required DateTime checkDate,
+    required DateKey checkDate,
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationDateTime rotationDateTime,

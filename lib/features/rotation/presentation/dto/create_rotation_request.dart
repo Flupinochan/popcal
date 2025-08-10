@@ -10,7 +10,6 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 
 part 'create_rotation_request.freezed.dart';
 
@@ -27,19 +26,17 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
   }) = _CreateRotationRequest;
 
   /// DTO => Entity
-  Result<Rotation> toEntity() {
+  Result<Rotation> toEntity({required DateTime currentTime}) {
     try {
-      final currentTime = TimeUtilsImpl.getLocalDateTime();
-
       return Results.success(
         Rotation(
-          rotationId: null, // 作成時は未設定
+          rotationId: null,
           userId: userId,
           rotationName: rotationName,
           rotationMemberNames: rotationMembers,
           rotationDays: rotationDays,
           notificationTime: notificationTime,
-          currentRotationIndex: RotationIndex(0), // 作成時は0
+          currentRotationIndex: RotationIndex(0),
           createdAt: RotationCreatedAt(currentTime),
           updatedAt: RotationUpdatedAt(currentTime),
         ),

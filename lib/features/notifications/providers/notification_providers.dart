@@ -61,5 +61,6 @@ RotationCalculationService rotationCalculationService(Ref ref) {
 BuildCalendarScheduleUseCase buildCalendarScheduleUseCase(Ref ref) {
   return BuildCalendarScheduleUseCase(
     ref.watch(rotationCalculationServiceProvider),
+    ref.watch(timeUtilsProvider),
   );
 }

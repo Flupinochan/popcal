@@ -1,21 +1,18 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 
 extension type NotificationDateTime(DateTime value) {
-  factory NotificationDateTime.now() =>
-      NotificationDateTime(TimeUtilsImpl.getLocalDateTime());
-
   factory NotificationDateTime.fromDateAndTime({
-    required DateTime date,
+    required DateKey date,
     required NotificationTime notificationTime,
   }) {
     return NotificationDateTime(
       DateTime(
-        date.year,
-        date.month,
-        date.day,
+        date.value.year,
+        date.value.month,
+        date.value.day,
         notificationTime.value.hour,
         notificationTime.value.minute,
       ),

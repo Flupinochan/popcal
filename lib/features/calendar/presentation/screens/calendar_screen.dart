@@ -32,7 +32,8 @@ class CalendarScreen extends HookConsumerWidget {
     return calendarDataAsync.when(
       data:
           (result) => result.when(
-            success: (dto) => _buildCalendarScreen(context, dto, now),
+            success:
+                (dto) => _buildCalendarScreen(context, dto, now, timeUtils),
             failure: (error) => customErrorWidget(context, error.message),
           ),
       loading: () => customLoadingWidget(context),
@@ -44,6 +45,7 @@ class CalendarScreen extends HookConsumerWidget {
     BuildContext context,
     CalendarScheduleResponse calendarDataDto,
     DateTime now,
+    TimeUtils timeUtils,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
@@ -77,6 +79,7 @@ class CalendarScreen extends HookConsumerWidget {
                         focusedDay,
                         selectedDay,
                         now,
+                        timeUtils,
                       ),
                       const SizedBox(height: 16),
                       _buildSelectedDayInfo(
@@ -106,6 +109,7 @@ class CalendarScreen extends HookConsumerWidget {
     ValueNotifier<DateTime> focusedDay,
     ValueNotifier<DateTime?> selectedDay,
     DateTime now,
+    TimeUtils timeUtils,
   ) {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
@@ -121,7 +125,7 @@ class CalendarScreen extends HookConsumerWidget {
         ),
         focusedDay: focusedDay.value,
         selectedDayPredicate:
-            (day) => TimeUtilsImpl.isSameDay(selectedDay.value, day),
+            (day) => timeUtils.isSameDay(selectedDay.value, day),
         calendarFormat: CalendarFormat.month,
         startingDayOfWeek: StartingDayOfWeek.monday,
         sixWeekMonthsEnforced: true,

@@ -9,11 +9,16 @@ import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
 
 class BuildCalendarScheduleUseCase {
   final RotationCalculationService _rotationCalculationService;
+  final TimeUtils _timeUtils;
 
-  BuildCalendarScheduleUseCase(this._rotationCalculationService);
+  BuildCalendarScheduleUseCase(
+    this._rotationCalculationService,
+    this._timeUtils,
+  );
 
   // 2. カレンダー表示用DTO作成
   /// 表示用データの生成、これはapplication service
@@ -28,25 +33,24 @@ class BuildCalendarScheduleUseCase {
     NotificationDateTime? toDate,
   }) {
     try {
+      final now = NotificationDateTime(_timeUtils.now());
       var newCurrentRotationIndex = RotationIndex(0);
       final calendarDays = <DateKey, ScheduleDay>{};
       // 指定期間をループしてカレンダー日を作成
       for (
         var checkDate = rotation.createdAt;
-        checkDate.isBeforeNotificationDateTime(
-          toDate ?? NotificationDateTime.now(),
-        );
+        checkDate.isBeforeNotificationDateTime(toDate ?? now);
         checkDate = checkDate.add(const Duration(days: 1))
       ) {
-        final dateTime = checkDate.value;
+        final dateKey = DateKey.fromDateTime(checkDate.value);
         final notificationTime = rotation.notificationTime;
         final notificationDateTime = NotificationDateTime.fromDateAndTime(
-          date: dateTime,
+          date: dateKey,
           notificationTime: notificationTime,
         );
 
         if (_rotationCalculationService.isValidNotificationDate(
-          checkDate: dateTime,
+          checkDate: dateKey,
           rotationDays: rotation.rotationDays,
           notificationTime: notificationTime,
           rotationDateTime: RotationDateTime.createdAt(rotation.createdAt),

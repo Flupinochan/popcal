@@ -25,7 +25,7 @@ import 'package:popcal/shared/utils/time_utils.dart';
 
 class MockRotationNotifier extends Mock implements RotationNotifier {}
 
-class MockTimeUtilsImpl extends Mock implements TimeUtils {
+class MockTimeUtils extends Mock implements TimeUtils {
   @override
   DateTime now() {
     return DateTime(2025, 8, 31, 9, 0);
@@ -86,7 +86,7 @@ void main() {
             );
           }),
           rotationNotifierProvider.overrideWith(() => MockRotationNotifier()),
-          timeUtilsProvider.overrideWith((ref) => MockTimeUtilsImpl()),
+          timeUtilsProvider.overrideWith((ref) => MockTimeUtils()),
         ]);
       },
     );
@@ -110,7 +110,7 @@ void main() {
             );
           }),
           rotationNotifierProvider.overrideWith(() => MockRotationNotifier()),
-          timeUtilsProvider.overrideWith((ref) => MockTimeUtilsImpl()),
+          timeUtilsProvider.overrideWith((ref) => MockTimeUtils()),
           rotationDataResponseProvider(null).overrideWith((ref) {
             return Future.value(
               Results.success(RotationDataResponse(mockUser, rotationResponse)),

@@ -1,5 +1,7 @@
 import 'package:popcal/core/utils/failures.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
+import 'package:popcal/shared/providers/utils_providers.dart';
+import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -12,6 +14,8 @@ part 'rotation_notifier.g.dart';
 // EntityとDtoの変換処理を担当
 @riverpod
 class RotationNotifier extends _$RotationNotifier {
+  TimeUtils get _timeUtils => ref.read(timeUtilsProvider);
+
   @override
   FutureOr<void> build() => null;
 
@@ -21,7 +25,8 @@ class RotationNotifier extends _$RotationNotifier {
   ) async {
     state = const AsyncLoading();
     try {
-      final entityResult = dto.toEntity();
+      final currentTime = _timeUtils.now();
+      final entityResult = dto.toEntity(currentTime: currentTime);
       if (entityResult.isFailure) {
         state = AsyncError(entityResult.failureOrNull!, StackTrace.current);
         return Results.failure(RotationFailure(entityResult.displayText));
@@ -44,7 +49,8 @@ class RotationNotifier extends _$RotationNotifier {
   ) async {
     state = const AsyncLoading();
     try {
-      final entityResult = dto.toEntity();
+      final currentTime = _timeUtils.now();
+      final entityResult = dto.toEntity(currentTime: currentTime);
       if (entityResult.isFailure) {
         state = AsyncError(entityResult.failureOrNull!, StackTrace.current);
         return Results.failure(RotationFailure(entityResult.displayText));
