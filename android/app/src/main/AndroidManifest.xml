@@ -1,14 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Internet -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- flutter local notifications -->
-   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-   <uses-permission android:name="android.permission.VIBRATE" />
-   <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-   <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-   <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
-   <uses-permission android:name="android.permission.INTERNET"/>
-   <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
     <application
         android:label="popcal"
@@ -43,7 +44,7 @@
                 android:stopWithTask="false"
                 android:foregroundServiceType="specialUse">
         </service>
-        
+
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
@@ -65,21 +66,5 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
-        <!-- If your app checks for SMS support -->
-        <!-- <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="sms" />
-        </intent> -->
-        <!-- If your app checks for call support -->
-        <!-- <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:scheme="tel" />
-        </intent> -->
-        <!-- If your application checks for inAppBrowserView launch mode support -->
-        <!-- <intent>
-            <action android:name="android.support.customtabs.action.CustomTabsService" />
-        </intent> -->
     </queries>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
