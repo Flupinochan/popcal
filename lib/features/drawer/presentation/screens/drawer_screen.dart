@@ -70,7 +70,6 @@ class DrawerScreen extends HookConsumerWidget {
                     SizedBox(height: 16),
                   ],
                 ),
-
                 // Menu
                 Expanded(
                   child: ListView(
@@ -79,6 +78,7 @@ class DrawerScreen extends HookConsumerWidget {
                         icon: Icons.home,
                         title: 'ホーム',
                         onTap: () {
+                          context.pop();
                           context.go(Routes.home);
                         },
                       ),

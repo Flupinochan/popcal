@@ -285,12 +285,7 @@ class NotificationGatewayLocal {
             final calendarPath = Routes.calendarPath(
               localNotificationSettingDto.rotationId,
             );
-            // 履歴がある(アプリ起動中にタップした)場合はpush
-            if (_router.canPop()) {
-              _router.push(calendarPath);
-            } else {
-              _router.go(calendarPath);
-            }
+            _router.push(calendarPath);
           },
           failure: (error) => _router.go(Routes.error),
         );
