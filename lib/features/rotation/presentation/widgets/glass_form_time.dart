@@ -103,6 +103,7 @@ class GlassFormTime extends StatelessWidget {
               height: 56,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
+                spacing: 12,
                 children: [
                   // Time Icon
                   Icon(
@@ -110,7 +111,6 @@ class GlassFormTime extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.8),
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
                   // Time Text
                   Expanded(child: Text(timeText, style: textTheme.bodyLarge)),
                 ],

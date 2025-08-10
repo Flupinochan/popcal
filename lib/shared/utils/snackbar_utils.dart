@@ -57,6 +57,7 @@ class SnackBarUtils {
         content: GlassWrapper(
           padding: EdgeInsets.all(10),
           child: Row(
+            spacing: 12,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildTwoPartMessage(
@@ -64,7 +65,6 @@ class SnackBarUtils {
                 fixedMessage: fixedMessage,
                 style: textTheme.bodyLarge!,
               ),
-              const SizedBox(width: 12),
               GlassButton(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 gradient: glassTheme.backgroundGradientStrong,

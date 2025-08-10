@@ -284,6 +284,7 @@ class CalendarScreen extends HookConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
+          spacing: 16,
           children: [
             // 日付アイコン
             GlassWrapper(
@@ -298,13 +299,13 @@ class CalendarScreen extends HookConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
+                    spacing: 8,
                     children: [
                       // 曜日
                       Container(
@@ -316,7 +317,6 @@ class CalendarScreen extends HookConsumerWidget {
                           style: textTheme.titleMedium,
                         ),
                       ),
-                      const SizedBox(width: 8),
                       // 担当日/対象外
                       GlassChip(
                         text: dayInfo.displayText,
@@ -329,6 +329,7 @@ class CalendarScreen extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Row(
+                    spacing: 10,
                     children: [
                       // Icon
                       Container(
@@ -344,7 +345,6 @@ class CalendarScreen extends HookConsumerWidget {
                           size: 20,
                         ),
                       ),
-                      const SizedBox(width: 10),
                       // メンバー名
                       Text(
                         memberName.value,
@@ -428,10 +428,10 @@ class CalendarScreen extends HookConsumerWidget {
     final effectiveTextStyle = textStyle ?? textTheme.titleSmall;
 
     return Row(
+      spacing: 8,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Icon(iconData, color: glassTheme.surfaceColor, size: iconSize),
-        const SizedBox(width: 8),
         Text(
           infoText,
           style: effectiveTextStyle,

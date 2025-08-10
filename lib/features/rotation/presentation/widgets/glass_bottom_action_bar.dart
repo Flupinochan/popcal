@@ -21,6 +21,7 @@ class GlassBottomActionBar extends StatelessWidget {
       padding: EdgeInsets.all(20),
       color: Colors.transparent,
       child: Row(
+        spacing: 16,
         children: [
           // キャンセル
           Expanded(
@@ -32,7 +33,6 @@ class GlassBottomActionBar extends StatelessWidget {
               onPressed: isLoading ? null : onCancel,
             ),
           ),
-          SizedBox(width: 16),
           // 作成/更新
           Expanded(
             child: GlassButton(

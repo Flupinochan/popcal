@@ -155,10 +155,10 @@ class GlassListItem extends StatelessWidget {
     required Color iconColor,
   }) {
     return Row(
+      spacing: 8,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(iconData, size: 18, color: iconColor),
-        SizedBox(width: 8),
         Text(title, style: TextStyle(fontSize: 14, color: Colors.white)),
       ],
     );

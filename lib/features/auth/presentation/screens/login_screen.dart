@@ -80,6 +80,7 @@ class LoginScreen extends HookConsumerWidget {
                         SizedBox(height: 16),
                         // Sign In/Sign Up セグメント
                         Row(
+                          spacing: 8,
                           children: [
                             Expanded(
                               child: GlassToggleButton(
@@ -91,7 +92,6 @@ class LoginScreen extends HookConsumerWidget {
                                     () => selectedMode.value = AuthMode.signIn,
                               ),
                             ),
-                            SizedBox(width: 8),
                             Expanded(
                               child: GlassToggleButton(
                                 height: 40,
@@ -193,6 +193,7 @@ class LoginScreen extends HookConsumerWidget {
                         SizedBox(height: 24),
                         // OR CONTINUE WITH
                         Row(
+                          spacing: 16,
                           children: [
                             Expanded(
                               child: Divider(
@@ -201,12 +202,10 @@ class LoginScreen extends HookConsumerWidget {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 16),
                             Text(
                               'OR CONTINUE WITH',
                               style: textTheme.bodySmall,
                             ),
-                            SizedBox(width: 16),
                             Expanded(
                               child: Divider(
                                 color: glassTheme.surfaceColor.withValues(
@@ -219,6 +218,7 @@ class LoginScreen extends HookConsumerWidget {
                         SizedBox(height: 24),
                         // Google & GitHub ボタン
                         Row(
+                          spacing: 16,
                           children: [
                             Expanded(
                               child: GlassButton(
@@ -227,7 +227,6 @@ class LoginScreen extends HookConsumerWidget {
                                 height: 50,
                               ),
                             ),
-                            SizedBox(width: 16),
                             Expanded(
                               child: GlassButton(
                                 iconData: Icons.code,
@@ -240,6 +239,7 @@ class LoginScreen extends HookConsumerWidget {
                         SizedBox(height: 24),
                         // Contact Support
                         Row(
+                          spacing: 4,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Flexible(
@@ -248,7 +248,6 @@ class LoginScreen extends HookConsumerWidget {
                                 style: textTheme.bodyMedium,
                               ),
                             ),
-                            SizedBox(width: 4),
                             Flexible(
                               child: Text(
                                 'Contact Support',

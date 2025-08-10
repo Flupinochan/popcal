@@ -35,6 +35,7 @@ class GlassFormList extends HookWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              spacing: 12,
               children: [
                 // メンバー名入力
                 Expanded(
@@ -45,7 +46,6 @@ class GlassFormList extends HookWidget {
                     onSubmitted: (_) => _addItem(controller, items, field),
                   ),
                 ),
-                SizedBox(width: 12),
                 // メンバー追加+ボタン
                 GlassButton(
                   iconData: Icons.add,

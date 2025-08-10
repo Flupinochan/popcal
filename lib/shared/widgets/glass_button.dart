@@ -53,11 +53,11 @@ class GlassButton extends StatelessWidget {
 
     if (text != null && iconData != null) {
       child = Row(
+        spacing: iconTextSpacing,
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(iconData!, size: iconSize, color: effectiveIconColor),
-          SizedBox(width: iconTextSpacing),
           Text(text!, style: effectiveTextStyle),
         ],
       );

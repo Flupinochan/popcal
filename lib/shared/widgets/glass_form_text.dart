@@ -32,10 +32,10 @@ class GlassFormText extends StatelessWidget {
     return GlassWrapper(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       child: Row(
+        spacing: 12,
         children: [
           if (prefixIcon != null) ...[
             Icon(prefixIcon, color: glassTheme.iconColor, size: 20),
-            SizedBox(width: 12),
           ],
           Expanded(
             child: FormBuilderTextField(
