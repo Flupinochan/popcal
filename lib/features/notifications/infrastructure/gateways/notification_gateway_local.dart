@@ -292,13 +292,13 @@ class NotificationGatewayLocal {
               _router.go(calendarPath);
             }
           },
-          failure: (error) => _router.go(Routes.home),
+          failure: (error) => _router.go(Routes.error),
         );
       } else {
-        _router.go(Routes.home);
+        _router.go(Routes.error);
       }
     } catch (error) {
-      _router.go(Routes.home);
+      _router.go(Routes.error);
     }
   }
 }
