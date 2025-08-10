@@ -281,17 +281,24 @@ class NotificationGatewayLocal {
           payload,
         );
         dtoResult.when(
-          success:
-              (localNotificationSettingDto) => _router.push(
-                Routes.calendarPath(localNotificationSettingDto.rotationId),
-              ),
-          failure: (error) => _router.push(Routes.home),
+          success: (localNotificationSettingDto) {
+            final calendarPath = Routes.calendarPath(
+              localNotificationSettingDto.rotationId,
+            );
+            // 履歴がある(アプリ起動中にタップした)場合はpush
+            if (_router.canPop()) {
+              _router.push(calendarPath);
+            } else {
+              _router.go(calendarPath);
+            }
+          },
+          failure: (error) => _router.go(Routes.home),
         );
       } else {
-        _router.push(Routes.home);
+        _router.go(Routes.home);
       }
     } catch (error) {
-      _router.push(Routes.home);
+      _router.go(Routes.home);
     }
   }
 }

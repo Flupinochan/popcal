@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
@@ -6,6 +7,7 @@ import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
+import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
@@ -77,17 +79,7 @@ class DrawerScreen extends HookConsumerWidget {
                         icon: Icons.home,
                         title: 'ホーム',
                         onTap: () {
-                          Navigator.pop(context);
-                          // ホーム画面への遷移処理
-                        },
-                      ),
-                      SizedBox(height: 12),
-                      _buildGlassMenuItem(
-                        icon: Icons.person,
-                        title: 'プロフィール',
-                        onTap: () {
-                          Navigator.pop(context);
-                          // プロフィール画面への遷移処理
+                          context.go(Routes.home);
                         },
                       ),
                     ],

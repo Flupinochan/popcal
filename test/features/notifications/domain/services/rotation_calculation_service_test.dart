@@ -222,7 +222,7 @@ void main() {
       when(() => mockTimeUtils.now()).thenReturn(from);
     });
 
-    test('通常仕様', () {
+    test('通常仕様 新規作成or更新でRotationIndexが0の場合', () {
       // テスト
       final result = service.planUpcomingNotifications(
         rotation: rotation,
@@ -268,6 +268,60 @@ void main() {
             rotation.rotationMemberNames.length;
         final expectedMemberName =
             rotation.rotationMemberNames[expectedMemberIndex].value;
+        expect(notificationEntry[i].memberName.value, expectedMemberName);
+        // 通知時刻が10:00になっている
+        final dt = notificationEntry[i].notificationDate.value;
+        expect(dt.hour, 10);
+        expect(dt.minute, 0);
+      }
+    });
+
+    test('1回目通知後の同期処理 RotationIndexが1の場合', () {
+      final oneRotated = rotation.copyWith(
+        currentRotationIndex: RotationIndex(1),
+      );
+      // テスト
+      final result = service.planUpcomingNotifications(
+        rotation: oneRotated,
+        futureDays: futureDays,
+      );
+      expect(result.isSuccess, isTrue);
+      final notificationSchedule = result.valueOrNull!;
+      final notificationEntry = notificationSchedule.notificationEntry;
+      final newCurrentRotationIndex =
+          notificationSchedule.newCurrentRotationIndex;
+      // RotationIndexが通知設定分+されている
+      final expectedIndex =
+          oneRotated.currentRotationIndex.value + notificationEntry.length;
+      expect(newCurrentRotationIndex.value, expectedIndex);
+      // 月曜日と金曜日の通知時刻が30日間分設定されている
+      int expectedNotificationEntryCount = 0;
+      for (
+        var date = from;
+        date.isBefore(to);
+        date = date.add(const Duration(days: 1))
+      ) {
+        if (oneRotated.rotationDays.contains(Weekday.fromDateTime(date))) {
+          expectedNotificationEntryCount++;
+        }
+      }
+      expect(notificationEntry.length, expectedNotificationEntryCount);
+      for (final entry in notificationEntry) {
+        expect(entry.notificationDate.value.hour, 10);
+        expect(entry.notificationDate.value.minute, 0);
+      }
+      // 次のローテーション日は、user2
+      expect(notificationEntry[0].memberName.value, 'user2');
+      expect(notificationEntry[1].memberName.value, 'user1');
+      expect(notificationEntry[2].memberName.value, 'user2');
+      expect(notificationEntry[3].memberName.value, 'user1');
+      // メンバー名がローテーション順に割り当てられている
+      for (var i = 0; i < notificationEntry.length; i++) {
+        final expectedMemberIndex =
+            (oneRotated.currentRotationIndex.value + i) %
+            oneRotated.rotationMemberNames.length;
+        final expectedMemberName =
+            oneRotated.rotationMemberNames[expectedMemberIndex].value;
         expect(notificationEntry[i].memberName.value, expectedMemberName);
         // 通知時刻が10:00になっている
         final dt = notificationEntry[i].notificationDate.value;

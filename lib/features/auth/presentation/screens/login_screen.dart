@@ -303,7 +303,7 @@ class LoginScreen extends HookConsumerWidget {
     if (!context.mounted) return;
     authResult.when(
       success: (user) {
-        context.push(Routes.home);
+        context.go(Routes.home);
       },
       failure: (error) {
         showErrorDialog(context, error.message);
