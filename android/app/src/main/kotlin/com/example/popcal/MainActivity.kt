@@ -1,4 +1,4 @@
-package com.example.popcal
+package net.metalmental.popcal
 
 import io.flutter.embedding.android.FlutterActivity
 

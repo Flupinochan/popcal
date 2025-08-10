@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '839692849399',
     projectId: 'popcal-e709a',
     storageBucket: 'popcal-e709a.firebasestorage.app',
-    iosBundleId: 'com.example.popcal',
+    iosBundleId: 'net.metalmental.popcal',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '839692849399',
     projectId: 'popcal-e709a',
     storageBucket: 'popcal-e709a.firebasestorage.app',
-    iosBundleId: 'com.example.popcal',
+    iosBundleId: 'net.metalmental.popcal',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'popcal-e709a.firebasestorage.app',
     measurementId: 'G-V9XBTNTWFN',
   );
-
 }
