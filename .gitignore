@@ -1,3 +1,5 @@
+upload-keystore.jks
+
 # Failure GoldenTest Image
 **/failures/*.png
 
