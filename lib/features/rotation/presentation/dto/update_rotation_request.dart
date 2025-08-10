@@ -11,7 +11,6 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 
 part 'update_rotation_request.freezed.dart';
 

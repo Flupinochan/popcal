@@ -29,7 +29,7 @@ import 'package:popcal/shared/utils/time_utils.dart';
 class MockTimeUtilsImpl extends Mock implements TimeUtils {
   @override
   DateTime now() {
-    return DateTime(2025, 8, 31, 9, 0);
+    return DateTime(2025, 8, 29, 9, 0);
   }
 }
 
@@ -48,12 +48,12 @@ void main() {
     rotationDays: [Weekday.monday, Weekday.friday],
     notificationTime: NotificationTime(TimeOfDay(hour: 9, minute: 0)),
     currentRotationIndex: RotationIndex(0),
-    createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9, 0)),
-    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9, 0)),
+    createdAt: RotationCreatedAt(DateTime(2025, 8, 29, 9, 0)),
+    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 29, 9, 0)),
   );
   Map<DateKey, ScheduleDayResponse> scheduleMap = {
-    DateKey(DateTime(2025, 8, 31)): ScheduleDayResponse(
-      date: NotificationDateTime(DateTime(2025, 8, 31)),
+    DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 29, 9, 0)),
       memberName: RotationMemberName('user1'),
       isRotationDay: true,
       memberColor: MemberColor.member1,

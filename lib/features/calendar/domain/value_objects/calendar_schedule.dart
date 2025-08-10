@@ -12,7 +12,8 @@ class CalendarSchedule {
   const CalendarSchedule({required this.rotation, required this.scheduleMap});
 
   ScheduleDay getDayInfo(DateTime date) {
-    return scheduleMap[NotificationDateTime(date)] ??
+    final dateKey = DateKey.fromDateTime(date);
+    return scheduleMap[dateKey] ??
         ScheduleDay(
           date: NotificationDateTime(date),
           memberName: RotationMemberName.notApplicable,

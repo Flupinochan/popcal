@@ -59,11 +59,24 @@ class Rotation {
   }
 
   RotationMemberName getRotationMemberName(RotationIndex rotationIndex) {
-    return rotationMemberNames[getRotationMemberIndex(rotationIndex)];
+    if (rotationMemberNames.isEmpty) {
+      return RotationMemberName.notApplicable;
+    }
+
+    final index = getRotationMemberIndex(rotationIndex);
+    if (index >= 0 && index < rotationMemberNames.length) {
+      return rotationMemberNames[index];
+    }
+
+    return RotationMemberName.notApplicable;
   }
 
   int getRotationMemberIndex(RotationIndex rotationIndex) {
-    return rotationIndex.value % getRotationMembersCount();
+    final memberCount = getRotationMembersCount();
+    if (memberCount == 0) {
+      return 0;
+    }
+    return rotationIndex.value % memberCount;
   }
 
   int getRotationMembersCount() {

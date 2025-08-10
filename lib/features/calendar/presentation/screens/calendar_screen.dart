@@ -7,6 +7,7 @@ import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_resp
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:popcal/shared/widgets/custom_error_widget.dart';
@@ -247,7 +248,7 @@ class CalendarScreen extends HookConsumerWidget {
               ),
             ),
           ),
-          isRotationDay && memberName != null
+          isRotationDay && memberName != RotationMemberName.notApplicable
               ? Text(
                 memberName.value,
                 style: textTheme.labelMedium!.copyWith(
