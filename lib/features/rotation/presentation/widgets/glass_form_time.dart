@@ -4,10 +4,9 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassFormTime extends StatelessWidget {
+  const GlassFormTime({required this.now, super.key, this.initialValue});
   final TimeOfDay? initialValue;
   final DateTime now;
-
-  const GlassFormTime({super.key, this.initialValue, required this.now});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class GlassFormTime extends StatelessWidget {
           return InkWell(
             onTap: () async {
               // TimePicker
-              final TimeOfDay? picked = await showTimePicker(
+              final picked = await showTimePicker(
                 context: context,
                 initialTime: field.value ?? const TimeOfDay(hour: 9, minute: 0),
                 builder: (BuildContext context, Widget? child) {
@@ -44,7 +43,7 @@ class GlassFormTime extends StatelessWidget {
                   return Theme(
                     data: Theme.of(context).copyWith(
                       timePickerTheme: TimePickerThemeData(
-                        backgroundColor: Color(
+                        backgroundColor: const Color(
                           0xFF1A1A2E,
                         ).withValues(alpha: 0.9),
                         hourMinuteTextColor: Colors.white,
@@ -55,7 +54,7 @@ class GlassFormTime extends StatelessWidget {
                           color: Colors.white.withValues(alpha: 0.4),
                           width: 1.5,
                         ),
-                        dialBackgroundColor: Color.fromARGB(
+                        dialBackgroundColor: const Color.fromARGB(
                           255,
                           22,
                           22,
@@ -64,7 +63,7 @@ class GlassFormTime extends StatelessWidget {
                         dialHandColor: Colors.white.withValues(alpha: 0.5),
                         dialTextColor: Colors.white,
                         entryModeIconColor: Colors.white,
-                        helpTextStyle: TextStyle(color: Colors.white),
+                        helpTextStyle: const TextStyle(color: Colors.white),
                         inputDecorationTheme: InputDecorationTheme(
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(

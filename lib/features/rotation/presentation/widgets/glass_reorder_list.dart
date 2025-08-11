@@ -3,24 +3,23 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassReorderList extends StatelessWidget {
+  const GlassReorderList({
+    required this.items,
+    required this.onReorder,
+    required this.onDelete,
+    super.key,
+  });
   final List<String> items;
   final void Function(int, int) onReorder;
   final void Function(int) onDelete;
 
-  const GlassReorderList({
-    super.key,
-    required this.items,
-    required this.onReorder,
-    required this.onDelete,
-  });
-
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) return SizedBox.shrink();
+    if (items.isEmpty) return const SizedBox.shrink();
 
     return ReorderableListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: items.length,
       onReorder: onReorder,
       // 並べ替え時のスタイル
@@ -53,18 +52,17 @@ class GlassReorderList extends StatelessWidget {
 }
 
 class _GlassReorderItem extends StatelessWidget {
-  final int index;
-  final String item;
-  final VoidCallback onDelete;
-  final bool isDragging;
-
   const _GlassReorderItem({
-    super.key,
     required this.index,
     required this.item,
     required this.onDelete,
     required this.isDragging,
+    super.key,
   });
+  final int index;
+  final String item;
+  final VoidCallback onDelete;
+  final bool isDragging;
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +83,8 @@ class _GlassReorderItem extends StatelessWidget {
             isDragging
                 ? glassTheme.backgroundGradientStrong
                 : glassTheme.backgroundGradient,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        margin: EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.only(bottom: 8),
         child: Row(
           children: [
             // メンバーIndex (数字)
@@ -101,7 +99,7 @@ class _GlassReorderItem extends StatelessWidget {
                 child: Text('${index + 1}', style: textTheme.titleMedium),
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             // メンバー名
             Expanded(child: Text(item, style: textTheme.bodyLarge)),
             // 削除ボタン

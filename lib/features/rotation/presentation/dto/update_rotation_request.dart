@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -16,8 +16,6 @@ part 'update_rotation_request.freezed.dart';
 
 @freezed
 sealed class UpdateRotationRequest with _$UpdateRotationRequest {
-  const UpdateRotationRequest._();
-
   const factory UpdateRotationRequest({
     required UserId userId,
     required RotationId rotationId,
@@ -27,29 +25,6 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
     required NotificationTime notificationTime,
     required RotationCreatedAt createdAt,
   }) = _UpdateRotationRequest;
-
-  // DTO => Entity
-  Result<Rotation> toEntity({required DateTime currentTime}) {
-    try {
-      return Results.success(
-        Rotation(
-          rotationId: rotationId,
-          userId: userId,
-          rotationName: rotationName,
-          rotationMemberNames: rotationMembers,
-          rotationDays: rotationDays,
-          notificationTime: notificationTime,
-          currentRotationIndex: RotationIndex(0),
-          createdAt: createdAt,
-          updatedAt: RotationUpdatedAt(currentTime),
-        ),
-      );
-    } catch (e) {
-      return Results.failure(
-        ValidationFailure('UpdateRotation to Rotation conversion failed: $e'),
-      );
-    }
-  }
 
   /// Entity => DTO
   factory UpdateRotationRequest.fromEntity(Rotation entity) {
@@ -62,5 +37,29 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
       notificationTime: entity.notificationTime,
       createdAt: entity.createdAt,
     );
+  }
+  const UpdateRotationRequest._();
+
+  // DTO => Entity
+  Result<Rotation> toEntity({required DateTime currentTime}) {
+    try {
+      return Results.success(
+        Rotation(
+          rotationId: rotationId,
+          userId: userId,
+          rotationName: rotationName,
+          rotationMemberNames: rotationMembers,
+          rotationDays: rotationDays,
+          notificationTime: notificationTime,
+          currentRotationIndex: const RotationIndex(0),
+          createdAt: createdAt,
+          updatedAt: RotationUpdatedAt(currentTime),
+        ),
+      );
+    } catch (e) {
+      return Results.failure(
+        ValidationFailure('UpdateRotation to Rotation conversion failed: $e'),
+      );
+    }
   }
 }

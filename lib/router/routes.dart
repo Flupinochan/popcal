@@ -1,3 +1,5 @@
+// ignore_for_file: prefer-match-file-name
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
@@ -5,7 +7,7 @@ import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/shared/widgets/custom_error_widget.dart';
+import 'package:popcal/shared/widgets/custom_error_screen.dart';
 
 part 'routes.g.dart';
 

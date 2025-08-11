@@ -3,20 +3,20 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/auth/domain/value_objects/email.dart';
+import 'package:popcal/features/auth/domain/value_objects/password.dart';
 import 'package:popcal/features/auth/presentation/dto/email_sign_in_request.dart';
 import 'package:popcal/features/auth/presentation/enums/auth_mode.dart';
 import 'package:popcal/features/auth/presentation/enums/login_form_key.dart';
-import 'package:popcal/features/auth/domain/value_objects/email.dart';
-import 'package:popcal/features/auth/domain/value_objects/password.dart';
+import 'package:popcal/features/auth/presentation/widgets/glass_form_password.dart';
+import 'package:popcal/features/auth/presentation/widgets/glass_toggle_button.dart';
 import 'package:popcal/features/auth/providers/auth_notifier.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_dialog.dart';
-import 'package:popcal/features/auth/presentation/widgets/glass_form_password.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
-import 'package:popcal/features/auth/presentation/widgets/glass_toggle_button.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class LoginScreen extends HookConsumerWidget {
@@ -27,8 +27,9 @@ class LoginScreen extends HookConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final mediaQuery = MediaQuery.of(context);
     final isLoading = ref.watch(authNotifierProvider).isLoading;
-    final formKey = useMemoized(() => GlobalKey<FormBuilderState>());
+    final formKey = useMemoized(GlobalKey<FormBuilderState>.new);
     final selectedMode = useState(AuthMode.signIn);
 
     return Scaffold(
@@ -40,44 +41,46 @@ class LoginScreen extends HookConsumerWidget {
         child: SafeArea(
           child: FormBuilder(
             key: formKey,
-            enabled: true,
             child: SingleChildScrollView(
               // height: double.infinity かつ SingleChildScrollView でスクロール可能な場合に
               // ConstrainedBoxで中央寄せ
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight:
-                      MediaQuery.of(context).size.height -
-                      MediaQuery.of(context).padding.top -
-                      MediaQuery.of(context).padding.bottom,
+                      mediaQuery.size.height -
+                      mediaQuery.padding.top -
+                      mediaQuery.padding.bottom,
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
+                  ),
                   child: GlassWrapper(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                    padding: const EdgeInsets.all(24),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // Lock Icon
-                        GlassIcon(
+                        const GlassIcon(
                           iconData: Icons.lock_outline_rounded,
                           iconSize: 30,
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         // Welcome Text
                         Text(
                           'Welcome to Popcal',
                           style: textTheme.headlineLarge,
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         // Description Text
                         Text(
                           'Sign in to your account or create a new one',
                           style: textTheme.bodyMedium,
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         // Sign In/Sign Up セグメント
                         Row(
                           spacing: 8,
@@ -104,7 +107,7 @@ class LoginScreen extends HookConsumerWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         // Form (Email & Password)
                         Column(
                           spacing: 20,
@@ -159,38 +162,39 @@ class LoginScreen extends HookConsumerWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 32),
+                        const SizedBox(height: 32),
                         // Sign In/Sign Up ボタン
-                        isLoading
-                            ? GlassWrapper(
-                              height: 50,
-                              child: SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: glassTheme.surfaceColor,
-                                  strokeWidth: 3,
-                                ),
+                        if (isLoading)
+                          GlassWrapper(
+                            height: 50,
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: glassTheme.surfaceColor,
+                                strokeWidth: 3,
                               ),
-                            )
-                            : GlassButton(
-                              text: selectedMode.value.displayName,
-                              height: 50,
-                              onPressed:
-                                  () => _handleSubmit(
-                                    context,
-                                    ref,
-                                    formKey,
-                                    selectedMode,
-                                  ),
                             ),
-                        SizedBox(height: 20),
+                          )
+                        else
+                          GlassButton(
+                            text: selectedMode.value.displayName,
+                            height: 50,
+                            onPressed:
+                                () => _handleSubmit(
+                                  context,
+                                  ref,
+                                  formKey,
+                                  selectedMode,
+                                ),
+                          ),
+                        const SizedBox(height: 20),
                         // Forgot password リンク
                         Text(
                           'Forgot your password?',
                           style: textTheme.bodyMedium,
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         // OR CONTINUE WITH
                         Row(
                           spacing: 16,
@@ -215,9 +219,9 @@ class LoginScreen extends HookConsumerWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         // Google & GitHub ボタン
-                        Row(
+                        const Row(
                           spacing: 16,
                           children: [
                             Expanded(
@@ -236,7 +240,7 @@ class LoginScreen extends HookConsumerWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         // Contact Support
                         Row(
                           spacing: 4,
@@ -301,7 +305,7 @@ class LoginScreen extends HookConsumerWidget {
     if (!context.mounted) return;
     authResult.when(
       success: (user) {
-        HomeRoute().go(context);
+        const HomeRoute().go(context);
       },
       failure: (error) {
         showErrorDialog(context, error.message);

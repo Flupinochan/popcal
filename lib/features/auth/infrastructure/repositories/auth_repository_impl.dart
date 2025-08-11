@@ -1,14 +1,13 @@
-import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/features/auth/infrastructure/repositories/auth_repository_firebase.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
+import 'package:popcal/features/auth/infrastructure/repositories/auth_repository_firebase.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRepositoryFirebase _authRepositoryFirebase;
-
   AuthRepositoryImpl(this._authRepositoryFirebase);
+  final AuthRepositoryFirebase _authRepositoryFirebase;
 
   @override
   Stream<Result<AppUser?>> get authStateChanges {
@@ -19,11 +18,11 @@ class AuthRepositoryImpl implements AuthRepository {
             return Results.success(null);
           }
           return dto.toEntity().when(
-            success: (entity) => Results.success(entity),
-            failure: (error) => Results.failure(error),
+            success: Results.success,
+            failure: Results.failure,
           );
         },
-        failure: (error) => Results.failure(error),
+        failure: Results.failure,
       );
     });
   }
@@ -37,11 +36,11 @@ class AuthRepositoryImpl implements AuthRepository {
           return Results.success(null);
         }
         return dto.toEntity().when(
-          success: (entity) => Results.success(entity),
-          failure: (error) => Results.failure(error),
+          success: Results.success,
+          failure: Results.failure,
         );
       },
-      failure: (error) => Results.failure(error),
+      failure: Results.failure,
     );
   }
 
@@ -58,12 +57,17 @@ class AuthRepositoryImpl implements AuthRepository {
     return dtoResult.when(
       success: (dto) {
         return dto.toEntity().when(
-          success: (entity) => Results.success(entity),
-          failure: (error) => Results.failure(error),
+          success: Results.success,
+          failure: Results.failure,
         );
       },
-      failure: (error) => Results.failure(error),
+      failure: Results.failure,
     );
+  }
+
+  @override
+  Future<Result<void>> signOut() async {
+    return _authRepositoryFirebase.signOut();
   }
 
   @override
@@ -79,16 +83,11 @@ class AuthRepositoryImpl implements AuthRepository {
     return dtoResult.when(
       success: (dto) {
         return dto.toEntity().when(
-          success: (entity) => Results.success(entity),
-          failure: (error) => Results.failure(error),
+          success: Results.success,
+          failure: Results.failure,
         );
       },
-      failure: (error) => Results.failure(error),
+      failure: Results.failure,
     );
-  }
-
-  @override
-  Future<Result<void>> signOut() async {
-    return _authRepositoryFirebase.signOut();
   }
 }

@@ -12,7 +12,7 @@ import 'package:popcal/features/rotation/domain/repositories/rotation_repository
 part 'rotation_providers.g.dart';
 
 @riverpod
-FirebaseFirestore firebaseFirestore(Ref ref) {
+FirebaseFirestore firebaseFirestore(Ref _) {
   return FirebaseFirestore.instance;
 }
 

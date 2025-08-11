@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 
-enum SyncStatus { idle, syncing, completed, failed }
-
 class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const GlassAppBar({
+    required this.title,
+    super.key,
+    this.leadingIcon,
+    this.onLeadingPressed,
+    this.syncStatus,
+  });
   final String title;
   final IconData? leadingIcon;
   final VoidCallback? onLeadingPressed;
   final SyncStatus? syncStatus;
 
-  const GlassAppBar({
-    super.key,
-    required this.title,
-    this.leadingIcon,
-    this.onLeadingPressed,
-    this.syncStatus,
-  });
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
       actions: [
         Padding(
-          padding: EdgeInsets.only(right: 16),
+          padding: const EdgeInsets.only(right: 16),
           child: _buildAction(context),
         ),
       ],
@@ -66,11 +66,12 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
         );
       case SyncStatus.failed:
         return Icon(Icons.error_outline, color: glassTheme.errorBorderColor);
-      default:
+      case SyncStatus.idle:
+        return const SizedBox();
+      case null:
         return const SizedBox();
     }
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+
+enum SyncStatus { idle, syncing, completed, failed }

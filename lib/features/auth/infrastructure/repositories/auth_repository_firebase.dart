@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:popcal/core/utils/failures.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures/auth_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/infrastructure/dto/user_firebase_response.dart';
 
 class AuthRepositoryFirebase {
-  final FirebaseAuth _firebaseAuth;
-
   AuthRepositoryFirebase(this._firebaseAuth);
+  final FirebaseAuth _firebaseAuth;
 
   // 認証状態(認証済 or 未認証)を監視
   Stream<Result<UserFirebaseResponse?>> get authStateChanges {
@@ -15,7 +14,7 @@ class AuthRepositoryFirebase {
         if (firebaseUser != null) {
           final dtoResult = UserFirebaseResponse.fromFirebaseUser(firebaseUser);
           return dtoResult.when(
-            success: (dto) => Results.success(dto),
+            success: Results.success,
             failure: (error) => Results.failure(AuthFailure(error.message)),
           );
         } else {
@@ -38,7 +37,7 @@ class AuthRepositoryFirebase {
       }
       final dtoResult = UserFirebaseResponse.fromFirebaseUser(firebaseUser);
       return dtoResult.when(
-        success: (dto) => Results.success(dto),
+        success: Results.success,
         failure: (error) => Results.failure(AuthFailure(error.message)),
       );
     } on FirebaseAuthException catch (error) {
@@ -59,17 +58,29 @@ class AuthRepositoryFirebase {
         password: password,
       );
       if (credential.user == null) {
-        return Results.failure(AuthFailure('メールアドレス認証認証に失敗しました'));
+        return Results.failure(const AuthFailure('メールアドレス認証認証に失敗しました'));
       }
       final dtoResult = UserFirebaseResponse.fromFirebaseUser(credential.user!);
       return dtoResult.when(
-        success: (dto) => Results.success(dto),
+        success: Results.success,
         failure: (error) => Results.failure(AuthFailure(error.message)),
       );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Results.failure(AuthFailure('メールアドレス認証で、予期しないエラーが発生しました: $error'));
+    }
+  }
+
+  // サインアウト
+  Future<Result<void>> signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+      return Results.success(null);
+    } on FirebaseAuthException catch (error) {
+      return Results.failure(AuthFailure(_mapFirebaseError(error)));
+    } catch (error) {
+      return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
     }
   }
 
@@ -84,29 +95,17 @@ class AuthRepositoryFirebase {
         password: password,
       );
       if (credential.user == null) {
-        return Results.failure(AuthFailure('サインアップに失敗しました'));
+        return Results.failure(const AuthFailure('サインアップに失敗しました'));
       }
       final dtoResult = UserFirebaseResponse.fromFirebaseUser(credential.user!);
       return dtoResult.when(
-        success: (dto) => Results.success(dto),
+        success: Results.success,
         failure: (error) => Results.failure(AuthFailure(error.message)),
       );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
     } catch (error) {
       return Results.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
-    }
-  }
-
-  // サインアウト
-  Future<Result<void>> signOut() async {
-    try {
-      await _firebaseAuth.signOut();
-      return Results.success(null);
-    } on FirebaseAuthException catch (error) {
-      return Results.failure(AuthFailure(_mapFirebaseError(error)));
-    } catch (error) {
-      return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
     }
   }
 

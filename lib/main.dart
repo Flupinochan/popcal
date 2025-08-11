@@ -1,23 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/logger/logger.dart';
 import 'package:popcal/core/themes/app_theme.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
+import 'package:popcal/firebase_options.dart';
 import 'package:popcal/router/router.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:timezone/data/latest_all.dart';
-import 'firebase_options.dart';
 
 void main() async {
   /// ロガー初期化
   setupLogging();
-  final Logger logger = Logger("main");
+  final logger = Logger('main');
 
   // タイムゾーン初期化 (通知機能のタイムゾーンtzで使用)
   initializeTimeZones();
@@ -37,19 +36,19 @@ void main() async {
   };
 
   // RiverPod Scope
-  logger.info("runApp実行");
+  logger.info('runApp実行');
   runApp(ProviderScope(child: MainApp()));
 }
 
 class MainApp extends ConsumerWidget {
   MainApp({super.key});
 
-  final Logger logger = Logger("MainApp");
+  final Logger logger = Logger('MainApp');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(
-      routerProvider(initialLocation: HomeRoute().location),
+      routerProvider(initialLocation: const HomeRoute().location),
     );
 
     // 通知初期化
@@ -70,7 +69,6 @@ class MainApp extends ConsumerWidget {
     });
 
     return MaterialApp.router(
-      themeMode: ThemeMode.system,
       theme: AppTheme.lightTheme,
       routerConfig: router,
     );

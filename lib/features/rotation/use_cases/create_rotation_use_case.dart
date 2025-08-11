@@ -1,20 +1,20 @@
-import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/core/utils/failures/notification_failure.dart';
+import 'package:popcal/core/utils/failures/rotation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 
 class CreateRotationUseCase {
-  final RotationRepository _rotationRepository;
-  final NotificationGateway _notificationRepository;
-  final RotationCalculationService _scheduleCalculationService;
-
   CreateRotationUseCase(
     this._rotationRepository,
     this._notificationRepository,
     this._scheduleCalculationService,
   );
+  final RotationRepository _rotationRepository;
+  final NotificationGateway _notificationRepository;
+  final RotationCalculationService _scheduleCalculationService;
 
   Future<Result<Rotation>> execute(Rotation rotation) async {
     // 1. ローテーショングループ作成
@@ -39,8 +39,7 @@ class CreateRotationUseCase {
         // 3. 各通知を作成
         final createResults = await Future.wait(
           notificationPlan.notificationEntry.map(
-            (notification) =>
-                _notificationRepository.createNotification(notification),
+            _notificationRepository.createNotification,
           ),
         );
         for (final createNotificationResult in createResults) {

@@ -1,5 +1,5 @@
-import 'package:popcal/core/utils/failures.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures/calendar_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
@@ -12,13 +12,12 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_member_na
 import 'package:popcal/shared/utils/time_utils.dart';
 
 class BuildCalendarScheduleUseCase {
-  final RotationCalculationService _rotationCalculationService;
-  final TimeUtils _timeUtils;
-
   BuildCalendarScheduleUseCase(
     this._rotationCalculationService,
     this._timeUtils,
   );
+  final RotationCalculationService _rotationCalculationService;
+  final TimeUtils _timeUtils;
 
   // 2. カレンダー表示用DTO作成
   /// 表示用データの生成、これはapplication service
@@ -34,7 +33,7 @@ class BuildCalendarScheduleUseCase {
   }) {
     try {
       final now = NotificationDateTime(_timeUtils.now());
-      var newCurrentRotationIndex = RotationIndex(0);
+      var newCurrentRotationIndex = const RotationIndex(0);
       final calendarDays = <DateKey, ScheduleDay>{};
       // 指定期間をループしてカレンダー日を作成
       for (

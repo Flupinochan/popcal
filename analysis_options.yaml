@@ -1,31 +1,10 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
+# include: package:flutter_lints/flutter.yaml
+include: package:very_good_analysis/analysis_options.yaml
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    public_member_api_docs: false
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
 analyzer:
   language:
     strict-casts: true
@@ -33,16 +12,16 @@ analyzer:
     strict-raw-types: true
   plugins:
     - custom_lint
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/generated/**"
+    - "test/fixtures/**"
 
+# DCM (無償版はpresetや特定の機能は利用不可)
 dart_code_metrics:
-  # 無償版はpresetや特定の機能は利用不可
   extends:
     - recommended
-  exclude:
-    - "test/**"
-    - "build/**"
-    - "**.g.dart"
-    - "**.freezed.dart"
   formatter:
     cascading-widget-extensions: true
   assists:
@@ -70,9 +49,9 @@ dart_code_metrics:
     weighted-methods-per-class: 35
     number-of-used-widgets: 20
     widgets-nesting-level: 10
-  # Commonルール（40個）
+  # linterと競合する場合があるため注意
   rules:
-    # Correctness & Control Flow
+    # Commonルール（40個）
     - avoid-cascade-after-if-null
     - avoid-collection-methods-with-unrelated-types
     - avoid-duplicate-named-imports
@@ -80,9 +59,9 @@ dart_code_metrics:
     - avoid-global-state
     - avoid-late-keyword
     - avoid-nested-conditional-expressions
-    - avoid-non-null-assertion
+    # - avoid-non-null-assertion
     - avoid-passing-async-when-sync-expected
-    - avoid-redundant-async
+    # - avoid-redundant-async
     - avoid-self-compare
     - avoid-substring
     - avoid-throw-in-catch-block
@@ -92,19 +71,15 @@ dart_code_metrics:
     - avoid-unnecessary-type-casts
     - avoid-unrelated-type-assertions
     - avoid-unused-parameters
-    
-    # Readability & Consistency
     - binary-expression-operand-order
     - double-literal-format
-    - member-ordering
+    # - member-ordering
     - missing-test-assertion
-    - newline-before-return
+    # - newline-before-return
     - no-boolean-literal-compare
     - no-empty-block
     - no-equal-then-else
-    - no-magic-number
-    
-    # Maintainability & Best Practices
+    # - no-magic-number
     - prefer-async-await
     - prefer-commenting-analyzer-ignores
     - prefer-conditional-expressions
@@ -116,7 +91,6 @@ dart_code_metrics:
     - prefer-last
     - prefer-match-file-name
     - prefer-moving-to-variable
-    
     # Flutterルール（18個）
     - always-remove-listener
     - avoid-border-all

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
@@ -24,13 +24,14 @@ class DrawerScreen extends HookConsumerWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final authRepository = ref.read(authRepositoryProvider);
+    final linkColor = Colors.blue.withValues(alpha: 0.8);
 
     return Drawer(
       backgroundColor: glassTheme.backgroundColor,
       child: GlassWrapper(
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 Column(
@@ -38,7 +39,7 @@ class DrawerScreen extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Icon
-                    GlassIcon(
+                    const GlassIcon(
                       iconData: Icons.person,
                       iconSize: 40,
                       backgroundSize: 60,
@@ -69,7 +70,7 @@ class DrawerScreen extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Menu
                 Expanded(
                   child: ListView(
@@ -79,7 +80,7 @@ class DrawerScreen extends HookConsumerWidget {
                         title: 'ホーム',
                         onTap: () {
                           context.pop();
-                          HomeRoute().go(context);
+                          const HomeRoute().go(context);
                         },
                       ),
                     ],
@@ -87,13 +88,13 @@ class DrawerScreen extends HookConsumerWidget {
                 ),
                 // Sign Out
                 GlassButton(
-                  text: "サインアウト",
+                  text: 'サインアウト',
                   height: 50,
                   borderColor: glassTheme.errorBorderColor,
                   gradient: glassTheme.errorGradient,
-                  onPressed: () => authRepository.signOut(),
+                  onPressed: authRepository.signOut,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Document Link
                 TextButton.icon(
                   onPressed: () async {
@@ -106,13 +107,13 @@ class DrawerScreen extends HookConsumerWidget {
                   },
                   icon: Icon(
                     Icons.open_in_new,
-                    color: Colors.blue.withValues(alpha: 0.8),
+                    color: linkColor,
                     size: 16,
                   ),
                   label: Text(
                     'How to use PopCal',
                     style: textTheme.bodyMedium?.copyWith(
-                      color: Colors.blue.withValues(alpha: 0.8),
+                      color: linkColor,
                     ),
                   ),
                 ),
@@ -151,7 +152,7 @@ class DrawerScreen extends HookConsumerWidget {
   }) {
     return GlassButton(
       height: 50,
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       iconData: icon,
       text: title,
       onPressed: onTap,
@@ -160,16 +161,15 @@ class DrawerScreen extends HookConsumerWidget {
   }
 
   Widget _buildUserInfo(TextTheme textTheme, UserResponse? userDto) {
+    final emailValue = userDto?.email.value;
+
     return Column(
       children: [
         Text(
-          userDto == null ? "読み込み中..." : userDto.email.value.split('@').first,
+          emailValue == null ? '読み込み中...' : emailValue.split('@').first,
           style: textTheme.titleMedium,
         ),
-        Text(
-          userDto == null ? "お待ちください" : userDto.email.value,
-          style: textTheme.bodySmall,
-        ),
+        Text(emailValue ?? 'お待ちください', style: textTheme.bodySmall),
       ],
     );
   }

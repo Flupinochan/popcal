@@ -29,12 +29,3 @@ class CustomLoadingScreen extends StatelessWidget {
     );
   }
 }
-
-Widget customLoadingSimpleWidget(BuildContext context) {
-  final glassTheme =
-      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-
-  return Center(
-    child: CircularProgressIndicator(color: glassTheme.surfaceColor),
-  );
-}

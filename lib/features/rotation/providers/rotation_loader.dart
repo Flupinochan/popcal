@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:popcal/core/utils/failures.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures/auth_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
@@ -22,7 +22,7 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
   }
   final userDto = authResult.valueOrNull;
   if (userDto == null) {
-    return Results.failure(AuthFailure('未認証です'));
+    return Results.failure(const AuthFailure('未認証です'));
   }
   if (rotationId == null) {
     return Results.success(RotationDataResponse(userDto, null));
@@ -45,8 +45,7 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
 }
 
 class RotationDataResponse {
+  const RotationDataResponse(this.userDto, this.rotationResponse);
   final UserResponse userDto;
   final RotationResponse? rotationResponse;
-
-  const RotationDataResponse(this.userDto, this.rotationResponse);
 }

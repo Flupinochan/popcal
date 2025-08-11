@@ -4,7 +4,7 @@ import 'package:alchemist/alchemist.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
-  return AlchemistConfig.runWithConfig(
+  return await AlchemistConfig.runWithConfig(
     config: AlchemistConfig(
       forceUpdateGoldenFiles: false,
       theme: AppTheme.lightTheme,

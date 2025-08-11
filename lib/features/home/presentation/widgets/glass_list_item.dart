@@ -5,18 +5,18 @@ import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassListItem extends StatelessWidget {
-  final RotationResponse rotationResponse;
-  final VoidCallback? onTap;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
-
   const GlassListItem({
-    super.key,
     required this.rotationResponse,
+    super.key,
     this.onTap,
     this.onEdit,
     this.onDelete,
   });
+
+  final RotationResponse rotationResponse;
+  final VoidCallback? onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,6 @@ class GlassListItem extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: Dismissible(
         key: Key(rotationResponse.rotationId.value),
-        direction: DismissDirection.horizontal,
         // Dismissによる削除時の背景色
         background: GlassWrapper(
           borderColor: glassTheme.errorBorderColor,
@@ -50,7 +49,7 @@ class GlassListItem extends StatelessWidget {
                 child: Row(
                   children: [
                     // アイコン
-                    GlassIcon(iconData: Icons.group),
+                    const GlassIcon(iconData: Icons.group),
                     const SizedBox(width: 16),
                     // テキスト情報
                     Expanded(
@@ -94,7 +93,7 @@ class GlassListItem extends StatelessWidget {
                           ),
                         );
                       },
-                      alignmentOffset: Offset(-77, -43),
+                      alignmentOffset: const Offset(-77, -43),
                       style: MenuStyle(
                         backgroundColor: WidgetStateProperty.all(
                           Colors.transparent,
@@ -103,7 +102,9 @@ class GlassListItem extends StatelessWidget {
                         padding: WidgetStateProperty.all(EdgeInsets.zero),
                         shape: WidgetStateProperty.all(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(8),
+                            ),
                             side: BorderSide(
                               color: glassTheme.borderColorStrong,
                             ),
@@ -159,7 +160,7 @@ class GlassListItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(iconData, size: 18, color: iconColor),
-        Text(title, style: TextStyle(fontSize: 14, color: Colors.white)),
+        Text(title, style: const TextStyle(fontSize: 14, color: Colors.white)),
       ],
     );
   }

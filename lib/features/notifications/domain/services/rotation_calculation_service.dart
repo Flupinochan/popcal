@@ -1,8 +1,8 @@
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
 
@@ -18,20 +18,20 @@ abstract class RotationCalculationService {
     required RotationDateTime rotationDateTime,
   });
 
-  /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
-  /// [rotation]
-  /// [futureDays] デフォルトは今日から30日分
-  Result<NotificationSchedule> planUpcomingNotifications({
-    required Rotation rotation,
-    int futureDays = 30,
-  });
-
   /// [checkDate] がローテーション曜日か判定
   bool isValidNotificationDate({
     required DateKey checkDate,
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationDateTime rotationDateTime,
+  });
+
+  /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
+  /// [rotation]
+  /// [futureDays] デフォルトは今日から30日分
+  Result<NotificationSchedule> planUpcomingNotifications({
+    required Rotation rotation,
+    int futureDays = 30,
   });
 
   /// ※アプリ更新時に直近30日分のスケジュールを再計算するロジックはuseCase層で実装

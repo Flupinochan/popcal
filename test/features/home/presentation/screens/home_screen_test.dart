@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -26,65 +26,40 @@ import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 
-class MockNotificationGateway extends Mock implements NotificationGateway {
-  @override
-  Future<Result<void>> initializeNotificationLaunch() async {
-    return Results.success(null);
-  }
-}
-
-class MockSyncNotificationsUseCase extends Mock
-    implements SyncNotificationsUseCase {
-  @override
-  Future<Result<void>> execute(UserId userId) async {
-    return Results.success(null);
-  }
-}
-
-class MockRotationRepository extends Mock implements RotationRepository {
-  @override
-  Future<Result<void>> deleteRotation(
-    UserId userId,
-    RotationId rotationId,
-  ) async {
-    return Results.success(null);
-  }
-}
-
 void main() {
-  final screenSize = Size(411, 914);
-  final mockUser = UserResponse(
+  const screenSize = Size(411, 914);
+  const mockUser = UserResponse(
     userId: UserId('test-user-id'),
     email: Email('test@example.com'),
   );
-  List<RotationResponse> rotations = [
+  final rotations = <RotationResponse>[
     RotationResponse(
       rotationId: RotationId('test-rotation-id-1'),
-      userId: UserId('test-user-id-1'),
+      userId: const UserId('test-user-id-1'),
       rotationName: RotationName('test-rotation-name-1'),
       rotationMembers: [
-        RotationMemberName('tester1-1'),
-        RotationMemberName('tester1-2'),
+        const RotationMemberName('tester1-1'),
+        const RotationMemberName('tester1-2'),
       ],
       rotationDays: [Weekday.monday, Weekday.sunday],
-      notificationTime: NotificationTime(TimeOfDay(hour: 15, minute: 0)),
-      currentRotationIndex: RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9, 0)),
-      updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9, 0)),
+      notificationTime: NotificationTime(const TimeOfDay(hour: 15, minute: 0)),
+      currentRotationIndex: const RotationIndex(0),
+      createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
+      updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9)),
     ),
     RotationResponse(
       rotationId: RotationId('test-rotation-id-2'),
-      userId: UserId('test-user-id-2'),
+      userId: const UserId('test-user-id-2'),
       rotationName: RotationName('test-rotation-name-2'),
       rotationMembers: [
-        RotationMemberName('tester2-1'),
-        RotationMemberName('tester2-2'),
+        const RotationMemberName('tester2-1'),
+        const RotationMemberName('tester2-2'),
       ],
       rotationDays: [Weekday.monday, Weekday.sunday],
-      notificationTime: NotificationTime(TimeOfDay(hour: 16, minute: 0)),
-      currentRotationIndex: RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime(2025, 9, 1, 9, 0)),
-      updatedAt: RotationUpdatedAt(DateTime(2025, 9, 1, 9, 0)),
+      notificationTime: NotificationTime(const TimeOfDay(hour: 16, minute: 0)),
+      currentRotationIndex: const RotationIndex(0),
+      createdAt: RotationCreatedAt(DateTime(2025, 9, 1, 9)),
+      updatedAt: RotationUpdatedAt(DateTime(2025, 9, 1, 9)),
     ),
   ];
 
@@ -196,4 +171,29 @@ void main() {
       },
     );
   });
+}
+
+class MockNotificationGateway extends Mock implements NotificationGateway {
+  @override
+  Future<Result<void>> initializeNotificationLaunch() async {
+    return Results.success(null);
+  }
+}
+
+class MockRotationRepository extends Mock implements RotationRepository {
+  @override
+  Future<Result<void>> deleteRotation(
+    UserId userId,
+    RotationId rotationId,
+  ) async {
+    return Results.success(null);
+  }
+}
+
+class MockSyncNotificationsUseCase extends Mock
+    implements SyncNotificationsUseCase {
+  @override
+  Future<Result<void>> execute(UserId userId) async {
+    return Results.success(null);
+  }
 }

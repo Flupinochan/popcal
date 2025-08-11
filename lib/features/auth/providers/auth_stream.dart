@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/core/utils/result.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_stream.g.dart';
 
@@ -19,7 +19,7 @@ Stream<Result<UserResponse?>> authStateChangesForUI(Ref ref) {
         if (entity == null) return Results.success(null);
         return Results.success(UserResponse.fromEntity(entity));
       },
-      failure: (error) => Results.failure(error),
+      failure: Results.failure,
     );
   });
 }

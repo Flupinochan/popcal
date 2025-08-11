@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
@@ -18,13 +18,10 @@ Stream<Result<List<RotationResponse>>> rotationResponsesStream(
   ) async {
     return entityResult.when(
       success: (rotations) {
-        final dtoList =
-            rotations
-                .map((entity) => RotationResponse.fromEntity(entity))
-                .toList();
+        final dtoList = rotations.map(RotationResponse.fromEntity).toList();
         return Results.success(dtoList);
       },
-      failure: (error) => Results.failure(error),
+      failure: Results.failure,
     );
   });
 }

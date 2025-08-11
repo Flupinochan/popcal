@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -23,18 +23,9 @@ import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 
-class MockRotationNotifier extends Mock implements RotationNotifier {}
-
-class MockTimeUtils extends Mock implements TimeUtils {
-  @override
-  DateTime now() {
-    return DateTime(2025, 8, 31, 9, 0);
-  }
-}
-
 void main() {
-  final screenSize = Size(411, 914);
-  final mockUser = UserResponse(
+  const screenSize = Size(411, 914);
+  const mockUser = UserResponse(
     userId: UserId('test-user-id'),
     email: Email('test@example.com'),
   );
@@ -43,12 +34,15 @@ void main() {
     rotationId: rotationId,
     userId: mockUser.userId,
     rotationName: RotationName('test-rotation-name'),
-    rotationMembers: [RotationMemberName('user1'), RotationMemberName('user2')],
+    rotationMembers: [
+      const RotationMemberName('user1'),
+      const RotationMemberName('user2'),
+    ],
     rotationDays: [Weekday.monday, Weekday.friday],
-    notificationTime: NotificationTime(TimeOfDay(hour: 9, minute: 0)),
-    currentRotationIndex: RotationIndex(0),
-    createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9, 0)),
-    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9, 0)),
+    notificationTime: NotificationTime(const TimeOfDay(hour: 9, minute: 0)),
+    currentRotationIndex: const RotationIndex(0),
+    createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
+    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9)),
   );
 
   group('RotationScreen', () {
@@ -61,7 +55,7 @@ void main() {
           home: GoldenTestScenario(
             name: 'home_screen',
             constraints: BoxConstraints.tight(screenSize),
-            child: RotationScreen(),
+            child: const RotationScreen(),
           ),
         ),
       );
@@ -82,10 +76,10 @@ void main() {
         return buildTestWidget([
           rotationDataResponseProvider(null).overrideWith((_) {
             return Future.value(
-              Results.success(RotationDataResponse(mockUser, null)),
+              Results.success(const RotationDataResponse(mockUser, null)),
             );
           }),
-          rotationNotifierProvider.overrideWith(() => MockRotationNotifier()),
+          rotationNotifierProvider.overrideWith(MockRotationNotifier.new),
           timeUtilsProvider.overrideWith((ref) => MockTimeUtils()),
         ]);
       },
@@ -106,10 +100,10 @@ void main() {
         return buildTestWidget([
           rotationDataResponseProvider(null).overrideWith((_) {
             return Future.value(
-              Results.success(RotationDataResponse(mockUser, null)),
+              Results.success(const RotationDataResponse(mockUser, null)),
             );
           }),
-          rotationNotifierProvider.overrideWith(() => MockRotationNotifier()),
+          rotationNotifierProvider.overrideWith(MockRotationNotifier.new),
           timeUtilsProvider.overrideWith((ref) => MockTimeUtils()),
           rotationDataResponseProvider(null).overrideWith((ref) {
             return Future.value(
@@ -120,4 +114,13 @@ void main() {
       },
     );
   });
+}
+
+class MockRotationNotifier extends Mock implements RotationNotifier {}
+
+class MockTimeUtils extends Mock implements TimeUtils {
+  @override
+  DateTime now() {
+    return DateTime(2025, 8, 31, 9);
+  }
 }

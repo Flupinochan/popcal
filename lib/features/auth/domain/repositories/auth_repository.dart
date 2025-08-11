@@ -1,4 +1,4 @@
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
@@ -12,9 +12,9 @@ abstract class AuthRepository {
     Email email,
     Password password,
   );
+  Future<Result<void>> signOut();
   Future<Result<AppUser>> signUpWithEmailAndPassword(
     Email email,
     Password password,
   );
-  Future<Result<void>> signOut();
 }

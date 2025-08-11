@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures/auth_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
@@ -11,12 +12,25 @@ part 'user_firebase_response.g.dart'; // json_serializable
 
 @freezed
 sealed class UserFirebaseResponse with _$UserFirebaseResponse {
-  const UserFirebaseResponse._();
-
   const factory UserFirebaseResponse({
     required UserId userId,
     required Email email,
   }) = _UserFirebaseResponse;
+
+  // Entity => Dto
+  factory UserFirebaseResponse.fromEntity(AppUser entity) {
+    return UserFirebaseResponse(userId: entity.userId, email: entity.email);
+  }
+
+  // Json => Dto ※Dto => Jsonは自動生成
+  factory UserFirebaseResponse.fromJson(Map<String, dynamic> json) =>
+      _$UserFirebaseResponseFromJson(json);
+  const UserFirebaseResponse._();
+
+  // Dto => Entity
+  Result<AppUser> toEntity() {
+    return Results.success(AppUser(userId: userId, email: email));
+  }
 
   // ★Firebase認証情報 => Dto
   static Result<UserFirebaseResponse> fromFirebaseUser(
@@ -24,12 +38,12 @@ sealed class UserFirebaseResponse with _$UserFirebaseResponse {
   ) {
     if (firebaseUser.email == null) {
       return Results.failure(
-        AuthFailure('Email is required for this application'),
+        const AuthFailure('Email is required for this application'),
       );
     }
 
     final userIdResult = UserId.create(firebaseUser.uid);
-    final emailResult = Email.create(firebaseUser.email!);
+    final emailResult = Email.create(firebaseUser.email);
 
     return userIdResult.flatMap(
       (validUid) => emailResult.map(
@@ -39,10 +53,6 @@ sealed class UserFirebaseResponse with _$UserFirebaseResponse {
     );
   }
 
-  // Json => Dto ※Dto => Jsonは自動生成
-  factory UserFirebaseResponse.fromJson(Map<String, dynamic> json) =>
-      _$UserFirebaseResponseFromJson(json);
-
   static Result<UserFirebaseResponse> fromJsonSafe(Map<String, dynamic> json) {
     try {
       final dto = UserFirebaseResponse.fromJson(json);
@@ -50,16 +60,6 @@ sealed class UserFirebaseResponse with _$UserFirebaseResponse {
     } catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
     }
-  }
-
-  // Entity => Dto
-  factory UserFirebaseResponse.fromEntity(AppUser entity) {
-    return UserFirebaseResponse(userId: entity.userId, email: entity.email);
-  }
-
-  // Dto => Entity
-  Result<AppUser> toEntity() {
-    return Results.success(AppUser(userId: userId, email: email));
   }
 }
 
@@ -69,12 +69,12 @@ extension UserDtoDisplay on UserFirebaseResponse {
     (error) => 'Unknown User',
     (entity) => entity.email.localPart,
   );
-  String get emailDomain => toEntity().fold(
-    (error) => 'Unknown Domain',
-    (entity) => entity.email.domain,
-  );
   String get email => toEntity().fold(
     (error) => 'Unknown Email',
     (entity) => entity.email.value,
+  );
+  String get emailDomain => toEntity().fold(
+    (error) => 'Unknown Domain',
+    (entity) => entity.email.domain,
   );
 }

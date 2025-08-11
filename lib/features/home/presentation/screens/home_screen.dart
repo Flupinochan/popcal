@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
@@ -16,9 +16,11 @@ import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 import 'package:popcal/router/routes.dart';
-import 'package:popcal/shared/widgets/custom_error_widget.dart';
-import 'package:popcal/shared/widgets/custom_loading_widget.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
+import 'package:popcal/shared/widgets/custom_error_screen.dart';
+import 'package:popcal/shared/widgets/custom_error_simple_widget.dart';
+import 'package:popcal/shared/widgets/custom_loading_screen.dart';
+import 'package:popcal/shared/widgets/custom_loading_simple_widget.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
@@ -27,7 +29,7 @@ import 'package:popcal/shared/widgets/glass_wrapper.dart';
 class HomeScreen extends HookConsumerWidget {
   HomeScreen({super.key});
 
-  final Logger logger = Logger("HomeScreen");
+  final Logger logger = Logger('HomeScreen');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,7 +47,7 @@ class HomeScreen extends HookConsumerWidget {
       data:
           (dtoResult) => dtoResult.when(
             success: (dto) {
-              if (dto == null) return LoginScreen();
+              if (dto == null) return const LoginScreen();
 
               // バックグラウンドで通知同期処理
               useEffect(() {
@@ -60,8 +62,8 @@ class HomeScreen extends HookConsumerWidget {
               return CustomErrorScreen(message: error.message);
             },
           ),
-      loading: () => CustomLoadingScreen(),
-      error: (error, stack) => CustomErrorScreen(),
+      loading: CustomLoadingScreen.new,
+      error: (error, stack) => const CustomErrorScreen(),
     );
   }
 
@@ -75,13 +77,13 @@ class HomeScreen extends HookConsumerWidget {
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
       extendBodyBehindAppBar: true,
-      appBar: GlassAppBar(title: 'PopCal'),
+      appBar: const GlassAppBar(title: 'PopCal'),
       drawer: const DrawerScreen(),
       floatingActionButton: GlassButton(
         width: 56,
         height: 56,
         iconData: Icons.add,
-        onPressed: () => RotationCreateRoute().push<void>(context),
+        onPressed: () => const RotationCreateRoute().push<void>(context),
       ),
       body: Container(
         height: double.infinity,
@@ -123,13 +125,13 @@ class HomeScreen extends HookConsumerWidget {
       child: GlassWrapper(
         width: 340,
         height: 240,
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           spacing: 16,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Icon
-            GlassIcon(iconData: Icons.group_add),
+            const GlassIcon(iconData: Icons.group_add),
             // Text1
             Text(
               'ローテーションがありません',
@@ -144,12 +146,13 @@ class HomeScreen extends HookConsumerWidget {
             ),
             // 作成Button
             Padding(
-              padding: EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 8),
               child: GlassButton(
                 width: 120,
                 height: 40,
                 text: '作成',
-                onPressed: () => RotationCreateRoute().push<void>(context),
+                onPressed:
+                    () => const RotationCreateRoute().push<void>(context),
               ),
             ),
           ],
@@ -170,7 +173,6 @@ class HomeScreen extends HookConsumerWidget {
         SliverPadding(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
           sliver: SliverList(
-            // このcontextは使用しない ※ローカル内で扱うcontextの場合は使用してOK (scaffold messengerはNG)
             delegate: SliverChildBuilderDelegate((_, index) {
               final rotationResponse = rotationResponses[index];
               return GlassListItem(
@@ -197,7 +199,7 @@ class HomeScreen extends HookConsumerWidget {
   }
 
   // ローテーショングループの削除&復元処理
-  void _handleDelete(
+  Future<void> _handleDelete(
     BuildContext context,
     WidgetRef ref,
     RotationResponse rotationResponse,

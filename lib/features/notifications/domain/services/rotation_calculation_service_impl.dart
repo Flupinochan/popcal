@@ -1,21 +1,21 @@
-import 'package:popcal/core/utils/failures.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures/notification_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
-  final TimeUtils _timeUtils;
-
   RotationCalculationServiceImpl(this._timeUtils);
+  final TimeUtils _timeUtils;
 
   /// 1. 次回の通知予定日を計算
   @override
@@ -46,7 +46,32 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         return Results.success(checkDate);
       }
     }
-    return Results.failure(ValidationFailure('次回ローテーション日の取得に失敗しました'));
+    return Results.failure(const ValidationFailure('次回ローテーション日の取得に失敗しました'));
+  }
+
+  /// ローテーション日判定
+  @override
+  bool isValidNotificationDate({
+    required DateKey checkDate,
+    required List<Weekday> rotationDays,
+    required NotificationTime notificationTime,
+    required RotationDateTime rotationDateTime,
+  }) {
+    final checkDay = Weekday.fromDateTime(checkDate.value);
+
+    // ローテーション曜日の場合
+    if (rotationDays.contains(checkDay)) {
+      final notificationDateTime = NotificationDateTime.fromDateAndTime(
+        date: checkDate,
+        notificationTime: notificationTime,
+      );
+      // ※作成日がローテーション曜日の場合でも、すでに時刻が過ぎている場合は、ローテーション日に含めない
+      // そのため、曜日だけでなく時刻を含めて比較
+      if (notificationDateTime.isAfterRotationDateTime(rotationDateTime)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
@@ -85,12 +110,13 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             rotation.rotationId!.value,
             checkDate,
           );
+          final notificationTime = rotation.notificationTime.value;
           final scheduledDateTime = DateTime(
             checkDate.year,
             checkDate.month,
             checkDate.day,
-            rotation.notificationTime.value.hour,
-            rotation.notificationTime.value.minute,
+            notificationTime.hour,
+            notificationTime.minute,
           );
 
           final notificationSetting = NotificationEntry(
@@ -116,30 +142,5 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     } catch (error) {
       return Results.failure(NotificationFailure('通知予定の作成に失敗しました: $error'));
     }
-  }
-
-  /// ローテーション日判定
-  @override
-  bool isValidNotificationDate({
-    required DateKey checkDate,
-    required List<Weekday> rotationDays,
-    required NotificationTime notificationTime,
-    required RotationDateTime rotationDateTime,
-  }) {
-    final checkDay = Weekday.fromDateTime(checkDate.value);
-
-    // ローテーション曜日の場合
-    if (rotationDays.contains(checkDay)) {
-      final notificationDateTime = NotificationDateTime.fromDateAndTime(
-        date: checkDate,
-        notificationTime: notificationTime,
-      );
-      // ※作成日がローテーション曜日の場合でも、すでに時刻が過ぎている場合は、ローテーション日に含めない
-      // そのため、曜日だけでなく時刻を含めて比較
-      if (notificationDateTime.isAfterRotationDateTime(rotationDateTime)) {
-        return true;
-      }
-    }
-    return false;
   }
 }

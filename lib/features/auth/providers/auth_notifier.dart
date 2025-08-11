@@ -1,11 +1,11 @@
-import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/core/utils/failures/auth_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
-import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:popcal/features/auth/presentation/dto/email_sign_in_request.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/features/auth/presentation/dto/email_sign_in_request.dart';
+import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';
 
@@ -40,6 +40,14 @@ class AuthNotifier extends _$AuthNotifier {
     });
   }
 
+  // T型で流用したいところ
+  Result<UserResponse> _convertEntityToDto(Result<AppUser> entityResult) {
+    return entityResult.when(
+      success: (appUser) => Results.success(UserResponse.fromEntity(appUser)),
+      failure: (error) => Results.failure(AuthFailure(error.message)),
+    );
+  }
+
   Future<Result<UserResponse?>> _executeAuthOperation(
     Future<Result<UserResponse?>> Function() operation,
   ) async {
@@ -50,13 +58,5 @@ class AuthNotifier extends _$AuthNotifier {
       failure: (error) => state = AsyncError(error, StackTrace.current),
     );
     return result;
-  }
-
-  // T型で流用したいところ
-  Result<UserResponse> _convertEntityToDto(Result<AppUser> entityResult) {
-    return entityResult.when(
-      success: (appUser) => Results.success(UserResponse.fromEntity(appUser)),
-      failure: (error) => Results.failure(AuthFailure(error.message)),
-    );
   }
 }

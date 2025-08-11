@@ -5,6 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'utils_providers.g.dart';
 
 @riverpod
-TimeUtils timeUtils(Ref ref) {
+TimeUtils timeUtils(Ref _) {
   return TimeUtilsImpl();
 }

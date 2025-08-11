@@ -1,25 +1,27 @@
-import 'package:popcal/core/utils/result.dart';
-import 'package:popcal/core/utils/failures.dart';
+import 'package:popcal/core/utils/failures/notification_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 
 class UpdateRotationUseCase {
-  final RotationRepository _rotationRepository;
-  final NotificationGateway _notificationRepository;
-  final RotationCalculationService _scheduleCalculationService;
-
   UpdateRotationUseCase(
     this._rotationRepository,
     this._notificationRepository,
     this._scheduleCalculationService,
   );
+  final RotationRepository _rotationRepository;
+  final NotificationGateway _notificationRepository;
+  final RotationCalculationService _scheduleCalculationService;
 
   /// 更新処理は、既存のローテーショングループを削除し、再作成
   Future<Result<Rotation>> execute(Rotation rotation) async {
     if (rotation.rotationId == null) {
-      return Results.failure(ValidationFailure('ローテーショングループIDが指定されていません'));
+      return Results.failure(
+        const ValidationFailure('ローテーショングループIDが指定されていません'),
+      );
     }
 
     // 1. ローテーショングループを削除
@@ -48,8 +50,7 @@ class UpdateRotationUseCase {
     // 6. 新しい通知を作成
     final createResults = await Future.wait(
       result.notificationEntry.map(
-        (notification) =>
-            _notificationRepository.createNotification(notification),
+        _notificationRepository.createNotification,
       ),
     );
     for (final createResult in createResults) {

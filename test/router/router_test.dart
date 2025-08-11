@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
-import 'package:popcal/core/utils/failures.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/failures/auth_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -20,26 +20,9 @@ import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 import 'package:popcal/router/router.dart';
 import 'package:popcal/router/routes.dart';
 
-class MockNotificationGateway extends Mock implements NotificationGateway {
-  @override
-  Future<Result<void>> initializeNotificationLaunch() async {
-    return Results.success(null);
-  }
-}
-
-class MockSyncNotificationsUseCase extends Mock
-    implements SyncNotificationsUseCase {
-  @override
-  Future<Result<void>> execute(UserId userId) async {
-    return Results.success(null);
-  }
-}
-
-class MockAuthNotifier extends Mock implements AuthNotifier {}
-
 void main() {
-  final screenSize = Size(411, 914);
-  final mockUser = UserResponse(
+  const screenSize = Size(411, 914);
+  const mockUser = UserResponse(
     userId: UserId('test-user-id'),
     email: Email('test@example.com'),
   );
@@ -69,7 +52,6 @@ void main() {
             builder: (context, ref, child) {
               final router = ref.watch(routerProvider(initialLocation: screen));
               return MaterialApp.router(
-                themeMode: ThemeMode.system,
                 theme: AppTheme.lightTheme,
                 routerConfig: router,
               );
@@ -98,7 +80,7 @@ void main() {
             authStateChangesForUIProvider.overrideWith(
               (ref) => Stream.value(Results.success(mockUser)),
             ),
-          ], LoginRoute().location),
+          ], const LoginRoute().location),
     );
 
     goldenTest(
@@ -120,7 +102,7 @@ void main() {
             authStateChangesForUIProvider.overrideWith(
               (ref) => Stream.value(Results.success(null)),
             ),
-          ], HomeRoute().location),
+          ], const HomeRoute().location),
     );
 
     goldenTest(
@@ -142,7 +124,7 @@ void main() {
             authStateChangesForUIProvider.overrideWith(
               (ref) => Stream.value(Results.success(mockUser)),
             ),
-          ], HomeRoute().location),
+          ], const HomeRoute().location),
     );
 
     goldenTest(
@@ -162,9 +144,27 @@ void main() {
           // 4. 認証エラー時に認証画面にいない => 認証画面へ
           () => buildTestWidget([
             authStateChangesForUIProvider.overrideWith(
-              (ref) => Stream.value(Results.failure(AuthFailure('認証エラー'))),
+              (ref) =>
+                  Stream.value(Results.failure(const AuthFailure('認証エラー'))),
             ),
-          ], HomeRoute().location),
+          ], const HomeRoute().location),
     );
   });
+}
+
+class MockAuthNotifier extends Mock implements AuthNotifier {}
+
+class MockNotificationGateway extends Mock implements NotificationGateway {
+  @override
+  Future<Result<void>> initializeNotificationLaunch() async {
+    return Results.success(null);
+  }
+}
+
+class MockSyncNotificationsUseCase extends Mock
+    implements SyncNotificationsUseCase {
+  @override
+  Future<Result<void>> execute(UserId userId) async {
+    return Results.success(null);
+  }
 }

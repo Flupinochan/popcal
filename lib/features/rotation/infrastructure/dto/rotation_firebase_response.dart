@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -18,8 +18,6 @@ part 'rotation_firebase_response.freezed.dart';
 
 @freezed
 sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
-  const RotationFirebaseResponse._();
-
   const factory RotationFirebaseResponse({
     required RotationId? rotationId,
     required UserId userId,
@@ -33,7 +31,6 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     required RotationCreatedAt createdAt,
     required RotationUpdatedAt updatedAt,
   }) = _RotationFirebaseResponse;
-
   // Entity => DTO (factory method)
   factory RotationFirebaseResponse.fromEntity(Rotation entity) {
     return RotationFirebaseResponse(
@@ -57,7 +54,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    final data = snapshot.data() as Map<String, dynamic>;
+    final data = snapshot.data()!;
     final createdAt = data['createdAt'] as Timestamp;
     final updatedAt = data['updatedAt'] as Timestamp;
     final rotationIndex = RotationIndex.create(
@@ -86,6 +83,8 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     );
   }
 
+  const RotationFirebaseResponse._();
+
   // DTO => Entity (instance method)
   Rotation toEntity() {
     return Rotation(
@@ -93,8 +92,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       userId: userId,
       rotationName: rotationName,
       rotationMemberNames: rotationMemberNames,
-      rotationDays:
-          rotationDays.map((value) => Weekday.fromInt(value)).toList(),
+      rotationDays: rotationDays.map(Weekday.fromInt).toList(),
       notificationTime: notificationTime,
       currentRotationIndex: currentRotationIndex,
       createdAt: createdAt,
@@ -118,11 +116,6 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     };
   }
 
-  // TimeOfDay => Map 変換 ※FirebaseにはTimeOfDay型がないためMapで保存
-  static Map<String, int> _timeOfDayToMap(TimeOfDay timeOfDay) {
-    return {'hour': timeOfDay.hour, 'minute': timeOfDay.minute};
-  }
-
   // Map => TimeOfDay ※firebaseでは値はdynamic判定
   static TimeOfDay _mapToTimeOfDay(Map<String, dynamic> map) {
     return TimeOfDay(
@@ -140,9 +133,11 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       );
     }
 
-    return data
-        .whereType<String>()
-        .map((name) => RotationMemberName(name))
-        .toList();
+    return data.whereType<String>().map(RotationMemberName.new).toList();
+  }
+
+  // TimeOfDay => Map 変換 ※FirebaseにはTimeOfDay型がないためMapで保存
+  static Map<String, int> _timeOfDayToMap(TimeOfDay timeOfDay) {
+    return {'hour': timeOfDay.hour, 'minute': timeOfDay.minute};
   }
 }

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/result.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -15,8 +15,6 @@ part 'rotation_response.freezed.dart';
 
 @freezed
 sealed class RotationResponse with _$RotationResponse {
-  const RotationResponse._();
-
   const factory RotationResponse({
     required RotationId rotationId,
     required UserId userId,
@@ -28,6 +26,22 @@ sealed class RotationResponse with _$RotationResponse {
     required RotationCreatedAt createdAt,
     required RotationUpdatedAt updatedAt,
   }) = _RotationResponse;
+
+  /// Entity => DTO
+  factory RotationResponse.fromEntity(Rotation entity) {
+    return RotationResponse(
+      rotationId: entity.rotationId!,
+      userId: entity.userId,
+      rotationName: entity.rotationName,
+      rotationMembers: entity.rotationMemberNames,
+      rotationDays: entity.rotationDays,
+      notificationTime: entity.notificationTime,
+      currentRotationIndex: entity.currentRotationIndex,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    );
+  }
+  const RotationResponse._();
 
   /// DTO => Entity
   Result<Rotation> toEntity() {
@@ -43,21 +57,6 @@ sealed class RotationResponse with _$RotationResponse {
         createdAt: createdAt,
         updatedAt: updatedAt,
       ),
-    );
-  }
-
-  /// Entity => DTO
-  factory RotationResponse.fromEntity(Rotation entity) {
-    return RotationResponse(
-      rotationId: entity.rotationId!,
-      userId: entity.userId,
-      rotationName: entity.rotationName,
-      rotationMembers: entity.rotationMemberNames,
-      rotationDays: entity.rotationDays,
-      notificationTime: entity.notificationTime,
-      currentRotationIndex: entity.currentRotationIndex,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
     );
   }
 }
