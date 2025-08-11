@@ -31,6 +31,11 @@ class LoginScreen extends HookConsumerWidget {
     final isLoading = ref.watch(authNotifierProvider).isLoading;
     final formKey = useMemoized(GlobalKey<FormBuilderState>.new);
     final selectedMode = useState(AuthMode.signIn);
+    final loginFormKey = LoginFormKey.email.key;
+    final passwordFormKey = LoginFormKey.password.key;
+    final dividerColor = glassTheme.surfaceColor.withValues(
+      alpha: 0.3,
+    );
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -118,21 +123,14 @@ class LoginScreen extends HookConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  LoginFormKey.email.key,
+                                  loginFormKey,
                                   style: textTheme.titleMedium,
                                 ),
                                 GlassFormText(
-                                  name: LoginFormKey.email.key,
-                                  hintText:
-                                      'Enter your ${LoginFormKey.email.key}',
+                                  name: loginFormKey,
+                                  hintText: 'Enter your $loginFormKey',
                                   prefixIcon: Icons.email_outlined,
-                                  validator: (value) {
-                                    final result = Email.create(value);
-                                    return result.when(
-                                      success: (_) => null,
-                                      failure: (error) => error.message,
-                                    );
-                                  },
+                                  validator: _validateEmail,
                                 ),
                               ],
                             ),
@@ -142,21 +140,14 @@ class LoginScreen extends HookConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  LoginFormKey.password.key,
+                                  passwordFormKey,
                                   style: textTheme.titleMedium,
                                 ),
                                 GlassFormPassword(
-                                  name: LoginFormKey.password.key,
-                                  hintText:
-                                      'Enter your ${LoginFormKey.password.key}',
+                                  name: passwordFormKey,
+                                  hintText: 'Enter your $passwordFormKey',
                                   prefixIcon: Icons.lock_outline,
-                                  validator: (value) {
-                                    final result = Password.create(value);
-                                    return result.when(
-                                      success: (_) => null,
-                                      failure: (error) => error.message,
-                                    );
-                                  },
+                                  validator: _validatePassword,
                                 ),
                               ],
                             ),
@@ -186,6 +177,8 @@ class LoginScreen extends HookConsumerWidget {
                                   ref,
                                   formKey,
                                   selectedMode,
+                                  loginFormKey,
+                                  passwordFormKey,
                                 ),
                           ),
                         const SizedBox(height: 20),
@@ -200,22 +193,14 @@ class LoginScreen extends HookConsumerWidget {
                           spacing: 16,
                           children: [
                             Expanded(
-                              child: Divider(
-                                color: glassTheme.surfaceColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                              ),
+                              child: Divider(color: dividerColor),
                             ),
                             Text(
                               'OR CONTINUE WITH',
                               style: textTheme.bodySmall,
                             ),
                             Expanded(
-                              child: Divider(
-                                color: glassTheme.surfaceColor.withValues(
-                                  alpha: 0.3,
-                                ),
-                              ),
+                              child: Divider(color: dividerColor),
                             ),
                           ],
                         ),
@@ -278,12 +263,14 @@ class LoginScreen extends HookConsumerWidget {
     WidgetRef ref,
     GlobalKey<FormBuilderState> formKey,
     ValueNotifier<AuthMode> selectedMode,
+    String loginFormKey,
+    String passwordFormKey,
   ) async {
     if (!formKey.currentState!.saveAndValidate()) return;
 
     final formData = formKey.currentState!.value;
-    final email = formData[LoginFormKey.email.key] as String;
-    final password = formData[LoginFormKey.password.key] as String;
+    final email = formData[loginFormKey] as String;
+    final password = formData[passwordFormKey] as String;
 
     final dtoResult = EmailSignInRequest.create(
       email: email,
@@ -310,6 +297,22 @@ class LoginScreen extends HookConsumerWidget {
       failure: (error) {
         showErrorDialog(context, error.message);
       },
+    );
+  }
+
+  String _validateEmail(String? value) {
+    final result = Email.create(value);
+    return result.when(
+      success: (_) => '',
+      failure: (error) => error.message,
+    );
+  }
+
+  String _validatePassword(String? value) {
+    final result = Password.create(value);
+    return result.when(
+      success: (_) => '',
+      failure: (error) => error.message,
     );
   }
 }

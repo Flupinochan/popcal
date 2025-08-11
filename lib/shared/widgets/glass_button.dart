@@ -4,23 +4,6 @@ import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 /// ガラス風Button Widget
 class GlassButton extends StatelessWidget {
-  final String? text;
-  final TextStyle? textStyle;
-  final IconData? iconData;
-  final double? iconSize;
-  final Color? iconColor;
-  final double? backgroundSize;
-  final VoidCallback? onPressed;
-  final double? width;
-  final double? height;
-  final Color? borderColor;
-  final Gradient? gradient;
-  final bool showBorder;
-  final bool showBackground;
-  final double iconTextSpacing;
-  final Alignment alignment;
-  final EdgeInsets? padding;
-
   const GlassButton({
     super.key,
     this.text,
@@ -40,6 +23,22 @@ class GlassButton extends StatelessWidget {
     this.alignment = Alignment.center,
     this.padding,
   }) : assert(text != null || iconData != null, 'textまたはiconのどちらかを指定してください');
+  final String? text;
+  final TextStyle? textStyle;
+  final IconData? iconData;
+  final double? iconSize;
+  final Color? iconColor;
+  final double? backgroundSize;
+  final VoidCallback? onPressed;
+  final double? width;
+  final double? height;
+  final Color? borderColor;
+  final Gradient? gradient;
+  final bool showBorder;
+  final bool showBackground;
+  final double iconTextSpacing;
+  final Alignment alignment;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,7 @@ class GlassButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(iconData!, size: iconSize, color: effectiveIconColor),
+          Icon(iconData, size: iconSize, color: effectiveIconColor),
           Text(text!, style: effectiveTextStyle),
         ],
       );
@@ -66,7 +65,7 @@ class GlassButton extends StatelessWidget {
       child = Text(text!, style: effectiveTextStyle);
     } else {
       // アイコンのみ
-      child = Icon(iconData!, size: iconSize, color: effectiveIconColor);
+      child = Icon(iconData, size: iconSize, color: effectiveIconColor);
     }
 
     if (padding != null) {

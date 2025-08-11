@@ -33,6 +33,7 @@ class GlassFormTime extends StatelessWidget {
                   : '時刻を選択してください';
 
           return InkWell(
+            // ignore: avoid-passing-async-when-sync-expected
             onTap: () async {
               // TimePicker
               final picked = await showTimePicker(
@@ -46,12 +47,16 @@ class GlassFormTime extends StatelessWidget {
                         backgroundColor: const Color(
                           0xFF1A1A2E,
                         ).withValues(alpha: 0.9),
-                        hourMinuteTextColor: Colors.white,
-                        hourMinuteColor: Colors.white.withValues(alpha: 0.15),
-                        dayPeriodTextColor: Colors.white,
-                        dayPeriodColor: Colors.white.withValues(alpha: 0.3),
+                        hourMinuteTextColor: glassTheme.surfaceColor,
+                        hourMinuteColor: glassTheme.surfaceColor.withValues(
+                          alpha: 0.15,
+                        ),
+                        dayPeriodTextColor: glassTheme.surfaceColor,
+                        dayPeriodColor: glassTheme.surfaceColor.withValues(
+                          alpha: 0.3,
+                        ),
                         dayPeriodBorderSide: BorderSide(
-                          color: Colors.white.withValues(alpha: 0.4),
+                          color: glassTheme.surfaceColor.withValues(alpha: 0.4),
                           width: 1.5,
                         ),
                         dialBackgroundColor: const Color.fromARGB(
@@ -60,18 +65,26 @@ class GlassFormTime extends StatelessWidget {
                           22,
                           39,
                         ).withValues(alpha: 0.9),
-                        dialHandColor: Colors.white.withValues(alpha: 0.5),
-                        dialTextColor: Colors.white,
-                        entryModeIconColor: Colors.white,
-                        helpTextStyle: const TextStyle(color: Colors.white),
+                        dialHandColor: glassTheme.surfaceColor.withValues(
+                          alpha: 0.5,
+                        ),
+                        dialTextColor: glassTheme.surfaceColor,
+                        entryModeIconColor: glassTheme.surfaceColor,
+                        helpTextStyle: TextStyle(
+                          color: glassTheme.surfaceColor,
+                        ),
                         inputDecorationTheme: InputDecorationTheme(
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Colors.white.withValues(alpha: 0.4),
+                              color: glassTheme.surfaceColor.withValues(
+                                alpha: 0.4,
+                              ),
                             ),
                           ),
                           filled: true,
-                          fillColor: Colors.white.withValues(alpha: 0.15),
+                          fillColor: glassTheme.surfaceColor.withValues(
+                            alpha: 0.15,
+                          ),
                         ),
                       ),
                       textButtonTheme: TextButtonThemeData(
@@ -97,7 +110,7 @@ class GlassFormTime extends StatelessWidget {
                 field.didChange(picked);
               }
             },
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
             child: Container(
               height: 56,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -107,7 +120,7 @@ class GlassFormTime extends StatelessWidget {
                   // Time Icon
                   Icon(
                     Icons.access_time,
-                    color: Colors.white.withValues(alpha: 0.8),
+                    color: glassTheme.surfaceColor.withValues(alpha: 0.8),
                     size: 20,
                   ),
                   // Time Text

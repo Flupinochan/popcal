@@ -227,8 +227,8 @@ class HomeScreen extends HookConsumerWidget {
           scaffoldMessenger: scaffoldMessenger,
           flexibleMessage: rotationResponse.rotationName.value,
           fixedMessage: 'を削除しました',
+          // ignore: avoid_passing_async_when_sync_expected, avoid-passing-async-when-sync-expected
           onAction: () async {
-            // 再作成処理 ※再レンダリングされいるため、contextを再取得
             final createDto = CreateRotationRequest(
               userId: rotationResponse.userId,
               rotationName: rotationResponse.rotationName,
@@ -241,8 +241,6 @@ class HomeScreen extends HookConsumerWidget {
               createDto,
             );
 
-            // _buildRotationEmpty から _buildRotations に戻る場合はcontextが異なるため戻れない
-            // 以下のcontextが前の親のcontextのためエラー
             restoreResult.when(
               success: (_) {
                 SnackBarUtils.showGlassSnackBar(

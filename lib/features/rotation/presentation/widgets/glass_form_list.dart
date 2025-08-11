@@ -59,14 +59,14 @@ class GlassFormList extends HookWidget {
               items: items.value,
               onReorder: (oldIndex, newIndex) {
                 if (newIndex > oldIndex) newIndex--;
-                final newItems = List<String>.from(items.value);
+                final newItems = List<String>.of(items.value);
                 final item = newItems.removeAt(oldIndex);
                 newItems.insert(newIndex, item);
                 items.value = newItems;
                 field.didChange(newItems);
               },
               onDelete: (index) {
-                final newItems = List<String>.from(items.value);
+                final newItems = List<String>.of(items.value);
                 newItems.removeAt(index);
                 items.value = newItems;
                 field.didChange(newItems);

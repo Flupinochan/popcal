@@ -44,6 +44,7 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
   return Results.success(RotationDataResponse(userDto, rotationResponse));
 }
 
+// ignore: prefer-match-file-name
 class RotationDataResponse {
   const RotationDataResponse(this.userDto, this.rotationResponse);
   final UserResponse userDto;

@@ -75,6 +75,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       userId: UserId(data['userId'] as String),
       rotationName: RotationName(data['rotationName'] as String),
       rotationMemberNames: _parseRotationMembers(data['rotationMemberNames']),
+      // ignore: avoid-dynamic
       rotationDays: List<int>.from(data['rotationDays'] as List<dynamic>),
       notificationTime: NotificationTime(notificationTime),
       currentRotationIndex: rotationIndex.valueOrNull!,
@@ -124,6 +125,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     );
   }
 
+  // ignore: avoid-dynamic
   static List<RotationMemberName> _parseRotationMembers(dynamic data) {
     if (data == null) return [];
 

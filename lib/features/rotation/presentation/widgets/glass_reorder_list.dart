@@ -93,7 +93,7 @@ class _GlassReorderItem extends StatelessWidget {
               height: 32,
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
               ),
               child: Center(
                 child: Text('${index + 1}', style: textTheme.titleMedium),

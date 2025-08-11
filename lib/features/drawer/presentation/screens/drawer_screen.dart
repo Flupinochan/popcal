@@ -92,19 +92,14 @@ class DrawerScreen extends HookConsumerWidget {
                   height: 50,
                   borderColor: glassTheme.errorBorderColor,
                   gradient: glassTheme.errorGradient,
-                  onPressed: authRepository.signOut,
+                  // ignore: unnecessary_lambdas 非同期関数のため
+                  onPressed: () => authRepository.signOut(),
                 ),
                 const SizedBox(height: 16),
                 // Document Link
                 TextButton.icon(
-                  onPressed: () async {
-                    if (!await launchUrl(
-                      _url,
-                      mode: LaunchMode.externalApplication,
-                    )) {
-                      throw Exception('Could not launch $_url');
-                    }
-                  },
+                  // ignore: unnecessary_lambdas 非同期関数のため
+                  onPressed: () => _showDocumentPage(),
                   icon: Icon(
                     Icons.open_in_new,
                     color: linkColor,
@@ -172,5 +167,14 @@ class DrawerScreen extends HookConsumerWidget {
         Text(emailValue ?? 'お待ちください', style: textTheme.bodySmall),
       ],
     );
+  }
+
+  Future<void> _showDocumentPage() async {
+    if (!await launchUrl(
+      _url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $_url');
+    }
   }
 }
