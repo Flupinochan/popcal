@@ -15,6 +15,8 @@ class GlassFormTime extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     // ローカル日時で指定
     final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
+    final surfaceColorLight = glassTheme.surfaceColor.withValues(alpha: 0.15);
+    final surfaceColorMedium = glassTheme.surfaceColor.withValues(alpha: 0.4);
 
     return GlassWrapper(
       child: FormBuilderField<TimeOfDay>(
@@ -48,15 +50,13 @@ class GlassFormTime extends StatelessWidget {
                           0xFF1A1A2E,
                         ).withValues(alpha: 0.9),
                         hourMinuteTextColor: glassTheme.surfaceColor,
-                        hourMinuteColor: glassTheme.surfaceColor.withValues(
-                          alpha: 0.15,
-                        ),
+                        hourMinuteColor: surfaceColorLight,
                         dayPeriodTextColor: glassTheme.surfaceColor,
                         dayPeriodColor: glassTheme.surfaceColor.withValues(
                           alpha: 0.3,
                         ),
                         dayPeriodBorderSide: BorderSide(
-                          color: glassTheme.surfaceColor.withValues(alpha: 0.4),
+                          color: surfaceColorMedium,
                           width: 1.5,
                         ),
                         dialBackgroundColor: const Color.fromARGB(

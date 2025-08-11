@@ -7,7 +7,7 @@ part of 'calendar_loader.dart';
 // **************************************************************************
 
 String _$calendarScheduleResponseHash() =>
-    r'9a8fbf9a7bb78eb1ef3a1cdd708daf8e9174523f';
+    r'07350a105974cf03942657d24425d43866899b01';
 
 /// Copied from Dart SDK
 class _SystemHash {

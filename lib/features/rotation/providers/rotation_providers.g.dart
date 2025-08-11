@@ -6,7 +6,7 @@ part of 'rotation_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$firebaseFirestoreHash() => r'963402713bf9b7cc1fb259d619d9b0184d4dcec1';
+String _$firebaseFirestoreHash() => r'2283bf6f6456985048ff91b10647601e60704320';
 
 /// See also [firebaseFirestore].
 @ProviderFor(firebaseFirestore)

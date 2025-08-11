@@ -7,7 +7,7 @@ part of 'rotation_stream.dart';
 // **************************************************************************
 
 String _$rotationResponsesStreamHash() =>
-    r'6b5ea9d84d82dbfb0600909bfba69688e77b98f1';
+    r'9571c1b1df024e2e4d11ed63e481d05010463340';
 
 /// Copied from Dart SDK
 class _SystemHash {

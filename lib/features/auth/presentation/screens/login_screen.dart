@@ -300,18 +300,18 @@ class LoginScreen extends HookConsumerWidget {
     );
   }
 
-  String _validateEmail(String? value) {
+  String? _validateEmail(String? value) {
     final result = Email.create(value);
     return result.when(
-      success: (_) => '',
+      success: (_) => null,
       failure: (error) => error.message,
     );
   }
 
-  String _validatePassword(String? value) {
+  String? _validatePassword(String? value) {
     final result = Password.create(value);
     return result.when(
-      success: (_) => '',
+      success: (_) => null,
       failure: (error) => error.message,
     );
   }

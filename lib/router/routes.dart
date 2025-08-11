@@ -3,13 +3,36 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
-import 'package:popcal/features/home/presentation/screens/home_screen.dart';
-import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/shared/widgets/custom_error_screen.dart';
+import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
+import 'package:popcal/shared/screens/custom_error_screen.dart';
 
 part 'routes.g.dart';
+
+@TypedGoRoute<CalendarRoute>(path: '/calendar/:id')
+class CalendarRoute extends GoRouteData with _$CalendarRoute {
+  const CalendarRoute({required this.id});
+
+  final String id;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    final rotationId = RotationId(id);
+    return CalendarScreen(rotationId: rotationId);
+  }
+}
+
+@TypedGoRoute<ErrorRoute>(path: '/error')
+class ErrorRoute extends GoRouteData with _$ErrorRoute {
+  const ErrorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const CustomErrorScreen();
+  }
+}
 
 @TypedGoRoute<HomeRoute>(path: '/')
 class HomeRoute extends GoRouteData with _$HomeRoute {
@@ -49,28 +72,5 @@ class RotationUpdateRoute extends GoRouteData with _$RotationUpdateRoute {
   Widget build(BuildContext context, GoRouterState state) {
     final rotationId = RotationId(id);
     return RotationScreen(rotationId: rotationId);
-  }
-}
-
-@TypedGoRoute<CalendarRoute>(path: '/calendar/:id')
-class CalendarRoute extends GoRouteData with _$CalendarRoute {
-  const CalendarRoute({required this.id});
-
-  final String id;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    final rotationId = RotationId(id);
-    return CalendarScreen(rotationId: rotationId);
-  }
-}
-
-@TypedGoRoute<ErrorRoute>(path: '/error')
-class ErrorRoute extends GoRouteData with _$ErrorRoute {
-  const ErrorRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const CustomErrorScreen();
   }
 }

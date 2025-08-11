@@ -7,7 +7,7 @@ part of 'rotation_loader.dart';
 // **************************************************************************
 
 String _$rotationDataResponseHash() =>
-    r'd3c8e56c689caafc3e63565aac7a1c2894392905';
+    r'2bfbb0bfe181494e6a3f91e52eeb1c1dfc93dff3';
 
 /// Copied from Dart SDK
 class _SystemHash {

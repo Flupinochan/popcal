@@ -6,7 +6,7 @@ part of 'core_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$packageInfoHash() => r'e85c18fc1df698cf58e72da2ff3d20b5e68db434';
+String _$packageInfoHash() => r'35bc6604a1ece79e2ad7f40e8bfe46e5a7def200';
 
 /// See also [packageInfo].
 @ProviderFor(packageInfo)
@@ -22,7 +22,7 @@ final packageInfoProvider = AutoDisposeFutureProvider<PackageInfo>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef PackageInfoRef = AutoDisposeFutureProviderRef<PackageInfo>;
-String _$loggerHash() => r'ac8b78048e5ee9879c300e3d26c2956cc7ead3f0';
+String _$loggerHash() => r'22d3a88fc0c906e5cfc3847b6a5aa08e5dcd6773';
 
 /// Copied from Dart SDK
 class _SystemHash {

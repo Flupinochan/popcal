@@ -7,7 +7,7 @@ part of 'auth_stream.dart';
 // **************************************************************************
 
 String _$authStateChangesForUIHash() =>
-    r'93472eac4fefe9157885201bc187a9519b321a7f';
+    r'e373792f09206b39ff141575fcf60cfd0750e136';
 
 /// See also [authStateChangesForUI].
 @ProviderFor(authStateChangesForUI)

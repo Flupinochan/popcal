@@ -22,9 +22,9 @@ import 'package:popcal/features/rotation/presentation/widgets/glass_form_weekday
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
+import 'package:popcal/shared/screens/custom_error_screen.dart';
+import 'package:popcal/shared/screens/custom_loading_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
-import 'package:popcal/shared/widgets/custom_error_screen.dart';
-import 'package:popcal/shared/widgets/custom_loading_screen.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 

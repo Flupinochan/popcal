@@ -16,11 +16,11 @@ import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 import 'package:popcal/router/routes.dart';
+import 'package:popcal/shared/screens/custom_error_screen.dart';
+import 'package:popcal/shared/screens/custom_error_simple_screen.dart';
+import 'package:popcal/shared/screens/custom_loading_screen.dart';
+import 'package:popcal/shared/screens/custom_loading_simple_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
-import 'package:popcal/shared/widgets/custom_error_screen.dart';
-import 'package:popcal/shared/widgets/custom_error_simple_widget.dart';
-import 'package:popcal/shared/widgets/custom_loading_screen.dart';
-import 'package:popcal/shared/widgets/custom_loading_simple_widget.dart';
 import 'package:popcal/shared/widgets/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
@@ -105,13 +105,15 @@ class HomeScreen extends HookConsumerWidget {
                                 rotationResponses,
                               ),
                   failure:
-                      (error) =>
-                          customErrorSimpleWidget(context, error.message),
+                      (error) => CustomErrorSimpleScreen(
+                        message: error.message,
+                      ),
                 ),
-            loading: () => customLoadingSimpleWidget(context),
+            loading: CustomLoadingSimpleScreen.new,
             error:
-                (error, stack) =>
-                    customErrorSimpleWidget(context, error.toString()),
+                (error, stack) => CustomErrorSimpleScreen(
+                  message: error.toString(),
+                ),
           ),
         ),
       ),

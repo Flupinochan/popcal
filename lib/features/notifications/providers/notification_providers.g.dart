@@ -6,131 +6,6 @@ part of 'notification_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$flutterLocalNotificationsPluginHash() =>
-    r'7ddacc6af7d67f7f1a34d7166a7d48420e7fa892';
-
-/// See also [flutterLocalNotificationsPlugin].
-@ProviderFor(flutterLocalNotificationsPlugin)
-final flutterLocalNotificationsPluginProvider =
-    AutoDisposeProvider<FlutterLocalNotificationsPlugin>.internal(
-      flutterLocalNotificationsPlugin,
-      name: r'flutterLocalNotificationsPluginProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$flutterLocalNotificationsPluginHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FlutterLocalNotificationsPluginRef =
-    AutoDisposeProviderRef<FlutterLocalNotificationsPlugin>;
-String _$notificationGatewayLocalHash() =>
-    r'5ebc511a5392b2030b64908de46f7e74167c6bb4';
-
-/// See also [notificationGatewayLocal].
-@ProviderFor(notificationGatewayLocal)
-final notificationGatewayLocalProvider =
-    AutoDisposeProvider<NotificationGatewayLocal>.internal(
-      notificationGatewayLocal,
-      name: r'notificationGatewayLocalProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$notificationGatewayLocalHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef NotificationGatewayLocalRef =
-    AutoDisposeProviderRef<NotificationGatewayLocal>;
-String _$notificationGatewayHash() =>
-    r'94ae7da3d8048660df7dba3df414fc19a3516928';
-
-/// See also [notificationGateway].
-@ProviderFor(notificationGateway)
-final notificationGatewayProvider =
-    AutoDisposeProvider<NotificationGateway>.internal(
-      notificationGateway,
-      name: r'notificationGatewayProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$notificationGatewayHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef NotificationGatewayRef = AutoDisposeProviderRef<NotificationGateway>;
-String _$notificationInitializationHash() =>
-    r'981b5db7ddf62770dc57d3d5f93b5a78d29b22ee';
-
-/// See also [notificationInitialization].
-@ProviderFor(notificationInitialization)
-final notificationInitializationProvider =
-    AutoDisposeFutureProvider<Result<void>>.internal(
-      notificationInitialization,
-      name: r'notificationInitializationProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$notificationInitializationHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef NotificationInitializationRef =
-    AutoDisposeFutureProviderRef<Result<void>>;
-String _$syncNotificationsUseCaseHash() =>
-    r'dfb19830e077257bef82df3edf0282281ddb248f';
-
-/// See also [syncNotificationsUseCase].
-@ProviderFor(syncNotificationsUseCase)
-final syncNotificationsUseCaseProvider =
-    AutoDisposeProvider<SyncNotificationsUseCase>.internal(
-      syncNotificationsUseCase,
-      name: r'syncNotificationsUseCaseProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$syncNotificationsUseCaseHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SyncNotificationsUseCaseRef =
-    AutoDisposeProviderRef<SyncNotificationsUseCase>;
-String _$rotationCalculationServiceHash() =>
-    r'c67900665e819a4717af3ff37ef0e8e8d7228593';
-
-/// See also [rotationCalculationService].
-@ProviderFor(rotationCalculationService)
-final rotationCalculationServiceProvider =
-    AutoDisposeProvider<RotationCalculationService>.internal(
-      rotationCalculationService,
-      name: r'rotationCalculationServiceProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$rotationCalculationServiceHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef RotationCalculationServiceRef =
-    AutoDisposeProviderRef<RotationCalculationService>;
 String _$buildCalendarScheduleUseCaseHash() =>
     r'018f2265528f0cedc97dd3b530330b454afda980';
 
@@ -152,5 +27,130 @@ final buildCalendarScheduleUseCaseProvider =
 // ignore: unused_element
 typedef BuildCalendarScheduleUseCaseRef =
     AutoDisposeProviderRef<BuildCalendarScheduleUseCase>;
+String _$flutterLocalNotificationsPluginHash() =>
+    r'ebdfa69f7c185b4f8274e7e0d41a298d4e3f4b91';
+
+/// See also [flutterLocalNotificationsPlugin].
+@ProviderFor(flutterLocalNotificationsPlugin)
+final flutterLocalNotificationsPluginProvider =
+    AutoDisposeProvider<FlutterLocalNotificationsPlugin>.internal(
+      flutterLocalNotificationsPlugin,
+      name: r'flutterLocalNotificationsPluginProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$flutterLocalNotificationsPluginHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FlutterLocalNotificationsPluginRef =
+    AutoDisposeProviderRef<FlutterLocalNotificationsPlugin>;
+String _$notificationGatewayHash() =>
+    r'94ae7da3d8048660df7dba3df414fc19a3516928';
+
+/// See also [notificationGateway].
+@ProviderFor(notificationGateway)
+final notificationGatewayProvider =
+    AutoDisposeProvider<NotificationGateway>.internal(
+      notificationGateway,
+      name: r'notificationGatewayProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$notificationGatewayHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef NotificationGatewayRef = AutoDisposeProviderRef<NotificationGateway>;
+String _$notificationGatewayLocalHash() =>
+    r'b6717d452bd837c0c9caaa826c3796433d287c8a';
+
+/// See also [notificationGatewayLocal].
+@ProviderFor(notificationGatewayLocal)
+final notificationGatewayLocalProvider =
+    AutoDisposeProvider<NotificationGatewayLocal>.internal(
+      notificationGatewayLocal,
+      name: r'notificationGatewayLocalProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$notificationGatewayLocalHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef NotificationGatewayLocalRef =
+    AutoDisposeProviderRef<NotificationGatewayLocal>;
+String _$notificationInitializationHash() =>
+    r'28b0878e8878862ca7da8bfc30553aa918bd56cc';
+
+/// See also [notificationInitialization].
+@ProviderFor(notificationInitialization)
+final notificationInitializationProvider =
+    AutoDisposeFutureProvider<Result<void>>.internal(
+      notificationInitialization,
+      name: r'notificationInitializationProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$notificationInitializationHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef NotificationInitializationRef =
+    AutoDisposeFutureProviderRef<Result<void>>;
+String _$rotationCalculationServiceHash() =>
+    r'c67900665e819a4717af3ff37ef0e8e8d7228593';
+
+/// See also [rotationCalculationService].
+@ProviderFor(rotationCalculationService)
+final rotationCalculationServiceProvider =
+    AutoDisposeProvider<RotationCalculationService>.internal(
+      rotationCalculationService,
+      name: r'rotationCalculationServiceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$rotationCalculationServiceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RotationCalculationServiceRef =
+    AutoDisposeProviderRef<RotationCalculationService>;
+String _$syncNotificationsUseCaseHash() =>
+    r'dfb19830e077257bef82df3edf0282281ddb248f';
+
+/// See also [syncNotificationsUseCase].
+@ProviderFor(syncNotificationsUseCase)
+final syncNotificationsUseCaseProvider =
+    AutoDisposeProvider<SyncNotificationsUseCase>.internal(
+      syncNotificationsUseCase,
+      name: r'syncNotificationsUseCaseProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$syncNotificationsUseCaseHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SyncNotificationsUseCaseRef =
+    AutoDisposeProviderRef<SyncNotificationsUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
