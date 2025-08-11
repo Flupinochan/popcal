@@ -4,7 +4,7 @@
             "android": {
                 "default": {
                     "projectId": "popcal-e709a",
-                    "appId": "1:839692849399:android:dced36efb1368f1e0243f2",
+                    "appId": "1:839692849399:android:10e5bcb9b34f92b80243f2",
                     "fileOutput": "android/app/google-services.json"
                 }
             },
@@ -12,11 +12,7 @@
                 "lib/firebase_options.dart": {
                     "projectId": "popcal-e709a",
                     "configurations": {
-                        "android": "1:839692849399:android:dced36efb1368f1e0243f2",
-                        "ios": "1:839692849399:ios:727c3f4ec9552de40243f2",
-                        "macos": "1:839692849399:ios:727c3f4ec9552de40243f2",
-                        "web": "1:839692849399:web:31d92ba204bb6ab10243f2",
-                        "windows": "1:839692849399:web:1ef42cdd47b4c3ff0243f2"
+                        "android": "1:839692849399:android:10e5bcb9b34f92b80243f2"
                     }
                 }
             }

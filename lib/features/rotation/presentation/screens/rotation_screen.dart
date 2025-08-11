@@ -169,6 +169,11 @@ Future<void> _handleSubmit(
   RotationResponse? originalRotation,
   bool isUpdateMode,
 ) async {
+  final textTheme = Theme.of(context).textTheme;
+  final glassTheme =
+      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+  final scaffoldMessenger = ScaffoldMessenger.of(context);
+
   if (formKey.currentState!.saveAndValidate()) {
     final formData = formKey.currentState!.value;
     final rotationController = ref.read(rotationNotifierProvider.notifier);
@@ -206,7 +211,9 @@ Future<void> _handleSubmit(
 
       if (context.mounted) {
         SnackBarUtils.showGlassSnackBar(
-          context: context,
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
           flexibleMessage: formData['rotationName'].toString(),
           fixedMessage: isUpdateMode ? 'を更新しました' : 'を作成しました',
         );
@@ -215,7 +222,9 @@ Future<void> _handleSubmit(
     } catch (error) {
       if (context.mounted) {
         SnackBarUtils.showGlassSnackBar(
-          context: context,
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
           flexibleMessage: 'エラーが発生しました',
         );
       }

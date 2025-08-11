@@ -17,17 +17,29 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -40,49 +52,12 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAdFyrlJ77NWUBM5RgcPijr7DkhT1EQPU4',
-    appId: '1:839692849399:web:31d92ba204bb6ab10243f2',
-    messagingSenderId: '839692849399',
-    projectId: 'popcal-e709a',
-    authDomain: 'popcal-e709a.firebaseapp.com',
-    storageBucket: 'popcal-e709a.firebasestorage.app',
-    measurementId: 'G-DSDZ510H18',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBrp5KYKRFO2rm1Bp-7-SywY6hRrZIg46o',
-    appId: '1:839692849399:android:dced36efb1368f1e0243f2',
+    appId: '1:839692849399:android:10e5bcb9b34f92b80243f2',
     messagingSenderId: '839692849399',
     projectId: 'popcal-e709a',
     storageBucket: 'popcal-e709a.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAtNup3UqHFxK2-QZclLHkqhIlz-ted1uM',
-    appId: '1:839692849399:ios:727c3f4ec9552de40243f2',
-    messagingSenderId: '839692849399',
-    projectId: 'popcal-e709a',
-    storageBucket: 'popcal-e709a.firebasestorage.app',
-    iosBundleId: 'net.metalmental.popcal',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAtNup3UqHFxK2-QZclLHkqhIlz-ted1uM',
-    appId: '1:839692849399:ios:727c3f4ec9552de40243f2',
-    messagingSenderId: '839692849399',
-    projectId: 'popcal-e709a',
-    storageBucket: 'popcal-e709a.firebasestorage.app',
-    iosBundleId: 'net.metalmental.popcal',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAdFyrlJ77NWUBM5RgcPijr7DkhT1EQPU4',
-    appId: '1:839692849399:web:1ef42cdd47b4c3ff0243f2',
-    messagingSenderId: '839692849399',
-    projectId: 'popcal-e709a',
-    authDomain: 'popcal-e709a.firebaseapp.com',
-    storageBucket: 'popcal-e709a.firebasestorage.app',
-    measurementId: 'G-V9XBTNTWFN',
-  );
 }

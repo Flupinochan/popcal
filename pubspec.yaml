@@ -66,6 +66,9 @@ dependencies:
   alchemist: ^0.12.1
   firebase_auth_mocks: ^0.14.2
   go_router_builder: ^3.0.0
+  firebase_performance: ^0.10.1+10
+  firebase_crashlytics: ^4.3.10
+  firebase_analytics: ^11.6.0
 
 dev_dependencies:
   flutter_test:

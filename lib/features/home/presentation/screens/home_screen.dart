@@ -203,6 +203,11 @@ class HomeScreen extends HookConsumerWidget {
     RotationResponse rotationResponse,
     UserResponse userDto,
   ) async {
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     final rotationRepository = ref.read(rotationRepositoryProvider);
     final rotationController = ref.read(rotationNotifierProvider.notifier);
 
@@ -215,7 +220,9 @@ class HomeScreen extends HookConsumerWidget {
     result.when(
       success: (_) {
         SnackBarUtils.showGlassSnackBarWithAction(
-          context: context,
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
           flexibleMessage: rotationResponse.rotationName.value,
           fixedMessage: 'を削除しました',
           onAction: () async {
@@ -237,14 +244,18 @@ class HomeScreen extends HookConsumerWidget {
             restoreResult.when(
               success: (_) {
                 SnackBarUtils.showGlassSnackBar(
-                  context: context,
+                  textTheme: textTheme,
+                  glassTheme: glassTheme,
+                  scaffoldMessenger: scaffoldMessenger,
                   flexibleMessage: rotationResponse.rotationName.value,
                   fixedMessage: 'を元に戻しました',
                 );
               },
               failure: (error) {
                 SnackBarUtils.showGlassSnackBar(
-                  context: context,
+                  textTheme: textTheme,
+                  glassTheme: glassTheme,
+                  scaffoldMessenger: scaffoldMessenger,
                   flexibleMessage: '復元に失敗しました',
                 );
               },
@@ -255,7 +266,9 @@ class HomeScreen extends HookConsumerWidget {
       },
       failure: (error) {
         SnackBarUtils.showGlassSnackBar(
-          context: context,
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
           flexibleMessage: '削除に失敗しました',
         );
       },
