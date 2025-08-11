@@ -33,3 +33,106 @@ analyzer:
     strict-raw-types: true
   plugins:
     - custom_lint
+
+dart_code_metrics:
+  # 無償版はpresetや特定の機能は利用不可
+  extends:
+    - recommended
+  exclude:
+    - "test/**"
+    - "build/**"
+    - "**.g.dart"
+    - "**.freezed.dart"
+  formatter:
+    cascading-widget-extensions: true
+  assists:
+    wrap-with:
+      - GlassWrapper
+  metrics:
+    cyclomatic-complexity: 20
+    coupling-between-object-classes: 12
+    depth-of-inheritance-tree: 5
+    halstead-volume: 150
+    lines-of-code: 200
+    source-lines-of-code: 150
+    maintainability-index: 50
+    maximum-nesting-level: 5
+    number-of-added-methods: 10
+    number-of-external-imports: 8
+    number-of-implemented-interfaces: 5
+    number-of-imports: 10
+    number-of-methods: 10
+    number-of-overridden-methods: 10
+    number-of-parameters: 6
+    response-for-class: 55
+    tight-class-cohesion: 0.33
+    weight-of-class: 0.33
+    weighted-methods-per-class: 35
+    number-of-used-widgets: 20
+    widgets-nesting-level: 10
+  # Commonルール（40個）
+  rules:
+    # Correctness & Control Flow
+    - avoid-cascade-after-if-null
+    - avoid-collection-methods-with-unrelated-types
+    - avoid-duplicate-named-imports
+    - avoid-dynamic
+    - avoid-global-state
+    - avoid-late-keyword
+    - avoid-nested-conditional-expressions
+    - avoid-non-null-assertion
+    - avoid-passing-async-when-sync-expected
+    - avoid-redundant-async
+    - avoid-self-compare
+    - avoid-substring
+    - avoid-throw-in-catch-block
+    - avoid-top-level-members-in-tests
+    - avoid-unnecessary-conditionals
+    - avoid-unnecessary-type-assertions
+    - avoid-unnecessary-type-casts
+    - avoid-unrelated-type-assertions
+    - avoid-unused-parameters
+    
+    # Readability & Consistency
+    - binary-expression-operand-order
+    - double-literal-format
+    - member-ordering
+    - missing-test-assertion
+    - newline-before-return
+    - no-boolean-literal-compare
+    - no-empty-block
+    - no-equal-then-else
+    - no-magic-number
+    
+    # Maintainability & Best Practices
+    - prefer-async-await
+    - prefer-commenting-analyzer-ignores
+    - prefer-conditional-expressions
+    - prefer-correct-test-file-name
+    - prefer-enums-by-name
+    - prefer-first
+    - prefer-immediate-return
+    - prefer-iterable-of
+    - prefer-last
+    - prefer-match-file-name
+    - prefer-moving-to-variable
+    
+    # Flutterルール（18個）
+    - always-remove-listener
+    - avoid-border-all
+    - avoid-expanded-as-spacer
+    - avoid-returning-widgets
+    - avoid-shrink-wrap-in-lists
+    - avoid-unnecessary-setstate
+    - avoid-unnecessary-stateful-widgets
+    - avoid-wrapping-in-padding
+    - check-for-equals-in-render-object-setters
+    - consistent-update-render-object
+    - prefer-const-border-radius
+    - prefer-correct-edge-insets-constructor
+    - prefer-define-hero-tag
+    - prefer-extracting-callbacks
+    - prefer-single-widget-per-file
+    - prefer-text-rich
+    - prefer-using-list-view
+    - use-setstate-synchronously

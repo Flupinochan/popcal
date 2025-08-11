@@ -86,6 +86,7 @@ dev_dependencies:
   riverpod_lint: ^2.6.5
   json_serializable: ^6.9.5
   test: ^1.25.15
+  dart_code_metrics_presets: ^2.24.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
