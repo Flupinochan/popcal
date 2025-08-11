@@ -28,10 +28,7 @@ class NotificationGatewayLocal {
   Future<Result<void>> initializeNotification() async {
     try {
       const AndroidInitializationSettings android =
-          AndroidInitializationSettings(
-            // 'app_icon',
-            '@mipmap/ic_launcher',
-          );
+          AndroidInitializationSettings('notification_small_icon');
       const InitializationSettings settings = InitializationSettings(
         android: android,
       );
@@ -150,6 +147,8 @@ class NotificationGatewayLocal {
             priority: Priority.high,
             importance: Importance.high,
             showWhen: true,
+            icon: 'notification_small_icon',
+            largeIcon: DrawableResourceAndroidBitmap('notification_large_icon'),
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
