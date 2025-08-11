@@ -226,7 +226,7 @@ class HomeScreen extends HookConsumerWidget {
           flexibleMessage: rotationResponse.rotationName.value,
           fixedMessage: 'を削除しました',
           onAction: () async {
-            // 再作成処理
+            // 再作成処理 ※再レンダリングされいるため、contextを再取得
             final createDto = CreateRotationRequest(
               userId: rotationResponse.userId,
               rotationName: rotationResponse.rotationName,

@@ -65,8 +65,8 @@ class SnackBarUtils {
                 text: actionLabel,
                 textStyle: textTheme.labelLarge,
                 onPressed: () {
-                  onAction();
                   scaffoldMessenger.hideCurrentSnackBar();
+                  onAction();
                 },
               ),
             ],
@@ -89,30 +89,27 @@ class SnackBarUtils {
     String? fixedMessage, // 右側の固定幅メッセージ
     required TextStyle style,
   }) {
-    return Flexible(
-      child:
-          fixedMessage == null
-              ? Text(
+    return fixedMessage == null
+        ? Text(
+          flexibleMessage,
+          style: style,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        )
+        : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
                 flexibleMessage,
                 style: style,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
-              )
-              : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Text(
-                      flexibleMessage,
-                      style: style,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                  Text(fixedMessage, style: style, maxLines: 1),
-                ],
               ),
-    );
+            ),
+            Text(fixedMessage, style: style, maxLines: 1),
+          ],
+        );
   }
 }
