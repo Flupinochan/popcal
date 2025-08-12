@@ -7,6 +7,7 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/auth/providers/auth_stream.dart';
+import 'package:popcal/features/drawer/presentation/widgets/glass_menu_item.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
@@ -75,7 +76,7 @@ class DrawerScreen extends HookConsumerWidget {
                 Expanded(
                   child: ListView(
                     children: [
-                      _buildGlassMenuItem(
+                      GlassMenuItem(
                         icon: Icons.home,
                         title: 'ホーム',
                         onTap: () {
@@ -137,21 +138,6 @@ class DrawerScreen extends HookConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildGlassMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return GlassButton(
-      height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      iconData: icon,
-      text: title,
-      onPressed: onTap,
-      alignment: Alignment.centerLeft,
     );
   }
 

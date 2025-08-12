@@ -5,17 +5,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
+import 'package:popcal/features/calendar/presentation/widgets/calendar_cell.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
+import 'package:popcal/features/calendar/presentation/widgets/info_row_item.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
 import 'package:popcal/shared/screens/custom_loading_screen.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
-import 'package:popcal/shared/widgets/glass_app_bar.dart';
+import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -39,71 +40,6 @@ class CalendarScreen extends HookConsumerWidget {
           ),
       loading: CustomLoadingScreen.new,
       error: (error, stack) => const CustomErrorScreen(),
-    );
-  }
-
-  Widget _buildCalendarCell(
-    BuildContext context,
-    CalendarScheduleResponse calendarDataDto,
-    DateTime day,
-    bool isToday,
-    bool isSelected,
-  ) {
-    final textTheme = Theme.of(context).textTheme;
-    final glassTheme =
-        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-
-    final dayInfo = calendarDataDto.getDayInfo(day);
-    final memberName = dayInfo.memberName;
-    final isRotationDay = dayInfo.isRotationDay;
-
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border.all(color: glassTheme.borderColor, width: 0.5),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const SizedBox(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color:
-                  isSelected
-                      ? Colors.blue.withValues(alpha: 0.4)
-                      : isToday
-                      ? Colors.amber.withValues(alpha: 0.3)
-                      : isRotationDay
-                      ? Colors.white.withValues(alpha: 0.15)
-                      : Colors.transparent,
-              borderRadius: const BorderRadius.all(Radius.circular(4)),
-            ),
-            child: Text(
-              '${day.day}',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ),
-          if (isRotationDay && memberName != RotationMemberName.notApplicable)
-            Text(
-              memberName.value,
-              style: textTheme.labelMedium!.copyWith(
-                color: dayInfo.memberColor.value,
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            )
-          else
-            const SizedBox(),
-        ],
-      ),
     );
   }
 
@@ -170,32 +106,29 @@ class CalendarScreen extends HookConsumerWidget {
         calendarBuilders: CalendarBuilders(
           // 通常の日付
           defaultBuilder: (context, day, focusedDay) {
-            return _buildCalendarCell(
-              context,
-              calendarDataDto,
-              day,
-              false,
-              false,
+            return CalendarCell(
+              calendarDataDto: calendarDataDto,
+              day: day,
+              isToday: false,
+              isSelected: false,
             );
           },
           // 今日の日付
           todayBuilder: (context, day, focusedDay) {
-            return _buildCalendarCell(
-              context,
-              calendarDataDto,
-              day,
-              true,
-              false,
+            return CalendarCell(
+              calendarDataDto: calendarDataDto,
+              day: day,
+              isToday: true,
+              isSelected: false,
             );
           },
           // 選択された日付
           selectedBuilder: (context, day, focusedDay) {
-            return _buildCalendarCell(
-              context,
-              calendarDataDto,
-              day,
-              false,
-              true,
+            return CalendarCell(
+              calendarDataDto: calendarDataDto,
+              day: day,
+              isToday: false,
+              isSelected: true,
             );
           },
         ),
@@ -277,30 +210,29 @@ class CalendarScreen extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ローテーション情報
-            _rotationInfoItem(
-              context,
-              'ローテーション情報',
-              Icons.info_outline,
+            InfoRowItem(
+              infoText: 'ローテーション情報',
+              iconData: Icons.info_outline,
               iconSize: 20,
               textStyle: textTheme.titleMedium,
             ),
             // メンバー
-            _rotationInfoItem(
-              context,
-              'メンバー: ${calendarDataDto.rotationResponse.rotationMembers.join(', ')}',
-              Icons.group,
+            InfoRowItem(
+              infoText:
+                  'メンバー: ${calendarDataDto.rotationResponse.rotationMembers.join(', ')}',
+              iconData: Icons.group,
             ),
             // 曜日
-            _rotationInfoItem(
-              context,
-              '曜日: ${calendarDataDto.rotationResponse.rotationDays.map((w) => w.displayName).join(', ')}',
-              Icons.calendar_today,
+            InfoRowItem(
+              infoText:
+                  '曜日: ${calendarDataDto.rotationResponse.rotationDays.map((w) => w.displayName).join(', ')}',
+              iconData: Icons.calendar_today,
             ),
             // 通知時刻
-            _rotationInfoItem(
-              context,
-              '時刻: ${calendarDataDto.rotationResponse.notificationTime.display24hour}',
-              Icons.access_time,
+            InfoRowItem(
+              infoText:
+                  '時刻: ${calendarDataDto.rotationResponse.notificationTime.display24hour}',
+              iconData: Icons.access_time,
             ),
           ],
         ),
@@ -404,33 +336,6 @@ class CalendarScreen extends HookConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _rotationInfoItem(
-    BuildContext context,
-    String infoText,
-    IconData iconData, {
-    double iconSize = 18,
-    TextStyle? textStyle,
-  }) {
-    final textTheme = Theme.of(context).textTheme;
-    final glassTheme =
-        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-
-    final effectiveTextStyle = textStyle ?? textTheme.titleSmall;
-
-    return Row(
-      spacing: 8,
-      children: [
-        Icon(iconData, color: glassTheme.surfaceColor, size: iconSize),
-        Text(
-          infoText,
-          style: effectiveTextStyle,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
     );
   }
 }

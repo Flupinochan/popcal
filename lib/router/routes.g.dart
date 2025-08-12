@@ -7,13 +7,66 @@ part of 'routes.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
+  $calendarRoute,
+  $errorRoute,
   $homeRoute,
   $loginRoute,
   $rotationCreateRoute,
   $rotationUpdateRoute,
-  $calendarRoute,
-  $errorRoute,
 ];
+
+RouteBase get $calendarRoute => GoRouteData.$route(
+  path: '/calendar/:id',
+
+  factory: _$CalendarRoute._fromState,
+);
+
+mixin _$CalendarRoute on GoRouteData {
+  static CalendarRoute _fromState(GoRouterState state) =>
+      CalendarRoute(id: state.pathParameters['id']!);
+
+  CalendarRoute get _self => this as CalendarRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/calendar/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $errorRoute =>
+    GoRouteData.$route(path: '/error', factory: _$ErrorRoute._fromState);
+
+mixin _$ErrorRoute on GoRouteData {
+  static ErrorRoute _fromState(GoRouterState state) => const ErrorRoute();
+
+  @override
+  String get location => GoRouteData.$location('/error');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
 
 RouteBase get $homeRoute =>
     GoRouteData.$route(path: '/', factory: _$HomeRoute._fromState);
@@ -103,59 +156,6 @@ mixin _$RotationUpdateRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/rotation/${Uri.encodeComponent(_self.id)}');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $calendarRoute => GoRouteData.$route(
-  path: '/calendar/:id',
-
-  factory: _$CalendarRoute._fromState,
-);
-
-mixin _$CalendarRoute on GoRouteData {
-  static CalendarRoute _fromState(GoRouterState state) =>
-      CalendarRoute(id: state.pathParameters['id']!);
-
-  CalendarRoute get _self => this as CalendarRoute;
-
-  @override
-  String get location =>
-      GoRouteData.$location('/calendar/${Uri.encodeComponent(_self.id)}');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $errorRoute =>
-    GoRouteData.$route(path: '/error', factory: _$ErrorRoute._fromState);
-
-mixin _$ErrorRoute on GoRouteData {
-  static ErrorRoute _fromState(GoRouterState state) => const ErrorRoute();
-
-  @override
-  String get location => GoRouteData.$location('/error');
 
   @override
   void go(BuildContext context) => context.go(location);

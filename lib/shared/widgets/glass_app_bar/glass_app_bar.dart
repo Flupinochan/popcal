@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/shared/widgets/glass_app_bar/sync_status.dart';
+import 'package:popcal/shared/widgets/glass_app_bar/sync_status_indicator.dart';
 
 class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   const GlassAppBar({
@@ -37,41 +39,10 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16),
-          child: _buildAction(context),
+          child: SyncStatusIndicator(syncStatus: syncStatus),
         ),
       ],
       iconTheme: IconThemeData(color: glassTheme.surfaceColor),
     );
   }
-
-  // AppBarの右側にローディング状態を表示
-  Widget _buildAction(BuildContext context) {
-    final glassTheme =
-        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-
-    switch (syncStatus) {
-      case SyncStatus.syncing:
-        return SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            color: glassTheme.surfaceColor,
-          ),
-        );
-      case SyncStatus.completed:
-        return Icon(
-          Icons.check_circle_outline,
-          color: glassTheme.successBorderColor,
-        );
-      case SyncStatus.failed:
-        return Icon(Icons.error_outline, color: glassTheme.errorBorderColor);
-      case SyncStatus.idle:
-        return const SizedBox();
-      case null:
-        return const SizedBox();
-    }
-  }
 }
-
-enum SyncStatus { idle, syncing, completed, failed }

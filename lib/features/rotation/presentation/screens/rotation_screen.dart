@@ -25,7 +25,7 @@ import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
 import 'package:popcal/shared/screens/custom_loading_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
-import 'package:popcal/shared/widgets/glass_app_bar.dart';
+import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 
 Future<void> _handleSubmit(

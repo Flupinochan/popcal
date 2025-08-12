@@ -1,0 +1,79 @@
+import 'package:flutter/material.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+
+class CalendarCell extends StatelessWidget {
+  const CalendarCell({
+    required this.calendarDataDto,
+    required this.day,
+    required this.isToday,
+    required this.isSelected,
+    super.key,
+  });
+
+  final CalendarScheduleResponse calendarDataDto;
+  final DateTime day;
+  final bool isToday;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+
+    final dayInfo = calendarDataDto.getDayInfo(day);
+    final memberName = dayInfo.memberName;
+    final isRotationDay = dayInfo.isRotationDay;
+
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border.all(color: glassTheme.borderColor, width: 0.5),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const SizedBox(),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color:
+                  isSelected
+                      ? Colors.blue.withValues(alpha: 0.4)
+                      : isToday
+                      ? Colors.amber.withValues(alpha: 0.3)
+                      : isRotationDay
+                      ? Colors.white.withValues(alpha: 0.15)
+                      : Colors.transparent,
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
+            ),
+            child: Text(
+              '${day.day}',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
+          if (isRotationDay && memberName != RotationMemberName.notApplicable)
+            Text(
+              memberName.value,
+              style: textTheme.labelMedium!.copyWith(
+                color: dayInfo.memberColor.value,
+              ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            )
+          else
+            const SizedBox(),
+        ],
+      ),
+    );
+  }
+}

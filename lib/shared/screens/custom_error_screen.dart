@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
-import 'package:popcal/shared/widgets/glass_app_bar.dart';
+import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_dialog.dart';
 
 class CustomErrorScreen extends StatelessWidget {

@@ -115,6 +115,7 @@ class GlassListItem extends StatelessWidget {
                         // 編集
                         MenuItemButton(
                           onPressed: onEdit,
+                          // ignore: avoid-returning-widgets
                           child: _menuItem(
                             iconColor: Colors.white,
                             iconData: Icons.edit,
@@ -132,6 +133,7 @@ class GlassListItem extends StatelessWidget {
                         // 削除
                         MenuItemButton(
                           onPressed: onDelete,
+                          // ignore: avoid-returning-widgets
                           child: _menuItem(
                             iconColor: Colors.redAccent,
                             iconData: Icons.delete,
@@ -150,6 +152,7 @@ class GlassListItem extends StatelessWidget {
     );
   }
 
+  // シンプルでテスト不要なためStetelessWidgetへの移行は不要
   Widget _menuItem({
     required String title,
     required IconData iconData,
