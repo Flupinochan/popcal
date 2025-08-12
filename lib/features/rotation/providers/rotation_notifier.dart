@@ -23,47 +23,62 @@ class RotationNotifier extends _$RotationNotifier {
   Future<Result<RotationResponse>> createRotation(
     CreateRotationRequest dto,
   ) async {
-    state = const AsyncLoading();
-    try {
+    final result = await AsyncValue.guard<Result<RotationResponse>>(() async {
       final currentTime = _timeUtils.now();
       final entityResult = dto.toEntity(currentTime: currentTime);
+
       if (entityResult.isFailure) {
-        state = AsyncError(entityResult.failureOrNull!, StackTrace.current);
         return Results.failure(RotationFailure(entityResult.displayText));
       }
 
-      final result = await ref
+      final useCaseResult = await ref
           .read(createRotationUseCaseProvider)
           .execute(entityResult.valueOrNull!);
-      state = const AsyncData(null);
-      return _convertEntityToDto(result);
-    } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
-      rethrow;
-    }
+
+      return _convertEntityToDto(useCaseResult);
+    });
+
+    state = result;
+
+    return result.when(
+      data: (value) => value,
+      error: (error, _) => Results.failure(RotationFailure(error.toString())),
+      loading:
+          () => Results.failure<RotationResponse>(
+            const RotationFailure('処理中にエラーが発生しました'),
+          ),
+    );
   }
 
   // 更新
   Future<Result<RotationResponse>> updateRotation(
     UpdateRotationRequest dto,
   ) async {
-    state = const AsyncLoading();
-    try {
+    final result = await AsyncValue.guard<Result<RotationResponse>>(() async {
       final currentTime = _timeUtils.now();
       final entityResult = dto.toEntity(currentTime: currentTime);
+
       if (entityResult.isFailure) {
-        state = AsyncError(entityResult.failureOrNull!, StackTrace.current);
         return Results.failure(RotationFailure(entityResult.displayText));
       }
-      final result = await ref
+
+      final useCaseResult = await ref
           .read(updateRotationUseCaseProvider)
           .execute(entityResult.valueOrNull!);
-      state = const AsyncData(null);
-      return _convertEntityToDto(result);
-    } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
-      rethrow;
-    }
+
+      return _convertEntityToDto(useCaseResult);
+    });
+
+    state = result;
+
+    return result.when(
+      data: (value) => value,
+      error: (error, _) => Results.failure(RotationFailure(error.toString())),
+      loading:
+          () => Results.failure<RotationResponse>(
+            const RotationFailure('処理中にエラーが発生しました'),
+          ),
+    );
   }
 
   Result<RotationResponse> _convertEntityToDto(Result<Rotation> entityResult) {

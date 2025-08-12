@@ -89,7 +89,7 @@ class GlassDialog extends StatelessWidget {
               GlassButton(
                 text: 'OK',
                 height: 44,
-                onPressed: () => const HomeRoute().pushReplacement(context),
+                onPressed: () => const HomeRoute().go(context),
               ),
             ],
           ),

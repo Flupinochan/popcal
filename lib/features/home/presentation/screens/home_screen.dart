@@ -217,7 +217,6 @@ class HomeScreen extends HookConsumerWidget {
           scaffoldMessenger: scaffoldMessenger,
           flexibleMessage: rotationResponse.rotationName.value,
           fixedMessage: 'を削除しました',
-          // ignore: avoid_passing_async_when_sync_expected 非同期関数のため
           onAction:
               () => _handleRestore(
                 ref,
