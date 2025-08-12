@@ -6,13 +6,13 @@ part of 'rotation_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$rotationNotifierHash() => r'be1355398d2a044b8524ef1c617aa5037e8b96af';
+String _$rotationNotifierHash() => r'725e852e493b83710eb275572e7a3d0d3f3f1d09';
 
 /// See also [RotationNotifier].
 @ProviderFor(RotationNotifier)
 final rotationNotifierProvider = AutoDisposeAsyncNotifierProvider<
   RotationNotifier,
-  RotationResponse?
+  Result<RotationResponse>?
 >.internal(
   RotationNotifier.new,
   name: r'rotationNotifierProvider',
@@ -24,6 +24,7 @@ final rotationNotifierProvider = AutoDisposeAsyncNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$RotationNotifier = AutoDisposeAsyncNotifier<RotationResponse?>;
+typedef _$RotationNotifier =
+    AutoDisposeAsyncNotifier<Result<RotationResponse>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

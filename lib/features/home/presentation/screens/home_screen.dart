@@ -246,7 +246,6 @@ class HomeScreen extends HookConsumerWidget {
     GlassTheme glassTheme,
     ScaffoldMessengerState scaffoldMessenger,
   ) async {
-    final rotationController = ref.read(rotationNotifierProvider.notifier);
     final createDto = CreateRotationRequest(
       userId: rotationResponse.userId,
       rotationName: rotationResponse.rotationName,
@@ -255,26 +254,27 @@ class HomeScreen extends HookConsumerWidget {
       notificationTime: rotationResponse.notificationTime,
     );
 
-    final restoreResult = await rotationController.createRotation(createDto);
+    final rotationController = ref.read(rotationNotifierProvider.notifier);
+    await rotationController.createRotation(createDto);
 
-    restoreResult.when(
-      success: (_) {
-        SnackBarUtils.showGlassSnackBar(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
-          flexibleMessage: rotationResponse.rotationName.value,
-          fixedMessage: 'を元に戻しました',
-        );
-      },
-      failure: (error) {
-        SnackBarUtils.showGlassSnackBar(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
-          flexibleMessage: '復元に失敗しました',
-        );
-      },
+    final asyncRotation = ref.read(rotationNotifierProvider);
+    asyncRotation.when(
+      data:
+          (_) => SnackBarUtils.showGlassSnackBar(
+            textTheme: textTheme,
+            glassTheme: glassTheme,
+            scaffoldMessenger: scaffoldMessenger,
+            flexibleMessage: rotationResponse.rotationName.value,
+            fixedMessage: 'を復元しました',
+          ),
+      error:
+          (error, stackTrace) => SnackBarUtils.showGlassSnackBar(
+            textTheme: textTheme,
+            glassTheme: glassTheme,
+            scaffoldMessenger: scaffoldMessenger,
+            flexibleMessage: '復元に失敗しました: $error',
+          ),
+      loading: () => null,
     );
   }
 

@@ -15,9 +15,10 @@ class RotationNotifier extends _$RotationNotifier {
   TimeUtils get _timeUtils => ref.read(timeUtilsProvider);
 
   @override
-  FutureOr<RotationResponse?> build() => null;
+  FutureOr<Result<RotationResponse>?> build() => null;
 
-  Future<Result<RotationResponse>> createRotation(
+  // RotationResponseはreturnせずstateに値を格納する
+  Future<void> createRotation(
     CreateRotationRequest dto,
   ) async {
     state = await AsyncValue.guard(() async {
@@ -25,27 +26,23 @@ class RotationNotifier extends _$RotationNotifier {
 
       final entityResult = dto.toEntity(currentTime: currentTime);
       if (entityResult.isFailure) {
-        throw Exception(entityResult.displayText);
+        return Results.failure(RotationFailure(entityResult.displayText));
       }
 
       final useCaseResult = await ref
           .read(createRotationUseCaseProvider)
           .execute(entityResult.valueOrNull!);
       if (useCaseResult.isFailure) {
-        throw Exception(useCaseResult.displayText);
+        return Results.failure(RotationFailure(useCaseResult.displayText));
       }
 
-      return RotationResponse.fromEntity(useCaseResult.valueOrNull!);
+      return Results.success(
+        RotationResponse.fromEntity(useCaseResult.valueOrNull!),
+      );
     });
-
-    return state.when(
-      data: (response) => Results.success(response!),
-      error: (error, _) => Results.failure(RotationFailure(error.toString())),
-      loading: () => Results.failure(const RotationFailure('予期しないエラー')),
-    );
   }
 
-  Future<Result<RotationResponse>> updateRotation(
+  Future<void> updateRotation(
     UpdateRotationRequest dto,
   ) async {
     state = await AsyncValue.guard(() async {
@@ -53,23 +50,19 @@ class RotationNotifier extends _$RotationNotifier {
 
       final entityResult = dto.toEntity(currentTime: currentTime);
       if (entityResult.isFailure) {
-        throw Exception(entityResult.displayText);
+        return Results.failure(RotationFailure(entityResult.displayText));
       }
 
       final useCaseResult = await ref
           .read(updateRotationUseCaseProvider)
           .execute(entityResult.valueOrNull!);
       if (useCaseResult.isFailure) {
-        throw Exception(useCaseResult.displayText);
+        return Results.failure(RotationFailure(useCaseResult.displayText));
       }
 
-      return RotationResponse.fromEntity(useCaseResult.valueOrNull!);
+      return Results.success(
+        RotationResponse.fromEntity(useCaseResult.valueOrNull!),
+      );
     });
-
-    return state.when(
-      data: (response) => Results.success(response!),
-      error: (error, _) => Results.failure(RotationFailure(error.toString())),
-      loading: () => Results.failure(const RotationFailure('予期しないエラー')),
-    );
   }
 }

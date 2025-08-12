@@ -14,9 +14,7 @@ class AuthNotifier extends _$AuthNotifier {
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   @override
-  FutureOr<UserResponse?> build() {
-    return null;
-  }
+  FutureOr<UserResponse?> build() => null;
 
   Future<Result<UserResponse>> signIn(EmailSignInRequest dto) async {
     return _executeAuthOperation(
@@ -43,7 +41,12 @@ class AuthNotifier extends _$AuthNotifier {
     });
 
     return state.when(
-      data: (response) => Results.success(response!),
+      data: (response) {
+        if (response == null) {
+          return Results.failure(const AuthFailure('予期しないエラー'));
+        }
+        return Results.success(response);
+      },
       error: (error, _) => Results.failure(AuthFailure(error.toString())),
       loading: () => Results.failure(const AuthFailure('予期しないエラー')),
     );
