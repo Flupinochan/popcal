@@ -101,10 +101,9 @@ class NotificationGatewayLocal {
       String? errorMessage;
       for (final notification in pendingNotifications) {
         if (notification.payload != null) {
-          final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+          LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
             notification.payload!,
-          );
-          dtoResult.when(
+          ).when(
             success: (localNotificationSettingDto) {
               if (localNotificationSettingDto.rotationId ==
                   RotationId(rotationId)) {
@@ -233,17 +232,15 @@ class NotificationGatewayLocal {
   void _handleNotificationTap(String? payload) {
     try {
       if (payload != null) {
-        final dtoResult = LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+        LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
           payload,
-        );
-        dtoResult.when(
-          success: (localNotificationSettingDto) {
-            _router.push(
-              CalendarRoute(
-                id: localNotificationSettingDto.rotationId.value,
-              ).location,
-            );
-          },
+        ).when(
+          success:
+              (localNotificationSettingDto) => _router.push(
+                CalendarRoute(
+                  id: localNotificationSettingDto.rotationId.value,
+                ).location,
+              ),
           failure: (error) => _router.go(const ErrorRoute().location),
         );
       } else {

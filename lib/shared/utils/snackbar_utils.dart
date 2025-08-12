@@ -13,25 +13,26 @@ class SnackBarUtils {
     String? fixedMessage,
     Duration duration = const Duration(seconds: 2),
   }) {
-    scaffoldMessenger.clearSnackBars();
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: GlassWrapper(
-          padding: const EdgeInsets.all(10),
-          child: _buildTwoPartMessage(
-            flexibleMessage: flexibleMessage,
-            fixedMessage: fixedMessage,
-            style: textTheme.bodyLarge!,
+    scaffoldMessenger
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: GlassWrapper(
+            padding: const EdgeInsets.all(10),
+            child: _buildTwoPartMessage(
+              flexibleMessage: flexibleMessage,
+              fixedMessage: fixedMessage,
+              style: textTheme.bodyLarge!,
+            ),
           ),
+          backgroundColor: glassTheme.backgroundColor,
+          elevation: 0,
+          padding: EdgeInsets.zero,
+          margin: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
+          behavior: SnackBarBehavior.floating,
+          duration: duration,
         ),
-        backgroundColor: glassTheme.backgroundColor,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
-        behavior: SnackBarBehavior.floating,
-        duration: duration,
-      ),
-    );
+      );
   }
 
   // アクション付きSnackBar
@@ -45,46 +46,47 @@ class SnackBarUtils {
     String? fixedMessage,
     Duration duration = const Duration(seconds: 5),
   }) {
-    scaffoldMessenger.clearSnackBars();
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: GlassWrapper(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            spacing: 12,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: _buildTwoPartMessage(
-                  flexibleMessage: flexibleMessage,
-                  fixedMessage: fixedMessage,
-                  style: textTheme.bodyLarge!,
+    scaffoldMessenger
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: GlassWrapper(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              spacing: 12,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: _buildTwoPartMessage(
+                    flexibleMessage: flexibleMessage,
+                    fixedMessage: fixedMessage,
+                    style: textTheme.bodyLarge!,
+                  ),
                 ),
-              ),
-              GlassButton(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
+                GlassButton(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  gradient: glassTheme.backgroundGradientStrong,
+                  text: actionLabel,
+                  textStyle: textTheme.labelLarge,
+                  onPressed: () {
+                    scaffoldMessenger.hideCurrentSnackBar();
+                    onAction();
+                  },
                 ),
-                gradient: glassTheme.backgroundGradientStrong,
-                text: actionLabel,
-                textStyle: textTheme.labelLarge,
-                onPressed: () {
-                  scaffoldMessenger.hideCurrentSnackBar();
-                  onAction();
-                },
-              ),
-            ],
+              ],
+            ),
           ),
+          backgroundColor: glassTheme.backgroundColor,
+          elevation: 0,
+          padding: EdgeInsets.zero,
+          margin: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
+          behavior: SnackBarBehavior.floating,
+          duration: duration,
         ),
-        backgroundColor: glassTheme.backgroundColor,
-        elevation: 0,
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.symmetric(vertical: 36, horizontal: 24),
-        behavior: SnackBarBehavior.floating,
-        duration: duration,
-      ),
-    );
+      );
   }
 
   // メッセージ部分は、可変長部分と固定長部分で指定可能
