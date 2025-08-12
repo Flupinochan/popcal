@@ -38,8 +38,8 @@ class HomeScreen extends HookConsumerWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    ref.listen(rotationNotifierProvider, (previous, next) {
-      next.when(
+    ref.listen(rotationNotifierProvider, (previousValue, newValue) {
+      newValue.when(
         data: (result) {
           if (result == null) return;
           if (result.isFailure) {
@@ -50,7 +50,7 @@ class HomeScreen extends HookConsumerWidget {
               flexibleMessage: '復元に失敗しました: ${result.failureOrNull}',
             );
           }
-          if (previous?.isLoading == true) {
+          if (previousValue?.isLoading ?? false) {
             SnackBarUtils.showGlassSnackBar(
               textTheme: textTheme,
               glassTheme: glassTheme,
@@ -60,8 +60,8 @@ class HomeScreen extends HookConsumerWidget {
             );
           }
         },
-        error: (error, stackTrace) {
-          if (previous?.isLoading == true) {
+        error: (error, _) {
+          if (previousValue?.isLoading ?? false) {
             SnackBarUtils.showGlassSnackBar(
               textTheme: textTheme,
               glassTheme: glassTheme,
@@ -70,13 +70,7 @@ class HomeScreen extends HookConsumerWidget {
             );
           }
         },
-        loading:
-            () => SnackBarUtils.showGlassSnackBar(
-              textTheme: textTheme,
-              glassTheme: glassTheme,
-              scaffoldMessenger: scaffoldMessenger,
-              flexibleMessage: '復元中...',
-            ),
+        loading: () => null,
       );
     });
 

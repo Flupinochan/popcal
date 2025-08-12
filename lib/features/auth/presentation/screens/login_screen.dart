@@ -37,16 +37,22 @@ class LoginScreen extends HookConsumerWidget {
       alpha: 0.3,
     );
 
-    ref.listen(authNotifierProvider, (previous, next) {
-      next.when(
+    ref.listen(authNotifierProvider, (previousValue, newValue) {
+      newValue.when(
         data: (result) {
           if (result == null) return;
           if (result.isFailure) {
             showErrorDialog(context, result.displayText);
           }
-          const HomeRoute().go(context);
+          if (previousValue?.isLoading ?? false) {
+            const HomeRoute().go(context);
+          }
         },
-        error: (error, _) => showErrorDialog(context, error.toString()),
+        error: (error, _) {
+          if (previousValue?.isLoading ?? false) {
+            showErrorDialog(context, error.toString());
+          }
+        },
         loading: () => null,
       );
     });
