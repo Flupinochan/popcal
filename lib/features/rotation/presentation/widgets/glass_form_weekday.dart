@@ -78,15 +78,21 @@ class GlassFormWeekday extends StatelessWidget {
               ? glass.backgroundGradientStrong
               : glass.backgroundGradient,
       text: weekday.displayName,
-      onPressed: () {
-        final currentValue = List<Weekday>.from(field.value ?? []);
-        if (isSelected) {
-          currentValue.remove(weekday);
-        } else {
-          currentValue.add(weekday);
-        }
-        field.didChange(currentValue);
-      },
+      onPressed: () => _onWeekdayPressed(weekday, field, isSelected),
     );
+  }
+
+  void _onWeekdayPressed(
+    Weekday weekday,
+    FormFieldState<List<Weekday>> field,
+    bool isSelected,
+  ) {
+    final currentValue = List<Weekday>.from(field.value ?? []);
+    if (isSelected) {
+      currentValue.remove(weekday);
+    } else {
+      currentValue.add(weekday);
+    }
+    field.didChange(currentValue);
   }
 }

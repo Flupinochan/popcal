@@ -30,81 +30,14 @@ class GlassFormTime extends StatelessWidget {
                   : '時刻を選択してください';
 
           return InkWell(
-            // ignore: avoid-passing-async-when-sync-expected
-            onTap: () async {
-              // TimePicker
-              final picked = await showTimePicker(
-                context: context,
-                initialTime: field.value ?? const TimeOfDay(hour: 9, minute: 0),
-                builder: (BuildContext context, Widget? child) {
-                  // TimePicker ガラス風スタイル設定
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      timePickerTheme: TimePickerThemeData(
-                        backgroundColor: const Color(
-                          0xFF1A1A2E,
-                        ).withValues(alpha: 0.9),
-                        hourMinuteTextColor: glassTheme.surfaceColor,
-                        hourMinuteColor: surfaceColorLight,
-                        dayPeriodTextColor: glassTheme.surfaceColor,
-                        dayPeriodColor: glassTheme.surfaceColor.withValues(
-                          alpha: 0.3,
-                        ),
-                        dayPeriodBorderSide: BorderSide(
-                          color: surfaceColorMedium,
-                          width: 1.5,
-                        ),
-                        dialBackgroundColor: const Color.fromARGB(
-                          255,
-                          22,
-                          22,
-                          39,
-                        ).withValues(alpha: 0.9),
-                        dialHandColor: glassTheme.surfaceColor.withValues(
-                          alpha: 0.5,
-                        ),
-                        dialTextColor: glassTheme.surfaceColor,
-                        entryModeIconColor: glassTheme.surfaceColor,
-                        helpTextStyle: TextStyle(
-                          color: glassTheme.surfaceColor,
-                        ),
-                        inputDecorationTheme: InputDecorationTheme(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: glassTheme.surfaceColor.withValues(
-                                alpha: 0.4,
-                              ),
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: glassTheme.surfaceColor.withValues(
-                            alpha: 0.15,
-                          ),
-                        ),
-                      ),
-                      textButtonTheme: TextButtonThemeData(
-                        style: TextButton.styleFrom(
-                          foregroundColor: glassTheme.iconColor,
-                        ),
-                      ),
-                    ),
-                    // 24時間表記
-                    child: Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: MediaQuery(
-                        data: MediaQuery.of(
-                          context,
-                        ).copyWith(alwaysUse24HourFormat: true),
-                        child: child!,
-                      ),
-                    ),
-                  );
-                },
-              );
-              if (picked != null) {
-                field.didChange(picked);
-              }
-            },
+            onTap:
+                () => _onTimeTap(
+                  context,
+                  field,
+                  glassTheme,
+                  surfaceColorLight,
+                  surfaceColorMedium,
+                ),
             borderRadius: const BorderRadius.all(Radius.circular(12)),
             child: Container(
               height: 56,
@@ -127,5 +60,86 @@ class GlassFormTime extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> _onTimeTap(
+    BuildContext context,
+    FormFieldState<TimeOfDay> field,
+    GlassTheme glassTheme,
+    Color surfaceColorLight,
+    Color surfaceColorMedium,
+  ) async {
+    // TimePicker
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: field.value ?? const TimeOfDay(hour: 9, minute: 0),
+      builder: (BuildContext context, Widget? child) {
+        // TimePicker ガラス風スタイル設定
+        return Theme(
+          data: Theme.of(context).copyWith(
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: const Color(
+                0xFF1A1A2E,
+              ).withValues(alpha: 0.9),
+              hourMinuteTextColor: glassTheme.surfaceColor,
+              hourMinuteColor: surfaceColorLight,
+              dayPeriodTextColor: glassTheme.surfaceColor,
+              dayPeriodColor: glassTheme.surfaceColor.withValues(
+                alpha: 0.3,
+              ),
+              dayPeriodBorderSide: BorderSide(
+                color: surfaceColorMedium,
+                width: 1.5,
+              ),
+              dialBackgroundColor: const Color.fromARGB(
+                255,
+                22,
+                22,
+                39,
+              ).withValues(alpha: 0.9),
+              dialHandColor: glassTheme.surfaceColor.withValues(
+                alpha: 0.5,
+              ),
+              dialTextColor: glassTheme.surfaceColor,
+              entryModeIconColor: glassTheme.surfaceColor,
+              helpTextStyle: TextStyle(
+                color: glassTheme.surfaceColor,
+              ),
+              inputDecorationTheme: InputDecorationTheme(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: glassTheme.surfaceColor.withValues(
+                      alpha: 0.4,
+                    ),
+                  ),
+                ),
+                filled: true,
+                fillColor: glassTheme.surfaceColor.withValues(
+                  alpha: 0.15,
+                ),
+              ),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: glassTheme.iconColor,
+              ),
+            ),
+          ),
+          // 24時間表記
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(alwaysUse24HourFormat: true),
+              child: child!,
+            ),
+          ),
+        );
+      },
+    );
+    if (picked != null) {
+      field.didChange(picked);
+    }
   }
 }

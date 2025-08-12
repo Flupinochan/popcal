@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-// ignore: prefer-match-file-name
 class DateKeyConverter implements JsonConverter<DateKey, String> {
   const DateKeyConverter();
 

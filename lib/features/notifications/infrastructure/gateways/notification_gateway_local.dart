@@ -119,11 +119,9 @@ class NotificationGatewayLocal {
           );
         }
       }
-      if (errorMessage != null) {
-        return Results.failure(NotificationFailure(errorMessage!));
-      } else {
-        return Results.success(null);
-      }
+      return errorMessage != null
+          ? Results.failure(NotificationFailure(errorMessage!))
+          : Results.success(null);
     } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
     }

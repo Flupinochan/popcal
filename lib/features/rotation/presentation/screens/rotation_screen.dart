@@ -179,12 +179,11 @@ class RotationScreen extends HookConsumerWidget {
                           initialRotation?.rotationMembers
                               .map((member) => member.value)
                               .toList(),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'メンバーを1つ以上追加してください';
-                        }
-                        return null;
-                      },
+                      validator:
+                          (value) =>
+                              (value == null || value.isEmpty)
+                                  ? 'メンバーを1つ以上追加してください'
+                                  : null,
                     ),
                   ),
                   // ローテーション曜日

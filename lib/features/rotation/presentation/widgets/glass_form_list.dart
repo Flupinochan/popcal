@@ -57,20 +57,14 @@ class GlassFormList extends HookWidget {
             // chip Listの表示
             GlassReorderList(
               items: items.value,
-              onReorder: (oldIndex, newIndex) {
-                if (newIndex > oldIndex) newIndex--;
-                final newItems = List<String>.of(items.value);
-                final item = newItems.removeAt(oldIndex);
-                newItems.insert(newIndex, item);
-                items.value = newItems;
-                field.didChange(newItems);
-              },
-              onDelete: (index) {
-                final newItems = List<String>.of(items.value);
-                newItems.removeAt(index);
-                items.value = newItems;
-                field.didChange(newItems);
-              },
+              onReorder:
+                  (oldIndex, newIndex) => _onReorder(
+                    oldIndex,
+                    newIndex,
+                    items,
+                    field,
+                  ),
+              onDelete: (index) => _onDelete(index, items, field),
             ),
             if (field.hasError)
               Text(
@@ -99,5 +93,29 @@ class GlassFormList extends HookWidget {
       field.didChange(newItems);
       controller.clear();
     }
+  }
+
+  void _onDelete(
+    int index,
+    ValueNotifier<List<String>> items,
+    FormFieldState<List<String>> field,
+  ) {
+    final newItems = List<String>.of(items.value)..removeAt(index);
+    items.value = newItems;
+    field.didChange(newItems);
+  }
+
+  void _onReorder(
+    int oldIndex,
+    int newIndex,
+    ValueNotifier<List<String>> items,
+    FormFieldState<List<String>> field,
+  ) {
+    final adjustedNewIndex = newIndex > oldIndex ? newIndex - 1 : newIndex;
+    final newItems = List<String>.of(items.value);
+    final item = newItems.removeAt(oldIndex);
+    newItems.insert(adjustedNewIndex, item);
+    items.value = newItems;
+    field.didChange(newItems);
   }
 }

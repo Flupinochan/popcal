@@ -34,10 +34,7 @@ class GlassListItem extends StatelessWidget {
           gradient: glassTheme.errorGradient,
           child: const SizedBox.shrink(),
         ),
-        confirmDismiss: (direction) async {
-          onDelete?.call();
-          return false;
-        },
+        confirmDismiss: _onConfirmDismiss,
         // ListItem
         child: GlassWrapper(
           child: Material(
@@ -163,5 +160,10 @@ class GlassListItem extends StatelessWidget {
         Text(title, style: const TextStyle(fontSize: 14, color: Colors.white)),
       ],
     );
+  }
+
+  Future<bool> _onConfirmDismiss(DismissDirection direction) async {
+    onDelete?.call();
+    return false;
   }
 }

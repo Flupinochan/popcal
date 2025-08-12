@@ -65,7 +65,7 @@ dart_code_metrics:
     - avoid-late-keyword
     - avoid-nested-conditional-expressions
     # - avoid-non-null-assertion
-    - avoid-passing-async-when-sync-expected
+    # - avoid-passing-async-when-sync-expected
     # - avoid-redundant-async
     - avoid-self-compare
     - avoid-substring
@@ -94,7 +94,7 @@ dart_code_metrics:
     - prefer-immediate-return
     - prefer-iterable-of
     - prefer-last
-    - prefer-match-file-name
+    # - prefer-match-file-name
     - prefer-moving-to-variable
     # Flutterルール（18個）
     - always-remove-listener
