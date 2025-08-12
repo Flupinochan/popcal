@@ -9,12 +9,11 @@ part 'calendar_schedule_response.freezed.dart';
 
 @freezed
 sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
-  const CalendarScheduleResponse._();
-
   const factory CalendarScheduleResponse({
     required RotationResponse rotationResponse,
     required Map<DateKey, ScheduleDayResponse> scheduleMap,
   }) = _CalendarScheduleResponse;
+  const CalendarScheduleResponse._();
 
   // 指定した日付から表示用データを返却
   ScheduleDayResponse getDayInfo(DateTime date) {
@@ -25,7 +24,7 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
           memberName: RotationMemberName.notApplicable,
           isRotationDay: false,
           memberColor: MemberColor.notApplicable,
-          displayText: "対象外",
+          displayText: '対象外',
         );
   }
 }
@@ -33,8 +32,6 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
 // 各日付表示用データ
 @freezed
 sealed class ScheduleDayResponse with _$ScheduleDayResponse {
-  const ScheduleDayResponse._();
-
   const factory ScheduleDayResponse({
     required NotificationDateTime date,
     required RotationMemberName memberName,
@@ -42,4 +39,5 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
     required MemberColor memberColor,
     required String displayText,
   }) = _ScheduleDayResponse;
+  const ScheduleDayResponse._();
 }
