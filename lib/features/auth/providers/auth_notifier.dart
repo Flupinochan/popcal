@@ -9,8 +9,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_notifier.g.dart';
 
-// シンプルなためUseCase層の役割も含めているが複雑化した場合は
-// PresentationのロジックとしてUseCase層に切り出す
 @riverpod
 class AuthNotifier extends _$AuthNotifier {
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
@@ -20,43 +18,34 @@ class AuthNotifier extends _$AuthNotifier {
     return null;
   }
 
-  Future<Result<UserResponse?>> signIn(EmailSignInRequest dto) async {
-    return _executeAuthOperation(() async {
-      final entityResult = await _authRepository.signInWithEmailAndPassword(
-        dto.email,
-        dto.password,
-      );
-      return _convertEntityToDto(entityResult);
-    });
-  }
-
-  Future<Result<UserResponse?>> signUp(EmailSignInRequest dto) async {
-    return _executeAuthOperation(() async {
-      final entityResult = await _authRepository.signUpWithEmailAndPassword(
-        dto.email,
-        dto.password,
-      );
-      return _convertEntityToDto(entityResult);
-    });
-  }
-
-  // T型で流用したいところ
-  Result<UserResponse> _convertEntityToDto(Result<AppUser> entityResult) {
-    return entityResult.when(
-      success: (appUser) => Results.success(UserResponse.fromEntity(appUser)),
-      failure: (error) => Results.failure(AuthFailure(error.message)),
+  Future<Result<UserResponse>> signIn(EmailSignInRequest dto) async {
+    return _executeAuthOperation(
+      () => _authRepository.signInWithEmailAndPassword(dto.email, dto.password),
     );
   }
 
-  Future<Result<UserResponse?>> _executeAuthOperation(
-    Future<Result<UserResponse?>> Function() operation,
+  Future<Result<UserResponse>> signUp(EmailSignInRequest dto) async {
+    return _executeAuthOperation(
+      () => _authRepository.signUpWithEmailAndPassword(dto.email, dto.password),
+    );
+  }
+
+  Future<Result<UserResponse>> _executeAuthOperation(
+    Future<Result<AppUser>> Function() operation,
   ) async {
-    state = const AsyncLoading();
-    final result = await operation();
-    result.when(
-      success: (dto) => state = AsyncData(dto),
-      failure: (error) => state = AsyncError(error, StackTrace.current),
+    state = await AsyncValue.guard(() async {
+      final entityResult = await operation();
+      if (entityResult.isFailure) {
+        throw Exception(entityResult.displayText);
+      }
+
+      return UserResponse.fromEntity(entityResult.valueOrNull!);
+    });
+
+    return state.when(
+      data: (response) => Results.success(response!),
+      error: (error, _) => Results.failure(AuthFailure(error.toString())),
+      loading: () => Results.failure(const AuthFailure('予期しないエラー')),
     );
-    return result;
   }
 }
