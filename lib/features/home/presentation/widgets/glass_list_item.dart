@@ -79,13 +79,10 @@ class GlassListItem extends StatelessWidget {
                     MenuAnchor(
                       builder: (context, controller, child) {
                         return IconButton(
-                          onPressed: () {
-                            if (controller.isOpen) {
-                              controller.close();
-                            } else {
-                              controller.open();
-                            }
-                          },
+                          onPressed:
+                              controller.isOpen
+                                  ? controller.close
+                                  : controller.open,
                           // Popup Button
                           icon: Icon(
                             Icons.more_vert,

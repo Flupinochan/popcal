@@ -107,7 +107,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             newCurrentRotationIndex,
           );
           final notificationId = NotificationId.create(
-            rotation.rotationId!.value,
+            rotation.rotationId!,
             checkDate,
           );
           final notificationTime = rotation.notificationTime.value;
@@ -139,7 +139,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           newCurrentRotationIndex: newCurrentRotationIndex,
         ),
       );
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知予定の作成に失敗しました: $error'));
     }
   }

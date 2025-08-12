@@ -4,17 +4,9 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassFormText extends StatelessWidget {
-  final String name;
-  final String? initialValue;
-  final String? hintText;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final void Function(String?)? onSubmitted;
-  final IconData? prefixIcon;
-
   const GlassFormText({
-    super.key,
     required this.name,
+    super.key,
     this.initialValue,
     this.hintText,
     this.controller,
@@ -23,6 +15,14 @@ class GlassFormText extends StatelessWidget {
     this.prefixIcon,
   });
 
+  final String name;
+  final String? initialValue;
+  final String? hintText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final void Function(String?)? onSubmitted;
+  final IconData? prefixIcon;
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -30,7 +30,7 @@ class GlassFormText extends StatelessWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return GlassWrapper(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       child: Row(
         spacing: 12,
         children: [

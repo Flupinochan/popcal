@@ -86,7 +86,7 @@ Future<void> _handleSubmit(
         );
         context.pop();
       }
-    } catch (error) {
+    } on Exception catch (_) {
       if (context.mounted) {
         SnackBarUtils.showGlassSnackBar(
           textTheme: textTheme,

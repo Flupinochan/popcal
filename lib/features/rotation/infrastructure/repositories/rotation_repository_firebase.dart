@@ -41,7 +41,7 @@ class RotationRepositoryFirebase {
       );
 
       return Results.success(result);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(RotationFailure('ローテーショングループの作成に失敗しました: $error'));
     }
   }
@@ -58,7 +58,7 @@ class RotationRepositoryFirebase {
       await docRef.delete();
 
       return Results.success(null);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(RotationFailure('ローテーショングループの削除に失敗しました: $error'));
     }
   }
@@ -87,7 +87,7 @@ class RotationRepositoryFirebase {
 
       final rotations = docSnap.data();
       return Results.success(rotations);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(RotationFailure('ローテーショングループの取得に失敗しました: $error'));
     }
   }
@@ -110,7 +110,7 @@ class RotationRepositoryFirebase {
       // doc.data()に型変換したデータが格納
       final rotations = docSnap.docs.map((doc) => doc.data()).toList();
       return Results.success(rotations);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(RotationFailure('ローテーショングループの取得に失敗しました: $error'));
     }
   }
@@ -138,7 +138,7 @@ class RotationRepositoryFirebase {
       await docRef.update(updatedDto.toFirestore());
 
       return Results.success(updatedDto);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(RotationFailure('ローテーショングループの更新に失敗しました: $error'));
     }
   }
@@ -158,7 +158,7 @@ class RotationRepositoryFirebase {
           try {
             final rotations = docSnap.docs.map((doc) => doc.data()).toList();
             return Results.success(rotations);
-          } catch (error) {
+          } on Exception catch (error) {
             return Results.failure(
               RotationFailure('ローテーショングループの監視中にエラーが発生しました: $error'),
             );

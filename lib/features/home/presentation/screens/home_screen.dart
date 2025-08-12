@@ -36,8 +36,7 @@ class HomeScreen extends HookConsumerWidget {
     // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)
     useEffect(() {
       // useEffect内はref.watchは使用不可
-      final notificationProvider = ref.read(notificationGatewayProvider);
-      notificationProvider.initializeNotificationLaunch();
+      ref.read(notificationGatewayProvider).initializeNotificationLaunch();
       return null;
     }, []);
 
@@ -51,8 +50,7 @@ class HomeScreen extends HookConsumerWidget {
 
               // バックグラウンドで通知同期処理
               useEffect(() {
-                final syncUseCase = ref.read(syncNotificationsUseCaseProvider);
-                syncUseCase.execute(dto.userId);
+                ref.read(syncNotificationsUseCaseProvider).execute(dto.userId);
                 return null;
               }, [dto.userId]);
 
@@ -179,16 +177,8 @@ class HomeScreen extends HookConsumerWidget {
               final rotationResponse = rotationResponses[index];
               return GlassListItem(
                 rotationResponse: rotationResponse,
-                onTap: () {
-                  CalendarRoute(
-                    id: rotationResponse.rotationId.value,
-                  ).push<void>(context);
-                },
-                onEdit: () {
-                  RotationUpdateRoute(
-                    id: rotationResponse.rotationId.value,
-                  ).push<void>(context);
-                },
+                onTap: () => _onTapRotation(context, rotationResponse),
+                onEdit: () => _onEditRotation(context, rotationResponse),
                 onDelete:
                     () =>
                         _handleDelete(context, ref, rotationResponse, userDto),
@@ -211,9 +201,7 @@ class HomeScreen extends HookConsumerWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-
     final rotationRepository = ref.read(rotationRepositoryProvider);
-    final rotationController = ref.read(rotationNotifierProvider.notifier);
 
     // 削除処理
     final result = await rotationRepository.deleteRotation(
@@ -229,40 +217,15 @@ class HomeScreen extends HookConsumerWidget {
           scaffoldMessenger: scaffoldMessenger,
           flexibleMessage: rotationResponse.rotationName.value,
           fixedMessage: 'を削除しました',
-          // ignore: avoid_passing_async_when_sync_expected, avoid-passing-async-when-sync-expected
-          onAction: () async {
-            final createDto = CreateRotationRequest(
-              userId: rotationResponse.userId,
-              rotationName: rotationResponse.rotationName,
-              rotationMembers: rotationResponse.rotationMembers,
-              rotationDays: rotationResponse.rotationDays,
-              notificationTime: rotationResponse.notificationTime,
-            );
-
-            final restoreResult = await rotationController.createRotation(
-              createDto,
-            );
-
-            restoreResult.when(
-              success: (_) {
-                SnackBarUtils.showGlassSnackBar(
-                  textTheme: textTheme,
-                  glassTheme: glassTheme,
-                  scaffoldMessenger: scaffoldMessenger,
-                  flexibleMessage: rotationResponse.rotationName.value,
-                  fixedMessage: 'を元に戻しました',
-                );
-              },
-              failure: (error) {
-                SnackBarUtils.showGlassSnackBar(
-                  textTheme: textTheme,
-                  glassTheme: glassTheme,
-                  scaffoldMessenger: scaffoldMessenger,
-                  flexibleMessage: '復元に失敗しました',
-                );
-              },
-            );
-          },
+          // ignore: avoid_passing_async_when_sync_expected 非同期関数のため
+          onAction:
+              () => _handleRestore(
+                ref,
+                rotationResponse,
+                textTheme,
+                glassTheme,
+                scaffoldMessenger,
+              ),
           actionLabel: '元に戻す',
         );
       },
@@ -275,5 +238,59 @@ class HomeScreen extends HookConsumerWidget {
         );
       },
     );
+  }
+
+  Future<void> _handleRestore(
+    WidgetRef ref,
+    RotationResponse rotationResponse,
+    TextTheme textTheme,
+    GlassTheme glassTheme,
+    ScaffoldMessengerState scaffoldMessenger,
+  ) async {
+    final rotationController = ref.read(rotationNotifierProvider.notifier);
+    final createDto = CreateRotationRequest(
+      userId: rotationResponse.userId,
+      rotationName: rotationResponse.rotationName,
+      rotationMembers: rotationResponse.rotationMembers,
+      rotationDays: rotationResponse.rotationDays,
+      notificationTime: rotationResponse.notificationTime,
+    );
+
+    final restoreResult = await rotationController.createRotation(createDto);
+
+    restoreResult.when(
+      success: (_) {
+        SnackBarUtils.showGlassSnackBar(
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
+          flexibleMessage: rotationResponse.rotationName.value,
+          fixedMessage: 'を元に戻しました',
+        );
+      },
+      failure: (error) {
+        SnackBarUtils.showGlassSnackBar(
+          textTheme: textTheme,
+          glassTheme: glassTheme,
+          scaffoldMessenger: scaffoldMessenger,
+          flexibleMessage: '復元に失敗しました',
+        );
+      },
+    );
+  }
+
+  void _onEditRotation(
+    BuildContext context,
+    RotationResponse rotationResponse,
+  ) {
+    RotationUpdateRoute(
+      id: rotationResponse.rotationId.value,
+    ).push<void>(context);
+  }
+
+  void _onTapRotation(BuildContext context, RotationResponse rotationResponse) {
+    CalendarRoute(
+      id: rotationResponse.rotationId.value,
+    ).push<void>(context);
   }
 }

@@ -57,7 +57,7 @@ sealed class UserFirebaseResponse with _$UserFirebaseResponse {
     try {
       final dto = UserFirebaseResponse.fromJson(json);
       return Results.success(dto);
-    } catch (e) {
+    } on Exception catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
     }
   }

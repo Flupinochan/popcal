@@ -83,7 +83,7 @@ class BuildCalendarScheduleUseCase {
       }
 
       return Results.success(calendarDays);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(CalendarFailure('カレンダーの作成に失敗しました: $error'));
     }
   }

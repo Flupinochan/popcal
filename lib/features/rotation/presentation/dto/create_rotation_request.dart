@@ -50,7 +50,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
           updatedAt: RotationUpdatedAt(currentTime),
         ),
       );
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(
         ValidationFailure(
           'CreateRotation to Rotation conversion failed: $error',

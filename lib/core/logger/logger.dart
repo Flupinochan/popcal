@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+
 import 'package:logging/logging.dart';
 
 void setupLogging() {
@@ -21,21 +22,21 @@ void setupLogging() {
   });
 }
 
-// 簡潔なログフォーマット定義
-String _formatSimple(LogRecord record) {
-  return '[${record.level.name}] ${record.loggerName}: ${record.message}';
-}
-
 // 詳細なログフォーマット定義
 String _formatDetailed(LogRecord record) {
-  final buffer = StringBuffer();
-  buffer.write(
-    '[${record.level.name}] ${record.loggerName}: ${record.message}',
-  );
+  final buffer = StringBuffer()
+    ..write(
+      '[${record.level.name}] ${record.loggerName}: ${record.message}',
+    );
 
   if (record.error != null) {
     buffer.write(' | Error: ${record.error.runtimeType} - ${record.error}');
   }
 
   return buffer.toString();
+}
+
+// 簡潔なログフォーマット定義
+String _formatSimple(LogRecord record) {
+  return '[${record.level.name}] ${record.loggerName}: ${record.message}';
 }

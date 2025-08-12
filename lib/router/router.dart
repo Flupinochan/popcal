@@ -32,18 +32,12 @@ GoRouter router(Ref ref, {required String initialLocation}) {
                 return null;
               }
             },
-            failure: (error) {
-              if (!isAuthPage) {
-                // 4. 認証エラー時に認証画面にいない => 認証画面へ
-                return const LoginRoute().location;
-              } else {
-                return null;
-              }
-            },
+            // 4. 認証エラー時に認証画面にいない => 認証画面へ
+            failure: (_) => !isAuthPage ? const LoginRoute().location : null,
           );
         },
         loading: () => null,
-        error: (_, __) => const LoginRoute().location,
+        error: (_, _) => const LoginRoute().location,
       );
     },
     routes: $appRoutes,

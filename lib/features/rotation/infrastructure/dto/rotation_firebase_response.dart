@@ -52,7 +52,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   // https://firebase.google.com/docs/firestore/query-data/get-data?hl=ja#dart_4
   factory RotationFirebaseResponse.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
+    SnapshotOptions? _,
   ) {
     final data = snapshot.data()!;
     final createdAt = data['createdAt'] as Timestamp;

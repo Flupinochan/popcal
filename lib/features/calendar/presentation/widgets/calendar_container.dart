@@ -42,13 +42,8 @@ class CalendarContainer extends ConsumerWidget {
             (day) => timeUtils.isSameDay(selectedDay.value, day),
         startingDayOfWeek: StartingDayOfWeek.monday,
         sixWeekMonthsEnforced: true,
-        onDaySelected: (selected, focused) {
-          selectedDay.value = selected;
-          focusedDay.value = focused;
-        },
-        onPageChanged: (focused) {
-          focusedDay.value = focused;
-        },
+        onDaySelected: _onDaySelected,
+        onPageChanged: _onPageChanged,
         // <     July 2025     > のスタイル
         headerStyle: HeaderStyle(
           formatButtonVisible: false,
@@ -69,10 +64,7 @@ class CalendarContainer extends ConsumerWidget {
         daysOfWeekStyle: DaysOfWeekStyle(
           weekdayStyle: textTheme.labelLarge!,
           weekendStyle: textTheme.labelLarge!,
-          dowTextFormatter: (date, locale) {
-            const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
-            return weekdays[(date.weekday - 1) % 7];
-          },
+          dowTextFormatter: _formatDayOfWeek,
         ),
         // 各日付のスタイル
         calendarStyle: const CalendarStyle(outsideDaysVisible: false),
@@ -107,5 +99,20 @@ class CalendarContainer extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // ignore: avoid-dynamic
+  String _formatDayOfWeek(DateTime date, dynamic locale) {
+    const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
+    return weekdays[(date.weekday - 1) % 7];
+  }
+
+  void _onDaySelected(DateTime selected, DateTime focused) {
+    selectedDay.value = selected;
+    focusedDay.value = focused;
+  }
+
+  void _onPageChanged(DateTime focused) {
+    focusedDay.value = focused;
   }
 }

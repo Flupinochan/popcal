@@ -3,21 +3,21 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassToggleButton extends StatelessWidget {
+  const GlassToggleButton({
+    required this.text,
+    required this.isSelected,
+    required this.onPressed,
+    super.key,
+    this.width,
+    this.height,
+  });
+
   final String text;
   // 選択状態に応じてテーマを切り替えるButton
   final bool isSelected;
   final VoidCallback onPressed;
   final double? width;
   final double? height;
-
-  const GlassToggleButton({
-    super.key,
-    required this.text,
-    required this.isSelected,
-    required this.onPressed,
-    this.width,
-    this.height,
-  });
 
   @override
   Widget build(BuildContext context) {

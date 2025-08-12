@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassChip extends StatelessWidget {
-  const GlassChip({super.key, required this.text, required this.gradient});
+  const GlassChip({required this.text, required this.gradient, super.key});
 
   final String text;
   final Gradient gradient;

@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 
 class GlassBottomActionBar extends StatelessWidget {
+  const GlassBottomActionBar({
+    required this.onCancel,
+    required this.onSubmit,
+    super.key,
+    this.isLoading = false,
+    this.isUpdateMode = false,
+  });
+
   final bool isLoading;
   final bool isUpdateMode;
   final VoidCallback onCancel;
   final VoidCallback onSubmit;
 
-  const GlassBottomActionBar({
-    super.key,
-    this.isLoading = false,
-    this.isUpdateMode = false,
-    required this.onCancel,
-    required this.onSubmit,
-  });
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       color: Colors.transparent,
       child: Row(
         spacing: 16,
@@ -39,7 +39,7 @@ class GlassBottomActionBar extends StatelessWidget {
               width: double.infinity,
               height: 50,
               showBorder: false,
-              text: isUpdateMode ? "更新" : "作成",
+              text: isUpdateMode ? '更新' : '作成',
               onPressed: isLoading ? null : onSubmit,
             ),
           ),

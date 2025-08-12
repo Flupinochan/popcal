@@ -5,10 +5,10 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
 
 class GlassFormWeekday extends StatelessWidget {
+  const GlassFormWeekday({required this.now, super.key, this.initialValue});
+
   final List<Weekday>? initialValue;
   final DateTime now;
-
-  const GlassFormWeekday({super.key, this.initialValue, required this.now});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,9 @@ class GlassFormWeekday extends StatelessWidget {
     return FormBuilderField<List<Weekday>>(
       name: 'rotationDays',
       initialValue: initialValue ?? [Weekday.fromDateTime(now)],
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return '曜日を1つ以上選択してください';
-        }
-        return null;
-      },
+      validator:
+          (value) =>
+              (value == null || value.isEmpty) ? '曜日を1つ以上選択してください' : null,
       builder: (FormFieldState<List<Weekday>> field) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +46,7 @@ class GlassFormWeekday extends StatelessWidget {
             ),
             if (field.hasError)
               Padding(
-                padding: EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
                   field.errorText!,
                   style: TextStyle(
@@ -75,7 +72,7 @@ class GlassFormWeekday extends StatelessWidget {
       width: 44,
       height: 44,
       borderColor: isSelected ? glass.borderColorStrong : glass.borderColor,
-      showBackground: isSelected ? true : false,
+      showBackground: isSelected,
       gradient:
           isSelected
               ? glass.backgroundGradientStrong

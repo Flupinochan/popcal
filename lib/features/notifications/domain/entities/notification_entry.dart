@@ -7,14 +7,6 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart
 
 /// 通知設定
 class NotificationEntry {
-  final NotificationId notificationId;
-  // rotationIdはポップアップをタップした際に、カレンダー画面を表示するために必要
-  final RotationId rotationId;
-  final UserId userId;
-  final NotificationDateTime notificationDate;
-  final RotationName rotationName;
-  final RotationMemberName memberName;
-
   const NotificationEntry({
     required this.notificationId,
     required this.rotationId,
@@ -24,7 +16,15 @@ class NotificationEntry {
     required this.memberName,
   });
 
-  String get title => rotationName.value;
-  String get description => '${rotationName.value}の通知';
+  final NotificationId notificationId;
+  // rotationIdはポップアップをタップした際に、カレンダー画面を表示するために必要
+  final RotationId rotationId;
+  final UserId userId;
+  final NotificationDateTime notificationDate;
+  final RotationName rotationName;
+  final RotationMemberName memberName;
+
   String get content => '今日は${memberName.value}の番です';
+  String get description => '${rotationName.value}の通知';
+  String get title => rotationName.value;
 }

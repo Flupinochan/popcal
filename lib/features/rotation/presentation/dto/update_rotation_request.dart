@@ -56,7 +56,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
           updatedAt: RotationUpdatedAt(currentTime),
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       return Results.failure(
         ValidationFailure('UpdateRotation to Rotation conversion failed: $e'),
       );

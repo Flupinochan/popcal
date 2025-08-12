@@ -22,7 +22,7 @@ class AuthRepositoryFirebase {
         }
       } on FirebaseAuthException catch (error) {
         return Results.failure(AuthFailure(_mapFirebaseError(error)));
-      } catch (error) {
+      } on Exception catch (error) {
         return Results.failure(AuthFailure('認証状態の監視で、予期しないエラーが発生しました: $error'));
       }
     });
@@ -42,7 +42,7 @@ class AuthRepositoryFirebase {
       );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(AuthFailure('ユーザ情報の取得で、予期しないエラーが発生しました: $error'));
     }
   }
@@ -67,7 +67,7 @@ class AuthRepositoryFirebase {
       );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(AuthFailure('メールアドレス認証で、予期しないエラーが発生しました: $error'));
     }
   }
@@ -79,7 +79,7 @@ class AuthRepositoryFirebase {
       return Results.success(null);
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(AuthFailure('サインアウトで、予期しないエラーが発生しました: $error'));
     }
   }
@@ -104,7 +104,7 @@ class AuthRepositoryFirebase {
       );
     } on FirebaseAuthException catch (error) {
       return Results.failure(AuthFailure(_mapFirebaseError(error)));
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(AuthFailure('サインアップで、予期しないエラーが発生しました: $error'));
     }
   }

@@ -56,16 +56,14 @@ class DrawerScreen extends HookConsumerWidget {
                           data:
                               (result) => result.when(
                                 success: (userDto) {
-                                  if (userDto == null) {
-                                    return _buildUserInfo(textTheme, null);
-                                  } else {
-                                    return _buildUserInfo(textTheme, userDto);
-                                  }
+                                  return userDto == null
+                                      ? _buildUserInfo(textTheme, null)
+                                      : _buildUserInfo(textTheme, userDto);
                                 },
                                 failure: (_) => _buildUserInfo(textTheme, null),
                               ),
                           loading: () => _buildUserInfo(textTheme, null),
-                          error: (_, __) => _buildUserInfo(textTheme, null),
+                          error: (_, _) => _buildUserInfo(textTheme, null),
                         );
                       },
                     ),
@@ -79,10 +77,7 @@ class DrawerScreen extends HookConsumerWidget {
                       GlassMenuItem(
                         icon: Icons.home,
                         title: 'ホーム',
-                        onTap: () {
-                          context.pop();
-                          const HomeRoute().go(context);
-                        },
+                        onTap: () => _onHomeTap(context),
                       ),
                     ],
                   ),
@@ -153,6 +148,11 @@ class DrawerScreen extends HookConsumerWidget {
         Text(emailValue ?? 'お待ちください', style: textTheme.bodySmall),
       ],
     );
+  }
+
+  void _onHomeTap(BuildContext context) {
+    context.pop();
+    const HomeRoute().go(context);
   }
 
   Future<void> _showDocumentPage() async {

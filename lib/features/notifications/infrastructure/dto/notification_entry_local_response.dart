@@ -47,7 +47,7 @@ sealed class NotificationEntryLocalResponse
           memberName: memberName,
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       return Results.failure(
         ValidationFailure('DTO to NotificationSetting conversion failed: $e'),
       );
@@ -72,7 +72,7 @@ sealed class NotificationEntryLocalResponse
           content: notification.content,
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       return Results.failure(
         ValidationFailure('NotificationSetting to DTO conversion failed: $e'),
       );
@@ -86,7 +86,7 @@ sealed class NotificationEntryLocalResponse
     try {
       final dto = NotificationEntryLocalResponse.fromJson(json);
       return Results.success(dto);
-    } catch (e) {
+    } on Exception catch (e) {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
     }
   }
@@ -109,7 +109,7 @@ extension LocalNotificationSettingDtoJsonX on NotificationEntryLocalResponse {
     try {
       final map = jsonDecode(jsonString) as Map<String, dynamic>;
       return NotificationEntryLocalResponse.fromJsonSafe(map);
-    } catch (e) {
+    } on Exception catch (e) {
       return Results.failure(
         ValidationFailure('JSON string parsing failed: $e'),
       );

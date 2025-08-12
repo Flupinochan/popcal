@@ -25,6 +25,9 @@ sealed class RotationResponse with _$RotationResponse {
     required RotationIndex currentRotationIndex,
     required RotationCreatedAt createdAt,
     required RotationUpdatedAt updatedAt,
+    required String displayDays,
+    required String displayMembers,
+    required String displayNotificationTime,
   }) = _RotationResponse;
 
   /// Entity => DTO
@@ -39,6 +42,9 @@ sealed class RotationResponse with _$RotationResponse {
       currentRotationIndex: entity.currentRotationIndex,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
+      displayDays: entity.displayDays,
+      displayMembers: entity.displayMembers,
+      displayNotificationTime: entity.displayNotificationTime,
     );
   }
   const RotationResponse._();

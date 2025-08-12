@@ -5,21 +5,56 @@ import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
-class GlassDialog extends StatelessWidget {
-  final IconData icon;
-  final String message;
-  final Color iconColor;
-  final Gradient backgroundGradient;
-  final Color borderColor;
+/// ダイアログはshowDialogメソッドで表示する
+void showErrorDialog(BuildContext context, String message) {
+  final glassTheme =
+      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
+  showDialog<void>(
+    context: context,
+    builder:
+        (context) => GlassDialog(
+          icon: Icons.priority_high,
+          message: message,
+          iconColor: glassTheme.errorBorderColor,
+          backgroundGradient: glassTheme.errorGradient,
+          borderColor: glassTheme.errorBorderColor,
+        ),
+  );
+}
+
+void showInfoDialog(BuildContext context, String message) {
+  final glassTheme =
+      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+
+  showDialog<void>(
+    context: context,
+    builder:
+        (context) => GlassDialog(
+          icon: Icons.priority_high,
+          message: message,
+          iconColor: glassTheme.successBorderColor,
+          backgroundGradient: glassTheme.successGradient,
+          borderColor: glassTheme.successBorderColor,
+        ),
+  );
+}
+
+class GlassDialog extends StatelessWidget {
   const GlassDialog({
-    super.key,
     required this.icon,
     required this.message,
     required this.iconColor,
     required this.backgroundGradient,
     required this.borderColor,
+    super.key,
   });
+
+  final IconData icon;
+  final String message;
+  final Color iconColor;
+  final Gradient backgroundGradient;
+  final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +89,7 @@ class GlassDialog extends StatelessWidget {
               GlassButton(
                 text: 'OK',
                 height: 44,
-                onPressed: () => HomeRoute().pushReplacement(context),
+                onPressed: () => const HomeRoute().pushReplacement(context),
               ),
             ],
           ),
@@ -62,39 +97,4 @@ class GlassDialog extends StatelessWidget {
       ),
     );
   }
-}
-
-/// ダイアログはshowDialogメソッドで表示する
-void showErrorDialog(BuildContext context, String message) {
-  final glassTheme =
-      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-
-  showDialog<void>(
-    context: context,
-    builder:
-        (context) => GlassDialog(
-          icon: Icons.priority_high,
-          message: message,
-          iconColor: glassTheme.errorBorderColor,
-          backgroundGradient: glassTheme.errorGradient,
-          borderColor: glassTheme.errorBorderColor,
-        ),
-  );
-}
-
-void showInfoDialog(BuildContext context, String message) {
-  final glassTheme =
-      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-
-  showDialog<void>(
-    context: context,
-    builder:
-        (context) => GlassDialog(
-          icon: Icons.priority_high,
-          message: message,
-          iconColor: glassTheme.successBorderColor,
-          backgroundGradient: glassTheme.successGradient,
-          borderColor: glassTheme.successBorderColor,
-        ),
-  );
 }

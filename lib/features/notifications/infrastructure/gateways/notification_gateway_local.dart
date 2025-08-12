@@ -65,7 +65,7 @@ class NotificationGatewayLocal {
       // ログ出力
       await logPendingNotifications();
       return Results.success(null);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の作成に失敗しました: $error'));
     }
   }
@@ -75,7 +75,7 @@ class NotificationGatewayLocal {
     try {
       await _flutterLocalNotificationsPlugin.cancel(notificationId);
       return Results.success(null);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
     }
   }
@@ -85,7 +85,7 @@ class NotificationGatewayLocal {
     try {
       await _flutterLocalNotificationsPlugin.cancelAllPendingNotifications();
       return Results.success(null);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
     }
   }
@@ -110,7 +110,7 @@ class NotificationGatewayLocal {
                   RotationId(rotationId)) {
                 try {
                   _flutterLocalNotificationsPlugin.cancel(notification.id);
-                } catch (error) {
+                } on Exception catch (error) {
                   errorMessage = error.toString();
                 }
               }
@@ -124,7 +124,7 @@ class NotificationGatewayLocal {
       } else {
         return Results.success(null);
       }
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
     }
   }
@@ -139,7 +139,7 @@ class NotificationGatewayLocal {
               .map((notification) => notification.id)
               .toList();
       return Results.success(notificationIds);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の取得に失敗しました: $error'));
     }
   }
@@ -169,7 +169,7 @@ class NotificationGatewayLocal {
       // 権限要求
       await _requestNotificationPermission();
       return Results.success(null);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('初期化に失敗しました: $error'));
     }
   }
@@ -188,7 +188,7 @@ class NotificationGatewayLocal {
         _handleNotificationTap(payload);
       }
       return Results.success(null);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(
         NotificationFailure('通知タップから起動の確認に失敗しました: $error'),
       );
@@ -212,7 +212,7 @@ class NotificationGatewayLocal {
           final day = dateInt % 100;
 
           dateTime = '$month/$day';
-        } catch (e) {
+        } on Exception catch (_) {
           // 復元に失敗した場合は日時不明のまま
         }
 
@@ -226,7 +226,7 @@ class NotificationGatewayLocal {
       }
 
       return Results.success(null);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知一覧の取得に失敗しました: $error'));
     }
   }
@@ -251,7 +251,7 @@ class NotificationGatewayLocal {
       } else {
         _router.go(const ErrorRoute().location);
       }
-    } catch (error) {
+    } on Exception catch (_) {
       _router.go(const ErrorRoute().location);
     }
   }
@@ -269,7 +269,7 @@ class NotificationGatewayLocal {
               ?.areNotificationsEnabled() ??
           false;
       return Results.success(granted);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知権限状態の確認に失敗しました: $error'));
     }
   }
@@ -291,7 +291,7 @@ class NotificationGatewayLocal {
       }
       // Android以外のプラットフォームでは常にfalse
       return Results.success(false);
-    } catch (error) {
+    } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知権限の許可に失敗しました: $error'));
     }
   }

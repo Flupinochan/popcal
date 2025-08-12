@@ -32,19 +32,19 @@ class RotationInfoCard extends StatelessWidget {
             // メンバー
             InfoRowItem(
               infoText:
-                  'メンバー: ${calendarScheduleResponse.rotationResponse.rotationMembers.join(', ')}',
+                  'メンバー: ${calendarScheduleResponse.rotationResponse.displayMembers}',
               iconData: Icons.group,
             ),
             // 曜日
             InfoRowItem(
               infoText:
-                  '曜日: ${calendarScheduleResponse.rotationResponse.rotationDays.map((w) => w.displayName).join(', ')}',
+                  '曜日: ${calendarScheduleResponse.rotationResponse.displayDays}',
               iconData: Icons.calendar_today,
             ),
             // 通知時刻
             InfoRowItem(
               infoText:
-                  '時刻: ${calendarScheduleResponse.rotationResponse.notificationTime.display24hour}',
+                  '時刻: ${calendarScheduleResponse.rotationResponse.displayNotificationTime}',
               iconData: Icons.access_time,
             ),
           ],

@@ -10,6 +10,18 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_a
 
 // ローテーション設定
 class Rotation {
+  const Rotation({
+    required this.userId,
+    required this.rotationName,
+    required this.rotationMemberNames,
+    required this.rotationDays,
+    required this.notificationTime,
+    required this.currentRotationIndex,
+    required this.createdAt,
+    required this.updatedAt,
+    this.rotationId,
+  });
+
   // Firestoreに保存した後に付与されるためオプショナル
   final RotationId? rotationId;
   final UserId userId;
@@ -22,17 +34,17 @@ class Rotation {
   final RotationCreatedAt createdAt;
   final RotationUpdatedAt updatedAt;
 
-  const Rotation({
-    this.rotationId,
-    required this.userId,
-    required this.rotationName,
-    required this.rotationMemberNames,
-    required this.rotationDays,
-    required this.notificationTime,
-    required this.currentRotationIndex,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+  String get displayDays {
+    return rotationDays.map((day) => day.displayName).join(', ');
+  }
+
+  String get displayMembers {
+    return rotationMemberNames.map((member) => member.value).join(', ');
+  }
+
+  String get displayNotificationTime {
+    return notificationTime.display24hour;
+  }
 
   Rotation copyWith({
     RotationId? rotationId,
@@ -58,6 +70,14 @@ class Rotation {
     );
   }
 
+  int getRotationMemberIndex(RotationIndex rotationIndex) {
+    final memberCount = getRotationMembersCount();
+    if (memberCount == 0) {
+      return 0;
+    }
+    return rotationIndex.value % memberCount;
+  }
+
   RotationMemberName getRotationMemberName(RotationIndex rotationIndex) {
     if (rotationMemberNames.isEmpty) {
       return RotationMemberName.notApplicable;
@@ -69,14 +89,6 @@ class Rotation {
     }
 
     return RotationMemberName.notApplicable;
-  }
-
-  int getRotationMemberIndex(RotationIndex rotationIndex) {
-    final memberCount = getRotationMembersCount();
-    if (memberCount == 0) {
-      return 0;
-    }
-    return rotationIndex.value % memberCount;
   }
 
   int getRotationMembersCount() {

@@ -22,12 +22,7 @@ class GlassFormTime extends StatelessWidget {
       child: FormBuilderField<TimeOfDay>(
         name: 'notificationTime',
         initialValue: initialValue ?? currentTime,
-        validator: (value) {
-          if (value == null) {
-            return '通知時刻を選択してください';
-          }
-          return null;
-        },
+        validator: (value) => value == null ? '通知時刻を選択してください' : null,
         builder: (FormFieldState<TimeOfDay> field) {
           final timeText =
               field.value != null

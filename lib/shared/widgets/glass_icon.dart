@@ -1,21 +1,13 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 
 /// ガラス風Icon Widget
 class GlassIcon extends StatelessWidget {
-  final IconData iconData;
-  final double iconSize;
-  final double? backgroundSize;
-  final Color? iconColor;
-  final EdgeInsets? margin;
-  final bool showBorder;
-  final Gradient? backgroundGradient;
-  final Color? borderColor;
-
   const GlassIcon({
-    super.key,
     required this.iconData,
+    super.key,
     this.iconSize = 24,
     this.iconColor,
     this.backgroundSize,
@@ -24,6 +16,15 @@ class GlassIcon extends StatelessWidget {
     this.backgroundGradient,
     this.borderColor,
   });
+
+  final IconData iconData;
+  final double iconSize;
+  final double? backgroundSize;
+  final Color? iconColor;
+  final EdgeInsets? margin;
+  final bool showBorder;
+  final Gradient? backgroundGradient;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {

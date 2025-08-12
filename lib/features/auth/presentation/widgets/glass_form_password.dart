@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassFormPassword extends HookWidget {
-  final String name;
-  final String? initialValue;
-  final String? hintText;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final void Function(String?)? onSubmitted;
-  final IconData? prefixIcon;
-
   const GlassFormPassword({
-    super.key,
     required this.name,
+    super.key,
     this.initialValue,
     this.hintText,
     this.controller,
@@ -23,6 +15,14 @@ class GlassFormPassword extends HookWidget {
     this.onSubmitted,
     this.prefixIcon,
   });
+
+  final String name;
+  final String? initialValue;
+  final String? hintText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final void Function(String?)? onSubmitted;
+  final IconData? prefixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +32,12 @@ class GlassFormPassword extends HookWidget {
     final isPasswordVisible = useState(false);
 
     return GlassWrapper(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       child: Row(
         children: [
           if (prefixIcon != null) ...[
             Icon(prefixIcon, color: glassTheme.iconColor, size: 20),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
           ],
           Expanded(
             child: FormBuilderTextField(

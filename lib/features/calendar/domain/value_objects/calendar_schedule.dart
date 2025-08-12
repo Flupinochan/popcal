@@ -5,11 +5,11 @@ import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 
 class CalendarSchedule {
+  const CalendarSchedule({required this.rotation, required this.scheduleMap});
+
   final Rotation rotation;
   // 各日付のkey: 各日付の表示用データValue
   final Map<DateKey, ScheduleDay> scheduleMap;
-
-  const CalendarSchedule({required this.rotation, required this.scheduleMap});
 
   ScheduleDay getDayInfo(DateTime date) {
     final dateKey = DateKey.fromDateTime(date);
@@ -24,17 +24,16 @@ class CalendarSchedule {
 }
 
 class ScheduleDay {
-  final NotificationDateTime date;
-  final RotationMemberName memberName;
-  final bool isRotationDay;
-  final MemberColor memberColor;
-
   const ScheduleDay({
     required this.date,
     required this.memberName,
     required this.isRotationDay,
     required this.memberColor,
   });
+  final NotificationDateTime date;
+  final RotationMemberName memberName;
+  final bool isRotationDay;
+  final MemberColor memberColor;
 
-  String get displayText => isRotationDay ? "担当日" : "対象外";
+  String get displayText => isRotationDay ? '担当日' : '対象外';
 }

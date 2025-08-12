@@ -27,6 +27,61 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     required this.successGradient,
   });
 
+  /// デフォルトのテーマを定義 ※finalは再起動が必要
+  static final defaultTheme = GlassTheme(
+    blur: 20,
+    borderColor: Colors.white.withValues(alpha: 0.2),
+    borderColorStrong: Colors.white.withValues(alpha: 0.4),
+    borderWidth: 1,
+    borderRadius: 12,
+    iconColor: Colors.white.withValues(alpha: 0.8),
+    backgroundGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.white.withValues(alpha: 0.1),
+        Colors.white.withValues(alpha: 0.05),
+      ],
+    ),
+    backgroundGradientStrong: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.white.withValues(alpha: 0.3),
+        Colors.white.withValues(alpha: 0.15),
+      ],
+    ),
+    transparentGradient: const LinearGradient(
+      colors: [Colors.transparent, Colors.transparent],
+    ),
+    primaryColor: const Color(0xFF667eea),
+    secondaryColor: const Color(0xFF764ba2),
+    primaryGradient: const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF667eea), Color(0xFF764ba2)],
+    ),
+    surfaceColor: Colors.white,
+    backgroundColor: Colors.transparent,
+    errorBorderColor: Colors.redAccent.withValues(alpha: 0.4),
+    errorGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.redAccent.withValues(alpha: 0.3),
+        Colors.redAccent.withValues(alpha: 0.3),
+      ],
+    ),
+    successBorderColor: Colors.greenAccent.withValues(alpha: 0.4),
+    successGradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.greenAccent.withValues(alpha: 0.3),
+        Colors.greenAccent.withValues(alpha: 0.3),
+      ],
+    ),
+  );
   final double blur;
   final Color borderColor;
   final Color borderColorStrong;
@@ -37,6 +92,7 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
   final LinearGradient backgroundGradientStrong;
   final LinearGradient transparentGradient;
   final Color primaryColor;
+
   final Color secondaryColor;
 
   /// 青紫背景色
@@ -47,10 +103,10 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
 
   /// 透明
   final Color backgroundColor;
-
   final Color errorBorderColor;
   final LinearGradient errorGradient;
   final Color successBorderColor;
+
   final LinearGradient successGradient;
 
   /// デフォルトのテーマのプロパティをオーバーライドしてスタイルを適用するためのメソッド
@@ -141,60 +197,4 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
           LinearGradient.lerp(successGradient, other.successGradient, t)!,
     );
   }
-
-  /// デフォルトのテーマを定義 ※finalは再起動が必要
-  static final defaultTheme = GlassTheme(
-    blur: 20.0,
-    borderColor: Colors.white.withValues(alpha: 0.2),
-    borderColorStrong: Colors.white.withValues(alpha: 0.4),
-    borderWidth: 1.0,
-    borderRadius: 12.0,
-    iconColor: Colors.white.withValues(alpha: 0.8),
-    backgroundGradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Colors.white.withValues(alpha: 0.1),
-        Colors.white.withValues(alpha: 0.05),
-      ],
-    ),
-    backgroundGradientStrong: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Colors.white.withValues(alpha: 0.3),
-        Colors.white.withValues(alpha: 0.15),
-      ],
-    ),
-    transparentGradient: LinearGradient(
-      colors: [Colors.transparent, Colors.transparent],
-    ),
-    primaryColor: Color(0xFF667eea),
-    secondaryColor: Color(0xFF764ba2),
-    primaryGradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-    ),
-    surfaceColor: Colors.white,
-    backgroundColor: Colors.transparent,
-    errorBorderColor: Colors.redAccent.withValues(alpha: 0.4),
-    errorGradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Colors.redAccent.withValues(alpha: 0.3),
-        Colors.redAccent.withValues(alpha: 0.3),
-      ],
-    ),
-    successBorderColor: Colors.greenAccent.withValues(alpha: 0.4),
-    successGradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Colors.greenAccent.withValues(alpha: 0.3),
-        Colors.greenAccent.withValues(alpha: 0.3),
-      ],
-    ),
-  );
 }
