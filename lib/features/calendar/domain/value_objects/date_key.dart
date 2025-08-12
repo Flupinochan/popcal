@@ -1,13 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// カレンダー選択日とscheduleMapのKeyは年月日で判定すべき
-extension type DateKey(DateTime value) {
-  DateKey.fromDateTime(DateTime dateTime)
-    : this(DateTime(dateTime.year, dateTime.month, dateTime.day));
-
-  DateKey.now() : this.fromDateTime(DateTime.now());
-}
-
+// ignore: prefer-match-file-name
 class DateKeyConverter implements JsonConverter<DateKey, String> {
   const DateKeyConverter();
 
@@ -16,4 +9,10 @@ class DateKeyConverter implements JsonConverter<DateKey, String> {
 
   @override
   String toJson(DateKey object) => object.value.toIso8601String();
+}
+
+/// カレンダー選択日とscheduleMapのKeyは年月日で判定すべき
+extension type DateKey(DateTime value) {
+  DateKey.fromDateTime(DateTime dateTime)
+    : this(DateTime(dateTime.year, dateTime.month, dateTime.day));
 }

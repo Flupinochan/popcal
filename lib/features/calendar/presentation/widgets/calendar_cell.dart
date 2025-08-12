@@ -17,6 +17,17 @@ class CalendarCell extends StatelessWidget {
   final bool isToday;
   final bool isSelected;
 
+  Color _getBackgroundColor(bool isRotationDay) {
+    if (isSelected) return Colors.blue.withValues(alpha: 0.4);
+    if (isToday) return Colors.amber.withValues(alpha: 0.3);
+    if (isRotationDay) return Colors.white.withValues(alpha: 0.15);
+    return Colors.transparent;
+  }
+
+  FontWeight _getFontWeight() {
+    return isToday ? FontWeight.bold : FontWeight.normal;
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -41,14 +52,7 @@ class CalendarCell extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color:
-                  isSelected
-                      ? Colors.blue.withValues(alpha: 0.4)
-                      : isToday
-                      ? Colors.amber.withValues(alpha: 0.3)
-                      : isRotationDay
-                      ? Colors.white.withValues(alpha: 0.15)
-                      : Colors.transparent,
+              color: _getBackgroundColor(isRotationDay),
               borderRadius: const BorderRadius.all(Radius.circular(4)),
             ),
             child: Text(
@@ -56,7 +60,7 @@ class CalendarCell extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 11,
-                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                fontWeight: _getFontWeight(),
               ),
             ),
           ),
