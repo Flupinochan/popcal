@@ -15,7 +15,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
-import 'package:popcal/features/rotation/presentation/widgets/glass_bottom_action_bar.dart';
+import 'package:popcal/features/rotation/presentation/widgets/bottom_action_bar/glass_bottom_action_bar.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_list.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_weekday.dart';

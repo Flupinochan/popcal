@@ -15,12 +15,15 @@ class RotationNotifier extends _$RotationNotifier {
   TimeUtils get _timeUtils => ref.read(timeUtilsProvider);
 
   @override
-  FutureOr<Result<RotationResponse>?> build() => null;
+  FutureOr<Result<RotationResponse>?> build() async => null;
 
-  // RotationResponseはreturnせずstateに値を格納する
+  // 関数でRotationResponseはreturnせずstateに値を格納する
+  // .isLoadingでUIを動的に変更
+  // ref.listenで非同期処理完了後にactionを実行
   Future<void> createRotation(
     CreateRotationRequest dto,
   ) async {
+    state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final currentTime = _timeUtils.now();
 
@@ -45,6 +48,7 @@ class RotationNotifier extends _$RotationNotifier {
   Future<void> updateRotation(
     UpdateRotationRequest dto,
   ) async {
+    state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final currentTime = _timeUtils.now();
 

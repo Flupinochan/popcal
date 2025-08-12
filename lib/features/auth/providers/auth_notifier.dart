@@ -14,41 +14,33 @@ class AuthNotifier extends _$AuthNotifier {
   AuthRepository get _authRepository => ref.read(authRepositoryProvider);
 
   @override
-  FutureOr<UserResponse?> build() => null;
+  FutureOr<Result<UserResponse>?> build() async => null;
 
-  Future<Result<UserResponse>> signIn(EmailSignInRequest dto) async {
+  Future<void> signIn(EmailSignInRequest dto) async {
     return _executeAuthOperation(
       () => _authRepository.signInWithEmailAndPassword(dto.email, dto.password),
     );
   }
 
-  Future<Result<UserResponse>> signUp(EmailSignInRequest dto) async {
+  Future<void> signUp(EmailSignInRequest dto) async {
     return _executeAuthOperation(
       () => _authRepository.signUpWithEmailAndPassword(dto.email, dto.password),
     );
   }
 
-  Future<Result<UserResponse>> _executeAuthOperation(
+  Future<void> _executeAuthOperation(
     Future<Result<AppUser>> Function() operation,
   ) async {
+    state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final entityResult = await operation();
       if (entityResult.isFailure) {
-        throw Exception(entityResult.displayText);
+        return Results.failure(AuthFailure(entityResult.displayText));
       }
 
-      return UserResponse.fromEntity(entityResult.valueOrNull!);
-    });
+      final userResponse = UserResponse.fromEntity(entityResult.valueOrNull!);
 
-    return state.when(
-      data: (response) {
-        if (response == null) {
-          return Results.failure(const AuthFailure('予期しないエラー'));
-        }
-        return Results.success(response);
-      },
-      error: (error, _) => Results.failure(AuthFailure(error.toString())),
-      loading: () => Results.failure(const AuthFailure('予期しないエラー')),
-    );
+      return Results.success(userResponse);
+    });
   }
 }

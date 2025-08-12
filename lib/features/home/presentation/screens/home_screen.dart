@@ -33,6 +33,53 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    ref.listen(rotationNotifierProvider, (previous, next) {
+      next.when(
+        data: (result) {
+          if (result == null) return;
+          if (result.isFailure) {
+            SnackBarUtils.showGlassSnackBar(
+              textTheme: textTheme,
+              glassTheme: glassTheme,
+              scaffoldMessenger: scaffoldMessenger,
+              flexibleMessage: '復元に失敗しました: ${result.failureOrNull}',
+            );
+          }
+          if (previous?.isLoading == true) {
+            SnackBarUtils.showGlassSnackBar(
+              textTheme: textTheme,
+              glassTheme: glassTheme,
+              scaffoldMessenger: scaffoldMessenger,
+              flexibleMessage: result.valueOrNull!.rotationName.value,
+              fixedMessage: 'を復元しました',
+            );
+          }
+        },
+        error: (error, stackTrace) {
+          if (previous?.isLoading == true) {
+            SnackBarUtils.showGlassSnackBar(
+              textTheme: textTheme,
+              glassTheme: glassTheme,
+              scaffoldMessenger: scaffoldMessenger,
+              flexibleMessage: '復元に失敗しました: $error',
+            );
+          }
+        },
+        loading:
+            () => SnackBarUtils.showGlassSnackBar(
+              textTheme: textTheme,
+              glassTheme: glassTheme,
+              scaffoldMessenger: scaffoldMessenger,
+              flexibleMessage: '復元中...',
+            ),
+      );
+    });
+
     // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)
     useEffect(() {
       // useEffect内はref.watchは使用不可
@@ -221,9 +268,6 @@ class HomeScreen extends HookConsumerWidget {
               () => _handleRestore(
                 ref,
                 rotationResponse,
-                textTheme,
-                glassTheme,
-                scaffoldMessenger,
               ),
           actionLabel: '元に戻す',
         );
@@ -242,9 +286,6 @@ class HomeScreen extends HookConsumerWidget {
   Future<void> _handleRestore(
     WidgetRef ref,
     RotationResponse rotationResponse,
-    TextTheme textTheme,
-    GlassTheme glassTheme,
-    ScaffoldMessengerState scaffoldMessenger,
   ) async {
     final createDto = CreateRotationRequest(
       userId: rotationResponse.userId,
@@ -256,26 +297,6 @@ class HomeScreen extends HookConsumerWidget {
 
     final rotationController = ref.read(rotationNotifierProvider.notifier);
     await rotationController.createRotation(createDto);
-
-    final asyncRotation = ref.read(rotationNotifierProvider);
-    asyncRotation.when(
-      data:
-          (_) => SnackBarUtils.showGlassSnackBar(
-            textTheme: textTheme,
-            glassTheme: glassTheme,
-            scaffoldMessenger: scaffoldMessenger,
-            flexibleMessage: rotationResponse.rotationName.value,
-            fixedMessage: 'を復元しました',
-          ),
-      error:
-          (error, stackTrace) => SnackBarUtils.showGlassSnackBar(
-            textTheme: textTheme,
-            glassTheme: glassTheme,
-            scaffoldMessenger: scaffoldMessenger,
-            flexibleMessage: '復元に失敗しました: $error',
-          ),
-      loading: () => null,
-    );
   }
 
   void _onEditRotation(

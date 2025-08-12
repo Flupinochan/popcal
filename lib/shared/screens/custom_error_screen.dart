@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
+import 'package:popcal/router/routes.dart';
+import 'package:popcal/shared/widgets/dialog_content.dart';
 import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
-import 'package:popcal/shared/widgets/glass_dialog.dart';
 
 class CustomErrorScreen extends StatelessWidget {
   const CustomErrorScreen({super.key, this.title, this.message});
@@ -26,12 +27,13 @@ class CustomErrorScreen extends StatelessWidget {
         decoration: BoxDecoration(gradient: glassTheme.primaryGradient),
         child: SafeArea(
           child: Center(
-            child: GlassDialog(
+            child: DialogContent(
               icon: Icons.priority_high,
               message: message ?? '予期しないエラーが発生しました',
               iconColor: glassTheme.errorBorderColor,
-              backgroundGradient: glassTheme.errorGradient,
               borderColor: glassTheme.errorBorderColor,
+              backgroundGradient: glassTheme.errorGradient,
+              onPressed: () => const HomeRoute().go(context),
             ),
           ),
         ),

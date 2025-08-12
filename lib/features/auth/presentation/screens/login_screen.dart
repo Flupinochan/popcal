@@ -37,6 +37,20 @@ class LoginScreen extends HookConsumerWidget {
       alpha: 0.3,
     );
 
+    ref.listen(authNotifierProvider, (previous, next) {
+      next.when(
+        data: (result) {
+          if (result == null) return;
+          if (result.isFailure) {
+            showErrorDialog(context, result.displayText);
+          }
+          const HomeRoute().go(context);
+        },
+        error: (error, _) => showErrorDialog(context, error.toString()),
+        loading: () => null,
+      );
+    });
+
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
       body: Container(
@@ -285,19 +299,9 @@ class LoginScreen extends HookConsumerWidget {
     final dto = dtoResult.valueOrNull!;
 
     final authViewModel = ref.read(authNotifierProvider.notifier);
-    final authResult =
-        selectedMode.value == AuthMode.signIn
-            ? await authViewModel.signIn(dto)
-            : await authViewModel.signUp(dto);
-    if (!context.mounted) return;
-    authResult.when(
-      success: (user) {
-        const HomeRoute().go(context);
-      },
-      failure: (error) {
-        showErrorDialog(context, error.message);
-      },
-    );
+    selectedMode.value == AuthMode.signIn
+        ? await authViewModel.signIn(dto)
+        : await authViewModel.signUp(dto);
   }
 
   String? _validateEmail(String? value) {

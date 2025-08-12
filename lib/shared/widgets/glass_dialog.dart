@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/router/routes.dart';
-import 'package:popcal/shared/widgets/glass_button.dart';
-import 'package:popcal/shared/widgets/glass_icon.dart';
-import 'package:popcal/shared/widgets/glass_wrapper.dart';
+import 'package:popcal/shared/widgets/dialog_content.dart';
 
 /// ダイアログはshowDialogメソッドで表示する
 void showErrorDialog(BuildContext context, String message) {
@@ -58,42 +56,18 @@ class GlassDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
     return Dialog(
       backgroundColor: glassTheme.backgroundColor,
-      child: IntrinsicHeight(
-        child: GlassWrapper(
-          width: 300,
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            spacing: 20,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GlassIcon(
-                iconData: icon,
-                backgroundSize: 50,
-                iconSize: 40,
-                iconColor: iconColor,
-                showBorder: true,
-                backgroundGradient: backgroundGradient,
-                borderColor: borderColor,
-              ),
-              Text(
-                message,
-                style: textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              GlassButton(
-                text: 'OK',
-                height: 44,
-                onPressed: () => const HomeRoute().go(context),
-              ),
-            ],
-          ),
-        ),
+      child: DialogContent(
+        icon: icon,
+        message: message,
+        iconColor: iconColor,
+        borderColor: borderColor,
+        backgroundGradient: backgroundGradient,
+        onPressed: context.pop,
       ),
     );
   }
