@@ -186,7 +186,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
           (event) => {
             'date': Timestamp.fromDate(event.date.value),
             'type': event.type.name,
-            'skipCount': event.skipCount,
+            'skipCount': event.skipCount.skipCount,
           },
         )
         .toList();

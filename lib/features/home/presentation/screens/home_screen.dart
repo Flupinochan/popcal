@@ -38,40 +38,44 @@ class HomeScreen extends HookConsumerWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
+    // 全画面で動作するため注意 ※3.0以降は別画面に遷移するとpauseするようになる
     ref.listen(rotationNotifierProvider, (previousValue, newValue) {
-      newValue.when(
-        data: (result) {
-          if (result == null) return;
-          if (result.isFailure) {
-            SnackBarUtils.showGlassSnackBar(
-              textTheme: textTheme,
-              glassTheme: glassTheme,
-              scaffoldMessenger: scaffoldMessenger,
-              flexibleMessage: '復元に失敗しました: ${result.failureOrNull}',
-            );
-          }
-          if (previousValue?.isLoading ?? false) {
-            SnackBarUtils.showGlassSnackBar(
-              textTheme: textTheme,
-              glassTheme: glassTheme,
-              scaffoldMessenger: scaffoldMessenger,
-              flexibleMessage: result.valueOrNull!.rotationName.value,
-              fixedMessage: 'を復元しました',
-            );
-          }
-        },
-        error: (error, _) {
-          if (previousValue?.isLoading ?? false) {
-            SnackBarUtils.showGlassSnackBar(
-              textTheme: textTheme,
-              glassTheme: glassTheme,
-              scaffoldMessenger: scaffoldMessenger,
-              flexibleMessage: '復元に失敗しました: $error',
-            );
-          }
-        },
-        loading: () => null,
-      );
+      // Home画面の場合のみ処理を実行
+      if (ModalRoute.of(context)?.isCurrent ?? true) {
+        newValue.when(
+          data: (result) {
+            if (result == null) return;
+            if (result.isFailure) {
+              SnackBarUtils.showGlassSnackBar(
+                textTheme: textTheme,
+                glassTheme: glassTheme,
+                scaffoldMessenger: scaffoldMessenger,
+                flexibleMessage: '復元に失敗しました: ${result.failureOrNull}',
+              );
+            }
+            if (previousValue?.isLoading ?? false) {
+              SnackBarUtils.showGlassSnackBar(
+                textTheme: textTheme,
+                glassTheme: glassTheme,
+                scaffoldMessenger: scaffoldMessenger,
+                flexibleMessage: result.valueOrNull!.rotationName.value,
+                fixedMessage: 'を復元しました',
+              );
+            }
+          },
+          error: (error, _) {
+            if (previousValue?.isLoading ?? false) {
+              SnackBarUtils.showGlassSnackBar(
+                textTheme: textTheme,
+                glassTheme: glassTheme,
+                scaffoldMessenger: scaffoldMessenger,
+                flexibleMessage: '復元に失敗しました: $error',
+              );
+            }
+          },
+          loading: () => null,
+        );
+      }
     });
 
     // 通知タップから起動した場合の画面遷移 (calendar screenに遷移)

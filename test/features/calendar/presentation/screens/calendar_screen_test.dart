@@ -46,6 +46,8 @@ void main() {
     currentRotationIndex: const RotationIndex(0),
     createdAt: RotationCreatedAt(DateTime(2025, 8, 29, 9)),
     updatedAt: RotationUpdatedAt(DateTime(2025, 8, 29, 9)),
+    canSkipPrevious: true,
+    displayDays:
   );
   final scheduleMap = <DateKey, ScheduleDayResponse>{
     DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(

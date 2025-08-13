@@ -4,6 +4,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
+import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
@@ -94,7 +95,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           iconData: Icons.alarm_on,
                           borderRadius: 4,
                           onPressed:
-                              () => _skipNext(
+                              () => _enableHoliday(
                                 ref: ref,
                                 calendarScheduleResponse:
                                     calendarScheduleResponse,
@@ -102,10 +103,17 @@ class SelectedDayInfo extends ConsumerWidget {
                               ),
                         )
                       else
-                        const GlassButton(
+                        GlassButton(
                           iconSize: 14,
                           iconData: Icons.alarm_off,
                           borderRadius: 4,
+                          onPressed:
+                              () => _disableHoliday(
+                                ref: ref,
+                                calendarScheduleResponse:
+                                    calendarScheduleResponse,
+                                selectedDay: selectedDay,
+                              ),
                         ),
                     ],
                   ),
@@ -164,7 +172,35 @@ class SelectedDayInfo extends ConsumerWidget {
     );
   }
 
-  Future<void> _skipNext({
+  Future<void> _disableHoliday({
+    required WidgetRef ref,
+    required CalendarScheduleResponse calendarScheduleResponse,
+    required DateTime? selectedDay,
+  }) async {
+    if (selectedDay == null) {
+      return;
+    }
+    final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
+    final rotationResponse = calendarScheduleResponse.rotationResponse;
+    final skipEvents = List.of(rotationResponse.skipEvents)..removeWhere(
+      (skipEvent) => skipEvent.date == DateKey.fromDateTime(selectedDay),
+    );
+    final rotationId = rotationResponse.rotationId;
+    final updateRotation = UpdateRotationRequest(
+      userId: rotationResponse.userId,
+      rotationId: rotationId,
+      rotationName: rotationResponse.rotationName,
+      rotationMembers: rotationResponse.rotationMembers,
+      rotationDays: rotationResponse.rotationDays,
+      notificationTime: rotationResponse.notificationTime,
+      createdAt: rotationResponse.createdAt,
+      skipEvents: skipEvents,
+    );
+    await rotationNotifier.updateRotation(updateRotation);
+    final _ = ref.refresh(calendarScheduleResponseProvider(rotationId));
+  }
+
+  Future<void> _enableHoliday({
     required WidgetRef ref,
     required CalendarScheduleResponse calendarScheduleResponse,
     required DateTime? selectedDay,
@@ -183,9 +219,10 @@ class SelectedDayInfo extends ConsumerWidget {
       ),
       ...rotationResponse.skipEvents,
     ];
+    final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(
       userId: rotationResponse.userId,
-      rotationId: rotationResponse.rotationId,
+      rotationId: rotationId,
       rotationName: rotationResponse.rotationName,
       rotationMembers: rotationResponse.rotationMembers,
       rotationDays: rotationResponse.rotationDays,
@@ -194,5 +231,6 @@ class SelectedDayInfo extends ConsumerWidget {
       skipEvents: skipEvent,
     );
     await rotationNotifier.updateRotation(updateRotation);
+    final _ = ref.refresh(calendarScheduleResponseProvider(rotationId));
   }
 }
