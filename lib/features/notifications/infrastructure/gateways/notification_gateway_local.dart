@@ -62,8 +62,6 @@ class NotificationGatewayLocal {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: payloadJson, // タップ時に渡すデータ
       );
-      // ログ出力
-      await logPendingNotifications();
       return Results.success(null);
     } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の作成に失敗しました: $error'));
@@ -189,42 +187,6 @@ class NotificationGatewayLocal {
       return Results.failure(
         NotificationFailure('通知タップから起動の確認に失敗しました: $error'),
       );
-    }
-  }
-
-  /// 【デバッグ用】通知予定ログ出力
-  Future<Result<void>> logPendingNotifications() async {
-    try {
-      final pendingNotifications =
-          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
-      pendingNotifications.sort((a, b) => a.id.compareTo(b.id));
-
-      for (final notification in pendingNotifications) {
-        var dateTime = '日時不明';
-
-        try {
-          // 🔥 通知IDから日時を復元（yyyyMMdd形式）
-          final dateInt = notification.id;
-          final month = (dateInt % 10000) ~/ 100;
-          final day = dateInt % 100;
-
-          dateTime = '$month/$day';
-        } on Exception catch (_) {
-          // 復元に失敗した場合は日時不明のまま
-        }
-
-        _logger.fine(
-          '$dateTime | ${notification.title} | ${notification.body}',
-        );
-      }
-
-      if (pendingNotifications.isEmpty) {
-        _logger.fine('設定済み通知はありません');
-      }
-
-      return Results.success(null);
-    } on Exception catch (error) {
-      return Results.failure(NotificationFailure('通知一覧の取得に失敗しました: $error'));
     }
   }
 

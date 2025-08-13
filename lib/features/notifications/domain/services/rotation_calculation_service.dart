@@ -21,7 +21,7 @@ abstract class RotationCalculationService {
     required List<SkipEvent> skipEvents,
   });
 
-  /// ローテーション日の種別を判定
+  /// ローテーション日のTypeを判定
   ScheduleDayType getScheduleDayType({
     required DateKey checkDate,
     required List<Weekday> rotationDays,

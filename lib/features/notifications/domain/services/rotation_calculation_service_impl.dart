@@ -184,6 +184,8 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         }
       }
 
+      _printNotifications(notifications);
+
       return Results.success(
         NotificationSchedule(
           notificationEntry: notifications,
@@ -192,6 +194,15 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       );
     } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知予定の作成に失敗しました: $error'));
+    }
+  }
+
+  // ログ出力
+  void _printNotifications(List<NotificationEntry> notificationEntry) {
+    for (final notification in notificationEntry) {
+      print(
+        '通知予定: ${notification.notificationDate.value} ${notification.memberName}',
+      );
     }
   }
 }

@@ -98,15 +98,4 @@ class NotificationGatewayImpl implements NotificationGateway {
       failure: Results.failure,
     );
   }
-
-  /// 【デバッグ用】通知予定ログ出力
-  @override
-  Future<Result<void>> logPendingNotifications() async {
-    final result =
-        await _localNotificationsDatasource.logPendingNotifications();
-    return result.when(
-      success: (_) => Results.success(null),
-      failure: Results.failure,
-    );
-  }
 }

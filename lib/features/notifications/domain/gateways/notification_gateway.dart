@@ -30,7 +30,4 @@ abstract class NotificationGateway {
 
   /// 0-2. アプリが起動していない場合に、通知タップからアプリを起動した場合
   Future<Result<void>> initializeNotificationLaunch();
-
-  /// 【デバッグ用】通知予定ログ出力
-  Future<Result<void>> logPendingNotifications();
 }
