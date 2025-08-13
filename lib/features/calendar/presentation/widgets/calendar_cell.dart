@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 
 class CalendarCell extends StatelessWidget {
   const CalendarCell({
@@ -17,17 +17,6 @@ class CalendarCell extends StatelessWidget {
   final bool isToday;
   final bool isSelected;
 
-  Color _getBackgroundColor(bool isRotationDay) {
-    if (isSelected) return Colors.blue.withValues(alpha: 0.4);
-    if (isToday) return Colors.amber.withValues(alpha: 0.3);
-    if (isRotationDay) return Colors.white.withValues(alpha: 0.15);
-    return Colors.transparent;
-  }
-
-  FontWeight _getFontWeight() {
-    return isToday ? FontWeight.bold : FontWeight.normal;
-  }
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -36,7 +25,7 @@ class CalendarCell extends StatelessWidget {
 
     final dayInfo = calendarDataDto.getDayInfo(day);
     final memberName = dayInfo.memberName;
-    final isRotationDay = dayInfo.isRotationDay;
+    final scheduleDayType = dayInfo.scheduleDayType;
 
     return Container(
       width: double.infinity,
@@ -52,7 +41,7 @@ class CalendarCell extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: _getBackgroundColor(isRotationDay),
+              color: _getBackgroundColor(scheduleDayType),
               borderRadius: const BorderRadius.all(Radius.circular(4)),
             ),
             child: Text(
@@ -64,7 +53,7 @@ class CalendarCell extends StatelessWidget {
               ),
             ),
           ),
-          if (isRotationDay && memberName != RotationMemberName.notApplicable)
+          if (scheduleDayType == ScheduleDayType.rotationDay)
             Text(
               memberName.value,
               style: textTheme.labelMedium!.copyWith(
@@ -79,5 +68,18 @@ class CalendarCell extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color _getBackgroundColor(ScheduleDayType scheduleDayType) {
+    if (isSelected) return Colors.blue.withValues(alpha: 0.4);
+    if (isToday) return Colors.amber.withValues(alpha: 0.3);
+    if (scheduleDayType == ScheduleDayType.rotationDay) {
+      return Colors.white.withValues(alpha: 0.15);
+    }
+    return Colors.transparent;
+  }
+
+  FontWeight _getFontWeight() {
+    return isToday ? FontWeight.bold : FontWeight.normal;
   }
 }

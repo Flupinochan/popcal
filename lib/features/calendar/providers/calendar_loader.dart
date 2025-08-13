@@ -39,7 +39,7 @@ Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
       ScheduleDayResponse(
         date: scheduleDay.date,
         memberName: scheduleDay.memberName,
-        isRotationDay: scheduleDay.isRotationDay,
+        scheduleDayType: scheduleDay.scheduleType,
         memberColor: scheduleDay.memberColor,
         displayText: scheduleDay.displayText,
       ),

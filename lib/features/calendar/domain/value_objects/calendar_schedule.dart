@@ -2,6 +2,7 @@ import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 
 class CalendarSchedule {
@@ -17,7 +18,7 @@ class CalendarSchedule {
         ScheduleDay(
           date: NotificationDateTime(date),
           memberName: RotationMemberName.notApplicable,
-          isRotationDay: false,
+          scheduleType: ScheduleDayType.notRotationDay,
           memberColor: MemberColor.notApplicable,
         );
   }
@@ -27,13 +28,13 @@ class ScheduleDay {
   const ScheduleDay({
     required this.date,
     required this.memberName,
-    required this.isRotationDay,
+    required this.scheduleType,
     required this.memberColor,
   });
   final NotificationDateTime date;
   final RotationMemberName memberName;
-  final bool isRotationDay;
+  final ScheduleDayType scheduleType;
   final MemberColor memberColor;
 
-  String get displayText => isRotationDay ? '担当日' : '対象外';
+  String get displayText => scheduleType.displayText;
 }

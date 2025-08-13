@@ -15,6 +15,8 @@ import 'package:popcal/features/calendar/presentation/screens/calendar_screen.da
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
+import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -68,49 +70,57 @@ void main() {
     DateKey.fromDateTime(DateTime(2025, 8, 15)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 15, 9)),
       memberName: const RotationMemberName('user1'),
-      isRotationDay: true,
+      scheduleDayType: ScheduleDayType.rotationDay,
       memberColor: MemberColor.member1,
-      displayText: '担当日',
+      displayText: ScheduleDayType.rotationDay.displayText,
     ),
     // 18日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 18)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 18, 9)),
       memberName: const RotationMemberName('user2'),
-      isRotationDay: true,
+      scheduleDayType: ScheduleDayType.rotationDay,
       memberColor: MemberColor.member2,
-      displayText: '担当日',
+      displayText: ScheduleDayType.rotationDay.displayText,
+    ),
+    // 20日休日
+    DateKey.fromDateTime(DateTime(2025, 8, 20)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 20, 9)),
+      memberName: RotationMemberName.notApplicable,
+      scheduleDayType: ScheduleDayType.holiday,
+      memberColor: MemberColor.notApplicable,
+      displayText: ScheduleDayType.holiday.displayText,
     ),
     // 22日: user3 (index 2)
     DateKey.fromDateTime(DateTime(2025, 8, 22)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 22, 9)),
       memberName: const RotationMemberName('user3'),
-      isRotationDay: true,
+      scheduleDayType: ScheduleDayType.rotationDay,
       memberColor: MemberColor.member3,
-      displayText: '担当日',
+      displayText: ScheduleDayType.rotationDay.displayText,
     ),
     // 25日: user4 (index 3)
     DateKey.fromDateTime(DateTime(2025, 8, 25)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 25, 9)),
       memberName: const RotationMemberName('user4'),
-      isRotationDay: true,
+      scheduleDayType: ScheduleDayType.rotationDay,
       memberColor: MemberColor.member4,
-      displayText: '担当日',
+      displayText: ScheduleDayType.rotationDay.displayText,
     ),
     // 27日: user1 (index 0に戻る)
     DateKey.fromDateTime(DateTime(2025, 8, 27)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 27, 9)),
       memberName: const RotationMemberName('user1'),
-      isRotationDay: true,
+      scheduleDayType: ScheduleDayType.rotationDay,
       memberColor: MemberColor.member1,
-      displayText: '担当日',
+      displayText: ScheduleDayType.rotationDay.displayText,
     ),
     // 29日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 29, 9)),
       memberName: const RotationMemberName('user2'),
-      isRotationDay: true,
+      scheduleDayType: ScheduleDayType.rotationDay,
       memberColor: MemberColor.member2,
-      displayText: '担当日',
+      displayText: ScheduleDayType.rotationDay.displayText,
     ),
   };
   final calendarScheduleResponse = CalendarScheduleResponse(

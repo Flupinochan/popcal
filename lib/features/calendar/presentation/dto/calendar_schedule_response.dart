@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 
@@ -22,9 +23,9 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
         ScheduleDayResponse(
           date: NotificationDateTime(date),
           memberName: RotationMemberName.notApplicable,
-          isRotationDay: false,
+          scheduleDayType: ScheduleDayType.notRotationDay,
           memberColor: MemberColor.notApplicable,
-          displayText: '対象外',
+          displayText: ScheduleDayType.notRotationDay.displayText,
         );
   }
 }
@@ -35,7 +36,7 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
   const factory ScheduleDayResponse({
     required NotificationDateTime date,
     required RotationMemberName memberName,
-    required bool isRotationDay,
+    required ScheduleDayType scheduleDayType,
     required MemberColor memberColor,
     required String displayText,
   }) = _ScheduleDayResponse;

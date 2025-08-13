@@ -9,6 +9,8 @@ import 'package:popcal/features/notifications/domain/value_objects/notification_
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
+import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
@@ -50,6 +52,42 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       }
     }
     return Results.failure(const ValidationFailure('次回ローテーション日の取得に失敗しました'));
+  }
+
+  @override
+  ScheduleDayType getScheduleDayType({
+    required DateKey checkDate,
+    required List<Weekday> rotationDays,
+    required NotificationTime notificationTime,
+    required RotationDateTime rotationDateTime,
+    required List<SkipEvent> skipEvents,
+  }) {
+    final checkDay = Weekday.fromDateTime(checkDate.value);
+
+    // ローテーション曜日でない場合
+    if (!rotationDays.contains(checkDay)) {
+      return ScheduleDayType.notRotationDay;
+    }
+
+    // holiday skip日の場合
+    final hasHolidaySkip = skipEvents.any(
+      (event) => event.date == checkDate && event.type == SkipType.holiday,
+    );
+    if (hasHolidaySkip) {
+      return ScheduleDayType.holiday;
+    }
+
+    // 時刻チェック
+    final notificationDateTime = NotificationDateTime.fromDateAndTime(
+      date: checkDate,
+      notificationTime: notificationTime,
+    );
+    if (notificationDateTime.isAfterRotationDateTime(rotationDateTime)) {
+      return ScheduleDayType.rotationDay;
+    }
+
+    // 過去の時刻の場合は対象外
+    return ScheduleDayType.notRotationDay;
   }
 
   /// ローテーション日判定

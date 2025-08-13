@@ -6,6 +6,8 @@ import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_resp
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
+import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
@@ -34,9 +36,9 @@ class SelectedDayInfo extends ConsumerWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final dayInfo = calendarScheduleResponse.getDayInfo(selectedDay!);
     final memberName = dayInfo.memberName;
-    final isRotationDay = dayInfo.isRotationDay;
+    final scheduleDayType = dayInfo.scheduleDayType;
     final iconColor =
-        isRotationDay
+        scheduleDayType == ScheduleDayType.rotationDay
             ? glassTheme.surfaceColor
             : glassTheme.surfaceColor.withValues(alpha: 0.6);
 
@@ -84,12 +86,12 @@ class SelectedDayInfo extends ConsumerWidget {
                         child: GlassChip(
                           text: dayInfo.displayText,
                           gradient:
-                              isRotationDay
+                              scheduleDayType == ScheduleDayType.rotationDay
                                   ? glassTheme.successGradient
                                   : glassTheme.backgroundGradientStrong,
                         ),
                       ),
-                      if (isRotationDay)
+                      if (scheduleDayType == ScheduleDayType.rotationDay)
                         GlassButton(
                           iconSize: 14,
                           iconData: Icons.alarm_on,
@@ -102,7 +104,7 @@ class SelectedDayInfo extends ConsumerWidget {
                                 selectedDay: selectedDay,
                               ),
                         )
-                      else
+                      else if (scheduleDayType == ScheduleDayType.holiday)
                         GlassButton(
                           iconSize: 14,
                           iconData: Icons.alarm_off,
@@ -120,7 +122,7 @@ class SelectedDayInfo extends ConsumerWidget {
                   Row(
                     spacing: 10,
                     children: [
-                      if (isRotationDay &&
+                      if (scheduleDayType == ScheduleDayType.rotationDay &&
                           calendarScheduleResponse
                               .rotationResponse
                               .canSkipPrevious)
@@ -138,7 +140,9 @@ class SelectedDayInfo extends ConsumerWidget {
                             height: 24,
                             alignment: Alignment.center,
                             child: Icon(
-                              isRotationDay ? Icons.person : Icons.person_off,
+                              scheduleDayType == ScheduleDayType.rotationDay
+                                  ? Icons.person
+                                  : Icons.person_off,
                               color: iconColor,
                               size: 20,
                             ),
@@ -155,7 +159,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      if (isRotationDay)
+                      if (scheduleDayType == ScheduleDayType.rotationDay)
                         const GlassButton(
                           iconSize: 14,
                           iconData: Icons.skip_next,
