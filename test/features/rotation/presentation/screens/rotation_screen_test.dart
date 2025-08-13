@@ -43,6 +43,11 @@ void main() {
     currentRotationIndex: const RotationIndex(0),
     createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
     updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9)),
+    displayDays: '月, 金',
+    displayMembers: 'user1, user2',
+    displayNotificationTime: '09:00',
+    canSkipPrevious: true,
+    skipEvents: [],
   );
 
   group('RotationScreen', () {

@@ -5,7 +5,9 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service_impl.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -15,15 +17,16 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 
 void main() {
   group('findNextRotationDate', () {
     late RotationCalculationServiceImpl service;
-    late MockTimeUtils mockTimeUtils;
+    late MockTimeUtilsImpl mockTimeUtils;
 
     setUp(() {
-      mockTimeUtils = MockTimeUtils();
+      mockTimeUtils = MockTimeUtilsImpl();
       service = RotationCalculationServiceImpl(mockTimeUtils);
     });
 
@@ -45,6 +48,7 @@ void main() {
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
+        skipEvents: [],
       );
 
       // 火曜日は月曜日から+1日(2025/8/12)
@@ -73,6 +77,7 @@ void main() {
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
+        skipEvents: [],
       );
 
       // 来週の月曜日を返す(2025/8/18)
@@ -101,6 +106,7 @@ void main() {
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
+        skipEvents: [],
       );
 
       // 来週の月曜日を返す(2025/8/18)
@@ -114,10 +120,10 @@ void main() {
 
   group('isValidNotificationDate', () {
     late RotationCalculationServiceImpl service;
-    late MockTimeUtils mockTimeUtils;
+    late MockTimeUtilsImpl mockTimeUtils;
 
     setUp(() {
-      mockTimeUtils = MockTimeUtils();
+      mockTimeUtils = MockTimeUtilsImpl();
       service = RotationCalculationServiceImpl(mockTimeUtils);
     });
 
@@ -141,6 +147,7 @@ void main() {
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
+        skipEvents: [],
       );
 
       expect(result, isFalse);
@@ -167,6 +174,7 @@ void main() {
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
+        skipEvents: [],
       );
 
       expect(result, isFalse);
@@ -193,6 +201,7 @@ void main() {
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
+        skipEvents: [],
       );
 
       expect(result, isTrue);
@@ -201,11 +210,11 @@ void main() {
 
   group('planUpcomingNotifications', () {
     const futureDays = 30;
-    final from = DateTime(2025, 8, 10, 9, 5);
+    final from = DateTime(2025, 8, 2, 9, 5);
     final to = from.add(const Duration(days: futureDays));
     // ローテーション曜日は、月曜日と金曜日
     // 通知時刻は、10:00
-    // 計算開始時刻は、2025/8/10 09:05 から+30日
+    // 計算開始時刻は、2025/8/2 09:05 から+30日
     // RotationIndexは0で、user1からローテーション
     final rotation = Rotation(
       userId: const UserId('user1'),
@@ -218,18 +227,16 @@ void main() {
       rotationDays: [Weekday.monday, Weekday.friday],
       notificationTime: NotificationTime(const TimeOfDay(hour: 10, minute: 0)),
       currentRotationIndex: const RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime(2025, 8, 10, 9)),
-      updatedAt: RotationUpdatedAt(DateTime(2025, 8, 10, 9)),
+      createdAt: RotationCreatedAt(DateTime(2025, 8, 2, 9)),
+      updatedAt: RotationUpdatedAt(DateTime(2025, 8, 2, 9)),
     );
 
     late RotationCalculationServiceImpl service;
-    late MockTimeUtils mockTimeUtils;
+    late MockTimeUtilsImpl mockTimeUtils;
 
     setUp(() {
-      mockTimeUtils = MockTimeUtils();
+      mockTimeUtils = MockTimeUtilsImpl();
       service = RotationCalculationServiceImpl(mockTimeUtils);
-      // スタブ設定 ※現在時刻(実行タイミングからcreatedAtやupdatedAtより少し後になる)
-      when(() => mockTimeUtils.now()).thenReturn(from);
     });
 
     test('通常仕様 新規作成or更新でRotationIndexが0の場合', () {
@@ -257,21 +264,15 @@ void main() {
           expectedNotificationEntryCount++;
         }
       }
+      // 通知作成数チェック
       expect(notificationEntry.length, expectedNotificationEntryCount);
-      for (final entry in notificationEntry) {
-        expect(entry.notificationDate.value.hour, 10);
-        expect(entry.notificationDate.value.minute, 0);
-      }
       // 最初のローテーション日は、user1
       expect(notificationEntry[0].memberName.value, 'user1');
-      // 2日目のローテーション日は、user2
       expect(notificationEntry[1].memberName.value, 'user2');
-      // 3日目のローテーション日は、user1
       expect(notificationEntry[2].memberName.value, 'user1');
-      // 4日目のローテーション日は、user2
       expect(notificationEntry[3].memberName.value, 'user2');
-      // メンバー名がローテーション順に割り当てられている
       for (var i = 0; i < notificationEntry.length; i++) {
+        // メンバー名がローテーション順に割り当てられている
         final expectedMemberIndex =
             (rotation.currentRotationIndex.value + i) %
             rotation.rotationMemberNames.length;
@@ -294,15 +295,15 @@ void main() {
         rotation: oneRotated,
       );
       expect(result.isSuccess, isTrue);
+
       final notificationSchedule = result.valueOrNull!;
       final notificationEntry = notificationSchedule.notificationEntry;
       final newCurrentRotationIndex =
           notificationSchedule.newCurrentRotationIndex;
-      // RotationIndexが通知設定分+されている
       final expectedIndex =
           oneRotated.currentRotationIndex.value + notificationEntry.length;
       expect(newCurrentRotationIndex.value, expectedIndex);
-      // 月曜日と金曜日の通知時刻が30日間分設定されている
+
       var expectedNotificationEntryCount = 0;
       for (
         var date = from;
@@ -314,10 +315,7 @@ void main() {
         }
       }
       expect(notificationEntry.length, expectedNotificationEntryCount);
-      for (final entry in notificationEntry) {
-        expect(entry.notificationDate.value.hour, 10);
-        expect(entry.notificationDate.value.minute, 0);
-      }
+
       // 次のローテーション日は、user2
       expect(notificationEntry[0].memberName.value, 'user2');
       expect(notificationEntry[1].memberName.value, 'user1');
@@ -337,7 +335,133 @@ void main() {
         expect(dt.minute, 0);
       }
     });
+
+    test('HolidaySkip', () {
+      final holiday1 = DateKey.fromDateTime(DateTime(2025, 8, 8));
+      final holiday2 = DateKey.fromDateTime(DateTime(2025, 8, 22));
+      final notificationTime = NotificationTime(
+        const TimeOfDay(hour: 9, minute: 0),
+      );
+      final rotationResponse = Rotation(
+        rotationId: RotationId('test-rotation-id'),
+        userId: const UserId('test-user-id'),
+        rotationName: RotationName('test-rotation-name'),
+        rotationMemberNames: [
+          const RotationMemberName('user1'),
+          const RotationMemberName('user2'),
+          const RotationMemberName('user3'),
+          const RotationMemberName('user4'),
+        ],
+        rotationDays: [Weekday.monday, Weekday.wednesday, Weekday.friday],
+        notificationTime: NotificationTime(const TimeOfDay(hour: 9, minute: 0)),
+        currentRotationIndex: const RotationIndex(0),
+        createdAt: RotationCreatedAt(DateTime(2025, 8, 2, 9)),
+        updatedAt: RotationUpdatedAt(DateTime(2025, 8, 2, 9)),
+        // 8, 22日をholiday skip
+        skipEvents: [
+          SkipEvent(
+            date: holiday1,
+            type: SkipType.holiday,
+            skipCount: const SkipCount(skipCount: 1),
+          ),
+          SkipEvent(
+            date: holiday2,
+            type: SkipType.holiday,
+            skipCount: const SkipCount(skipCount: 1),
+          ),
+        ],
+      );
+
+      // テスト
+      final result = service.planUpcomingNotifications(
+        rotation: rotationResponse,
+      );
+      expect(result.isSuccess, isTrue);
+      final notificationSchedule = result.valueOrNull!;
+      final notificationEntry = notificationSchedule.notificationEntry;
+      final newCurrentRotationIndex =
+          notificationSchedule.newCurrentRotationIndex;
+      // RotationIndexが通知設定分+されている
+      final expectedIndex =
+          rotationResponse.currentRotationIndex.value +
+          notificationEntry.length;
+      expect(newCurrentRotationIndex.value, expectedIndex);
+      // 月曜日と金曜日の通知時刻が30日間分設定されている
+      var expectedNotificationEntryCount = 0;
+      for (
+        var date = from;
+        date.isBefore(to);
+        date = date.add(const Duration(days: 1))
+      ) {
+        if (rotationResponse.rotationDays.contains(
+          Weekday.fromDateTime(date),
+        )) {
+          expectedNotificationEntryCount++;
+        }
+      }
+      // 2日分holiday skipのため引く
+      expectedNotificationEntryCount -= 2;
+      expect(notificationEntry.length, expectedNotificationEntryCount);
+      for (final entry in notificationEntry) {
+        expect(entry.notificationDate.value.hour, 9);
+        expect(entry.notificationDate.value.minute, 0);
+      }
+      // 次のローテーション日は、user2
+      expect(notificationEntry[0].memberName.value, 'user1');
+      expect(notificationEntry[1].memberName.value, 'user2');
+      expect(notificationEntry[2].memberName.value, 'user3');
+      expect(notificationEntry[3].memberName.value, 'user4');
+      expect(notificationEntry[4].memberName.value, 'user1');
+      expect(notificationEntry[5].memberName.value, 'user2');
+      expect(notificationEntry[6].memberName.value, 'user3');
+      expect(notificationEntry[7].memberName.value, 'user4');
+      expect(notificationEntry[8].memberName.value, 'user1');
+      expect(notificationEntry[9].memberName.value, 'user2');
+      // メンバー名がローテーション順に割り当てられている
+      for (var i = 0; i < notificationEntry.length; i++) {
+        final expectedMemberIndex =
+            (rotationResponse.currentRotationIndex.value + i) %
+            rotationResponse.rotationMemberNames.length;
+        final expectedMemberName =
+            rotationResponse.rotationMemberNames[expectedMemberIndex].value;
+        expect(notificationEntry[i].memberName.value, expectedMemberName);
+        // 通知時刻が10:00になっている
+        final dt = notificationEntry[i].notificationDate.value;
+        expect(dt.hour, 9);
+        expect(dt.minute, 0);
+      }
+      // holiday skip日が存在しない
+      final holidayDateTime1 = NotificationDateTime.fromDateAndTime(
+        date: holiday1,
+        notificationTime: notificationTime,
+      );
+      final holidayDateTime2 = NotificationDateTime.fromDateAndTime(
+        date: holiday2,
+        notificationTime: notificationTime,
+      );
+      expect(
+        notificationEntry.any(
+          (entry) =>
+              entry.notificationDate == holidayDateTime1 &&
+              entry.notificationDate == holidayDateTime2,
+        ),
+        isFalse,
+      );
+    });
   });
 }
 
-class MockTimeUtils extends Mock implements TimeUtils {}
+// スタブ設定 ※現在時刻(実行タイミングからcreatedAtやupdatedAtより少し後になる)
+class MockTimeUtilsImpl extends Mock implements TimeUtils {
+  @override
+  bool isSameDay(DateTime? a, DateTime? b) {
+    if (a == null || b == null) return false;
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  @override
+  DateTime now() {
+    final from = DateTime(2025, 8, 2, 9, 5);
+    return from;
+  }
+}

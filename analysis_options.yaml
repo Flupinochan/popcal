@@ -17,8 +17,8 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "lib/generated/**"
-    - "**/*_test.dart"
-    - "test/**"
+    # - "**/*_test.dart"
+    # - "test/**"
 
 custom_lint:
   enable_all_lint_rules: true

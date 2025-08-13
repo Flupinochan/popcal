@@ -46,6 +46,11 @@ void main() {
       currentRotationIndex: const RotationIndex(0),
       createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
       updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9)),
+      displayDays: '月, 日',
+      displayMembers: 'user1, user2',
+      displayNotificationTime: '09:00',
+      canSkipPrevious: true,
+      skipEvents: [],
     ),
     RotationResponse(
       rotationId: RotationId('test-rotation-id-2'),
@@ -60,6 +65,11 @@ void main() {
       currentRotationIndex: const RotationIndex(0),
       createdAt: RotationCreatedAt(DateTime(2025, 9, 1, 9)),
       updatedAt: RotationUpdatedAt(DateTime(2025, 9, 1, 9)),
+      displayDays: '月, 日',
+      displayMembers: 'user1, user2',
+      displayNotificationTime: '09:00',
+      canSkipPrevious: true,
+      skipEvents: [],
     ),
   ];
 

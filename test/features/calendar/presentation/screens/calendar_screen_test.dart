@@ -14,6 +14,7 @@ import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_resp
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -22,6 +23,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
@@ -40,21 +42,74 @@ void main() {
     rotationMembers: [
       const RotationMemberName('user1'),
       const RotationMemberName('user2'),
+      const RotationMemberName('user3'),
+      const RotationMemberName('user4'),
     ],
     rotationDays: [Weekday.monday, Weekday.friday],
     notificationTime: NotificationTime(const TimeOfDay(hour: 9, minute: 0)),
     currentRotationIndex: const RotationIndex(0),
-    createdAt: RotationCreatedAt(DateTime(2025, 8, 29, 9)),
-    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 29, 9)),
+    createdAt: RotationCreatedAt(DateTime(2025, 8, 14, 9)),
+    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 14, 9)),
+    // 20日をholiday skip
+    skipEvents: [
+      SkipEvent(
+        date: DateKey.fromDateTime(DateTime(2025, 8, 20)),
+        type: SkipType.holiday,
+        skipCount: const SkipCount(skipCount: 1),
+      ),
+    ],
+    displayDays: '月, 金',
+    displayMembers: 'user1, user2, user3, user4',
+    displayNotificationTime: '09:00',
     canSkipPrevious: true,
-    displayDays:
   );
   final scheduleMap = <DateKey, ScheduleDayResponse>{
-    DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
-      date: NotificationDateTime(DateTime(2025, 8, 29, 9)),
+    // 15日: user1 (index 0)
+    DateKey.fromDateTime(DateTime(2025, 8, 15)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 15, 9)),
       memberName: const RotationMemberName('user1'),
       isRotationDay: true,
       memberColor: MemberColor.member1,
+      displayText: '担当日',
+    ),
+    // 18日: user2 (index 1)
+    DateKey.fromDateTime(DateTime(2025, 8, 18)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 18, 9)),
+      memberName: const RotationMemberName('user2'),
+      isRotationDay: true,
+      memberColor: MemberColor.member2,
+      displayText: '担当日',
+    ),
+    // 22日: user3 (index 2)
+    DateKey.fromDateTime(DateTime(2025, 8, 22)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 22, 9)),
+      memberName: const RotationMemberName('user3'),
+      isRotationDay: true,
+      memberColor: MemberColor.member3,
+      displayText: '担当日',
+    ),
+    // 25日: user4 (index 3)
+    DateKey.fromDateTime(DateTime(2025, 8, 25)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 25, 9)),
+      memberName: const RotationMemberName('user4'),
+      isRotationDay: true,
+      memberColor: MemberColor.member4,
+      displayText: '担当日',
+    ),
+    // 27日: user1 (index 0に戻る)
+    DateKey.fromDateTime(DateTime(2025, 8, 27)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 27, 9)),
+      memberName: const RotationMemberName('user1'),
+      isRotationDay: true,
+      memberColor: MemberColor.member1,
+      displayText: '担当日',
+    ),
+    // 29日: user2 (index 1)
+    DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
+      date: NotificationDateTime(DateTime(2025, 8, 29, 9)),
+      memberName: const RotationMemberName('user2'),
+      isRotationDay: true,
+      memberColor: MemberColor.member2,
       displayText: '担当日',
     ),
   };
@@ -111,6 +166,6 @@ class MockTimeUtilsImpl extends Mock implements TimeUtils {
 
   @override
   DateTime now() {
-    return DateTime(2025, 8, 29, 9);
+    return DateTime(2025, 8, 14, 9);
   }
 }
