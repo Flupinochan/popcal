@@ -1,5 +1,5 @@
 import 'package:popcal/core/utils/failures/notification_failure.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
@@ -10,67 +10,85 @@ class UpdateRotationUseCase {
   UpdateRotationUseCase(
     this._rotationRepository,
     this._notificationRepository,
-    this._scheduleCalculationService,
+    this._rotationCalculationService,
   );
   final RotationRepository _rotationRepository;
   final NotificationGateway _notificationRepository;
-  final RotationCalculationService _scheduleCalculationService;
+  final RotationCalculationService _rotationCalculationService;
 
-  /// 更新処理は、既存のローテーショングループを削除し、再作成
   Future<Result<Rotation>> execute(Rotation rotation) async {
-    if (rotation.rotationId == null) {
-      return Results.failure(
-        const ValidationFailure('ローテーショングループIDが指定されていません'),
-      );
-    }
-
-    // 1. ローテーショングループを削除
+    // 1. 通知設定を削除
     final deleteResult = await _notificationRepository
         .deleteNotificationsByRotationId(rotation.rotationId!);
     if (deleteResult.isFailure) {
       return Results.failure(deleteResult.failureOrNull!);
     }
 
-    // 4. ローテーショングループを再作成
-    // ※メンバーの更新場所と同一箇所でindexやcreatedAtも更新しておくべき
+    // 2. ローテーショングループ更新
     final updateResult = await _rotationRepository.updateRotation(rotation);
     if (updateResult.isFailure) {
       return Results.failure(updateResult.failureOrNull!);
     }
-    final finalRotation = updateResult.valueOrNull!;
 
-    // 5. 新しい通知スケジュールを計算
-    final calculationResult = _scheduleCalculationService
-        .planUpcomingNotifications(rotation: finalRotation);
-    if (calculationResult.isFailure) {
-      return Results.failure(calculationResult.failureOrNull!);
+    // 以降、update_rotation_use_case処理と重複しているため、まとめるべき
+    // 処理内容としては、ローテーション情報から通知設定する処理
+
+    // 2. 通知設定計算
+    final fromDateTime = rotation.updatedAt.value;
+    final toDateTime = fromDateTime.add(const Duration(days: 30));
+    final rotationCalculationDataResult = _rotationCalculationService
+        .calculateRotationSchedule(
+          rotation: rotation,
+          fromDateTime: rotation.updatedAt.value,
+          toDateTime: toDateTime,
+        );
+    if (rotationCalculationDataResult.isFailure) {
+      return Results.failure(
+        NotificationFailure(rotationCalculationDataResult.displayText),
+      );
     }
-    final result = calculationResult.valueOrNull!;
+    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
 
-    // 6. 新しい通知を作成
+    // 通知設定用データに変換
+    final notificationScheduleResult = _rotationCalculationService
+        .getNotificationEntry(
+          rotation,
+          rotationCalculationData,
+        );
+    if (notificationScheduleResult.isFailure) {
+      return Results.failure(
+        NotificationFailure(notificationScheduleResult.displayText),
+      );
+    }
+    final notificationSchedule = notificationScheduleResult.valueOrNull!;
+
+    // 3. 各通知を作成
     final createResults = await Future.wait(
-      result.notificationEntry.map(
+      notificationSchedule.notificationEntries.map(
         _notificationRepository.createNotification,
       ),
     );
-    for (final createResult in createResults) {
-      if (createResult.isFailure) {
-        return Results.failure(NotificationFailure(createResult.displayText));
+    for (final createNotificationResult in createResults) {
+      if (createNotificationResult.isFailure) {
+        return Results.failure(
+          NotificationFailure(createNotificationResult.displayText),
+        );
       }
     }
 
-    // 7. Rotationの状態を最終更新
-    final finalUpdatedRotation = finalRotation.copyWith(
-      currentRotationIndex: result.newCurrentRotationIndex,
+    // 4. RotationのcurrentRotationIndexを更新
+    final updatedRotation = rotation.copyWith(
+      currentRotationIndex: notificationSchedule.newCurrentRotationIndex,
     );
-    final finalUpdateRotationResult = await _rotationRepository.updateRotation(
-      finalUpdatedRotation,
+    final updatedRotationResult = await _rotationRepository.updateRotation(
+      updatedRotation,
     );
-    if (finalUpdateRotationResult.isFailure) {
-      return Results.failure(finalUpdateRotationResult.failureOrNull!);
+    if (updatedRotationResult.isFailure) {
+      return Results.failure(
+        RotationFailure(updatedRotationResult.displayText),
+      );
     }
-    final finalUpdateRotation = finalUpdateRotationResult.valueOrNull!;
-
-    return Results.success(finalUpdateRotation);
+    final finalRotation = updatedRotationResult.valueOrNull!;
+    return Results.success(finalRotation);
   }
 }

@@ -28,7 +28,7 @@ class SyncNotificationsUseCase {
   ) async {
     // 不足しているローカル通知設定を取得
     final missingNotifications =
-        result.notificationEntry.where((notification) {
+        result.notificationEntries.where((notification) {
           return !currentLocalRotationIds.contains(notification.notificationId);
         }).toList();
 
@@ -68,7 +68,7 @@ class SyncNotificationsUseCase {
   ) async {
     // 計算結果の通知Idsを取得
     final validNotificationIds =
-        result.notificationEntry
+        result.notificationEntries
             .map((notificationEntry) => notificationEntry.notificationId)
             .toSet();
 
@@ -105,21 +105,44 @@ class SyncNotificationsUseCase {
     }
     final currentLocalRotationIds = notificationResult.valueOrNull!.toSet();
 
-    // 3. 各ローテーショングループの通知設定を現在時刻から再計算
     String? errorMessage;
     for (final rotation in rotations) {
-      // 3-1. 通知スケジュールを計算
-      final calculationResult = _scheduleCalculationService
-          .planUpcomingNotifications(rotation: rotation);
-      if (calculationResult.isFailure) {
-        errorMessage = calculationResult.failureOrNull!.message;
-        continue;
+      // update_rotation_use_case処理と重複しているため、まとめるべき
+      // 処理内容としては、ローテーション情報から通知設定する処理
+
+      // 2. 通知設定計算
+      final fromDateTime = rotation.updatedAt.value;
+      final toDateTime = fromDateTime.add(const Duration(days: 30));
+      final rotationCalculationDataResult = _scheduleCalculationService
+          .calculateRotationSchedule(
+            rotation: rotation,
+            fromDateTime: rotation.updatedAt.value,
+            toDateTime: toDateTime,
+          );
+      if (rotationCalculationDataResult.isFailure) {
+        return Results.failure(
+          NotificationFailure(rotationCalculationDataResult.displayText),
+        );
       }
-      final result = calculationResult.valueOrNull!;
+      final rotationCalculationData =
+          rotationCalculationDataResult.valueOrNull!;
+
+      // 通知設定用データに変換
+      final notificationScheduleResult = _scheduleCalculationService
+          .getNotificationEntry(
+            rotation,
+            rotationCalculationData,
+          );
+      if (notificationScheduleResult.isFailure) {
+        return Results.failure(
+          NotificationFailure(notificationScheduleResult.displayText),
+        );
+      }
+      final notificationSchedule = notificationScheduleResult.valueOrNull!;
 
       // 3-2. 通知作成を同期
       final createResult = await createSync(
-        result,
+        notificationSchedule,
         currentLocalRotationIds,
         rotation,
       );
@@ -129,7 +152,10 @@ class SyncNotificationsUseCase {
       }
 
       // 3.3 通知削除を同期
-      final deleteResult = await deleteSync(result, currentLocalRotationIds);
+      final deleteResult = await deleteSync(
+        notificationSchedule,
+        currentLocalRotationIds,
+      );
       if (deleteResult.isFailure) {
         errorMessage = deleteResult.failureOrNull!.message;
         continue;

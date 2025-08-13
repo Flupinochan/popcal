@@ -281,7 +281,7 @@ void main() {
             rotation.rotationMemberNames[expectedMemberIndex].value;
         expect(notificationEntry[i].memberName.value, expectedMemberName);
         // 通知時刻が10:00になっている
-        final dt = notificationEntry[i].notificationDate.value;
+        final dt = notificationEntry[i].notificationDateTime.value;
         expect(dt.hour, 10);
         expect(dt.minute, 0);
       }
@@ -331,7 +331,7 @@ void main() {
             oneRotated.rotationMemberNames[expectedMemberIndex].value;
         expect(notificationEntry[i].memberName.value, expectedMemberName);
         // 通知時刻が10:00になっている
-        final dt = notificationEntry[i].notificationDate.value;
+        final dt = notificationEntry[i].notificationDateTime.value;
         expect(dt.hour, 10);
         expect(dt.minute, 0);
       }
@@ -361,13 +361,13 @@ void main() {
         // 8, 22日をholiday skip
         skipEvents: [
           SkipEvent(
-            date: holiday1,
-            type: SkipType.holiday,
+            dateKey: holiday1,
+            dayType: SkipType.holiday,
             skipCount: const SkipCount(skipCount: 1),
           ),
           SkipEvent(
-            date: holiday2,
-            type: SkipType.holiday,
+            dateKey: holiday2,
+            dayType: SkipType.holiday,
             skipCount: const SkipCount(skipCount: 1),
           ),
         ],
@@ -404,8 +404,8 @@ void main() {
       expectedNotificationEntryCount -= 2;
       expect(notificationEntry.length, expectedNotificationEntryCount);
       for (final entry in notificationEntry) {
-        expect(entry.notificationDate.value.hour, 9);
-        expect(entry.notificationDate.value.minute, 0);
+        expect(entry.notificationDateTime.value.hour, 9);
+        expect(entry.notificationDateTime.value.minute, 0);
       }
       // 次のローテーション日は、user2
       expect(notificationEntry[0].memberName.value, 'user1');
@@ -427,7 +427,7 @@ void main() {
             rotationResponse.rotationMemberNames[expectedMemberIndex].value;
         expect(notificationEntry[i].memberName.value, expectedMemberName);
         // 通知時刻が10:00になっている
-        final dt = notificationEntry[i].notificationDate.value;
+        final dt = notificationEntry[i].notificationDateTime.value;
         expect(dt.hour, 9);
         expect(dt.minute, 0);
       }
@@ -443,8 +443,8 @@ void main() {
       expect(
         notificationEntry.any(
           (entry) =>
-              entry.notificationDate == holidayDateTime1 &&
-              entry.notificationDate == holidayDateTime2,
+              entry.notificationDateTime == holidayDateTime1 &&
+              entry.notificationDateTime == holidayDateTime2,
         ),
         isFalse,
       );

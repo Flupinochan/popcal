@@ -16,7 +16,7 @@ GetCalendarScheduleUseCase getCalendarScheduleUseCase(Ref ref) {
   return GetCalendarScheduleUseCase(
     ref.watch(authRepositoryProvider),
     ref.watch(rotationRepositoryProvider),
-    ref.watch(buildCalendarScheduleUseCaseProvider),
+    ref.watch(rotationCalculationServiceProvider),
     ref.watch(timeUtilsProvider),
   );
 }

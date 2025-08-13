@@ -1,20 +1,20 @@
-enum ScheduleDayType {
+enum DayType {
   /// ローテーション対象外の日
   notRotationDay('対象外'),
 
-  /// 休日スキップされた日
-  holiday('休日'),
-
   /// 通常のローテーション日
-  rotationDay('担当日');
+  rotationDay('担当日'),
 
-  const ScheduleDayType(this.displayText);
+  /// 次の人にskipする日
+  skipToNext('次の人にスキップした日'),
+
+  /// 前の人にskipする日
+  skipToPrevious('前の人にスキップした日'),
+
+  /// 休日（ローテーション除外）
+  holiday('休日');
+
+  const DayType(this.displayText);
 
   final String displayText;
-
-  /// ローテーション日かどうか（holiday以外のrotationDay）
-  bool get isActiveRotationDay => this == ScheduleDayType.rotationDay;
-
-  /// 何らかのローテーション関連の日かどうか
-  bool get isRotationRelated => this != ScheduleDayType.notRotationDay;
 }

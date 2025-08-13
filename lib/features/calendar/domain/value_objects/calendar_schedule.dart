@@ -18,7 +18,7 @@ class CalendarSchedule {
         ScheduleDay(
           date: NotificationDateTime(date),
           memberName: RotationMemberName.notApplicable,
-          scheduleType: ScheduleDayType.notRotationDay,
+          scheduleType: DayType.notRotationDay,
           memberColor: MemberColor.notApplicable,
         );
   }
@@ -33,7 +33,7 @@ class ScheduleDay {
   });
   final NotificationDateTime date;
   final RotationMemberName memberName;
-  final ScheduleDayType scheduleType;
+  final DayType scheduleType;
   final MemberColor memberColor;
 
   String get displayText => scheduleType.displayText;

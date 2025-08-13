@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SkipEvent {
 
- DateKey get date; SkipType get type; SkipCount get skipCount;
+ DateKey get dateKey; DayType get dayType; SkipCount get skipCount;
 /// Create a copy of SkipEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $SkipEventCopyWith<SkipEvent> get copyWith => _$SkipEventCopyWithImpl<SkipEvent>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SkipEvent&&(identical(other.date, date) || other.date == date)&&(identical(other.type, type) || other.type == type)&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SkipEvent&&(identical(other.dateKey, dateKey) || other.dateKey == dateKey)&&(identical(other.dayType, dayType) || other.dayType == dayType)&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,type,skipCount);
+int get hashCode => Object.hash(runtimeType,dateKey,dayType,skipCount);
 
 @override
 String toString() {
-  return 'SkipEvent(date: $date, type: $type, skipCount: $skipCount)';
+  return 'SkipEvent(dateKey: $dateKey, dayType: $dayType, skipCount: $skipCount)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $SkipEventCopyWith<$Res>  {
   factory $SkipEventCopyWith(SkipEvent value, $Res Function(SkipEvent) _then) = _$SkipEventCopyWithImpl;
 @useResult
 $Res call({
- DateKey date, SkipType type, SkipCount skipCount
+ DateKey dateKey, DayType dayType, SkipCount skipCount
 });
 
 
@@ -62,11 +62,11 @@ class _$SkipEventCopyWithImpl<$Res>
 
 /// Create a copy of SkipEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? type = null,Object? skipCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? dateKey = null,Object? dayType = null,Object? skipCount = null,}) {
   return _then(_self.copyWith(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateKey,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as SkipType,skipCount: null == skipCount ? _self.skipCount : skipCount // ignore: cast_nullable_to_non_nullable
+dateKey: null == dateKey ? _self.dateKey : dateKey // ignore: cast_nullable_to_non_nullable
+as DateKey,dayType: null == dayType ? _self.dayType : dayType // ignore: cast_nullable_to_non_nullable
+as DayType,skipCount: null == skipCount ? _self.skipCount : skipCount // ignore: cast_nullable_to_non_nullable
 as SkipCount,
   ));
 }
@@ -158,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateKey date,  SkipType type,  SkipCount skipCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateKey dateKey,  DayType dayType,  SkipCount skipCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SkipEvent() when $default != null:
-return $default(_that.date,_that.type,_that.skipCount);case _:
+return $default(_that.dateKey,_that.dayType,_that.skipCount);case _:
   return orElse();
 
 }
@@ -179,10 +179,10 @@ return $default(_that.date,_that.type,_that.skipCount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateKey date,  SkipType type,  SkipCount skipCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateKey dateKey,  DayType dayType,  SkipCount skipCount)  $default,) {final _that = this;
 switch (_that) {
 case _SkipEvent():
-return $default(_that.date,_that.type,_that.skipCount);}
+return $default(_that.dateKey,_that.dayType,_that.skipCount);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -196,10 +196,10 @@ return $default(_that.date,_that.type,_that.skipCount);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateKey date,  SkipType type,  SkipCount skipCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateKey dateKey,  DayType dayType,  SkipCount skipCount)?  $default,) {final _that = this;
 switch (_that) {
 case _SkipEvent() when $default != null:
-return $default(_that.date,_that.type,_that.skipCount);case _:
+return $default(_that.dateKey,_that.dayType,_that.skipCount);case _:
   return null;
 
 }
@@ -211,11 +211,11 @@ return $default(_that.date,_that.type,_that.skipCount);case _:
 
 
 class _SkipEvent extends SkipEvent {
-  const _SkipEvent({required this.date, required this.type, required this.skipCount}): super._();
+  const _SkipEvent({required this.dateKey, required this.dayType, required this.skipCount}): super._();
   
 
-@override final  DateKey date;
-@override final  SkipType type;
+@override final  DateKey dateKey;
+@override final  DayType dayType;
 @override final  SkipCount skipCount;
 
 /// Create a copy of SkipEvent
@@ -228,16 +228,16 @@ _$SkipEventCopyWith<_SkipEvent> get copyWith => __$SkipEventCopyWithImpl<_SkipEv
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SkipEvent&&(identical(other.date, date) || other.date == date)&&(identical(other.type, type) || other.type == type)&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SkipEvent&&(identical(other.dateKey, dateKey) || other.dateKey == dateKey)&&(identical(other.dayType, dayType) || other.dayType == dayType)&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,type,skipCount);
+int get hashCode => Object.hash(runtimeType,dateKey,dayType,skipCount);
 
 @override
 String toString() {
-  return 'SkipEvent(date: $date, type: $type, skipCount: $skipCount)';
+  return 'SkipEvent(dateKey: $dateKey, dayType: $dayType, skipCount: $skipCount)';
 }
 
 
@@ -248,7 +248,7 @@ abstract mixin class _$SkipEventCopyWith<$Res> implements $SkipEventCopyWith<$Re
   factory _$SkipEventCopyWith(_SkipEvent value, $Res Function(_SkipEvent) _then) = __$SkipEventCopyWithImpl;
 @override @useResult
 $Res call({
- DateKey date, SkipType type, SkipCount skipCount
+ DateKey dateKey, DayType dayType, SkipCount skipCount
 });
 
 
@@ -265,11 +265,11 @@ class __$SkipEventCopyWithImpl<$Res>
 
 /// Create a copy of SkipEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? type = null,Object? skipCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? dateKey = null,Object? dayType = null,Object? skipCount = null,}) {
   return _then(_SkipEvent(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateKey,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as SkipType,skipCount: null == skipCount ? _self.skipCount : skipCount // ignore: cast_nullable_to_non_nullable
+dateKey: null == dateKey ? _self.dateKey : dateKey // ignore: cast_nullable_to_non_nullable
+as DateKey,dayType: null == dayType ? _self.dayType : dayType // ignore: cast_nullable_to_non_nullable
+as DayType,skipCount: null == skipCount ? _self.skipCount : skipCount // ignore: cast_nullable_to_non_nullable
 as SkipCount,
   ));
 }

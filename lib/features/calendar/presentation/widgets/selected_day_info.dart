@@ -6,7 +6,6 @@ import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_resp
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
-import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
@@ -38,7 +37,7 @@ class SelectedDayInfo extends ConsumerWidget {
     final memberName = dayInfo.memberName;
     final scheduleDayType = dayInfo.scheduleDayType;
     final iconColor =
-        scheduleDayType == ScheduleDayType.rotationDay
+        scheduleDayType == DayType.rotationDay
             ? glassTheme.surfaceColor
             : glassTheme.surfaceColor.withValues(alpha: 0.6);
 
@@ -86,12 +85,12 @@ class SelectedDayInfo extends ConsumerWidget {
                         child: GlassChip(
                           text: dayInfo.displayText,
                           gradient:
-                              scheduleDayType == ScheduleDayType.rotationDay
+                              scheduleDayType == DayType.rotationDay
                                   ? glassTheme.successGradient
                                   : glassTheme.backgroundGradientStrong,
                         ),
                       ),
-                      if (scheduleDayType == ScheduleDayType.rotationDay)
+                      if (scheduleDayType == DayType.rotationDay)
                         GlassButton(
                           iconSize: 14,
                           iconData: Icons.alarm_on,
@@ -104,7 +103,7 @@ class SelectedDayInfo extends ConsumerWidget {
                                 selectedDay: selectedDay,
                               ),
                         )
-                      else if (scheduleDayType == ScheduleDayType.holiday)
+                      else if (scheduleDayType == DayType.holiday)
                         GlassButton(
                           iconSize: 14,
                           iconData: Icons.alarm_off,
@@ -122,7 +121,7 @@ class SelectedDayInfo extends ConsumerWidget {
                   Row(
                     spacing: 10,
                     children: [
-                      if (scheduleDayType == ScheduleDayType.rotationDay &&
+                      if (scheduleDayType == DayType.rotationDay &&
                           calendarScheduleResponse
                               .rotationResponse
                               .canSkipPrevious)
@@ -140,7 +139,7 @@ class SelectedDayInfo extends ConsumerWidget {
                             height: 24,
                             alignment: Alignment.center,
                             child: Icon(
-                              scheduleDayType == ScheduleDayType.rotationDay
+                              scheduleDayType == DayType.rotationDay
                                   ? Icons.person
                                   : Icons.person_off,
                               color: iconColor,
@@ -159,7 +158,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      if (scheduleDayType == ScheduleDayType.rotationDay)
+                      if (scheduleDayType == DayType.rotationDay)
                         const GlassButton(
                           iconSize: 14,
                           iconData: Icons.skip_next,
@@ -187,7 +186,7 @@ class SelectedDayInfo extends ConsumerWidget {
     final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
     final rotationResponse = calendarScheduleResponse.rotationResponse;
     final skipEvents = List.of(rotationResponse.skipEvents)..removeWhere(
-      (skipEvent) => skipEvent.date == DateKey.fromDateTime(selectedDay),
+      (skipEvent) => skipEvent.dateKey == DateKey.fromDateTime(selectedDay),
     );
     final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(
@@ -217,8 +216,8 @@ class SelectedDayInfo extends ConsumerWidget {
     // holidayの場合はskipCount1で固定
     final skipEvent = [
       SkipEvent(
-        date: DateKey.fromDateTime(selectedDay),
-        type: SkipType.holiday,
+        dateKey: DateKey.fromDateTime(selectedDay),
+        dayType: DayType.holiday,
         skipCount: const SkipCount(skipCount: 1),
       ),
       ...rotationResponse.skipEvents,
@@ -237,4 +236,8 @@ class SelectedDayInfo extends ConsumerWidget {
     await rotationNotifier.updateRotation(updateRotation);
     final _ = ref.refresh(calendarScheduleResponseProvider(rotationId));
   }
+
+  Future<void> _skipNext() async {}
+
+  Future<void> _skipPrevious() async {}
 }

@@ -12,7 +12,7 @@ class NotificationEntry {
     required this.rotationId,
     required this.userId,
     required this.rotationName,
-    required this.notificationDate,
+    required this.notificationDateTime,
     required this.memberName,
   });
 
@@ -20,7 +20,7 @@ class NotificationEntry {
   // rotationIdはポップアップをタップした際に、カレンダー画面を表示するために必要
   final RotationId rotationId;
   final UserId userId;
-  final NotificationDateTime notificationDate;
+  final NotificationDateTime notificationDateTime;
   final RotationName rotationName;
   final RotationMemberName memberName;
 

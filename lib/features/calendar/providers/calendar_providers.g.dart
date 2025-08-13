@@ -7,7 +7,7 @@ part of 'calendar_providers.dart';
 // **************************************************************************
 
 String _$getCalendarScheduleUseCaseHash() =>
-    r'5346fbb42a0925762fdb21b0da5ae7741d6d6a6c';
+    r'7e0b8cbb19565b4aea9c573bdee2cbb95ecdd445';
 
 /// See also [getCalendarScheduleUseCase].
 @ProviderFor(getCalendarScheduleUseCase)

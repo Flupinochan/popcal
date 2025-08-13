@@ -6,27 +6,6 @@ part of 'notification_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$buildCalendarScheduleUseCaseHash() =>
-    r'018f2265528f0cedc97dd3b530330b454afda980';
-
-/// See also [buildCalendarScheduleUseCase].
-@ProviderFor(buildCalendarScheduleUseCase)
-final buildCalendarScheduleUseCaseProvider =
-    AutoDisposeProvider<BuildCalendarScheduleUseCase>.internal(
-      buildCalendarScheduleUseCase,
-      name: r'buildCalendarScheduleUseCaseProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$buildCalendarScheduleUseCaseHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef BuildCalendarScheduleUseCaseRef =
-    AutoDisposeProviderRef<BuildCalendarScheduleUseCase>;
 String _$flutterLocalNotificationsPluginHash() =>
     r'ebdfa69f7c185b4f8274e7e0d41a298d4e3f4b91';
 

@@ -1,4 +1,3 @@
-// Firebase Cloud Firestore <=> DTO <=> Entity 変換するDTOクラス
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -6,7 +5,7 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
-import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -166,14 +165,14 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       final typeString = item['type'] as String;
       final skipCount = (item['skipCount'] ?? 1) as int;
 
-      final type = SkipType.values.firstWhere(
+      final type = DayType.values.firstWhere(
         (e) => e.name == typeString,
         orElse: () => throw FormatException('Invalid SkipType: $typeString'),
       );
 
       return SkipEvent(
-        date: DateKey.fromDateTime(timestamp.toDate()),
-        type: type,
+        dateKey: DateKey.fromDateTime(timestamp.toDate()),
+        dayType: type,
         skipCount: SkipCount(skipCount: skipCount),
       );
     }).toList();
@@ -185,8 +184,8 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     return skipEvents
         .map(
           (event) => {
-            'date': Timestamp.fromDate(event.date.value),
-            'type': event.type.name,
+            'date': Timestamp.fromDate(event.dateKey.value),
+            'type': event.dayType.name,
             'skipCount': event.skipCount.skipCount,
           },
         )

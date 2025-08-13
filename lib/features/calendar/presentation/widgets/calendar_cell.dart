@@ -53,9 +53,9 @@ class CalendarCell extends StatelessWidget {
               ),
             ),
           ),
-          if (scheduleDayType == ScheduleDayType.rotationDay)
+          if (scheduleDayType == DayType.rotationDay)
             Text(
-              memberName.value,
+              memberName!.value,
               style: textTheme.labelMedium!.copyWith(
                 color: dayInfo.memberColor.value,
               ),
@@ -70,10 +70,10 @@ class CalendarCell extends StatelessWidget {
     );
   }
 
-  Color _getBackgroundColor(ScheduleDayType scheduleDayType) {
+  Color _getBackgroundColor(DayType scheduleDayType) {
     if (isSelected) return Colors.blue.withValues(alpha: 0.4);
     if (isToday) return Colors.amber.withValues(alpha: 0.3);
-    if (scheduleDayType == ScheduleDayType.rotationDay) {
+    if (scheduleDayType == DayType.rotationDay) {
       return Colors.white.withValues(alpha: 0.15);
     }
     return Colors.transparent;

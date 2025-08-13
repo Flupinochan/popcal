@@ -4,14 +4,14 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 /// 30日分の通知設定作成結果
 class NotificationSchedule {
   const NotificationSchedule({
-    required this.notificationEntry,
+    required this.notificationEntries,
     required this.newCurrentRotationIndex,
   });
 
-  final List<NotificationEntry> notificationEntry;
+  final List<NotificationEntry> notificationEntries;
   // 通知作成分だけ増加 ※ローテーション処理に必須のため返却
   final RotationIndex newCurrentRotationIndex;
 
-  bool get hasNotifications => notificationEntry.isNotEmpty;
-  int get notificationCount => notificationEntry.length;
+  bool get hasNotifications => notificationEntries.isNotEmpty;
+  int get notificationCount => notificationEntries.length;
 }

@@ -55,8 +55,8 @@ void main() {
     // 20日をholiday skip
     skipEvents: [
       SkipEvent(
-        date: DateKey.fromDateTime(DateTime(2025, 8, 20)),
-        type: SkipType.holiday,
+        dateKey: DateKey.fromDateTime(DateTime(2025, 8, 20)),
+        dayType: SkipType.holiday,
         skipCount: const SkipCount(skipCount: 1),
       ),
     ],
@@ -70,57 +70,57 @@ void main() {
     DateKey.fromDateTime(DateTime(2025, 8, 15)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 15, 9)),
       memberName: const RotationMemberName('user1'),
-      scheduleDayType: ScheduleDayType.rotationDay,
+      scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member1,
-      displayText: ScheduleDayType.rotationDay.displayText,
+      displayText: DayType.rotationDay.displayText,
     ),
     // 18日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 18)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 18, 9)),
       memberName: const RotationMemberName('user2'),
-      scheduleDayType: ScheduleDayType.rotationDay,
+      scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member2,
-      displayText: ScheduleDayType.rotationDay.displayText,
+      displayText: DayType.rotationDay.displayText,
     ),
     // 20日休日
     DateKey.fromDateTime(DateTime(2025, 8, 20)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 20, 9)),
       memberName: RotationMemberName.notApplicable,
-      scheduleDayType: ScheduleDayType.holiday,
+      scheduleDayType: DayType.holiday,
       memberColor: MemberColor.notApplicable,
-      displayText: ScheduleDayType.holiday.displayText,
+      displayText: DayType.holiday.displayText,
     ),
     // 22日: user3 (index 2)
     DateKey.fromDateTime(DateTime(2025, 8, 22)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 22, 9)),
       memberName: const RotationMemberName('user3'),
-      scheduleDayType: ScheduleDayType.rotationDay,
+      scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member3,
-      displayText: ScheduleDayType.rotationDay.displayText,
+      displayText: DayType.rotationDay.displayText,
     ),
     // 25日: user4 (index 3)
     DateKey.fromDateTime(DateTime(2025, 8, 25)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 25, 9)),
       memberName: const RotationMemberName('user4'),
-      scheduleDayType: ScheduleDayType.rotationDay,
+      scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member4,
-      displayText: ScheduleDayType.rotationDay.displayText,
+      displayText: DayType.rotationDay.displayText,
     ),
     // 27日: user1 (index 0に戻る)
     DateKey.fromDateTime(DateTime(2025, 8, 27)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 27, 9)),
       memberName: const RotationMemberName('user1'),
-      scheduleDayType: ScheduleDayType.rotationDay,
+      scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member1,
-      displayText: ScheduleDayType.rotationDay.displayText,
+      displayText: DayType.rotationDay.displayText,
     ),
     // 29日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 29, 9)),
       memberName: const RotationMemberName('user2'),
-      scheduleDayType: ScheduleDayType.rotationDay,
+      scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member2,
-      displayText: ScheduleDayType.rotationDay.displayText,
+      displayText: DayType.rotationDay.displayText,
     ),
   };
   final calendarScheduleResponse = CalendarScheduleResponse(

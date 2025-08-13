@@ -1,18 +1,22 @@
+import 'package:collection/collection.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
+import 'package:popcal/features/notifications/domain/value_objects/day_calculation_data.dart';
+import 'package:popcal/features/notifications/domain/value_objects/day_type_result.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
+import 'package:popcal/features/notifications/domain/value_objects/rotation_calculation_data.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
-import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 
@@ -20,180 +24,242 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   RotationCalculationServiceImpl(this._timeUtils);
   final TimeUtils _timeUtils;
 
-  /// 1. 次回の通知予定日を計算
   @override
-  Result<DateTime> findNextRotationDate({
-    required List<Weekday> rotationDays,
-    required NotificationTime notificationTime,
-    required RotationDateTime rotationDateTime,
-    required List<SkipEvent> skipEvents,
-  }) {
-    // 曜日指定のローテーション機能であり、遅くても未来7日後までに最初の通知日があるはず
-    // 判定開始日は+0日で、今から未来+8日分をチェックが妥当だが
-    // 拡張性を考え未来1年分(+365)は計算可能にする ※whileはリスクがあるため利用しない
-    for (
-      var checkDate = rotationDateTime.dateTime;
-      checkDate.isBefore(
-        rotationDateTime.dateTime.add(const Duration(days: 365)),
-      );
-      checkDate = checkDate.add(const Duration(days: 1))
-    ) {
-      // 日付のみに変換
-      final dateKey = DateKey.fromDateTime(checkDate);
-
-      if (isValidNotificationDate(
-        checkDate: dateKey,
-        rotationDays: rotationDays,
-        notificationTime: notificationTime,
-        rotationDateTime: rotationDateTime,
-        skipEvents: skipEvents,
-      )) {
-        return Results.success(checkDate);
-      }
-    }
-    return Results.failure(const ValidationFailure('次回ローテーション日の取得に失敗しました'));
-  }
-
-  @override
-  ScheduleDayType getScheduleDayType({
-    required DateKey checkDate,
-    required List<Weekday> rotationDays,
-    required NotificationTime notificationTime,
-    required RotationDateTime rotationDateTime,
-    required List<SkipEvent> skipEvents,
-  }) {
-    final checkDay = Weekday.fromDateTime(checkDate.value);
-
-    // ローテーション曜日でない場合
-    if (!rotationDays.contains(checkDay)) {
-      return ScheduleDayType.notRotationDay;
-    }
-
-    // holiday skip日の場合
-    final hasHolidaySkip = skipEvents.any(
-      (event) => event.date == checkDate && event.type == SkipType.holiday,
-    );
-    if (hasHolidaySkip) {
-      return ScheduleDayType.holiday;
-    }
-
-    // 時刻チェック
-    final notificationDateTime = NotificationDateTime.fromDateAndTime(
-      date: checkDate,
-      notificationTime: notificationTime,
-    );
-    if (notificationDateTime.isAfterRotationDateTime(rotationDateTime)) {
-      return ScheduleDayType.rotationDay;
-    }
-
-    // 過去の時刻の場合は対象外
-    return ScheduleDayType.notRotationDay;
-  }
-
-  /// ローテーション日判定
-  @override
-  bool isValidNotificationDate({
-    required DateKey checkDate,
-    required List<Weekday> rotationDays,
-    required NotificationTime notificationTime,
-    required RotationDateTime rotationDateTime,
-    required List<SkipEvent> skipEvents,
-  }) {
-    final checkDay = Weekday.fromDateTime(checkDate.value);
-
-    // ローテーション曜日の場合
-    if (rotationDays.contains(checkDay)) {
-      // holiday skip日の場合
-      final hasHolidaySkip = skipEvents.any(
-        (event) => event.date == checkDate && event.type == SkipType.holiday,
-      );
-      if (hasHolidaySkip) {
-        return false;
-      }
-
-      final notificationDateTime = NotificationDateTime.fromDateAndTime(
-        date: checkDate,
-        notificationTime: notificationTime,
-      );
-      // ※作成日がローテーション曜日の場合でも、すでに時刻が過ぎている場合は、ローテーション日に含めない
-      // そのため、曜日だけでなく時刻を含めて比較
-      if (notificationDateTime.isAfterRotationDateTime(rotationDateTime)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分
-  @override
-  Result<NotificationSchedule> planUpcomingNotifications({
+  Result<RotationCalculationData> calculateRotationSchedule({
     required Rotation rotation,
-    int futureDays = 30,
+    required DateTime fromDateTime,
+    required DateTime toDateTime,
   }) {
     try {
-      // 現在時刻をベース
-      final currentTime = _timeUtils.now();
-      final toDate = currentTime.add(Duration(days: futureDays));
+      final dayCalculationResults = <DayCalculationData>[];
+      var newRotationIndex = rotation.currentRotationIndex.value;
 
-      final notifications = <NotificationEntry>[];
-      var newCurrentRotationIndex = rotation.currentRotationIndex;
-
-      // 指定期間をループして通知情報を作成
+      // fromDateからtoDateまで+1日しながらfor文で計算
       for (
-        var checkDate = currentTime;
-        checkDate.isBefore(toDate);
-        checkDate = checkDate.add(const Duration(days: 1))
+        var checkDateTime = fromDateTime;
+        checkDateTime.isBefore(toDateTime);
+        checkDateTime = checkDateTime.add(const Duration(days: 1))
       ) {
-        // 日付のみに変換
-        final dateKey = DateKey.fromDateTime(checkDate);
+        // ローテーション日(checkDateTime)と通知時刻(notificationTime)から
+        // NotificationDateTime(通知日時)を生成
+        final dateKey = DateKey.fromDateTime(checkDateTime);
+        final notificationTime = rotation.notificationTime;
+        final notificationDateTime = NotificationDateTime.fromDateAndTime(
+          date: dateKey,
+          notificationTime: notificationTime,
+        );
 
-        if (isValidNotificationDate(
-          checkDate: dateKey,
+        // タイプ判定
+        final dayTypeResult = getScheduleDayType(
+          fromDateTime: fromDateTime,
+          notificationDateTime: notificationDateTime,
           rotationDays: rotation.rotationDays,
-          notificationTime: rotation.notificationTime,
-          rotationDateTime: RotationDateTime.updatedAt(rotation.updatedAt),
           skipEvents: rotation.skipEvents,
-        )) {
-          final memberName = rotation.getRotationMemberName(
-            newCurrentRotationIndex,
-          );
-          final notificationId = NotificationId.create(
-            rotation.rotationId!,
-            checkDate,
-          );
-          final notificationTime = rotation.notificationTime.value;
-          final scheduledDateTime = DateTime(
-            checkDate.year,
-            checkDate.month,
-            checkDate.day,
-            notificationTime.hour,
-            notificationTime.minute,
-          );
+        );
+        final dayType = dayTypeResult.dayType;
+        final skipEvent = dayTypeResult.skipEvent;
 
-          final notificationSetting = NotificationEntry(
-            notificationId: notificationId,
-            rotationId: rotation.rotationId!,
-            userId: rotation.userId,
-            rotationName: rotation.rotationName,
-            notificationDate: NotificationDateTime(scheduledDateTime),
-            memberName: memberName,
-          );
+        final memberIndex = rotation.getRotationMemberIndex(
+          RotationIndex(newRotationIndex),
+        );
 
-          notifications.add(notificationSetting);
-          newCurrentRotationIndex = newCurrentRotationIndex.increment();
+        switch (dayType) {
+          // ローテーション日でない場合は担当者を示すmemberIndexをnull
+          case DayType.holiday:
+          case DayType.notRotationDay:
+            dayCalculationResults.add(
+              DayCalculationData(
+                notificationDateTime: notificationDateTime,
+                memberIndex: null,
+                dayType: dayType,
+              ),
+            );
+          // ローテーション日の場合はシンプルにnewRotationIndexを+1
+          case DayType.rotationDay:
+            dayCalculationResults.add(
+              DayCalculationData(
+                notificationDateTime: notificationDateTime,
+                memberIndex: memberIndex,
+                dayType: dayType,
+              ),
+            );
+            newRotationIndex++;
+          // 次の人にスキップするローテーション日の場合は、
+          // skipCount分indexを進めたmemberIndexを取得
+          // 1つスキップする場合は、skipCountは1
+          case DayType.skipToNext:
+            newRotationIndex += skipEvent!.skipCount.skipCount;
+            dayCalculationResults.add(
+              DayCalculationData(
+                notificationDateTime: notificationDateTime,
+                memberIndex: memberIndex,
+                dayType: dayType,
+              ),
+            );
+            newRotationIndex++;
+          // 前の人に戻すローテーション日の場合は、
+          // skipCountから-1したmemberIndexを取得
+          // 2つスキップする予定から1つスキップに変える場合 (2 - 1)
+          // ※1つスキップの場合はありえない。UIでSkipEventを削除して再計算するため
+          case DayType.skipToPrevious:
+            newRotationIndex += skipEvent!.skipCount.skipCount - 1;
+            dayCalculationResults.add(
+              DayCalculationData(
+                notificationDateTime: notificationDateTime,
+                memberIndex: memberIndex,
+                dayType: dayType,
+              ),
+            );
+            newRotationIndex++;
         }
       }
 
-      _printNotifications(notifications);
-
       return Results.success(
-        NotificationSchedule(
-          notificationEntry: notifications,
-          newCurrentRotationIndex: newCurrentRotationIndex,
+        RotationCalculationData(
+          dayCalculationDatas: dayCalculationResults,
+          newRotationIndex: newRotationIndex,
         ),
       );
     } on Exception catch (error) {
-      return Results.failure(NotificationFailure('通知予定の作成に失敗しました: $error'));
+      return Results.failure(NotificationFailure('通知計算処理でエラーが発生: $error'));
+    }
+  }
+
+  @override
+  Result<NotificationSchedule> getNotificationEntry(
+    Rotation rotation,
+    RotationCalculationData rotationCalculationData,
+  ) {
+    try {
+      final notificationEntries = <NotificationEntry>[];
+      for (final dayCalculationData
+          in rotationCalculationData.dayCalculationDatas) {
+        final memberIndex = dayCalculationData.memberIndex;
+        final notificationDateTime = dayCalculationData.notificationDateTime;
+
+        // memberIndexがない場合は、通知日でないためcontinue
+        if (memberIndex == null) {
+          continue;
+        }
+
+        notificationEntries.add(
+          NotificationEntry(
+            notificationId: NotificationId.create(
+              rotation.rotationId!,
+              notificationDateTime.value,
+            ),
+            rotationId: rotation.rotationId!,
+            userId: rotation.userId,
+            rotationName: rotation.rotationName,
+            notificationDateTime: notificationDateTime,
+            memberName: rotation.rotationMemberNames[memberIndex],
+          ),
+        );
+      }
+
+      return Results.success(
+        NotificationSchedule(
+          notificationEntries: notificationEntries,
+          newCurrentRotationIndex: RotationIndex(
+            rotationCalculationData.newRotationIndex,
+          ),
+        ),
+      );
+    } on Exception catch (error) {
+      return Results.failure(
+        NotificationFailure('通知設定用データ整形処理でエラーが発生: $error'),
+      );
+    }
+  }
+
+  @override
+  DayTypeResult getScheduleDayType({
+    required DateTime fromDateTime,
+    required NotificationDateTime notificationDateTime,
+    required List<Weekday> rotationDays,
+    required List<SkipEvent> skipEvents,
+  }) {
+    final checkDay = Weekday.fromDateTime(notificationDateTime.value);
+
+    // 1. ローテーション曜日でない場合
+    if (!rotationDays.contains(checkDay)) {
+      return const DayTypeResult(dayType: DayType.notRotationDay);
+    }
+
+    // 2. 過去の時刻の場合
+    if (notificationDateTime.isBeforeDateTime(fromDateTime)) {
+      return const DayTypeResult(dayType: DayType.notRotationDay);
+    }
+
+    // 3. Skip日かどうか
+    final skipEvent = skipEvents.firstWhereOrNull(
+      (event) => _timeUtils.isSameDateKeyWithNotificationDateTime(
+        event.dateKey,
+        notificationDateTime,
+      ),
+    );
+
+    if (skipEvent == null) {
+      return const DayTypeResult(dayType: DayType.rotationDay);
+    }
+
+    switch (skipEvent.dayType) {
+      case DayType.skipToNext:
+        return DayTypeResult(
+          dayType: DayType.skipToNext,
+          skipEvent: skipEvent,
+        );
+      case DayType.skipToPrevious:
+        return DayTypeResult(
+          dayType: DayType.skipToPrevious,
+          skipEvent: skipEvent,
+        );
+      case DayType.holiday:
+        return DayTypeResult(
+          dayType: DayType.holiday,
+          skipEvent: skipEvent,
+        );
+      // 以下2つのDayTypeはバリデーションにより、ありえないがswitchの仕様により定義
+      case DayType.notRotationDay:
+        return const DayTypeResult(dayType: DayType.notRotationDay);
+      case DayType.rotationDay:
+        return const DayTypeResult(dayType: DayType.rotationDay);
+    }
+  }
+
+  @override
+  Result<Map<DateKey, ScheduleDay>> getScheduleMap(
+    Rotation rotation,
+    RotationCalculationData rotationCalculationData,
+  ) {
+    try {
+      final scheduleMap = <DateKey, ScheduleDay>{};
+      for (final dayCalculationData
+          in rotationCalculationData.dayCalculationDatas) {
+        final memberIndex = dayCalculationData.memberIndex;
+        final dayType = dayCalculationData.dayType;
+        final notificationDateTime = dayCalculationData.notificationDateTime;
+
+        final dateKey = DateKey.fromDateTime(
+          dayCalculationData.notificationDateTime.value,
+        );
+
+        final scheduleDay = ScheduleDay(
+          date: notificationDateTime,
+          memberName:
+              memberIndex != null
+                  ? rotation.rotationMemberNames[memberIndex]
+                  : RotationMemberName.notApplicable,
+          scheduleType: dayType,
+          memberColor: MemberColor.fromIndex(memberIndex),
+        );
+        scheduleMap[dateKey] = scheduleDay;
+      }
+      return Results.success(scheduleMap);
+    } on Exception catch (error) {
+      return Results.failure(
+        NotificationFailure('カレンダー画面表示用データ整形処理でエラーが発生: $error'),
+      );
     }
   }
 
@@ -201,7 +267,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   void _printNotifications(List<NotificationEntry> notificationEntry) {
     for (final notification in notificationEntry) {
       print(
-        '通知予定: ${notification.notificationDate.value} ${notification.memberName}',
+        '通知予定: ${notification.notificationDateTime.value} ${notification.memberName}',
       );
     }
   }

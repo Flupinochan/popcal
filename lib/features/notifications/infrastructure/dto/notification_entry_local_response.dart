@@ -43,7 +43,7 @@ sealed class NotificationEntryLocalResponse
           rotationId: rotationId,
           userId: userId,
           rotationName: rotationName,
-          notificationDate: notificationDate,
+          notificationDateTime: notificationDate,
           memberName: memberName,
         ),
       );
@@ -64,7 +64,7 @@ sealed class NotificationEntryLocalResponse
           notificationId: notification.notificationId,
           rotationId: notification.rotationId,
           userId: notification.userId,
-          notificationDate: notification.notificationDate,
+          notificationDate: notification.notificationDateTime,
           rotationName: notification.rotationName,
           memberName: notification.memberName,
           title: notification.title,

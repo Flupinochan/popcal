@@ -3,6 +3,18 @@ import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
 
+class NotificationDateConverter
+    implements JsonConverter<NotificationDateTime, String> {
+  const NotificationDateConverter();
+
+  @override
+  NotificationDateTime fromJson(String json) =>
+      NotificationDateTime(DateTime.parse(json));
+
+  @override
+  String toJson(NotificationDateTime object) => object.value.toIso8601String();
+}
+
 extension type NotificationDateTime(DateTime value) {
   factory NotificationDateTime.fromDateAndTime({
     required DateKey date,
@@ -19,23 +31,15 @@ extension type NotificationDateTime(DateTime value) {
     );
   }
 
+  bool isAfterRotationDateTime(RotationDateTime rotationDateTime) {
+    return value.isAfter(rotationDateTime.dateTime);
+  }
+
   bool isBeforeDateTime(DateTime datetime) {
     return value.isBefore(datetime);
   }
 
-  bool isAfterRotationDateTime(RotationDateTime rotationDateTime) {
-    return value.isAfter(rotationDateTime.dateTime);
+  bool isBeforeRotationDateTime(RotationDateTime rotationDateTime) {
+    return value.isBefore(rotationDateTime.dateTime);
   }
-}
-
-class NotificationDateConverter
-    implements JsonConverter<NotificationDateTime, String> {
-  const NotificationDateConverter();
-
-  @override
-  NotificationDateTime fromJson(String json) =>
-      NotificationDateTime(DateTime.parse(json));
-
-  @override
-  String toJson(NotificationDateTime object) => object.value.toIso8601String();
 }

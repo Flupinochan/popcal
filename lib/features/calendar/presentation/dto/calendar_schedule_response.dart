@@ -23,9 +23,9 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
         ScheduleDayResponse(
           date: NotificationDateTime(date),
           memberName: RotationMemberName.notApplicable,
-          scheduleDayType: ScheduleDayType.notRotationDay,
+          scheduleDayType: DayType.notRotationDay,
           memberColor: MemberColor.notApplicable,
-          displayText: ScheduleDayType.notRotationDay.displayText,
+          displayText: DayType.notRotationDay.displayText,
         );
   }
 }
@@ -36,7 +36,7 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
   const factory ScheduleDayResponse({
     required NotificationDateTime date,
     required RotationMemberName memberName,
-    required ScheduleDayType scheduleDayType,
+    required DayType scheduleDayType,
     required MemberColor memberColor,
     required String displayText,
   }) = _ScheduleDayResponse;
