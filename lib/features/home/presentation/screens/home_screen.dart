@@ -287,6 +287,7 @@ class HomeScreen extends HookConsumerWidget {
       rotationMembers: rotationResponse.rotationMembers,
       rotationDays: rotationResponse.rotationDays,
       notificationTime: rotationResponse.notificationTime,
+      skipEvents: rotationResponse.skipEvents,
     );
 
     final rotationController = ref.read(rotationNotifierProvider.notifier);

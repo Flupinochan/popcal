@@ -53,6 +53,7 @@ class BuildCalendarScheduleUseCase {
           rotationDays: rotation.rotationDays,
           notificationTime: notificationTime,
           rotationDateTime: RotationDateTime.createdAt(rotation.createdAt),
+          skipEvents: rotation.skipEvents,
         )) {
           final memberName = rotation.getRotationMemberName(
             newCurrentRotationIndex,

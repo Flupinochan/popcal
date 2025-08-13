@@ -3,6 +3,7 @@ import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -24,6 +25,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationCreatedAt createdAt,
+    required List<SkipEvent> skipEvents,
   }) = _UpdateRotationRequest;
 
   /// Entity => DTO
@@ -36,6 +38,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
       rotationDays: entity.rotationDays,
       notificationTime: entity.notificationTime,
       createdAt: entity.createdAt,
+      skipEvents: entity.skipEvents,
     );
   }
   const UpdateRotationRequest._();
@@ -54,6 +57,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
           currentRotationIndex: const RotationIndex(0),
           createdAt: createdAt,
           updatedAt: RotationUpdatedAt(currentTime),
+          skipEvents: skipEvents,
         ),
       );
     } on Exception catch (e) {

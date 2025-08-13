@@ -31,6 +31,7 @@ class CalendarContainer extends ConsumerWidget {
 
     return GlassWrapper(
       child: TableCalendar<String>(
+        currentDay: timeUtils.now(),
         firstDay: now.subtract(
           const Duration(days: GetCalendarScheduleUseCase.pastDays),
         ),

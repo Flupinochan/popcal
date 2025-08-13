@@ -16,7 +16,7 @@ mixin _$RotationFirebaseResponse {
 
  RotationId? get rotationId; UserId get userId; RotationName get rotationName; List<RotationMemberName> get rotationMemberNames; List<int> get rotationDays; NotificationTime get notificationTime; RotationIndex get currentRotationIndex;// firestoreに保存する際はTimestampが適切
 // Widget(UI)はDateTimeが適切
- RotationCreatedAt get createdAt; RotationUpdatedAt get updatedAt;
+ RotationCreatedAt get createdAt; RotationUpdatedAt get updatedAt; List<SkipEvent> get skipEvents;
 /// Create a copy of RotationFirebaseResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,16 +27,16 @@ $RotationFirebaseResponseCopyWith<RotationFirebaseResponse> get copyWith => _$Ro
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RotationFirebaseResponse&&(identical(other.rotationId, rotationId) || other.rotationId == rotationId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMemberNames, rotationMemberNames)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RotationFirebaseResponse&&(identical(other.rotationId, rotationId) || other.rotationId == rotationId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMemberNames, rotationMemberNames)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.skipEvents, skipEvents));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,rotationId,userId,rotationName,const DeepCollectionEquality().hash(rotationMemberNames),const DeepCollectionEquality().hash(rotationDays),notificationTime,currentRotationIndex,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,rotationId,userId,rotationName,const DeepCollectionEquality().hash(rotationMemberNames),const DeepCollectionEquality().hash(rotationDays),notificationTime,currentRotationIndex,createdAt,updatedAt,const DeepCollectionEquality().hash(skipEvents));
 
 @override
 String toString() {
-  return 'RotationFirebaseResponse(rotationId: $rotationId, userId: $userId, rotationName: $rotationName, rotationMemberNames: $rotationMemberNames, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'RotationFirebaseResponse(rotationId: $rotationId, userId: $userId, rotationName: $rotationName, rotationMemberNames: $rotationMemberNames, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt, skipEvents: $skipEvents)';
 }
 
 
@@ -47,7 +47,7 @@ abstract mixin class $RotationFirebaseResponseCopyWith<$Res>  {
   factory $RotationFirebaseResponseCopyWith(RotationFirebaseResponse value, $Res Function(RotationFirebaseResponse) _then) = _$RotationFirebaseResponseCopyWithImpl;
 @useResult
 $Res call({
- RotationId? rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMemberNames, List<int> rotationDays, NotificationTime notificationTime, RotationIndex currentRotationIndex, RotationCreatedAt createdAt, RotationUpdatedAt updatedAt
+ RotationId? rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMemberNames, List<int> rotationDays, NotificationTime notificationTime, RotationIndex currentRotationIndex, RotationCreatedAt createdAt, RotationUpdatedAt updatedAt, List<SkipEvent> skipEvents
 });
 
 
@@ -64,7 +64,7 @@ class _$RotationFirebaseResponseCopyWithImpl<$Res>
 
 /// Create a copy of RotationFirebaseResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? rotationId = freezed,Object? userId = null,Object? rotationName = null,Object? rotationMemberNames = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? rotationId = freezed,Object? userId = null,Object? rotationName = null,Object? rotationMemberNames = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,Object? skipEvents = null,}) {
   return _then(_self.copyWith(
 rotationId: freezed == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,8 @@ as List<int>,notificationTime: null == notificationTime ? _self.notificationTime
 as NotificationTime,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
 as RotationIndex,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as RotationCreatedAt,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as RotationUpdatedAt,
+as RotationUpdatedAt,skipEvents: null == skipEvents ? _self.skipEvents : skipEvents // ignore: cast_nullable_to_non_nullable
+as List<SkipEvent>,
   ));
 }
 /// Create a copy of RotationFirebaseResponse
@@ -175,10 +176,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RotationId? rotationId,  UserId userId,  RotationName rotationName,  List<RotationMemberName> rotationMemberNames,  List<int> rotationDays,  NotificationTime notificationTime,  RotationIndex currentRotationIndex,  RotationCreatedAt createdAt,  RotationUpdatedAt updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RotationId? rotationId,  UserId userId,  RotationName rotationName,  List<RotationMemberName> rotationMemberNames,  List<int> rotationDays,  NotificationTime notificationTime,  RotationIndex currentRotationIndex,  RotationCreatedAt createdAt,  RotationUpdatedAt updatedAt,  List<SkipEvent> skipEvents)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RotationFirebaseResponse() when $default != null:
-return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationMemberNames,_that.rotationDays,_that.notificationTime,_that.currentRotationIndex,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationMemberNames,_that.rotationDays,_that.notificationTime,_that.currentRotationIndex,_that.createdAt,_that.updatedAt,_that.skipEvents);case _:
   return orElse();
 
 }
@@ -196,10 +197,10 @@ return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationM
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RotationId? rotationId,  UserId userId,  RotationName rotationName,  List<RotationMemberName> rotationMemberNames,  List<int> rotationDays,  NotificationTime notificationTime,  RotationIndex currentRotationIndex,  RotationCreatedAt createdAt,  RotationUpdatedAt updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RotationId? rotationId,  UserId userId,  RotationName rotationName,  List<RotationMemberName> rotationMemberNames,  List<int> rotationDays,  NotificationTime notificationTime,  RotationIndex currentRotationIndex,  RotationCreatedAt createdAt,  RotationUpdatedAt updatedAt,  List<SkipEvent> skipEvents)  $default,) {final _that = this;
 switch (_that) {
 case _RotationFirebaseResponse():
-return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationMemberNames,_that.rotationDays,_that.notificationTime,_that.currentRotationIndex,_that.createdAt,_that.updatedAt);}
+return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationMemberNames,_that.rotationDays,_that.notificationTime,_that.currentRotationIndex,_that.createdAt,_that.updatedAt,_that.skipEvents);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -213,10 +214,10 @@ return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationM
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RotationId? rotationId,  UserId userId,  RotationName rotationName,  List<RotationMemberName> rotationMemberNames,  List<int> rotationDays,  NotificationTime notificationTime,  RotationIndex currentRotationIndex,  RotationCreatedAt createdAt,  RotationUpdatedAt updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RotationId? rotationId,  UserId userId,  RotationName rotationName,  List<RotationMemberName> rotationMemberNames,  List<int> rotationDays,  NotificationTime notificationTime,  RotationIndex currentRotationIndex,  RotationCreatedAt createdAt,  RotationUpdatedAt updatedAt,  List<SkipEvent> skipEvents)?  $default,) {final _that = this;
 switch (_that) {
 case _RotationFirebaseResponse() when $default != null:
-return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationMemberNames,_that.rotationDays,_that.notificationTime,_that.currentRotationIndex,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationMemberNames,_that.rotationDays,_that.notificationTime,_that.currentRotationIndex,_that.createdAt,_that.updatedAt,_that.skipEvents);case _:
   return null;
 
 }
@@ -228,7 +229,7 @@ return $default(_that.rotationId,_that.userId,_that.rotationName,_that.rotationM
 
 
 class _RotationFirebaseResponse extends RotationFirebaseResponse {
-  const _RotationFirebaseResponse({required this.rotationId, required this.userId, required this.rotationName, required final  List<RotationMemberName> rotationMemberNames, required final  List<int> rotationDays, required this.notificationTime, required this.currentRotationIndex, required this.createdAt, required this.updatedAt}): _rotationMemberNames = rotationMemberNames,_rotationDays = rotationDays,super._();
+  const _RotationFirebaseResponse({required this.rotationId, required this.userId, required this.rotationName, required final  List<RotationMemberName> rotationMemberNames, required final  List<int> rotationDays, required this.notificationTime, required this.currentRotationIndex, required this.createdAt, required this.updatedAt, required final  List<SkipEvent> skipEvents}): _rotationMemberNames = rotationMemberNames,_rotationDays = rotationDays,_skipEvents = skipEvents,super._();
   
 
 @override final  RotationId? rotationId;
@@ -254,6 +255,13 @@ class _RotationFirebaseResponse extends RotationFirebaseResponse {
 // Widget(UI)はDateTimeが適切
 @override final  RotationCreatedAt createdAt;
 @override final  RotationUpdatedAt updatedAt;
+ final  List<SkipEvent> _skipEvents;
+@override List<SkipEvent> get skipEvents {
+  if (_skipEvents is EqualUnmodifiableListView) return _skipEvents;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_skipEvents);
+}
+
 
 /// Create a copy of RotationFirebaseResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -265,16 +273,16 @@ _$RotationFirebaseResponseCopyWith<_RotationFirebaseResponse> get copyWith => __
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RotationFirebaseResponse&&(identical(other.rotationId, rotationId) || other.rotationId == rotationId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other._rotationMemberNames, _rotationMemberNames)&&const DeepCollectionEquality().equals(other._rotationDays, _rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RotationFirebaseResponse&&(identical(other.rotationId, rotationId) || other.rotationId == rotationId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other._rotationMemberNames, _rotationMemberNames)&&const DeepCollectionEquality().equals(other._rotationDays, _rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.currentRotationIndex, currentRotationIndex) || other.currentRotationIndex == currentRotationIndex)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._skipEvents, _skipEvents));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,rotationId,userId,rotationName,const DeepCollectionEquality().hash(_rotationMemberNames),const DeepCollectionEquality().hash(_rotationDays),notificationTime,currentRotationIndex,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,rotationId,userId,rotationName,const DeepCollectionEquality().hash(_rotationMemberNames),const DeepCollectionEquality().hash(_rotationDays),notificationTime,currentRotationIndex,createdAt,updatedAt,const DeepCollectionEquality().hash(_skipEvents));
 
 @override
 String toString() {
-  return 'RotationFirebaseResponse(rotationId: $rotationId, userId: $userId, rotationName: $rotationName, rotationMemberNames: $rotationMemberNames, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'RotationFirebaseResponse(rotationId: $rotationId, userId: $userId, rotationName: $rotationName, rotationMemberNames: $rotationMemberNames, rotationDays: $rotationDays, notificationTime: $notificationTime, currentRotationIndex: $currentRotationIndex, createdAt: $createdAt, updatedAt: $updatedAt, skipEvents: $skipEvents)';
 }
 
 
@@ -285,7 +293,7 @@ abstract mixin class _$RotationFirebaseResponseCopyWith<$Res> implements $Rotati
   factory _$RotationFirebaseResponseCopyWith(_RotationFirebaseResponse value, $Res Function(_RotationFirebaseResponse) _then) = __$RotationFirebaseResponseCopyWithImpl;
 @override @useResult
 $Res call({
- RotationId? rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMemberNames, List<int> rotationDays, NotificationTime notificationTime, RotationIndex currentRotationIndex, RotationCreatedAt createdAt, RotationUpdatedAt updatedAt
+ RotationId? rotationId, UserId userId, RotationName rotationName, List<RotationMemberName> rotationMemberNames, List<int> rotationDays, NotificationTime notificationTime, RotationIndex currentRotationIndex, RotationCreatedAt createdAt, RotationUpdatedAt updatedAt, List<SkipEvent> skipEvents
 });
 
 
@@ -302,7 +310,7 @@ class __$RotationFirebaseResponseCopyWithImpl<$Res>
 
 /// Create a copy of RotationFirebaseResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? rotationId = freezed,Object? userId = null,Object? rotationName = null,Object? rotationMemberNames = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? rotationId = freezed,Object? userId = null,Object? rotationName = null,Object? rotationMemberNames = null,Object? rotationDays = null,Object? notificationTime = null,Object? currentRotationIndex = null,Object? createdAt = null,Object? updatedAt = null,Object? skipEvents = null,}) {
   return _then(_RotationFirebaseResponse(
 rotationId: freezed == rotationId ? _self.rotationId : rotationId // ignore: cast_nullable_to_non_nullable
 as RotationId?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -313,7 +321,8 @@ as List<int>,notificationTime: null == notificationTime ? _self.notificationTime
 as NotificationTime,currentRotationIndex: null == currentRotationIndex ? _self.currentRotationIndex : currentRotationIndex // ignore: cast_nullable_to_non_nullable
 as RotationIndex,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as RotationCreatedAt,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as RotationUpdatedAt,
+as RotationUpdatedAt,skipEvents: null == skipEvents ? _self._skipEvents : skipEvents // ignore: cast_nullable_to_non_nullable
+as List<SkipEvent>,
   ));
 }
 

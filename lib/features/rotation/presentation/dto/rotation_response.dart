@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -25,9 +26,11 @@ sealed class RotationResponse with _$RotationResponse {
     required RotationIndex currentRotationIndex,
     required RotationCreatedAt createdAt,
     required RotationUpdatedAt updatedAt,
+    required List<SkipEvent> skipEvents,
     required String displayDays,
     required String displayMembers,
     required String displayNotificationTime,
+    required bool canSkipPrevious,
   }) = _RotationResponse;
 
   /// Entity => DTO
@@ -42,9 +45,11 @@ sealed class RotationResponse with _$RotationResponse {
       currentRotationIndex: entity.currentRotationIndex,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
+      skipEvents: entity.skipEvents,
       displayDays: entity.displayDays,
       displayMembers: entity.displayMembers,
       displayNotificationTime: entity.displayNotificationTime,
+      canSkipPrevious: entity.canSkipPrevious(),
     );
   }
   const RotationResponse._();
@@ -62,6 +67,7 @@ sealed class RotationResponse with _$RotationResponse {
         currentRotationIndex: currentRotationIndex,
         createdAt: createdAt,
         updatedAt: updatedAt,
+        skipEvents: skipEvents,
       ),
     );
   }

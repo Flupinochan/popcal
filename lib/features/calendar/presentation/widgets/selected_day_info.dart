@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
+import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
+import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
+import 'package:popcal/shared/widgets/glass_button.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
-class SelectedDayInfo extends StatelessWidget {
+class SelectedDayInfo extends ConsumerWidget {
   const SelectedDayInfo({
     required this.calendarScheduleResponse,
     required this.selectedDay,
@@ -16,7 +23,7 @@ class SelectedDayInfo extends StatelessWidget {
   final DateTime? selectedDay;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (selectedDay == null) {
       return const SizedBox.shrink();
     }
@@ -71,36 +78,81 @@ class SelectedDayInfo extends StatelessWidget {
                         ),
                       ),
                       // 担当日/対象外
-                      GlassChip(
-                        text: dayInfo.displayText,
-                        gradient:
-                            isRotationDay
-                                ? glassTheme.successGradient
-                                : glassTheme.backgroundGradientStrong,
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: GlassChip(
+                          text: dayInfo.displayText,
+                          gradient:
+                              isRotationDay
+                                  ? glassTheme.successGradient
+                                  : glassTheme.backgroundGradientStrong,
+                        ),
                       ),
+                      if (isRotationDay)
+                        GlassButton(
+                          iconSize: 14,
+                          iconData: Icons.alarm_on,
+                          borderRadius: 4,
+                          onPressed:
+                              () => _skipNext(
+                                ref: ref,
+                                calendarScheduleResponse:
+                                    calendarScheduleResponse,
+                                selectedDay: selectedDay,
+                              ),
+                        )
+                      else
+                        const GlassButton(
+                          iconSize: 14,
+                          iconData: Icons.alarm_off,
+                          borderRadius: 4,
+                        ),
                     ],
                   ),
                   Row(
                     spacing: 10,
                     children: [
-                      // Icon
-                      Container(
-                        width: 24,
-                        height: 24,
-                        alignment: Alignment.center,
-                        child: Icon(
-                          isRotationDay ? Icons.person : Icons.person_off,
-                          color: iconColor,
-                          size: 20,
+                      if (isRotationDay &&
+                          calendarScheduleResponse
+                              .rotationResponse
+                              .canSkipPrevious)
+                        const GlassButton(
+                          iconSize: 14,
+                          iconData: Icons.skip_previous,
+                          borderRadius: 4,
                         ),
+                      Row(
+                        spacing: 4,
+                        children: [
+                          // Icon
+                          Container(
+                            width: 24,
+                            height: 24,
+                            alignment: Alignment.center,
+                            child: Icon(
+                              isRotationDay ? Icons.person : Icons.person_off,
+                              color: iconColor,
+                              size: 20,
+                            ),
+                          ),
+                          // メンバー名
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: Text(
+                              memberName.value,
+                              style: textTheme.titleMedium!.copyWith(
+                                color: iconColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      // メンバー名
-                      Text(
-                        memberName.value,
-                        style: textTheme.titleMedium!.copyWith(
-                          color: iconColor,
+                      if (isRotationDay)
+                        const GlassButton(
+                          iconSize: 14,
+                          iconData: Icons.skip_next,
+                          borderRadius: 4,
                         ),
-                      ),
                     ],
                   ),
                 ],
@@ -110,5 +162,37 @@ class SelectedDayInfo extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _skipNext({
+    required WidgetRef ref,
+    required CalendarScheduleResponse calendarScheduleResponse,
+    required DateTime? selectedDay,
+  }) async {
+    if (selectedDay == null) {
+      return;
+    }
+    final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
+    final rotationResponse = calendarScheduleResponse.rotationResponse;
+    // holidayの場合はskipCount1で固定
+    final skipEvent = [
+      SkipEvent(
+        date: DateKey.fromDateTime(selectedDay),
+        type: SkipType.holiday,
+        skipCount: const SkipCount(skipCount: 1),
+      ),
+      ...rotationResponse.skipEvents,
+    ];
+    final updateRotation = UpdateRotationRequest(
+      userId: rotationResponse.userId,
+      rotationId: rotationResponse.rotationId,
+      rotationName: rotationResponse.rotationName,
+      rotationMembers: rotationResponse.rotationMembers,
+      rotationDays: rotationResponse.rotationDays,
+      notificationTime: rotationResponse.notificationTime,
+      createdAt: rotationResponse.createdAt,
+      skipEvents: skipEvent,
+    );
+    await rotationNotifier.updateRotation(updateRotation);
   }
 }

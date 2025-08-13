@@ -28,17 +28,7 @@ class RotationRepositoryFirebase {
       // Firestoreに保存
       await docRef.set(dto.toFirestore());
 
-      final result = RotationFirebaseResponse(
-        rotationId: RotationId(docRef.id), // 生成されたdocument id
-        userId: dto.userId,
-        rotationName: dto.rotationName,
-        rotationMemberNames: dto.rotationMemberNames,
-        rotationDays: dto.rotationDays,
-        notificationTime: dto.notificationTime,
-        currentRotationIndex: dto.currentRotationIndex,
-        createdAt: dto.createdAt,
-        updatedAt: dto.updatedAt,
-      );
+      final result = dto.copyWith(rotationId: RotationId(docRef.id));
 
       return Results.success(result);
     } on Exception catch (error) {

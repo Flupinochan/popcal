@@ -1,4 +1,5 @@
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -20,6 +21,7 @@ class Rotation {
     required this.createdAt,
     required this.updatedAt,
     this.rotationId,
+    this.skipEvents = const [],
   });
 
   // Firestoreに保存した後に付与されるためオプショナル
@@ -33,6 +35,7 @@ class Rotation {
   final RotationIndex currentRotationIndex;
   final RotationCreatedAt createdAt;
   final RotationUpdatedAt updatedAt;
+  final List<SkipEvent> skipEvents;
 
   String get displayDays {
     return rotationDays.map((day) => day.displayName).join(', ');
@@ -46,6 +49,10 @@ class Rotation {
     return notificationTime.display24hour;
   }
 
+  bool canSkipPrevious() {
+    return skipEvents.length > 1;
+  }
+
   Rotation copyWith({
     RotationId? rotationId,
     UserId? userId,
@@ -56,6 +63,7 @@ class Rotation {
     RotationIndex? currentRotationIndex,
     RotationCreatedAt? createdAt,
     RotationUpdatedAt? updatedAt,
+    List<SkipEvent>? skipEvents,
   }) {
     return Rotation(
       rotationId: rotationId ?? this.rotationId,
@@ -67,6 +75,7 @@ class Rotation {
       currentRotationIndex: currentRotationIndex ?? this.currentRotationIndex,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      skipEvents: skipEvents ?? this.skipEvents,
     );
   }
 

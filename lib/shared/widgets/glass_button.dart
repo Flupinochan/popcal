@@ -22,6 +22,8 @@ class GlassButton extends StatelessWidget {
     this.iconTextSpacing = 8,
     this.alignment = Alignment.center,
     this.padding,
+    this.borderRadius,
+    this.margin,
   }) : assert(text != null || iconData != null, 'textまたはiconのどちらかを指定してください');
   final String? text;
   final TextStyle? textStyle;
@@ -39,6 +41,8 @@ class GlassButton extends StatelessWidget {
   final double iconTextSpacing;
   final Alignment alignment;
   final EdgeInsets? padding;
+  final double? borderRadius;
+  final EdgeInsets? margin;
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +72,6 @@ class GlassButton extends StatelessWidget {
       child = Icon(iconData, size: iconSize, color: effectiveIconColor);
     }
 
-    if (padding != null) {
-      child = Padding(padding: padding!, child: child);
-    }
-
     // サイズの計算
     final isIconOnly = text == null && iconData != null;
     final defaultSize = backgroundSize ?? (iconSize! * 2);
@@ -79,7 +79,10 @@ class GlassButton extends StatelessWidget {
     return GlassWrapper(
       width: isIconOnly ? defaultSize : width,
       height: isIconOnly ? defaultSize : height,
+      padding: padding,
+      margin: margin,
       borderColor: borderColor,
+      borderRadius: borderRadius,
       showBorder: showBorder,
       gradient: gradient,
       showBackground: showBackground,

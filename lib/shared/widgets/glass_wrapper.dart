@@ -17,6 +17,7 @@ class GlassWrapper extends StatelessWidget {
     this.borderColor,
     this.gradient,
     this.showBackground = true,
+    this.borderRadius,
   });
 
   // ガラス風スタイルを適用する子Widgetを指定
@@ -30,6 +31,7 @@ class GlassWrapper extends StatelessWidget {
   final Color? borderColor;
   final Gradient? gradient;
   final bool showBackground;
+  final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,10 @@ class GlassWrapper extends StatelessWidget {
       margin: margin,
       // ClipRRect: 角丸
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(glassTheme.borderRadius),
+        borderRadius:
+            borderRadius == null
+                ? BorderRadius.circular(glassTheme.borderRadius)
+                : BorderRadius.circular(borderRadius!),
         // BackdropFilter, ImageFilter: 背景をぼかす
         child: BackdropFilter(
           filter: ImageFilter.blur(
@@ -58,7 +63,10 @@ class GlassWrapper extends StatelessWidget {
                   showBackground
                       ? (gradient ?? glassTheme.backgroundGradient)
                       : glassTheme.transparentGradient,
-              borderRadius: BorderRadius.circular(glassTheme.borderRadius),
+              borderRadius:
+                  borderRadius == null
+                      ? BorderRadius.circular(glassTheme.borderRadius)
+                      : BorderRadius.circular(borderRadius!),
               border:
                   showBorder
                       ? Border.all(

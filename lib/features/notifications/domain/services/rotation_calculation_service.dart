@@ -2,6 +2,7 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
@@ -16,6 +17,7 @@ abstract class RotationCalculationService {
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationDateTime rotationDateTime,
+    required List<SkipEvent> skipEvents,
   });
 
   /// [checkDate] がローテーション曜日か判定
@@ -24,6 +26,7 @@ abstract class RotationCalculationService {
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationDateTime rotationDateTime,
+    required List<SkipEvent> skipEvents,
   });
 
   /// 3. 通知設定用スケジュールを計算 ※実際に設定するのは30日分

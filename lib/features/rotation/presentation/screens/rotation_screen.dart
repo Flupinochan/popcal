@@ -28,77 +28,6 @@ import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 
-Future<void> _handleSubmit(
-  BuildContext context,
-  WidgetRef ref,
-  GlobalKey<FormBuilderState> formKey,
-  UserResponse userDto,
-  RotationResponse? originalRotation,
-  bool isUpdateMode,
-) async {
-  final textTheme = Theme.of(context).textTheme;
-  final glassTheme =
-      Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-  final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-  if (formKey.currentState!.saveAndValidate()) {
-    final formData = formKey.currentState!.value;
-    final rotationController = ref.read(rotationNotifierProvider.notifier);
-
-    try {
-      if (isUpdateMode) {
-        final dto = UpdateRotationRequest(
-          userId: userDto.userId,
-          rotationId: originalRotation!.rotationId,
-          rotationName: RotationName(formData['rotationName'] as String),
-          rotationMembers: List<RotationMemberName>.from(
-            formData['rotationMembers'] as List,
-          ),
-          rotationDays: formData['rotationDays'] as List<Weekday>,
-          notificationTime: NotificationTime(
-            formData['notificationTime'] as TimeOfDay,
-          ),
-          createdAt: originalRotation.createdAt,
-        );
-        await rotationController.updateRotation(dto);
-      } else {
-        final dto = CreateRotationRequest(
-          userId: userDto.userId,
-          rotationName: RotationName(formData['rotationName'] as String),
-          rotationMembers: List<RotationMemberName>.from(
-            formData['rotationMembers'] as List,
-          ),
-          rotationDays: formData['rotationDays'] as List<Weekday>,
-          notificationTime: NotificationTime(
-            formData['notificationTime'] as TimeOfDay,
-          ),
-        );
-        await rotationController.createRotation(dto);
-      }
-
-      if (context.mounted) {
-        SnackBarUtils.showGlassSnackBar(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
-          flexibleMessage: formData['rotationName'].toString(),
-          fixedMessage: isUpdateMode ? 'を更新しました' : 'を作成しました',
-        );
-        context.pop();
-      }
-    } on Exception catch (_) {
-      if (context.mounted) {
-        SnackBarUtils.showGlassSnackBar(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
-          flexibleMessage: 'エラーが発生しました',
-        );
-      }
-    }
-  }
-}
-
 class RotationScreen extends HookConsumerWidget {
   const RotationScreen({super.key, this.rotationId});
   final RotationId? rotationId;
@@ -226,5 +155,78 @@ class RotationScreen extends HookConsumerWidget {
             ),
       ),
     );
+  }
+
+  Future<void> _handleSubmit(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<FormBuilderState> formKey,
+    UserResponse userDto,
+    RotationResponse? originalRotation,
+    bool isUpdateMode,
+  ) async {
+    final textTheme = Theme.of(context).textTheme;
+    final glassTheme =
+        Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    if (formKey.currentState!.saveAndValidate()) {
+      final formData = formKey.currentState!.value;
+      final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
+
+      try {
+        if (isUpdateMode) {
+          final dto = UpdateRotationRequest(
+            userId: userDto.userId,
+            rotationId: originalRotation!.rotationId,
+            rotationName: RotationName(formData['rotationName'] as String),
+            rotationMembers: List<RotationMemberName>.from(
+              formData['rotationMembers'] as List,
+            ),
+            rotationDays: formData['rotationDays'] as List<Weekday>,
+            notificationTime: NotificationTime(
+              formData['notificationTime'] as TimeOfDay,
+            ),
+            createdAt: originalRotation.createdAt,
+            skipEvents: [],
+          );
+          await rotationNotifier.updateRotation(dto);
+        } else {
+          final dto = CreateRotationRequest(
+            userId: userDto.userId,
+            rotationName: RotationName(formData['rotationName'] as String),
+            rotationMembers: List<RotationMemberName>.from(
+              formData['rotationMembers'] as List,
+            ),
+            rotationDays: formData['rotationDays'] as List<Weekday>,
+            notificationTime: NotificationTime(
+              formData['notificationTime'] as TimeOfDay,
+            ),
+            skipEvents: [],
+          );
+          await rotationNotifier.createRotation(dto);
+        }
+
+        if (context.mounted) {
+          SnackBarUtils.showGlassSnackBar(
+            textTheme: textTheme,
+            glassTheme: glassTheme,
+            scaffoldMessenger: scaffoldMessenger,
+            flexibleMessage: formData['rotationName'].toString(),
+            fixedMessage: isUpdateMode ? 'を更新しました' : 'を作成しました',
+          );
+          context.pop();
+        }
+      } on Exception catch (_) {
+        if (context.mounted) {
+          SnackBarUtils.showGlassSnackBar(
+            textTheme: textTheme,
+            glassTheme: glassTheme,
+            scaffoldMessenger: scaffoldMessenger,
+            flexibleMessage: 'エラーが発生しました',
+          );
+        }
+      }
+    }
   }
 }

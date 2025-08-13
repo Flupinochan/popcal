@@ -56,7 +56,7 @@ class MainApp extends ConsumerWidget {
       next.when(
         data:
             (result) => result.when(
-              success: (_) => logger.severe('通知初期化成功'),
+              success: (_) => logger.info('通知初期化成功'),
               failure: (error) {
                 logger.severe('通知初期化失敗: ${error.message}');
                 // 通知機能無効化フラグをグローバルに設定すべき

@@ -8,6 +8,7 @@ import 'package:popcal/features/notifications/domain/services/rotation_calculati
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
@@ -23,6 +24,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationDateTime rotationDateTime,
+    required List<SkipEvent> skipEvents,
   }) {
     // 曜日指定のローテーション機能であり、遅くても未来7日後までに最初の通知日があるはず
     // 判定開始日は+0日で、今から未来+8日分をチェックが妥当だが
@@ -42,6 +44,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         rotationDays: rotationDays,
         notificationTime: notificationTime,
         rotationDateTime: rotationDateTime,
+        skipEvents: skipEvents,
       )) {
         return Results.success(checkDate);
       }
@@ -56,11 +59,20 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationDateTime rotationDateTime,
+    required List<SkipEvent> skipEvents,
   }) {
     final checkDay = Weekday.fromDateTime(checkDate.value);
 
     // ローテーション曜日の場合
     if (rotationDays.contains(checkDay)) {
+      // holiday skip日の場合
+      final hasHolidaySkip = skipEvents.any(
+        (event) => event.date == checkDate && event.type == SkipType.holiday,
+      );
+      if (hasHolidaySkip) {
+        return false;
+      }
+
       final notificationDateTime = NotificationDateTime.fromDateAndTime(
         date: checkDate,
         notificationTime: notificationTime,
@@ -102,6 +114,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           rotationDays: rotation.rotationDays,
           notificationTime: rotation.notificationTime,
           rotationDateTime: RotationDateTime.updatedAt(rotation.updatedAt),
+          skipEvents: rotation.skipEvents,
         )) {
           final memberName = rotation.getRotationMemberName(
             newCurrentRotationIndex,
