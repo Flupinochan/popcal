@@ -14,7 +14,6 @@ import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_resp
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
-import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -26,6 +25,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_member_na
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/utils/time_utils.dart';

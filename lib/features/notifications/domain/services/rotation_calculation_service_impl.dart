@@ -8,12 +8,12 @@ import 'package:popcal/features/notifications/domain/services/rotation_calculati
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
-import 'package:popcal/features/rotation/domain/entities/skip_event.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_datetime.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
