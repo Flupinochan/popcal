@@ -75,7 +75,14 @@ class SelectedDayInfo extends ConsumerWidget {
                         alignment: Alignment.center,
                         child: Text(
                           Weekday.fromDateTime(selectedDay!).displayName,
-                          style: textTheme.titleMedium,
+                          style: textTheme.titleMedium?.copyWith(
+                            color:
+                                selectedDay!.weekday == DateTime.sunday
+                                    ? Colors.redAccent.withValues(alpha: 0.8)
+                                    : selectedDay!.weekday == DateTime.saturday
+                                    ? Colors.blue.withValues(alpha: 0.9)
+                                    : glassTheme.surfaceColor,
+                          ),
                         ),
                       ),
                       // 担当日/対象外
