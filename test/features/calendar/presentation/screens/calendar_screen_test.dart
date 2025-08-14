@@ -51,12 +51,18 @@ void main() {
     currentRotationIndex: const RotationIndex(0),
     createdAt: RotationCreatedAt(DateTime(2025, 8, 14, 9)),
     updatedAt: RotationUpdatedAt(DateTime(2025, 8, 14, 9)),
-    // 20日をholiday skip
     skipEvents: [
+      // 20日をholiday skip
       SkipEvent(
         dateKey: DateKey.fromDateTime(DateTime(2025, 8, 20)),
         dayType: DayType.holiday,
         skipCount: const SkipCount(skipCount: 1),
+      ),
+      // 27日を2回交代無しskip
+      SkipEvent(
+        dateKey: DateKey.fromDateTime(DateTime(2025, 8, 27)),
+        dayType: DayType.skipToNext,
+        skipCount: const SkipCount(skipCount: 2),
       ),
     ],
     displayDays: '月, 金',
@@ -117,17 +123,17 @@ void main() {
     // 27日: user1 (index 0に戻る)
     DateKey.fromDateTime(DateTime(2025, 8, 27)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 27, 9)),
-      memberName: const RotationMemberName('user1'),
-      scheduleDayType: DayType.rotationDay,
+      memberName: const RotationMemberName('user3'),
+      scheduleDayType: DayType.skipToNext,
       memberColor: MemberColor.member1,
-      displayText: DayType.rotationDay.displayText,
+      displayText: DayType.skipToNext.displayText,
       canSkipNext: true,
       canSkipPrevious: false,
     ),
     // 29日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 29, 9)),
-      memberName: const RotationMemberName('user2'),
+      memberName: const RotationMemberName('user4'),
       scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member2,
       displayText: DayType.rotationDay.displayText,
