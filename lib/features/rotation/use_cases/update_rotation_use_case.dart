@@ -24,12 +24,6 @@ class UpdateRotationUseCase {
       return Results.failure(deleteResult.failureOrNull!);
     }
 
-    // 2. ローテーショングループ更新
-    final updateResult = await _rotationRepository.updateRotation(rotation);
-    if (updateResult.isFailure) {
-      return Results.failure(updateResult.failureOrNull!);
-    }
-
     // 以降、update_rotation_use_case処理と重複しているため、まとめるべき
     // 処理内容としては、ローテーション情報から通知設定する処理
 
@@ -76,19 +70,20 @@ class UpdateRotationUseCase {
       }
     }
 
-    // 4. RotationのcurrentRotationIndexを更新
+    // 4. Rotationを更新
     final updatedRotation = rotation.copyWith(
       currentRotationIndex: notificationSchedule.newCurrentRotationIndex,
     );
-    final updatedRotationResult = await _rotationRepository.updateRotation(
-      updatedRotation,
-    );
-    if (updatedRotationResult.isFailure) {
+    final updatedRotationNewIndexResult = await _rotationRepository
+        .updateRotation(
+          updatedRotation,
+        );
+    if (updatedRotationNewIndexResult.isFailure) {
       return Results.failure(
-        RotationFailure(updatedRotationResult.displayText),
+        RotationFailure(updatedRotationNewIndexResult.displayText),
       );
     }
-    final finalRotation = updatedRotationResult.valueOrNull!;
+    final finalRotation = updatedRotationNewIndexResult.valueOrNull!;
     return Results.success(finalRotation);
   }
 }

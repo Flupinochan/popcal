@@ -7,6 +7,7 @@ import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 
 class GetCalendarScheduleUseCase {
@@ -55,11 +56,15 @@ class GetCalendarScheduleUseCase {
     // 3. カレンダー表示用通知情報を取得
     final now = _timeUtils.now();
     final toDateTime = now.add(const Duration(days: futureDays));
+    // 作成時刻から計算するため、indexは0で初期化
+    final initRotation = rotation.copyWith(
+      currentRotationIndex: const RotationIndex(0),
+    );
 
     final rotationCalculationDataResult = _rotationCalculationService
         .calculateRotationSchedule(
-          rotation: rotation,
-          fromDateTime: rotation.updatedAt.value,
+          rotation: initRotation,
+          fromDateTime: initRotation.updatedAt.value,
           toDateTime: toDateTime,
         );
     if (rotationCalculationDataResult.isFailure) {
@@ -71,7 +76,7 @@ class GetCalendarScheduleUseCase {
 
     // カレンダー画面表示用データに変換
     final scheduleMapResult = _rotationCalculationService.getScheduleMap(
-      rotation,
+      initRotation,
       rotationCalculationData,
     );
     if (scheduleMapResult.isFailure) {
@@ -82,7 +87,7 @@ class GetCalendarScheduleUseCase {
     final scheduleMap = scheduleMapResult.valueOrNull!;
 
     final calendarData = CalendarSchedule(
-      rotation: rotation,
+      rotation: initRotation,
       scheduleMap: scheduleMap,
     );
 

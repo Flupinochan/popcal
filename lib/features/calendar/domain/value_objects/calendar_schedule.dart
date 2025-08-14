@@ -20,6 +20,8 @@ class CalendarSchedule {
           memberName: RotationMemberName.notApplicable,
           scheduleType: DayType.notRotationDay,
           memberColor: MemberColor.notApplicable,
+          canSkipNext: false,
+          canSkipPrevious: false,
         );
   }
 }
@@ -30,11 +32,15 @@ class ScheduleDay {
     required this.memberName,
     required this.scheduleType,
     required this.memberColor,
+    required this.canSkipNext,
+    required this.canSkipPrevious,
   });
   final NotificationDateTime date;
   final RotationMemberName memberName;
   final DayType scheduleType;
   final MemberColor memberColor;
+  final bool canSkipNext;
+  final bool canSkipPrevious;
 
   String get displayText => scheduleType.displayText;
 }

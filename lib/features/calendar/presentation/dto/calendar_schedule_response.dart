@@ -26,6 +26,8 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
           scheduleDayType: DayType.notRotationDay,
           memberColor: MemberColor.notApplicable,
           displayText: DayType.notRotationDay.displayText,
+          canSkipNext: false,
+          canSkipPrevious: false,
         );
   }
 }
@@ -39,6 +41,9 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
     required DayType scheduleDayType,
     required MemberColor memberColor,
     required String displayText,
+    required bool canSkipNext,
+    required bool canSkipPrevious,
   }) = _ScheduleDayResponse;
+
   const ScheduleDayResponse._();
 }

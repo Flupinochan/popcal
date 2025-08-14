@@ -292,7 +292,7 @@ $RotationResponseCopyWith<$Res> get rotationResponse {
 /// @nodoc
 mixin _$ScheduleDayResponse {
 
- NotificationDateTime get date; RotationMemberName get memberName; DayType get scheduleDayType; MemberColor get memberColor; String get displayText;
+ NotificationDateTime get date; RotationMemberName get memberName; DayType get scheduleDayType; MemberColor get memberColor; String get displayText; bool get canSkipNext; bool get canSkipPrevious;
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +303,16 @@ $ScheduleDayResponseCopyWith<ScheduleDayResponse> get copyWith => _$ScheduleDayR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText)&&(identical(other.canSkipNext, canSkipNext) || other.canSkipNext == canSkipNext)&&(identical(other.canSkipPrevious, canSkipPrevious) || other.canSkipPrevious == canSkipPrevious));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText);
+int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText,canSkipNext,canSkipPrevious);
 
 @override
 String toString() {
-  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText)';
+  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText, canSkipNext: $canSkipNext, canSkipPrevious: $canSkipPrevious)';
 }
 
 
@@ -323,7 +323,7 @@ abstract mixin class $ScheduleDayResponseCopyWith<$Res>  {
   factory $ScheduleDayResponseCopyWith(ScheduleDayResponse value, $Res Function(ScheduleDayResponse) _then) = _$ScheduleDayResponseCopyWithImpl;
 @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText
+ NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious
 });
 
 
@@ -340,14 +340,16 @@ class _$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as RotationMemberName,scheduleDayType: null == scheduleDayType ? _self.scheduleDayType : scheduleDayType // ignore: cast_nullable_to_non_nullable
 as DayType,memberColor: null == memberColor ? _self.memberColor : memberColor // ignore: cast_nullable_to_non_nullable
 as MemberColor,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
-as String,
+as String,canSkipNext: null == canSkipNext ? _self.canSkipNext : canSkipNext // ignore: cast_nullable_to_non_nullable
+as bool,canSkipPrevious: null == canSkipPrevious ? _self.canSkipPrevious : canSkipPrevious // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -429,10 +431,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse() when $default != null:
-return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText);case _:
+return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious);case _:
   return orElse();
 
 }
@@ -450,10 +452,10 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse():
-return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText);}
+return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -467,10 +469,10 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse() when $default != null:
-return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText);case _:
+return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious);case _:
   return null;
 
 }
@@ -482,7 +484,7 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 
 
 class _ScheduleDayResponse extends ScheduleDayResponse {
-  const _ScheduleDayResponse({required this.date, required this.memberName, required this.scheduleDayType, required this.memberColor, required this.displayText}): super._();
+  const _ScheduleDayResponse({required this.date, required this.memberName, required this.scheduleDayType, required this.memberColor, required this.displayText, required this.canSkipNext, required this.canSkipPrevious}): super._();
   
 
 @override final  NotificationDateTime date;
@@ -490,6 +492,8 @@ class _ScheduleDayResponse extends ScheduleDayResponse {
 @override final  DayType scheduleDayType;
 @override final  MemberColor memberColor;
 @override final  String displayText;
+@override final  bool canSkipNext;
+@override final  bool canSkipPrevious;
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -501,16 +505,16 @@ _$ScheduleDayResponseCopyWith<_ScheduleDayResponse> get copyWith => __$ScheduleD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText)&&(identical(other.canSkipNext, canSkipNext) || other.canSkipNext == canSkipNext)&&(identical(other.canSkipPrevious, canSkipPrevious) || other.canSkipPrevious == canSkipPrevious));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText);
+int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText,canSkipNext,canSkipPrevious);
 
 @override
 String toString() {
-  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText)';
+  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText, canSkipNext: $canSkipNext, canSkipPrevious: $canSkipPrevious)';
 }
 
 
@@ -521,7 +525,7 @@ abstract mixin class _$ScheduleDayResponseCopyWith<$Res> implements $ScheduleDay
   factory _$ScheduleDayResponseCopyWith(_ScheduleDayResponse value, $Res Function(_ScheduleDayResponse) _then) = __$ScheduleDayResponseCopyWithImpl;
 @override @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText
+ NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious
 });
 
 
@@ -538,14 +542,16 @@ class __$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,}) {
   return _then(_ScheduleDayResponse(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
 as RotationMemberName,scheduleDayType: null == scheduleDayType ? _self.scheduleDayType : scheduleDayType // ignore: cast_nullable_to_non_nullable
 as DayType,memberColor: null == memberColor ? _self.memberColor : memberColor // ignore: cast_nullable_to_non_nullable
 as MemberColor,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
-as String,
+as String,canSkipNext: null == canSkipNext ? _self.canSkipNext : canSkipNext // ignore: cast_nullable_to_non_nullable
+as bool,canSkipPrevious: null == canSkipPrevious ? _self.canSkipPrevious : canSkipPrevious // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

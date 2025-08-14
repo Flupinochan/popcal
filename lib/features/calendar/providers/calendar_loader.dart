@@ -42,6 +42,8 @@ Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
         scheduleDayType: scheduleDay.scheduleType,
         memberColor: scheduleDay.memberColor,
         displayText: scheduleDay.displayText,
+        canSkipNext: scheduleDay.canSkipNext,
+        canSkipPrevious: scheduleDay.canSkipPrevious,
       ),
     ),
   );

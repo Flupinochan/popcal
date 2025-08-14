@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
-import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 
 class CalendarCell extends StatelessWidget {
   const CalendarCell({
@@ -39,9 +38,10 @@ class CalendarCell extends StatelessWidget {
         children: [
           const SizedBox(),
           Container(
+            width: 26,
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: _getBackgroundColor(scheduleDayType),
+              color: _getBackgroundColor(dayInfo),
               borderRadius: const BorderRadius.all(Radius.circular(4)),
             ),
             child: Text(
@@ -51,11 +51,12 @@ class CalendarCell extends StatelessWidget {
                 fontSize: 11,
                 fontWeight: _getFontWeight(),
               ),
+              textAlign: TextAlign.center,
             ),
           ),
-          if (scheduleDayType == DayType.rotationDay)
+          if (scheduleDayType.isRotationDay)
             Text(
-              memberName!.value,
+              memberName.value,
               style: textTheme.labelMedium!.copyWith(
                 color: dayInfo.memberColor.value,
               ),
@@ -70,13 +71,10 @@ class CalendarCell extends StatelessWidget {
     );
   }
 
-  Color _getBackgroundColor(DayType scheduleDayType) {
+  Color _getBackgroundColor(ScheduleDayResponse dayInfo) {
     if (isSelected) return Colors.blue.withValues(alpha: 0.4);
     if (isToday) return Colors.amber.withValues(alpha: 0.3);
-    if (scheduleDayType == DayType.rotationDay) {
-      return Colors.white.withValues(alpha: 0.15);
-    }
-    return Colors.transparent;
+    return dayInfo.scheduleDayType.bkColor;
   }
 
   FontWeight _getFontWeight() {

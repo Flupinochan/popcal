@@ -59,12 +59,10 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         final dayType = dayTypeResult.dayType;
         final skipEvent = dayTypeResult.skipEvent;
 
-        final memberIndex = rotation.getRotationMemberIndex(
-          RotationIndex(newRotationIndex),
-        );
-
         switch (dayType) {
           // ローテーション日でない場合は担当者を示すmemberIndexをnull
+          // ★データを軽くするために、DayType.notRotationDayは返却しない方針もあり
+          // そしてUI(Dto)側で存在しない日についてはnotRotationDayとして扱う
           case DayType.holiday:
           case DayType.notRotationDay:
             dayCalculationResults.add(
@@ -76,6 +74,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             );
           // ローテーション日の場合はシンプルにnewRotationIndexを+1
           case DayType.rotationDay:
+            final memberIndex = rotation.getRotationMemberIndex(
+              RotationIndex(newRotationIndex),
+            );
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,
@@ -89,6 +90,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           // 1つスキップする場合は、skipCountは1
           case DayType.skipToNext:
             newRotationIndex += skipEvent!.skipCount.skipCount;
+            final memberIndex = rotation.getRotationMemberIndex(
+              RotationIndex(newRotationIndex),
+            );
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,
@@ -103,6 +107,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           // ※1つスキップの場合はありえない。UIでSkipEventを削除して再計算するため
           case DayType.skipToPrevious:
             newRotationIndex += skipEvent!.skipCount.skipCount - 1;
+            final memberIndex = rotation.getRotationMemberIndex(
+              RotationIndex(newRotationIndex),
+            );
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,
@@ -131,6 +138,12 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     RotationCalculationData rotationCalculationData,
   ) {
     try {
+      if (rotation.rotationId == null) {
+        return Results.failure(
+          const NotificationFailure('ローテーションIDがnullです。'),
+        );
+      }
+
       final notificationEntries = <NotificationEntry>[];
       for (final dayCalculationData
           in rotationCalculationData.dayCalculationDatas) {
@@ -220,10 +233,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           skipEvent: skipEvent,
         );
       // 以下2つのDayTypeはバリデーションにより、ありえないがswitchの仕様により定義
-      case DayType.notRotationDay:
-        return const DayTypeResult(dayType: DayType.notRotationDay);
-      case DayType.rotationDay:
-        return const DayTypeResult(dayType: DayType.rotationDay);
+      // ignore: no_default_cases
+      default:
+        throw Exception('予期しないDayTypeに判定されました: ${skipEvent.dayType}');
     }
   }
 
@@ -252,6 +264,8 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
                   : RotationMemberName.notApplicable,
           scheduleType: dayType,
           memberColor: MemberColor.fromIndex(memberIndex),
+          canSkipNext: rotation.canSkipNext(dateKey: dateKey),
+          canSkipPrevious: rotation.canSkipPrevious(dateKey: dateKey),
         );
         scheduleMap[dateKey] = scheduleDay;
       }
@@ -264,6 +278,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   }
 
   // ログ出力
+  // ignore: unused_element
   void _printNotifications(List<NotificationEntry> notificationEntry) {
     for (final notification in notificationEntry) {
       print(

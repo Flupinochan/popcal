@@ -1,4 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -49,8 +52,43 @@ class Rotation {
     return notificationTime.display24hour;
   }
 
-  bool canSkipPrevious() {
-    return skipEvents.length > 1;
+  bool canSkipNext({required DateKey dateKey}) {
+    final skipEvent = skipEvents.firstWhereOrNull(
+      (skipEvent) => skipEvent.dateKey == dateKey,
+    );
+
+    // ローテーション日でない or 休日 はスキップ不可
+    if (skipEvent != null &&
+        (skipEvent.dayType == DayType.holiday ||
+            skipEvent.dayType == DayType.notRotationDay)) {
+      return false;
+    }
+
+    if (skipEvent == null) {
+      return true;
+    }
+
+    // 1巡以上はskip不可
+    return (rotationMemberNames.length - 1) > skipEvent.skipCount.skipCount;
+  }
+
+  bool canSkipPrevious({required DateKey dateKey}) {
+    final skipEvent = skipEvents.firstWhereOrNull(
+      (skipEvent) => skipEvent.dateKey == dateKey,
+    );
+
+    // ローテーション日でない or 休日 はスキップ不可
+    if (skipEvent != null &&
+        (skipEvent.dayType == DayType.holiday ||
+            skipEvent.dayType == DayType.notRotationDay)) {
+      return false;
+    }
+
+    if (skipEvent == null) {
+      return false;
+    }
+
+    return skipEvent.skipCount.skipCount > 0;
   }
 
   Rotation copyWith({

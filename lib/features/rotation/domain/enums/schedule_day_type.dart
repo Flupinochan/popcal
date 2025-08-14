@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum DayType {
   /// ローテーション対象外の日
   notRotationDay('対象外'),
@@ -17,4 +19,70 @@ enum DayType {
   const DayType(this.displayText);
 
   final String displayText;
+
+  /// カレンダー画面の各日付の背景色
+  /// UI側でさらに、選択日をblue、今日をamber色で定義
+  Color get bkColor {
+    switch (this) {
+      case DayType.notRotationDay:
+        return Colors.transparent;
+      case DayType.rotationDay:
+        return Colors.greenAccent.withValues(alpha: 0.3);
+      case DayType.skipToNext:
+      case DayType.skipToPrevious:
+        return Colors.lightGreenAccent.withValues(alpha: 0.4);
+      case DayType.holiday:
+        return Colors.redAccent.withValues(alpha: 0.3);
+    }
+  }
+
+  Color get iconColor {
+    switch (this) {
+      case DayType.notRotationDay:
+      case DayType.holiday:
+        return Colors.white.withValues(alpha: 0.6);
+      case DayType.rotationDay:
+      case DayType.skipToNext:
+      case DayType.skipToPrevious:
+        return Colors.white;
+    }
+  }
+
+  LinearGradient get isRotationColor {
+    switch (this) {
+      case DayType.notRotationDay:
+      case DayType.holiday:
+        return LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withValues(alpha: 0.3),
+            Colors.white.withValues(alpha: 0.15),
+          ],
+        );
+      case DayType.rotationDay:
+      case DayType.skipToNext:
+      case DayType.skipToPrevious:
+        return LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.greenAccent.withValues(alpha: 0.3),
+            Colors.greenAccent.withValues(alpha: 0.3),
+          ],
+        );
+    }
+  }
+
+  bool get isRotationDay {
+    switch (this) {
+      case DayType.notRotationDay:
+      case DayType.holiday:
+        return false;
+      case DayType.rotationDay:
+      case DayType.skipToNext:
+      case DayType.skipToPrevious:
+        return true;
+    }
+  }
 }

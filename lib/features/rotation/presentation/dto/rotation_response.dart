@@ -30,7 +30,6 @@ sealed class RotationResponse with _$RotationResponse {
     required String displayDays,
     required String displayMembers,
     required String displayNotificationTime,
-    required bool canSkipPrevious,
   }) = _RotationResponse;
 
   /// Entity => DTO
@@ -49,7 +48,6 @@ sealed class RotationResponse with _$RotationResponse {
       displayDays: entity.displayDays,
       displayMembers: entity.displayMembers,
       displayNotificationTime: entity.displayNotificationTime,
-      canSkipPrevious: entity.canSkipPrevious(),
     );
   }
   const RotationResponse._();
