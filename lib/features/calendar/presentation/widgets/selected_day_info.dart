@@ -146,9 +146,10 @@ class SelectedDayInfo extends ConsumerWidget {
                             height: 24,
                             alignment: Alignment.center,
                             child: Icon(
-                              scheduleDayType == DayType.rotationDay
-                                  ? Icons.person
-                                  : Icons.person_off,
+                              (scheduleDayType == DayType.notRotationDay ||
+                                      scheduleDayType == DayType.holiday)
+                                  ? Icons.person_off
+                                  : Icons.person,
                               color: iconColor,
                               size: 20,
                             ),
