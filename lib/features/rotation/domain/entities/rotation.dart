@@ -52,43 +52,31 @@ class Rotation {
     return notificationTime.display24hour;
   }
 
-  bool canSkipNext({required DateKey dateKey}) {
+  bool canSkipNext({required DateKey dateKey, required DayType dayType}) {
+    if (dayType == DayType.holiday || dayType == DayType.notRotationDay) {
+      return false;
+    }
+
     final skipEvent = skipEvents.firstWhereOrNull(
       (skipEvent) => skipEvent.dateKey == dateKey,
     );
 
-    // ローテーション日でない or 休日 はスキップ不可
-    if (skipEvent != null &&
-        (skipEvent.dayType == DayType.holiday ||
-            skipEvent.dayType == DayType.notRotationDay)) {
-      return false;
-    }
-
-    if (skipEvent == null) {
-      return true;
-    }
-
-    // 1巡以上はskip不可
-    return (rotationMemberNames.length - 1) > skipEvent.skipCount.skipCount;
+    // 1巡以上のskipは不可
+    return skipEvent == null ||
+        (rotationMemberNames.length - 1) > skipEvent.skipCount.skipCount;
   }
 
-  bool canSkipPrevious({required DateKey dateKey}) {
+  bool canSkipPrevious({required DateKey dateKey, required DayType dayType}) {
+    if (dayType == DayType.holiday || dayType == DayType.notRotationDay) {
+      return false;
+    }
+
     final skipEvent = skipEvents.firstWhereOrNull(
       (skipEvent) => skipEvent.dateKey == dateKey,
     );
 
-    // ローテーション日でない or 休日 はスキップ不可
-    if (skipEvent != null &&
-        (skipEvent.dayType == DayType.holiday ||
-            skipEvent.dayType == DayType.notRotationDay)) {
-      return false;
-    }
-
-    if (skipEvent == null) {
-      return false;
-    }
-
-    return skipEvent.skipCount.skipCount > 0;
+    // 1度もskipしていない場合は不可
+    return skipEvent != null && skipEvent.skipCount.skipCount > 0;
   }
 
   Rotation copyWith({

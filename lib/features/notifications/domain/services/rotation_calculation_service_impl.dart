@@ -133,8 +133,11 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
                   : RotationMemberName.notApplicable,
           scheduleType: dayType,
           memberColor: MemberColor.fromIndex(memberIndex),
-          canSkipNext: rotation.canSkipNext(dateKey: dateKey),
-          canSkipPrevious: rotation.canSkipPrevious(dateKey: dateKey),
+          canSkipNext: rotation.canSkipNext(dateKey: dateKey, dayType: dayType),
+          canSkipPrevious: rotation.canSkipPrevious(
+            dateKey: dateKey,
+            dayType: dayType,
+          ),
         );
         scheduleMap[dateKey] = scheduleDay;
       }
