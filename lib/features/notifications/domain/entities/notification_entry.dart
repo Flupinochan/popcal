@@ -5,7 +5,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 
-/// 通知設定
+/// 各通知設定
 class NotificationEntry {
   const NotificationEntry({
     required this.notificationId,
@@ -24,6 +24,7 @@ class NotificationEntry {
   final RotationName rotationName;
   final RotationMemberName memberName;
 
+  /// ポップアップ通知で表示する内容
   String get content => '今日は${memberName.value}の番です';
   String get description => '${rotationName.value}の通知';
   String get title => rotationName.value;

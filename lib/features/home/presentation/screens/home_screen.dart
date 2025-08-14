@@ -40,7 +40,7 @@ class HomeScreen extends HookConsumerWidget {
 
     // 全画面で動作するため注意 ※3.0以降は別画面に遷移するとpauseするようになる
     ref.listen(rotationNotifierProvider, (previousValue, newValue) {
-      // Home画面の場合のみ処理を実行
+      // Home画面の場合のみ処理を実行 ※Rotation画面でも使用するため
       if (ModalRoute.of(context)?.isCurrent ?? true) {
         newValue.when(
           data: (result) {
@@ -133,7 +133,7 @@ class HomeScreen extends HookConsumerWidget {
         width: double.infinity,
         decoration: BoxDecoration(gradient: glassTheme.primaryGradient),
         child: SafeArea(
-          // ローテーショングループ一覧表示 (StreamBuilderと同じ)
+          // ローテーショングループ一覧表示
           child: rotationResponsesStream.when(
             data:
                 (result) => result.when(
@@ -152,7 +152,7 @@ class HomeScreen extends HookConsumerWidget {
                         message: error.message,
                       ),
                 ),
-            loading: CustomLoadingSimpleScreen.new,
+            loading: () => const CustomLoadingSimpleScreen(),
             error:
                 (error, stack) => CustomErrorSimpleScreen(
                   message: error.toString(),
@@ -294,8 +294,9 @@ class HomeScreen extends HookConsumerWidget {
       skipEvents: rotationResponse.skipEvents,
     );
 
-    final rotationController = ref.read(rotationNotifierProvider.notifier);
-    await rotationController.createRotation(createDto);
+    final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
+    await rotationNotifier.createRotation(createDto);
+    // notifierのためmethodの戻り値で返却せず、stateで返却、ref.listernで後続処理
   }
 
   void _onEditRotation(

@@ -7,12 +7,12 @@ import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
+import 'package:popcal/features/notifications/domain/services/result/day_calculation_data.dart';
+import 'package:popcal/features/notifications/domain/services/result/rotation_calculation_data.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
-import 'package:popcal/features/notifications/domain/value_objects/day_calculation_data.dart';
-import 'package:popcal/features/notifications/domain/value_objects/day_type_result.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
-import 'package:popcal/features/notifications/domain/value_objects/rotation_calculation_data.dart';
+import 'package:popcal/features/notifications/result/day_type_result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -26,7 +26,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   final TimeUtils _timeUtils;
 
   @override
-  Result<NotificationSchedule> getNotificationEntry({
+  Result<NotificationSchedule> calculationNotificationSchedule({
     required Rotation rotation,
     required DateTime fromDateTime,
     required DateTime toDateTime,
@@ -94,7 +94,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   }
 
   @override
-  Result<Map<DateKey, ScheduleDay>> getScheduleMap({
+  Result<Map<DateKey, ScheduleDay>> calculationScheduleMap({
     required Rotation rotation,
     required DateTime fromDateTime,
     required DateTime toDateTime,
@@ -153,11 +153,12 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   }
 
   /// 通知設定およびカレンダー表示用の共通ローテーション計算処理
-  /// ※Rotation Entityのみを利用しているため、Rotation Entity内に移動すべき?
   /// [rotation] 計算対象
-  /// [fromDateTime] 計算開始日付 ※通知設定の場合は更新日(現在時刻)
+  /// [fromDateTime] 計算開始日付
+  /// 通知設定の場合は更新日(現在時刻)
   /// カレンダー表示の場合はRotation作成日
-  /// [toDateTime] 計算終了日付 ※通知設定の場合はfromDateから+30日分、
+  /// [toDateTime] 計算終了日付
+  /// 通知設定の場合はfromDateから+30日分、
   /// カレンダー表示の場合はfromDateから+1年分
   Result<RotationCalculationData> _calculateRotationSchedule({
     required Rotation rotation,
@@ -195,7 +196,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
 
         switch (dayType) {
           // ローテーション日でない場合は担当者を示すmemberIndexをnull
-          // ★データを軽くするために、DayType.notRotationDayは返却しない方針もあり
+          // ★データを軽くするために、DayType.notRotationDayは返却しない
           // そしてUI(Dto)側で存在しない日についてはnotRotationDayとして扱う
           case DayType.holiday:
             dayCalculationResults.add(
@@ -220,7 +221,8 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             newRotationIndex++;
           // 次の人にスキップするローテーション日の場合は、
           // skipCount分indexを進めたmemberIndexを取得
-          // 1つスキップする場合は、skipCountは1
+          // 1つスキップする場合は、skipCountが1
+          // 2つスキップする場合は、skipCountが2
           case DayType.skipToNext:
             newRotationIndex += skipEvent!.skipCount.skipCount;
             final memberIndex = rotation.getRotationMemberIndex(
@@ -234,23 +236,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
               ),
             );
             newRotationIndex++;
-          // 前の人に戻すローテーション日の場合は、
-          // skipCountから-1したmemberIndexを取得
-          // 2つスキップする予定から1つスキップに変える場合 (2 - 1)
-          // ※1つスキップの場合はありえない。UIでSkipEventを削除して再計算するため
-          case DayType.skipToPrevious:
-            newRotationIndex += skipEvent!.skipCount.skipCount - 1;
-            final memberIndex = rotation.getRotationMemberIndex(
-              RotationIndex(newRotationIndex),
-            );
-            dayCalculationResults.add(
-              DayCalculationData(
-                notificationDateTime: notificationDateTime,
-                memberIndex: memberIndex,
-                dayType: dayType,
-              ),
-            );
-            newRotationIndex++;
+          // 前の人に戻すローテーション日の場合は、存在しない
+          // 前の人に戻す場合は、skipToNextでskipCountを減らして再計算するため
+
           // ローテーションに関係のない日(すべての日)を計算結果に含めるとデータが重いため、含めないことにする
           // CalendarScheduleResponse (dto) 側で見つからないデータをnotRotationDayと判定する
           case DayType.notRotationDay:
@@ -269,9 +257,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     }
   }
 
-  /// 対象日付の曜日タイプ判定
+  /// 対象日付のタイプ判定
   /// [fromDateTime] 計算開始日時
-  /// [notificationDateTime] 通知日時 ※判定対象
+  /// [notificationDateTime] 対象日付
   /// [rotationDays] ローテーション曜日
   /// [skipEvents] スキップ日リスト
   DayTypeResult _getScheduleDayType({
@@ -304,15 +292,11 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       return const DayTypeResult(dayType: DayType.rotationDay);
     }
 
+    // Skip日の場合はskipEventも返却
     switch (skipEvent.dayType) {
       case DayType.skipToNext:
         return DayTypeResult(
           dayType: DayType.skipToNext,
-          skipEvent: skipEvent,
-        );
-      case DayType.skipToPrevious:
-        return DayTypeResult(
-          dayType: DayType.skipToPrevious,
           skipEvent: skipEvent,
         );
       case DayType.holiday:

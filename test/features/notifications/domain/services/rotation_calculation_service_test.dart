@@ -57,7 +57,7 @@ void main() {
 
       // 実行
       final notificationScheduleResult = rotationCalculationService
-          .getNotificationEntry(
+          .calculationNotificationSchedule(
             rotation: rotation,
             fromDateTime: createdAt,
             toDateTime: toDateTime,
@@ -156,7 +156,7 @@ void main() {
 
       // 実行
       final notificationScheduleResult = rotationCalculationService
-          .getNotificationEntry(
+          .calculationNotificationSchedule(
             rotation: rotation,
             fromDateTime: createdAt,
             toDateTime: toDateTime,
@@ -255,7 +255,7 @@ void main() {
 
       // 実行
       final notificationScheduleResult = rotationCalculationService
-          .getNotificationEntry(
+          .calculationNotificationSchedule(
             rotation: rotation,
             fromDateTime: createdAt,
             toDateTime: toDateTime,
@@ -360,7 +360,7 @@ void main() {
 
       // 実行
       final notificationScheduleResult = rotationCalculationService
-          .getNotificationEntry(
+          .calculationNotificationSchedule(
             rotation: rotation,
             fromDateTime: createdAt,
             toDateTime: toDateTime,
@@ -469,7 +469,7 @@ void main() {
 
       // 実行
       final notificationScheduleResult = rotationCalculationService
-          .getNotificationEntry(
+          .calculationNotificationSchedule(
             rotation: rotation,
             fromDateTime: createdAt,
             toDateTime: toDateTime,
@@ -586,7 +586,7 @@ void main() {
 
       // 実行
       final notificationScheduleResult = rotationCalculationService
-          .getNotificationEntry(
+          .calculationNotificationSchedule(
             rotation: rotation,
             fromDateTime: createdAt,
             toDateTime: toDateTime,

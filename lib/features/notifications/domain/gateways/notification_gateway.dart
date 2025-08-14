@@ -12,7 +12,7 @@ abstract class NotificationGateway {
   Future<Result<void>> deleteAllNotifications();
 
   /// 3. 通知を更新
-  /// ※local notificationにupdateは存在しないため UseCase層を作成し delete + create で実装する
+  /// ※local notificationにupdateは存在しないため UseCase層で delete + create で実装
 
   /// 4-1. 特定の通知を削除
   Future<Result<void>> deleteNotification(NotificationId notificationId);

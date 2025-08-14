@@ -62,11 +62,12 @@ class GetCalendarScheduleUseCase {
     final now = _timeUtils.now();
     final toDateTime = now.add(const Duration(days: futureDays));
 
-    final scheduleMapResult = _rotationCalculationService.getScheduleMap(
-      rotation: initRotation,
-      fromDateTime: fromDateTime,
-      toDateTime: toDateTime,
-    );
+    final scheduleMapResult = _rotationCalculationService
+        .calculationScheduleMap(
+          rotation: initRotation,
+          fromDateTime: fromDateTime,
+          toDateTime: toDateTime,
+        );
     if (scheduleMapResult.isFailure) {
       return Results.failure(
         NotificationFailure(scheduleMapResult.displayText),

@@ -4,15 +4,18 @@ import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 
-/// 2. 計算ロジックDomain Service
+/// 計算ロジックDomain Service
+/// Rotation Entityのみを利用するが、処理内容が大きいため、サービスとして定義
 abstract class RotationCalculationService {
-  Result<NotificationSchedule> getNotificationEntry({
+  /// 通知設定データ取得用
+  Result<NotificationSchedule> calculationNotificationSchedule({
     required Rotation rotation,
     required DateTime fromDateTime,
     required DateTime toDateTime,
   });
 
-  Result<Map<DateKey, ScheduleDay>> getScheduleMap({
+  /// カレンダー表示データ取得用
+  Result<Map<DateKey, ScheduleDay>> calculationScheduleMap({
     required Rotation rotation,
     required DateTime fromDateTime,
     required DateTime toDateTime,

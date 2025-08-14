@@ -1,5 +1,6 @@
-import 'package:popcal/features/notifications/domain/value_objects/day_calculation_data.dart';
+import 'package:popcal/features/notifications/domain/services/result/day_calculation_data.dart';
 
+/// _calculateRotationScheduleにおける共通の計算結果
 class RotationCalculationData {
   const RotationCalculationData({
     required this.dayCalculationDatas,

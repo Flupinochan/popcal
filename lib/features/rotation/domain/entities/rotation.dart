@@ -131,8 +131,6 @@ class Rotation {
 
   /// 有効なローテーション日かどうか
   bool isValidRotationDay({required DayType dayType}) {
-    return dayType == DayType.rotationDay ||
-        dayType == DayType.skipToNext ||
-        dayType == DayType.skipToPrevious;
+    return dayType == DayType.rotationDay || dayType == DayType.skipToNext;
   }
 }

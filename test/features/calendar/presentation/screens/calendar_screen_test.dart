@@ -79,6 +79,9 @@ void main() {
       displayText: DayType.rotationDay.displayText,
       canSkipNext: true,
       canSkipPrevious: false,
+      canDisableHoliday: false,
+      canEnableHoliday: true,
+      isValidRotationDay: true,
     ),
     // 18日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 18)): ScheduleDayResponse(
@@ -89,6 +92,9 @@ void main() {
       displayText: DayType.rotationDay.displayText,
       canSkipNext: true,
       canSkipPrevious: false,
+      canDisableHoliday: false,
+      canEnableHoliday: true,
+      isValidRotationDay: true,
     ),
     // 20日休日
     DateKey.fromDateTime(DateTime(2025, 8, 20)): ScheduleDayResponse(
@@ -99,6 +105,9 @@ void main() {
       displayText: DayType.holiday.displayText,
       canSkipNext: false,
       canSkipPrevious: false,
+      canDisableHoliday: true,
+      canEnableHoliday: false,
+      isValidRotationDay: false,
     ),
     // 22日: user3 (index 2)
     DateKey.fromDateTime(DateTime(2025, 8, 22)): ScheduleDayResponse(
@@ -109,6 +118,9 @@ void main() {
       displayText: DayType.rotationDay.displayText,
       canSkipNext: true,
       canSkipPrevious: false,
+      canDisableHoliday: false,
+      canEnableHoliday: true,
+      isValidRotationDay: true,
     ),
     // 25日: user4 (index 3)
     DateKey.fromDateTime(DateTime(2025, 8, 25)): ScheduleDayResponse(
@@ -119,6 +131,9 @@ void main() {
       displayText: DayType.rotationDay.displayText,
       canSkipNext: true,
       canSkipPrevious: false,
+      canDisableHoliday: false,
+      canEnableHoliday: true,
+      isValidRotationDay: true,
     ),
     // 27日: user1 (index 0に戻る)
     DateKey.fromDateTime(DateTime(2025, 8, 27)): ScheduleDayResponse(
@@ -129,6 +144,9 @@ void main() {
       displayText: DayType.skipToNext.displayText,
       canSkipNext: true,
       canSkipPrevious: false,
+      canDisableHoliday: false,
+      canEnableHoliday: true,
+      isValidRotationDay: true,
     ),
     // 29日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
@@ -139,6 +157,9 @@ void main() {
       displayText: DayType.rotationDay.displayText,
       canSkipNext: true,
       canSkipPrevious: false,
+      canDisableHoliday: false,
+      canEnableHoliday: true,
+      isValidRotationDay: true,
     ),
   };
   final calendarScheduleResponse = CalendarScheduleResponse(

@@ -114,7 +114,7 @@ class SyncNotificationsUseCase {
       final fromDateTime = rotation.updatedAt.value;
       final toDateTime = fromDateTime.add(const Duration(days: 30));
       final notificationScheduleResult = _scheduleCalculationService
-          .getNotificationEntry(
+          .calculationNotificationSchedule(
             rotation: rotation,
             fromDateTime: rotation.updatedAt.value,
             toDateTime: toDateTime,

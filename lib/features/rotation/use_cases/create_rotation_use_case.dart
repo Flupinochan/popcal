@@ -34,7 +34,7 @@ class CreateRotationUseCase {
     final toDateTime = fromDateTime.add(const Duration(days: 30));
     // 通知設定用データ取得
     final notificationScheduleResult = _rotationCalculationService
-        .getNotificationEntry(
+        .calculationNotificationSchedule(
           rotation: createdRotation,
           fromDateTime: fromDateTime,
           toDateTime: toDateTime,

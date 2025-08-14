@@ -10,9 +10,6 @@ enum DayType {
   /// 次の人にskipする日
   skipToNext('次の人にスキップした日'),
 
-  /// 前の人にskipする日
-  skipToPrevious('前の人にスキップした日'),
-
   /// 休日（ローテーション除外）
   holiday('休日');
 
@@ -29,7 +26,6 @@ enum DayType {
       case DayType.rotationDay:
         return Colors.greenAccent.withValues(alpha: 0.3);
       case DayType.skipToNext:
-      case DayType.skipToPrevious:
         return Colors.lightGreenAccent.withValues(alpha: 0.4);
       case DayType.holiday:
         return Colors.redAccent.withValues(alpha: 0.3);
@@ -43,7 +39,6 @@ enum DayType {
         return Colors.white.withValues(alpha: 0.6);
       case DayType.rotationDay:
       case DayType.skipToNext:
-      case DayType.skipToPrevious:
         return Colors.white;
     }
   }
@@ -62,7 +57,6 @@ enum DayType {
         );
       case DayType.rotationDay:
       case DayType.skipToNext:
-      case DayType.skipToPrevious:
         final greenColor = Colors.greenAccent.withValues(alpha: 0.3);
         return LinearGradient(
           begin: Alignment.topLeft,
@@ -79,7 +73,6 @@ enum DayType {
         return false;
       case DayType.rotationDay:
       case DayType.skipToNext:
-      case DayType.skipToPrevious:
         return true;
     }
   }

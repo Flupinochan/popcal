@@ -64,7 +64,7 @@ class GlassListItem extends StatelessWidget {
                           ),
                           // MemberNameList
                           Text(
-                            rotationResponse.rotationMembers.join(', '),
+                            rotationResponse.displayMembers,
                             style: textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -146,7 +146,6 @@ class GlassListItem extends StatelessWidget {
     );
   }
 
-  // シンプルでテスト不要なためStetelessWidgetへの移行は不要
   Widget _menuItem({
     required String title,
     required IconData iconData,

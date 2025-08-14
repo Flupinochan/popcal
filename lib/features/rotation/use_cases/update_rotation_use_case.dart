@@ -32,7 +32,7 @@ class UpdateRotationUseCase {
     // 30日は環境設定に移す
     final toDateTime = fromDateTime.add(const Duration(days: 30));
     final notificationScheduleResult = _rotationCalculationService
-        .getNotificationEntry(
+        .calculationNotificationSchedule(
           rotation: rotation,
           fromDateTime: fromDateTime,
           toDateTime: toDateTime,

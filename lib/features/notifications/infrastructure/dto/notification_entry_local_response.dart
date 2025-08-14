@@ -18,6 +18,7 @@ part 'notification_entry_local_response.g.dart';
 sealed class NotificationEntryLocalResponse
     with _$NotificationEntryLocalResponse {
   const factory NotificationEntryLocalResponse({
+    // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
     @NotificationIdConverter() required NotificationId notificationId,
     @RotationIdConverter() required RotationId rotationId,
     required UserId userId,
