@@ -66,14 +66,7 @@ enum DayType {
     }
   }
 
-  bool get isRotationDay {
-    switch (this) {
-      case DayType.notRotationDay:
-      case DayType.holiday:
-        return false;
-      case DayType.rotationDay:
-      case DayType.skipToNext:
-        return true;
-    }
-  }
+  /// 色(UI)はここで定義
+  /// isValidRotationDayなどの条件、ロジックはEntity側で定義?
+  /// 考慮が必要
 }

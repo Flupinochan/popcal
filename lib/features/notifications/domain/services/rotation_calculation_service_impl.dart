@@ -8,11 +8,11 @@ import 'package:popcal/features/calendar/domain/value_objects/member_color.dart'
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/notifications/domain/services/result/day_calculation_data.dart';
+import 'package:popcal/features/notifications/domain/services/result/day_type_result.dart';
 import 'package:popcal/features/notifications/domain/services/result/rotation_calculation_data.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
-import 'package:popcal/features/notifications/result/day_type_result.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -73,7 +73,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             userId: rotation.userId,
             rotationName: rotation.rotationName,
             notificationDateTime: notificationDateTime,
-            memberName: rotation.rotationMemberNames[memberIndex],
+            memberName: rotation.rotationMemberNames.memberAt(memberIndex),
           ),
         );
       }
@@ -129,7 +129,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           date: notificationDateTime,
           memberName:
               memberIndex != null
-                  ? rotation.rotationMemberNames[memberIndex]
+                  ? rotation.rotationMemberNames.memberAt(memberIndex)
                   : RotationMemberName.notApplicable,
           scheduleType: dayType,
           memberColor: MemberColor.fromIndex(memberIndex),

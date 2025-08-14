@@ -1,4 +1,4 @@
-// ignore_for_file: prefer-first
+// ignore_for_file: prefer-first, prefer-moving-to-variable
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +16,7 @@ import 'package:popcal/features/rotation/domain/value_objects/notification_time.
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
@@ -35,12 +35,12 @@ void main() {
       final rotation = Rotation(
         userId: const UserId('test-user'),
         rotationId: RotationId('test-rotation-id'),
-        rotationName: RotationName('test-rotation'),
-        rotationMemberNames: [
-          const RotationMemberName('user1'),
-          const RotationMemberName('user2'),
-          const RotationMemberName('user3'),
-        ],
+        rotationName: const RotationName('test-rotation'),
+        rotationMemberNames: const RotationMemberNames([
+          'user1',
+          'user2',
+          'user3',
+        ]),
         rotationDays: [
           Weekday.monday,
           Weekday.wednesday,
@@ -75,27 +75,27 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[1].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[2].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
       expect(
         notificationEntries[3].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[4].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[5].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
 
       // 意図した通知設定日時であること
@@ -133,12 +133,12 @@ void main() {
       final rotation = Rotation(
         userId: const UserId('test-user'),
         rotationId: RotationId('test-rotation-id'),
-        rotationName: RotationName('test-rotation'),
-        rotationMemberNames: [
-          const RotationMemberName('user1'),
-          const RotationMemberName('user2'),
-          const RotationMemberName('user3'),
-        ],
+        rotationName: const RotationName('test-rotation'),
+        rotationMemberNames: const RotationMemberNames([
+          'user1',
+          'user2',
+          'user3',
+        ]),
         rotationDays: [
           Weekday.monday,
           Weekday.wednesday,
@@ -174,27 +174,27 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[1].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[2].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
       expect(
         notificationEntries[3].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[4].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[5].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
 
       // 意図した通知設定日時であること
@@ -232,12 +232,12 @@ void main() {
       final rotation = Rotation(
         userId: const UserId('test-user'),
         rotationId: RotationId('test-rotation-id'),
-        rotationName: RotationName('test-rotation'),
-        rotationMemberNames: [
-          const RotationMemberName('user1'),
-          const RotationMemberName('user2'),
-          const RotationMemberName('user3'),
-        ],
+        rotationName: const RotationName('test-rotation'),
+        rotationMemberNames: const RotationMemberNames([
+          'user1',
+          'user2',
+          'user3',
+        ]),
         rotationDays: [
           Weekday.monday,
           Weekday.wednesday,
@@ -273,27 +273,27 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[1].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[2].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
       expect(
         notificationEntries[3].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[4].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[5].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
 
       // 意図した通知設定日時であること
@@ -331,12 +331,12 @@ void main() {
       final rotation = Rotation(
         userId: const UserId('test-user'),
         rotationId: RotationId('test-rotation-id'),
-        rotationName: RotationName('test-rotation'),
-        rotationMemberNames: [
-          const RotationMemberName('user1'),
-          const RotationMemberName('user2'),
-          const RotationMemberName('user3'),
-        ],
+        rotationName: const RotationName('test-rotation'),
+        rotationMemberNames: const RotationMemberNames([
+          'user1',
+          'user2',
+          'user3',
+        ]),
         rotationDays: [
           Weekday.monday,
           Weekday.wednesday,
@@ -378,27 +378,27 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[1].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[2].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
       expect(
         notificationEntries[3].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[4].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[5].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
 
       // 意図した通知設定日時であること
@@ -440,12 +440,12 @@ void main() {
       final rotation = Rotation(
         userId: const UserId('test-user'),
         rotationId: RotationId('test-rotation-id'),
-        rotationName: RotationName('test-rotation'),
-        rotationMemberNames: [
-          const RotationMemberName('user1'),
-          const RotationMemberName('user2'),
-          const RotationMemberName('user3'),
-        ],
+        rotationName: const RotationName('test-rotation'),
+        rotationMemberNames: const RotationMemberNames([
+          'user1',
+          'user2',
+          'user3',
+        ]),
         rotationDays: [
           Weekday.monday,
           Weekday.wednesday,
@@ -487,28 +487,28 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       // 2回目のuser2はスキップ
       expect(
         notificationEntries[1].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
       expect(
         notificationEntries[2].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[3].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[4].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
       expect(
         notificationEntries[5].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
 
       // 意図した通知設定日時であること
@@ -545,12 +545,12 @@ void main() {
       final rotation = Rotation(
         userId: const UserId('test-user'),
         rotationId: RotationId('test-rotation-id'),
-        rotationName: RotationName('test-rotation'),
-        rotationMemberNames: [
-          const RotationMemberName('user1'),
-          const RotationMemberName('user2'),
-          const RotationMemberName('user3'),
-        ],
+        rotationName: const RotationName('test-rotation'),
+        rotationMemberNames: const RotationMemberNames([
+          'user1',
+          'user2',
+          'user3',
+        ]),
         rotationDays: [
           Weekday.monday,
           Weekday.wednesday,
@@ -604,29 +604,29 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       // 2回交代無しスキップ
       expect(
         notificationEntries[1].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       expect(
         notificationEntries[2].memberName,
-        rotation.rotationMemberNames[1],
+        rotation.rotationMemberNames.memberAt(1),
       );
       expect(
         notificationEntries[3].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
       expect(
         notificationEntries[4].memberName,
-        rotation.rotationMemberNames[0],
+        rotation.rotationMemberNames.memberAt(0),
       );
       // 1回交代無しスキップ
       expect(
         notificationEntries[5].memberName,
-        rotation.rotationMemberNames[2],
+        rotation.rotationMemberNames.memberAt(2),
       );
 
       // 意図した通知設定日時であること

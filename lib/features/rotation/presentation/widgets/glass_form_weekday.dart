@@ -30,13 +30,13 @@ class GlassFormWeekday extends StatelessWidget {
               runSpacing: 8,
               children:
                   [
-                        Weekday.sunday,
                         Weekday.monday,
                         Weekday.tuesday,
                         Weekday.wednesday,
                         Weekday.thursday,
                         Weekday.friday,
                         Weekday.saturday,
+                        Weekday.sunday,
                       ]
                       .map(
                         (weekday) =>

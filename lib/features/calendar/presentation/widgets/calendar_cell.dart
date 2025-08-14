@@ -25,6 +25,7 @@ class CalendarCell extends StatelessWidget {
     final dayInfo = calendarDataDto.getDayInfo(day);
     final memberName = dayInfo.memberName;
     final scheduleDayType = dayInfo.scheduleDayType;
+    final isValidRotationDay = dayInfo.isValidRotationDay;
 
     return Container(
       width: double.infinity,
@@ -56,7 +57,7 @@ class CalendarCell extends StatelessWidget {
             ),
           ),
           // ローテーション担当者をカレンダー日付に表示
-          if (scheduleDayType.isRotationDay)
+          if (isValidRotationDay)
             Text(
               memberName.value,
               style: textTheme.labelMedium!.copyWith(

@@ -23,7 +23,7 @@ sealed class NotificationEntryLocalResponse
     @RotationIdConverter() required RotationId rotationId,
     required UserId userId,
     @NotificationDateConverter() required NotificationDateTime notificationDate,
-    @RotationNameConverter() required RotationName rotationName,
+    required RotationName rotationName,
     @RotationMemberNameConverter() required RotationMemberName memberName,
     required String title,
     required String description,

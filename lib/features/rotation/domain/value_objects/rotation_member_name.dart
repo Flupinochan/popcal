@@ -1,11 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-extension type const RotationMemberName(String value) {
-  // nullの代わりに指定する文字列
-  static const RotationMemberName notApplicable = RotationMemberName(
-    'ローテーション対象外',
-  );
-}
+import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 
 class RotationMemberNameConverter
     implements JsonConverter<RotationMemberName, String> {
@@ -16,4 +11,18 @@ class RotationMemberNameConverter
 
   @override
   String toJson(RotationMemberName object) => object.value;
+}
+
+extension type const RotationMemberName(String value) {
+  // nullの代わりに指定する文字列
+  static const RotationMemberName notApplicable = RotationMemberName(
+    'ローテーション対象外',
+  );
+
+  static Result<RotationMemberName> create(String? input) {
+    if (input == null || input.trim().isEmpty) {
+      return Results.failure(const ValidationFailure('メンバーを1つ以上追加してください'));
+    }
+    return Results.success(RotationMemberName(input));
+  }
 }

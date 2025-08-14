@@ -8,7 +8,7 @@ import 'package:popcal/features/rotation/domain/value_objects/notification_time.
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
@@ -21,7 +21,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
     required UserId userId,
     required RotationId rotationId,
     required RotationName rotationName,
-    required List<RotationMemberName> rotationMembers,
+    required RotationMemberNames rotationMembers,
     required List<Weekday> rotationDays,
     required NotificationTime notificationTime,
     required RotationCreatedAt createdAt,

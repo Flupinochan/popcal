@@ -4,6 +4,7 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/presentation/widgets/calendar_cell.dart';
 import 'package:popcal/features/calendar/use_cases/get_calendar_schedule_use_case.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -75,27 +76,10 @@ class CalendarContainer extends ConsumerWidget {
           dowBuilder: (context, day) {
             const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
             final text = weekdays[day.weekday - 1];
-            if (day.weekday == DateTime.sunday) {
-              return Center(
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    color: Colors.redAccent.withValues(alpha: 0.8),
-                  ),
-                ),
-              );
-            } else if (day.weekday == DateTime.saturday) {
-              return Center(
-                child: Text(
-                  text,
-                  style: TextStyle(color: Colors.blue.withValues(alpha: 0.9)),
-                ),
-              );
-            }
             return Center(
               child: Text(
                 text,
-                style: TextStyle(color: glassTheme.surfaceColor),
+                style: TextStyle(color: Weekday.getWeekDayColor(day.weekday)),
               ),
             );
           },

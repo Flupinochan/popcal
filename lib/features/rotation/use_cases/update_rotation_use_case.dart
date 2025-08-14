@@ -24,9 +24,6 @@ class UpdateRotationUseCase {
       return Results.failure(deleteResult.failureOrNull!);
     }
 
-    // 以降、update_rotation_use_case処理と重複しているため、まとめるべき
-    // 処理内容としては、ローテーション情報から通知設定する処理
-
     // 2. 通知設定計算
     final fromDateTime = rotation.updatedAt.value;
     // 30日は環境設定に移す
@@ -58,7 +55,7 @@ class UpdateRotationUseCase {
       }
     }
 
-    // 4. Rotationを更新
+    // 4. RotationIndexを更新
     final updatedRotation = rotation.copyWith(
       currentRotationIndex: notificationSchedule.newCurrentRotationIndex,
     );

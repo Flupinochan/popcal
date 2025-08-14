@@ -9,7 +9,8 @@ import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
 /// home画面表示時に通知設定を同期するUseCase
-/// firebaseとの同期ではなく、現在時刻から30日分を計算、作成
+/// firebaseとの同期ではない
+/// アプリを起動するたびに現在時刻から30日分を計算、作成することで常に1か月分の通知設定をし続ける
 class SyncNotificationsUseCase {
   SyncNotificationsUseCase(
     this._rotationRepository,
@@ -90,6 +91,7 @@ class SyncNotificationsUseCase {
     return Results.success(null);
   }
 
+  // メイン処理
   Future<Result<void>> execute(UserId userId) async {
     // 1. Firebaseからローテーショングループ一覧を取得
     final rotationsResult = await _rotationRepository.getRotations(userId);
@@ -110,7 +112,7 @@ class SyncNotificationsUseCase {
       // update_rotation_use_case処理と重複しているため、まとめるべき
       // 処理内容としては、ローテーション情報から通知設定する処理
 
-      // 2. 通知設定計算
+      // 3. 通知設定計算
       final fromDateTime = rotation.updatedAt.value;
       final toDateTime = fromDateTime.add(const Duration(days: 30));
       final notificationScheduleResult = _scheduleCalculationService
@@ -126,7 +128,7 @@ class SyncNotificationsUseCase {
       }
       final notificationSchedule = notificationScheduleResult.valueOrNull!;
 
-      // 3-2. 通知作成を同期
+      // 4. 通知作成を同期
       final createResult = await createSync(
         notificationSchedule,
         currentLocalRotationIds,
@@ -137,7 +139,7 @@ class SyncNotificationsUseCase {
         continue;
       }
 
-      // 3.3 通知削除を同期
+      // 5. 通知削除を同期
       final deleteResult = await deleteSync(
         notificationSchedule,
         currentLocalRotationIds,

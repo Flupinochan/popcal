@@ -26,13 +26,9 @@ class CreateRotationUseCase {
     }
     final createdRotation = createRotationResult.valueOrNull!;
 
-    // 以降、update_rotation_use_case処理と重複しているため、まとめるべき
-    // 処理内容としては、ローテーション情報から通知設定する処理
-
-    // 2. 通知設定計算 ※2の処理はsync_notifications_use_caseでも利用
+    // 2. 通知設定計算
     final fromDateTime = createdRotation.updatedAt.value;
     final toDateTime = fromDateTime.add(const Duration(days: 30));
-    // 通知設定用データ取得
     final notificationScheduleResult = _rotationCalculationService
         .calculationNotificationSchedule(
           rotation: createdRotation,
@@ -60,7 +56,7 @@ class CreateRotationUseCase {
       }
     }
 
-    // 4. RotationのcurrentRotationIndexを更新
+    // 4. RotationIndexを更新
     final updatedRotation = createdRotation.copyWith(
       currentRotationIndex: notificationSchedule.newCurrentRotationIndex,
     );

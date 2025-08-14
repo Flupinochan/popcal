@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:popcal/core/themes/glass_theme.dart';
+
 enum Weekday {
   monday(1, '月'),
   tuesday(2, '火'),
@@ -28,5 +31,16 @@ enum Weekday {
                 'Invalid weekday value: $value (expected 1-7)',
               ),
     );
+  }
+
+  /// 土曜日は青色、日曜日は赤色
+  static Color getWeekDayColor(int value) {
+    if (value == 6) {
+      return Colors.blue.withValues(alpha: 0.9);
+    } else if (value == 7) {
+      return Colors.redAccent.withValues(alpha: 0.8);
+    } else {
+      return GlassTheme.defaultTheme.surfaceColor;
+    }
   }
 }

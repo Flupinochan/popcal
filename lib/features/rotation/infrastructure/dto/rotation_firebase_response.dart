@@ -11,7 +11,7 @@ import 'package:popcal/features/rotation/domain/value_objects/notification_time.
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
@@ -25,7 +25,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     required RotationId? rotationId,
     required UserId userId,
     required RotationName rotationName,
-    required List<RotationMemberName> rotationMemberNames,
+    required RotationMemberNames rotationMemberNames,
     required List<int> rotationDays,
     required NotificationTime notificationTime,
     required RotationIndex currentRotationIndex,
@@ -75,11 +75,20 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       );
     }
 
+    final rotationMemberNamesResult = _parseRotationMembers(
+      data['rotationMemberNames'],
+    );
+    if (rotationMemberNamesResult.isFailure) {
+      throw FormatException(
+        'rotationMemberNames is invalid: ${data['rotationMemberNames']}',
+      );
+    }
+
     return RotationFirebaseResponse(
       rotationId: RotationId(snapshot.id),
       userId: UserId(data['userId'] as String),
       rotationName: RotationName(data['rotationName'] as String),
-      rotationMemberNames: _parseRotationMembers(data['rotationMemberNames']),
+      rotationMemberNames: rotationMemberNamesResult.valueOrNull!,
       // ignore: avoid-dynamic
       rotationDays: List<int>.from(data['rotationDays'] as List<dynamic>),
       notificationTime: NotificationTime(notificationTime),
@@ -134,16 +143,15 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   }
 
   // ignore: avoid-dynamic
-  static List<RotationMemberName> _parseRotationMembers(dynamic data) {
-    if (data == null) return [];
-
+  static Result<RotationMemberNames> _parseRotationMembers(dynamic data) {
     if (data is! List) {
       throw FormatException(
         'rotationMemberNames must be a List, got ${data.runtimeType}',
       );
     }
 
-    return data.whereType<String>().map(RotationMemberName.new).toList();
+    final memberNames = data.whereType<String>().toList();
+    return RotationMemberNames.create(memberNames);
   }
 
   // ignore: avoid-dynamic

@@ -19,7 +19,7 @@ import 'package:popcal/features/rotation/domain/value_objects/notification_time.
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
@@ -36,36 +36,36 @@ void main() {
     RotationResponse(
       rotationId: RotationId('test-rotation-id-1'),
       userId: const UserId('test-user-id-1'),
-      rotationName: RotationName('test-rotation-name-1'),
-      rotationMembers: [
-        const RotationMemberName('tester1-1'),
-        const RotationMemberName('tester1-2'),
-      ],
+      rotationName: const RotationName('test-rotation-name-1'),
+      rotationMembers: const RotationMemberNames([
+        'tester1-1',
+        'tester1-2',
+      ]),
       rotationDays: [Weekday.monday, Weekday.sunday],
       notificationTime: NotificationTime(const TimeOfDay(hour: 15, minute: 0)),
       currentRotationIndex: const RotationIndex(0),
       createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
       updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9)),
       displayDays: '月, 日',
-      displayMembers: 'user1, user2',
+      displayMembers: 'tester1-1, tester1-2',
       displayNotificationTime: '09:00',
       skipEvents: [],
     ),
     RotationResponse(
       rotationId: RotationId('test-rotation-id-2'),
       userId: const UserId('test-user-id-2'),
-      rotationName: RotationName('test-rotation-name-2'),
-      rotationMembers: [
-        const RotationMemberName('tester2-1'),
-        const RotationMemberName('tester2-2'),
-      ],
+      rotationName: const RotationName('test-rotation-name-2'),
+      rotationMembers: const RotationMemberNames([
+        'tester2-1',
+        'tester2-2',
+      ]),
       rotationDays: [Weekday.monday, Weekday.sunday],
       notificationTime: NotificationTime(const TimeOfDay(hour: 16, minute: 0)),
       currentRotationIndex: const RotationIndex(0),
       createdAt: RotationCreatedAt(DateTime(2025, 9, 1, 9)),
       updatedAt: RotationUpdatedAt(DateTime(2025, 9, 1, 9)),
       displayDays: '月, 日',
-      displayMembers: 'user1, user2',
+      displayMembers: 'tester2-1, tester2-2',
       displayNotificationTime: '09:00',
       skipEvents: [],
     ),

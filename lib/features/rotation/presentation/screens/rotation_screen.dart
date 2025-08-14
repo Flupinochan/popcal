@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
@@ -10,7 +9,7 @@ import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
@@ -26,6 +25,7 @@ import 'package:popcal/shared/screens/custom_error_screen.dart';
 import 'package:popcal/shared/screens/custom_loading_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
+import 'package:popcal/shared/widgets/glass_dialog.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 
 class RotationScreen extends HookConsumerWidget {
@@ -94,9 +94,7 @@ class RotationScreen extends HookConsumerWidget {
                     name: 'rotationName',
                     initialValue: initialRotation?.rotationName.value,
                     hintText: 'ローテーション名を入力',
-                    validator: FormBuilderValidators.required(
-                      errorText: 'ローテーション名を入力してください',
-                    ),
+                    validator: _validateRotationName,
                   ),
                   // メンバー名を入力
                   Padding(
@@ -108,11 +106,7 @@ class RotationScreen extends HookConsumerWidget {
                           initialRotation?.rotationMembers
                               .map((member) => member.value)
                               .toList(),
-                      validator:
-                          (value) =>
-                              (value == null || value.isEmpty)
-                                  ? 'メンバーを1つ以上追加してください'
-                                  : null,
+                      validator: _validateRotationMemberNames,
                     ),
                   ),
                   // ローテーション曜日
@@ -174,15 +168,32 @@ class RotationScreen extends HookConsumerWidget {
       final formData = formKey.currentState!.value;
       final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
 
+      final rotationNameResult = RotationName.create(
+        formData['rotationName'] as String,
+      );
+      if (rotationNameResult.isFailure) {
+        showErrorDialog(context, rotationNameResult.failureOrNull!.message);
+        return;
+      }
+
+      final rotationMemberNamesResult = RotationMemberNames.createFromDynamic(
+        formData['rotationMembers'] as List,
+      );
+      if (rotationMemberNamesResult.isFailure) {
+        showErrorDialog(
+          context,
+          rotationMemberNamesResult.failureOrNull!.message,
+        );
+        return;
+      }
+
       try {
         if (isUpdateMode) {
           final dto = UpdateRotationRequest(
             userId: userDto.userId,
             rotationId: originalRotation!.rotationId,
-            rotationName: RotationName(formData['rotationName'] as String),
-            rotationMembers: List<RotationMemberName>.from(
-              formData['rotationMembers'] as List,
-            ),
+            rotationName: rotationNameResult.valueOrNull!,
+            rotationMembers: rotationMemberNamesResult.valueOrNull!,
             rotationDays: formData['rotationDays'] as List<Weekday>,
             notificationTime: NotificationTime(
               formData['notificationTime'] as TimeOfDay,
@@ -195,9 +206,7 @@ class RotationScreen extends HookConsumerWidget {
           final dto = CreateRotationRequest(
             userId: userDto.userId,
             rotationName: RotationName(formData['rotationName'] as String),
-            rotationMembers: List<RotationMemberName>.from(
-              formData['rotationMembers'] as List,
-            ),
+            rotationMembers: rotationMemberNamesResult.valueOrNull!,
             rotationDays: formData['rotationDays'] as List<Weekday>,
             notificationTime: NotificationTime(
               formData['notificationTime'] as TimeOfDay,
@@ -228,5 +237,21 @@ class RotationScreen extends HookConsumerWidget {
         }
       }
     }
+  }
+
+  String? _validateRotationMemberNames(List<String>? value) {
+    final result = RotationMemberNames.create(value);
+    return result.when(
+      success: (_) => null,
+      failure: (error) => error.message,
+    );
+  }
+
+  String? _validateRotationName(String? value) {
+    final result = RotationName.create(value);
+    return result.when(
+      success: (_) => null,
+      failure: (error) => error.message,
+    );
   }
 }

@@ -21,6 +21,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_created_a
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
@@ -39,13 +40,13 @@ void main() {
   final rotationResponse = RotationResponse(
     rotationId: rotationId,
     userId: mockUser.userId,
-    rotationName: RotationName('test-rotation-name'),
-    rotationMembers: [
-      const RotationMemberName('user1'),
-      const RotationMemberName('user2'),
-      const RotationMemberName('user3'),
-      const RotationMemberName('user4'),
-    ],
+    rotationName: const RotationName('test-rotation-name'),
+    rotationMembers: const RotationMemberNames([
+      'user1',
+      'user2',
+      'user3',
+      'user4',
+    ]),
     rotationDays: [Weekday.monday, Weekday.friday],
     notificationTime: NotificationTime(const TimeOfDay(hour: 9, minute: 0)),
     currentRotationIndex: const RotationIndex(0),

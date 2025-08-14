@@ -19,8 +19,8 @@ _NotificationEntryLocalResponse _$NotificationEntryLocalResponseFromJson(
   notificationDate: const NotificationDateConverter().fromJson(
     json['notificationDate'] as String,
   ),
-  rotationName: const RotationNameConverter().fromJson(
-    json['rotationName'] as String,
+  rotationName: RotationName.fromJson(
+    json['rotationName'] as Map<String, dynamic>,
   ),
   memberName: const RotationMemberNameConverter().fromJson(
     json['memberName'] as String,
@@ -41,7 +41,7 @@ Map<String, dynamic> _$NotificationEntryLocalResponseToJson(
   'notificationDate': const NotificationDateConverter().toJson(
     instance.notificationDate,
   ),
-  'rotationName': const RotationNameConverter().toJson(instance.rotationName),
+  'rotationName': instance.rotationName,
   'memberName': const RotationMemberNameConverter().toJson(instance.memberName),
   'title': instance.title,
   'description': instance.description,

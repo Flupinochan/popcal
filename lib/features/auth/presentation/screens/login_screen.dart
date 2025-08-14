@@ -298,9 +298,7 @@ class LoginScreen extends HookConsumerWidget {
       password: password,
     );
     if (dtoResult.isFailure) {
-      if (context.mounted) {
-        showErrorDialog(context, dtoResult.displayText);
-      }
+      showErrorDialog(context, dtoResult.displayText);
       return;
     }
     final dto = dtoResult.valueOrNull!;

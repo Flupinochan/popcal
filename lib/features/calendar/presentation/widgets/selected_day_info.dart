@@ -79,7 +79,9 @@ class SelectedDayInfo extends ConsumerWidget {
                         child: Text(
                           Weekday.fromDateTime(selectedDay!).displayName,
                           style: textTheme.titleMedium?.copyWith(
-                            color: _getWeekdayColor(selectedDay!, glassTheme),
+                            color: Weekday.getWeekDayColor(
+                              selectedDay!.weekday,
+                            ),
                           ),
                         ),
                       ),
@@ -247,16 +249,6 @@ class SelectedDayInfo extends ConsumerWidget {
     final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
     await rotationNotifier.updateRotation(updateRotation);
     final _ = ref.refresh(calendarScheduleResponseProvider(rotationId));
-  }
-
-  Color _getWeekdayColor(DateTime date, GlassTheme glassTheme) {
-    if (date.weekday == DateTime.sunday) {
-      return Colors.redAccent.withValues(alpha: 0.8);
-    }
-    if (date.weekday == DateTime.saturday) {
-      return Colors.blue.withValues(alpha: 0.9);
-    }
-    return glassTheme.surfaceColor;
   }
 
   Future<void> _skipNext({

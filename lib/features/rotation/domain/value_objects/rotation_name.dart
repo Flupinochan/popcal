@@ -1,13 +1,28 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 
-extension type RotationName(String value) {}
+part 'rotation_name.freezed.dart';
+part 'rotation_name.g.dart';
 
-class RotationNameConverter implements JsonConverter<RotationName, String> {
-  const RotationNameConverter();
+@freezed
+sealed class RotationName with _$RotationName {
+  const factory RotationName(
+    String value,
+  ) = _RotationName;
+
+  factory RotationName.fromJson(Map<String, dynamic> json) =>
+      _$RotationNameFromJson(json);
+
+  const RotationName._();
 
   @override
-  RotationName fromJson(String json) => RotationName(json);
+  String toString() => value;
 
-  @override
-  String toJson(RotationName object) => object.value;
+  static Result<RotationName> create(String? input) {
+    if (input == null || input.trim().isEmpty) {
+      return Results.failure(const ValidationFailure('ローテーション名を入力してください'));
+    }
+    return Results.success(RotationName(input));
+  }
 }

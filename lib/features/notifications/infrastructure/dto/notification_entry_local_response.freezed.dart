@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NotificationEntryLocalResponse {
 
-@NotificationIdConverter() NotificationId get notificationId;@RotationIdConverter() RotationId get rotationId; UserId get userId;@NotificationDateConverter() NotificationDateTime get notificationDate;@RotationNameConverter() RotationName get rotationName;@RotationMemberNameConverter() RotationMemberName get memberName; String get title; String get description; String get content;
+// extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
+@NotificationIdConverter() NotificationId get notificationId;@RotationIdConverter() RotationId get rotationId; UserId get userId;@NotificationDateConverter() NotificationDateTime get notificationDate; RotationName get rotationName;@RotationMemberNameConverter() RotationMemberName get memberName; String get title; String get description; String get content;
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +49,11 @@ abstract mixin class $NotificationEntryLocalResponseCopyWith<$Res>  {
   factory $NotificationEntryLocalResponseCopyWith(NotificationEntryLocalResponse value, $Res Function(NotificationEntryLocalResponse) _then) = _$NotificationEntryLocalResponseCopyWithImpl;
 @useResult
 $Res call({
-@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
+@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDate, RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
 });
 
 
-$UserIdCopyWith<$Res> get userId;
+$UserIdCopyWith<$Res> get userId;$RotationNameCopyWith<$Res> get rotationName;
 
 }
 /// @nodoc
@@ -87,6 +88,15 @@ $UserIdCopyWith<$Res> get userId {
   
   return $UserIdCopyWith<$Res>(_self.userId, (value) {
     return _then(_self.copyWith(userId: value));
+  });
+}/// Create a copy of NotificationEntryLocalResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RotationNameCopyWith<$Res> get rotationName {
+  
+  return $RotationNameCopyWith<$Res>(_self.rotationName, (value) {
+    return _then(_self.copyWith(rotationName: value));
   });
 }
 }
@@ -167,7 +177,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@NotificationIdConverter()  NotificationId notificationId, @RotationIdConverter()  RotationId rotationId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDate, @RotationNameConverter()  RotationName rotationName, @RotationMemberNameConverter()  RotationMemberName memberName,  String title,  String description,  String content)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@NotificationIdConverter()  NotificationId notificationId, @RotationIdConverter()  RotationId rotationId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDate,  RotationName rotationName, @RotationMemberNameConverter()  RotationMemberName memberName,  String title,  String description,  String content)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse() when $default != null:
 return $default(_that.notificationId,_that.rotationId,_that.userId,_that.notificationDate,_that.rotationName,_that.memberName,_that.title,_that.description,_that.content);case _:
@@ -188,7 +198,7 @@ return $default(_that.notificationId,_that.rotationId,_that.userId,_that.notific
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@NotificationIdConverter()  NotificationId notificationId, @RotationIdConverter()  RotationId rotationId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDate, @RotationNameConverter()  RotationName rotationName, @RotationMemberNameConverter()  RotationMemberName memberName,  String title,  String description,  String content)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@NotificationIdConverter()  NotificationId notificationId, @RotationIdConverter()  RotationId rotationId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDate,  RotationName rotationName, @RotationMemberNameConverter()  RotationMemberName memberName,  String title,  String description,  String content)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse():
 return $default(_that.notificationId,_that.rotationId,_that.userId,_that.notificationDate,_that.rotationName,_that.memberName,_that.title,_that.description,_that.content);}
@@ -205,7 +215,7 @@ return $default(_that.notificationId,_that.rotationId,_that.userId,_that.notific
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@NotificationIdConverter()  NotificationId notificationId, @RotationIdConverter()  RotationId rotationId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDate, @RotationNameConverter()  RotationName rotationName, @RotationMemberNameConverter()  RotationMemberName memberName,  String title,  String description,  String content)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@NotificationIdConverter()  NotificationId notificationId, @RotationIdConverter()  RotationId rotationId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDate,  RotationName rotationName, @RotationMemberNameConverter()  RotationMemberName memberName,  String title,  String description,  String content)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse() when $default != null:
 return $default(_that.notificationId,_that.rotationId,_that.userId,_that.notificationDate,_that.rotationName,_that.memberName,_that.title,_that.description,_that.content);case _:
@@ -220,14 +230,15 @@ return $default(_that.notificationId,_that.rotationId,_that.userId,_that.notific
 @JsonSerializable()
 
 class _NotificationEntryLocalResponse extends NotificationEntryLocalResponse {
-  const _NotificationEntryLocalResponse({@NotificationIdConverter() required this.notificationId, @RotationIdConverter() required this.rotationId, required this.userId, @NotificationDateConverter() required this.notificationDate, @RotationNameConverter() required this.rotationName, @RotationMemberNameConverter() required this.memberName, required this.title, required this.description, required this.content}): super._();
+  const _NotificationEntryLocalResponse({@NotificationIdConverter() required this.notificationId, @RotationIdConverter() required this.rotationId, required this.userId, @NotificationDateConverter() required this.notificationDate, required this.rotationName, @RotationMemberNameConverter() required this.memberName, required this.title, required this.description, required this.content}): super._();
   factory _NotificationEntryLocalResponse.fromJson(Map<String, dynamic> json) => _$NotificationEntryLocalResponseFromJson(json);
 
+// extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
 @override@NotificationIdConverter() final  NotificationId notificationId;
 @override@RotationIdConverter() final  RotationId rotationId;
 @override final  UserId userId;
 @override@NotificationDateConverter() final  NotificationDateTime notificationDate;
-@override@RotationNameConverter() final  RotationName rotationName;
+@override final  RotationName rotationName;
 @override@RotationMemberNameConverter() final  RotationMemberName memberName;
 @override final  String title;
 @override final  String description;
@@ -266,11 +277,11 @@ abstract mixin class _$NotificationEntryLocalResponseCopyWith<$Res> implements $
   factory _$NotificationEntryLocalResponseCopyWith(_NotificationEntryLocalResponse value, $Res Function(_NotificationEntryLocalResponse) _then) = __$NotificationEntryLocalResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDate,@RotationNameConverter() RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
+@NotificationIdConverter() NotificationId notificationId,@RotationIdConverter() RotationId rotationId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDate, RotationName rotationName,@RotationMemberNameConverter() RotationMemberName memberName, String title, String description, String content
 });
 
 
-@override $UserIdCopyWith<$Res> get userId;
+@override $UserIdCopyWith<$Res> get userId;@override $RotationNameCopyWith<$Res> get rotationName;
 
 }
 /// @nodoc
@@ -306,6 +317,15 @@ $UserIdCopyWith<$Res> get userId {
   
   return $UserIdCopyWith<$Res>(_self.userId, (value) {
     return _then(_self.copyWith(userId: value));
+  });
+}/// Create a copy of NotificationEntryLocalResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RotationNameCopyWith<$Res> get rotationName {
+  
+  return $RotationNameCopyWith<$Res>(_self.rotationName, (value) {
+    return _then(_self.copyWith(rotationName: value));
   });
 }
 }

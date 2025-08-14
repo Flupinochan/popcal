@@ -7,7 +7,7 @@ import 'package:popcal/features/rotation/domain/value_objects/notification_time.
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
@@ -31,7 +31,7 @@ class Rotation {
   final RotationId? rotationId;
   final UserId userId;
   final RotationName rotationName;
-  final List<RotationMemberName> rotationMemberNames;
+  final RotationMemberNames rotationMemberNames;
   final List<Weekday> rotationDays;
   final NotificationTime notificationTime;
   // ローテーションした回数
@@ -94,7 +94,7 @@ class Rotation {
     RotationId? rotationId,
     UserId? userId,
     RotationName? rotationName,
-    List<RotationMemberName>? rotationMemberNames,
+    RotationMemberNames? rotationMemberNames,
     List<Weekday>? rotationDays,
     NotificationTime? notificationTime,
     RotationIndex? currentRotationIndex,
