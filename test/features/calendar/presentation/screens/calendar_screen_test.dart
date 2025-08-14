@@ -15,7 +15,6 @@ import 'package:popcal/features/calendar/presentation/screens/calendar_screen.da
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
-import 'package:popcal/features/rotation/domain/enums/skip_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
@@ -56,14 +55,13 @@ void main() {
     skipEvents: [
       SkipEvent(
         dateKey: DateKey.fromDateTime(DateTime(2025, 8, 20)),
-        dayType: SkipType.holiday,
+        dayType: DayType.holiday,
         skipCount: const SkipCount(skipCount: 1),
       ),
     ],
     displayDays: '月, 金',
     displayMembers: 'user1, user2, user3, user4',
     displayNotificationTime: '09:00',
-    canSkipPrevious: true,
   );
   final scheduleMap = <DateKey, ScheduleDayResponse>{
     // 15日: user1 (index 0)
@@ -73,6 +71,8 @@ void main() {
       scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member1,
       displayText: DayType.rotationDay.displayText,
+      canSkipNext: true,
+      canSkipPrevious: false,
     ),
     // 18日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 18)): ScheduleDayResponse(
@@ -81,6 +81,8 @@ void main() {
       scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member2,
       displayText: DayType.rotationDay.displayText,
+      canSkipNext: true,
+      canSkipPrevious: false,
     ),
     // 20日休日
     DateKey.fromDateTime(DateTime(2025, 8, 20)): ScheduleDayResponse(
@@ -89,6 +91,8 @@ void main() {
       scheduleDayType: DayType.holiday,
       memberColor: MemberColor.notApplicable,
       displayText: DayType.holiday.displayText,
+      canSkipNext: false,
+      canSkipPrevious: false,
     ),
     // 22日: user3 (index 2)
     DateKey.fromDateTime(DateTime(2025, 8, 22)): ScheduleDayResponse(
@@ -97,6 +101,8 @@ void main() {
       scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member3,
       displayText: DayType.rotationDay.displayText,
+      canSkipNext: true,
+      canSkipPrevious: false,
     ),
     // 25日: user4 (index 3)
     DateKey.fromDateTime(DateTime(2025, 8, 25)): ScheduleDayResponse(
@@ -105,6 +111,8 @@ void main() {
       scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member4,
       displayText: DayType.rotationDay.displayText,
+      canSkipNext: true,
+      canSkipPrevious: false,
     ),
     // 27日: user1 (index 0に戻る)
     DateKey.fromDateTime(DateTime(2025, 8, 27)): ScheduleDayResponse(
@@ -113,6 +121,8 @@ void main() {
       scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member1,
       displayText: DayType.rotationDay.displayText,
+      canSkipNext: true,
+      canSkipPrevious: false,
     ),
     // 29日: user2 (index 1)
     DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
@@ -121,6 +131,8 @@ void main() {
       scheduleDayType: DayType.rotationDay,
       memberColor: MemberColor.member2,
       displayText: DayType.rotationDay.displayText,
+      canSkipNext: true,
+      canSkipPrevious: false,
     ),
   };
   final calendarScheduleResponse = CalendarScheduleResponse(

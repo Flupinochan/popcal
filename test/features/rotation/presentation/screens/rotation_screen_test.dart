@@ -46,7 +46,6 @@ void main() {
     displayDays: '月, 金',
     displayMembers: 'user1, user2',
     displayNotificationTime: '09:00',
-    canSkipPrevious: true,
     skipEvents: [],
   );
 

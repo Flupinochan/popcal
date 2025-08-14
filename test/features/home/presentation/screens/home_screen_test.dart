@@ -49,7 +49,6 @@ void main() {
       displayDays: '月, 日',
       displayMembers: 'user1, user2',
       displayNotificationTime: '09:00',
-      canSkipPrevious: true,
       skipEvents: [],
     ),
     RotationResponse(
@@ -68,7 +67,6 @@ void main() {
       displayDays: '月, 日',
       displayMembers: 'user1, user2',
       displayNotificationTime: '09:00',
-      canSkipPrevious: true,
       skipEvents: [],
     ),
   ];
