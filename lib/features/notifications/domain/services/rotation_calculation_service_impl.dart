@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
+import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
@@ -25,7 +26,134 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   final TimeUtils _timeUtils;
 
   @override
-  Result<RotationCalculationData> calculateRotationSchedule({
+  Result<NotificationSchedule> getNotificationEntry({
+    required Rotation rotation,
+    required DateTime fromDateTime,
+    required DateTime toDateTime,
+  }) {
+    // 共通の計算処理
+    final rotationCalculationDataResult = _calculateRotationSchedule(
+      rotation: rotation,
+      fromDateTime: fromDateTime,
+      toDateTime: toDateTime,
+    );
+    if (rotationCalculationDataResult.isFailure) {
+      return Results.failure(
+        RotationFailure(rotationCalculationDataResult.displayText),
+      );
+    }
+    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
+
+    // 通知設定用データに整形
+    try {
+      if (rotation.rotationId == null) {
+        return Results.failure(
+          const NotificationFailure('ローテーションIDがnullです。'),
+        );
+      }
+
+      final notificationEntries = <NotificationEntry>[];
+      for (final dayCalculationData
+          in rotationCalculationData.dayCalculationDatas) {
+        final memberIndex = dayCalculationData.memberIndex;
+        final notificationDateTime = dayCalculationData.notificationDateTime;
+
+        // memberIndexがない場合は、通知日でないためcontinue
+        if (memberIndex == null) {
+          continue;
+        }
+
+        notificationEntries.add(
+          NotificationEntry(
+            notificationId: NotificationId.create(
+              rotation.rotationId!,
+              notificationDateTime.value,
+            ),
+            rotationId: rotation.rotationId!,
+            userId: rotation.userId,
+            rotationName: rotation.rotationName,
+            notificationDateTime: notificationDateTime,
+            memberName: rotation.rotationMemberNames[memberIndex],
+          ),
+        );
+      }
+
+      return Results.success(
+        NotificationSchedule(
+          notificationEntries: notificationEntries,
+          newCurrentRotationIndex: RotationIndex(
+            rotationCalculationData.newRotationIndex,
+          ),
+        ),
+      );
+    } on Exception catch (error) {
+      return Results.failure(
+        NotificationFailure('通知設定用データ整形処理でエラーが発生: $error'),
+      );
+    }
+  }
+
+  @override
+  Result<Map<DateKey, ScheduleDay>> getScheduleMap({
+    required Rotation rotation,
+    required DateTime fromDateTime,
+    required DateTime toDateTime,
+  }) {
+    // 共通の計算処理
+    final rotationCalculationDataResult = _calculateRotationSchedule(
+      rotation: rotation,
+      fromDateTime: fromDateTime,
+      toDateTime: toDateTime,
+    );
+    if (rotationCalculationDataResult.isFailure) {
+      return Results.failure(
+        RotationFailure(rotationCalculationDataResult.displayText),
+      );
+    }
+    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
+
+    // カレンダー画面表示用データに整形
+    try {
+      final scheduleMap = <DateKey, ScheduleDay>{};
+      for (final dayCalculationData
+          in rotationCalculationData.dayCalculationDatas) {
+        final memberIndex = dayCalculationData.memberIndex;
+        final dayType = dayCalculationData.dayType;
+        final notificationDateTime = dayCalculationData.notificationDateTime;
+
+        final dateKey = DateKey.fromDateTime(
+          dayCalculationData.notificationDateTime.value,
+        );
+
+        final scheduleDay = ScheduleDay(
+          date: notificationDateTime,
+          memberName:
+              memberIndex != null
+                  ? rotation.rotationMemberNames[memberIndex]
+                  : RotationMemberName.notApplicable,
+          scheduleType: dayType,
+          memberColor: MemberColor.fromIndex(memberIndex),
+          canSkipNext: rotation.canSkipNext(dateKey: dateKey),
+          canSkipPrevious: rotation.canSkipPrevious(dateKey: dateKey),
+        );
+        scheduleMap[dateKey] = scheduleDay;
+      }
+      return Results.success(scheduleMap);
+    } on Exception catch (error) {
+      return Results.failure(
+        NotificationFailure('カレンダー画面表示用データ整形処理でエラーが発生: $error'),
+      );
+    }
+  }
+
+  /// 通知設定およびカレンダー表示用の共通ローテーション計算処理
+  /// ※Rotation Entityのみを利用しているため、Rotation Entity内に移動すべき?
+  /// [rotation] 計算対象
+  /// [fromDateTime] 計算開始日付 ※通知設定の場合は更新日(現在時刻)
+  /// カレンダー表示の場合はRotation作成日
+  /// [toDateTime] 計算終了日付 ※通知設定の場合はfromDateから+30日分、
+  /// カレンダー表示の場合はfromDateから+1年分
+  Result<RotationCalculationData> _calculateRotationSchedule({
     required Rotation rotation,
     required DateTime fromDateTime,
     required DateTime toDateTime,
@@ -50,7 +178,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
 
         // タイプ判定
-        final dayTypeResult = getScheduleDayType(
+        final dayTypeResult = _getScheduleDayType(
           fromDateTime: fromDateTime,
           notificationDateTime: notificationDateTime,
           rotationDays: rotation.rotationDays,
@@ -132,61 +260,12 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     }
   }
 
-  @override
-  Result<NotificationSchedule> getNotificationEntry(
-    Rotation rotation,
-    RotationCalculationData rotationCalculationData,
-  ) {
-    try {
-      if (rotation.rotationId == null) {
-        return Results.failure(
-          const NotificationFailure('ローテーションIDがnullです。'),
-        );
-      }
-
-      final notificationEntries = <NotificationEntry>[];
-      for (final dayCalculationData
-          in rotationCalculationData.dayCalculationDatas) {
-        final memberIndex = dayCalculationData.memberIndex;
-        final notificationDateTime = dayCalculationData.notificationDateTime;
-
-        // memberIndexがない場合は、通知日でないためcontinue
-        if (memberIndex == null) {
-          continue;
-        }
-
-        notificationEntries.add(
-          NotificationEntry(
-            notificationId: NotificationId.create(
-              rotation.rotationId!,
-              notificationDateTime.value,
-            ),
-            rotationId: rotation.rotationId!,
-            userId: rotation.userId,
-            rotationName: rotation.rotationName,
-            notificationDateTime: notificationDateTime,
-            memberName: rotation.rotationMemberNames[memberIndex],
-          ),
-        );
-      }
-
-      return Results.success(
-        NotificationSchedule(
-          notificationEntries: notificationEntries,
-          newCurrentRotationIndex: RotationIndex(
-            rotationCalculationData.newRotationIndex,
-          ),
-        ),
-      );
-    } on Exception catch (error) {
-      return Results.failure(
-        NotificationFailure('通知設定用データ整形処理でエラーが発生: $error'),
-      );
-    }
-  }
-
-  @override
-  DayTypeResult getScheduleDayType({
+  /// 対象日付の曜日タイプ判定
+  /// [fromDateTime] 計算開始日時
+  /// [notificationDateTime] 通知日時 ※判定対象
+  /// [rotationDays] ローテーション曜日
+  /// [skipEvents] スキップ日リスト
+  DayTypeResult _getScheduleDayType({
     required DateTime fromDateTime,
     required NotificationDateTime notificationDateTime,
     required List<Weekday> rotationDays,
@@ -236,44 +315,6 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       // ignore: no_default_cases
       default:
         throw Exception('予期しないDayTypeに判定されました: ${skipEvent.dayType}');
-    }
-  }
-
-  @override
-  Result<Map<DateKey, ScheduleDay>> getScheduleMap(
-    Rotation rotation,
-    RotationCalculationData rotationCalculationData,
-  ) {
-    try {
-      final scheduleMap = <DateKey, ScheduleDay>{};
-      for (final dayCalculationData
-          in rotationCalculationData.dayCalculationDatas) {
-        final memberIndex = dayCalculationData.memberIndex;
-        final dayType = dayCalculationData.dayType;
-        final notificationDateTime = dayCalculationData.notificationDateTime;
-
-        final dateKey = DateKey.fromDateTime(
-          dayCalculationData.notificationDateTime.value,
-        );
-
-        final scheduleDay = ScheduleDay(
-          date: notificationDateTime,
-          memberName:
-              memberIndex != null
-                  ? rotation.rotationMemberNames[memberIndex]
-                  : RotationMemberName.notApplicable,
-          scheduleType: dayType,
-          memberColor: MemberColor.fromIndex(memberIndex),
-          canSkipNext: rotation.canSkipNext(dateKey: dateKey),
-          canSkipPrevious: rotation.canSkipPrevious(dateKey: dateKey),
-        );
-        scheduleMap[dateKey] = scheduleDay;
-      }
-      return Results.success(scheduleMap);
-    } on Exception catch (error) {
-      return Results.failure(
-        NotificationFailure('カレンダー画面表示用データ整形処理でエラーが発生: $error'),
-      );
     }
   }
 

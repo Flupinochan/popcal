@@ -29,25 +29,13 @@ class UpdateRotationUseCase {
 
     // 2. 通知設定計算
     final fromDateTime = rotation.updatedAt.value;
+    // 30日は環境設定に移す
     final toDateTime = fromDateTime.add(const Duration(days: 30));
-    final rotationCalculationDataResult = _rotationCalculationService
-        .calculateRotationSchedule(
-          rotation: rotation,
-          fromDateTime: rotation.updatedAt.value,
-          toDateTime: toDateTime,
-        );
-    if (rotationCalculationDataResult.isFailure) {
-      return Results.failure(
-        NotificationFailure(rotationCalculationDataResult.displayText),
-      );
-    }
-    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
-
-    // 通知設定用データに変換
     final notificationScheduleResult = _rotationCalculationService
         .getNotificationEntry(
-          rotation,
-          rotationCalculationData,
+          rotation: rotation,
+          fromDateTime: fromDateTime,
+          toDateTime: toDateTime,
         );
     if (notificationScheduleResult.isFailure) {
       return Results.failure(

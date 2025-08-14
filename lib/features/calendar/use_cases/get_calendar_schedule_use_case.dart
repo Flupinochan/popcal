@@ -54,30 +54,19 @@ class GetCalendarScheduleUseCase {
     }
 
     // 3. カレンダー表示用通知情報を取得
-    final now = _timeUtils.now();
-    final toDateTime = now.add(const Duration(days: futureDays));
     // 作成時刻から計算するため、indexは0で初期化
     final initRotation = rotation.copyWith(
       currentRotationIndex: const RotationIndex(0),
     );
+    final fromDateTime = initRotation.createdAt.value;
+    final now = _timeUtils.now();
+    final toDateTime = now.add(const Duration(days: futureDays));
 
-    final rotationCalculationDataResult = _rotationCalculationService
-        .calculateRotationSchedule(
-          rotation: initRotation,
-          fromDateTime: initRotation.updatedAt.value,
-          toDateTime: toDateTime,
-        );
-    if (rotationCalculationDataResult.isFailure) {
-      return Results.failure(
-        NotificationFailure(rotationCalculationDataResult.displayText),
-      );
-    }
-    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
-
-    // カレンダー画面表示用データに変換
+    // カレンダー画面表示用データ取得
     final scheduleMapResult = _rotationCalculationService.getScheduleMap(
-      initRotation,
-      rotationCalculationData,
+      rotation: initRotation,
+      fromDateTime: fromDateTime,
+      toDateTime: toDateTime,
     );
     if (scheduleMapResult.isFailure) {
       return Results.failure(

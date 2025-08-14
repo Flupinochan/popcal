@@ -70,6 +70,35 @@ class CalendarContainer extends ConsumerWidget {
         // 各日付のスタイル
         calendarStyle: const CalendarStyle(outsideDaysVisible: false),
         calendarBuilders: CalendarBuilders(
+          // 月火水木金土日
+          dowBuilder: (context, day) {
+            const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
+            final text = weekdays[day.weekday - 1];
+            if (day.weekday == DateTime.sunday) {
+              return Center(
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    color: Colors.redAccent.withValues(alpha: 0.8),
+                  ),
+                ),
+              );
+            } else if (day.weekday == DateTime.saturday) {
+              return Center(
+                child: Text(
+                  text,
+                  style: TextStyle(color: Colors.blue.withValues(alpha: 0.9)),
+                ),
+              );
+            }
+
+            return Center(
+              child: Text(
+                text,
+                style: TextStyle(color: glassTheme.surfaceColor),
+              ),
+            );
+          },
           // 通常の日付
           defaultBuilder: (context, day, focusedDay) {
             return CalendarCell(

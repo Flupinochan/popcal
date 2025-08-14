@@ -113,25 +113,11 @@ class SyncNotificationsUseCase {
       // 2. 通知設定計算
       final fromDateTime = rotation.updatedAt.value;
       final toDateTime = fromDateTime.add(const Duration(days: 30));
-      final rotationCalculationDataResult = _scheduleCalculationService
-          .calculateRotationSchedule(
+      final notificationScheduleResult = _scheduleCalculationService
+          .getNotificationEntry(
             rotation: rotation,
             fromDateTime: rotation.updatedAt.value,
             toDateTime: toDateTime,
-          );
-      if (rotationCalculationDataResult.isFailure) {
-        return Results.failure(
-          NotificationFailure(rotationCalculationDataResult.displayText),
-        );
-      }
-      final rotationCalculationData =
-          rotationCalculationDataResult.valueOrNull!;
-
-      // 通知設定用データに変換
-      final notificationScheduleResult = _scheduleCalculationService
-          .getNotificationEntry(
-            rotation,
-            rotationCalculationData,
           );
       if (notificationScheduleResult.isFailure) {
         return Results.failure(

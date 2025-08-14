@@ -32,24 +32,12 @@ class CreateRotationUseCase {
     // 2. 通知設定計算 ※2の処理はsync_notifications_use_caseでも利用
     final fromDateTime = createdRotation.updatedAt.value;
     final toDateTime = fromDateTime.add(const Duration(days: 30));
-    final rotationCalculationDataResult = _rotationCalculationService
-        .calculateRotationSchedule(
-          rotation: createdRotation,
-          fromDateTime: createdRotation.updatedAt.value,
-          toDateTime: toDateTime,
-        );
-    if (rotationCalculationDataResult.isFailure) {
-      return Results.failure(
-        NotificationFailure(rotationCalculationDataResult.displayText),
-      );
-    }
-    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
-
-    // 通知設定用データに変換
+    // 通知設定用データ取得
     final notificationScheduleResult = _rotationCalculationService
         .getNotificationEntry(
-          createdRotation,
-          rotationCalculationData,
+          rotation: createdRotation,
+          fromDateTime: fromDateTime,
+          toDateTime: toDateTime,
         );
     if (notificationScheduleResult.isFailure) {
       return Results.failure(
