@@ -195,7 +195,6 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           // ★データを軽くするために、DayType.notRotationDayは返却しない方針もあり
           // そしてUI(Dto)側で存在しない日についてはnotRotationDayとして扱う
           case DayType.holiday:
-          case DayType.notRotationDay:
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,
@@ -249,6 +248,10 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
               ),
             );
             newRotationIndex++;
+          // ローテーションに関係のない日(すべての日)を計算結果に含めるとデータが重いため、含めないことにする
+          // CalendarScheduleResponse (dto) 側で見つからないデータをnotRotationDayと判定する
+          case DayType.notRotationDay:
+            break;
         }
       }
 
