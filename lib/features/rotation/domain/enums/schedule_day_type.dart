@@ -63,13 +63,11 @@ enum DayType {
       case DayType.rotationDay:
       case DayType.skipToNext:
       case DayType.skipToPrevious:
+        final greenColor = Colors.greenAccent.withValues(alpha: 0.3);
         return LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.greenAccent.withValues(alpha: 0.3),
-            Colors.greenAccent.withValues(alpha: 0.3),
-          ],
+          colors: [greenColor, greenColor],
         );
     }
   }

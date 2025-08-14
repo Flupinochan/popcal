@@ -1,6 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
@@ -31,7 +30,6 @@ NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
   return NotificationGatewayLocal(
     ref.watch(routerProvider(initialLocation: const HomeRoute().location)),
     ref.watch(flutterLocalNotificationsPluginProvider),
-    ref.watch(loggerProvider('NotificationGatewayLocal')),
     ref.watch(timeUtilsProvider),
   );
 }

@@ -1,6 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
@@ -13,12 +12,10 @@ class NotificationGatewayLocal {
   NotificationGatewayLocal(
     this._router,
     this._flutterLocalNotificationsPlugin,
-    this._logger,
     this._timeUtils,
   );
   final GoRouter _router;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
-  final Logger _logger;
   final TimeUtils _timeUtils;
 
   /// 1. 通知スケジュールを作成
