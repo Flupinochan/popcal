@@ -5,7 +5,7 @@ enum DayType {
   notRotationDay('対象外'),
 
   /// 通常のローテーション日
-  rotationDay('担当日'),
+  rotationDay('ローテーション日'),
 
   /// 次の人にskipする日
   skipToNext('次の人にスキップした日'),
