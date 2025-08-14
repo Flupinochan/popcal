@@ -292,7 +292,7 @@ $RotationResponseCopyWith<$Res> get rotationResponse {
 /// @nodoc
 mixin _$ScheduleDayResponse {
 
- NotificationDateTime get date; RotationMemberName get memberName; DayType get scheduleDayType; MemberColor get memberColor; String get displayText; bool get canSkipNext; bool get canSkipPrevious;
+ NotificationDateTime get date; RotationMemberName get memberName; DayType get scheduleDayType; MemberColor get memberColor; String get displayText; bool get canSkipNext; bool get canSkipPrevious; bool get canDisableHoliday; bool get canEnableHoliday; bool get isValidRotationDay;
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +303,16 @@ $ScheduleDayResponseCopyWith<ScheduleDayResponse> get copyWith => _$ScheduleDayR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText)&&(identical(other.canSkipNext, canSkipNext) || other.canSkipNext == canSkipNext)&&(identical(other.canSkipPrevious, canSkipPrevious) || other.canSkipPrevious == canSkipPrevious));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText)&&(identical(other.canSkipNext, canSkipNext) || other.canSkipNext == canSkipNext)&&(identical(other.canSkipPrevious, canSkipPrevious) || other.canSkipPrevious == canSkipPrevious)&&(identical(other.canDisableHoliday, canDisableHoliday) || other.canDisableHoliday == canDisableHoliday)&&(identical(other.canEnableHoliday, canEnableHoliday) || other.canEnableHoliday == canEnableHoliday)&&(identical(other.isValidRotationDay, isValidRotationDay) || other.isValidRotationDay == isValidRotationDay));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText,canSkipNext,canSkipPrevious);
+int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText,canSkipNext,canSkipPrevious,canDisableHoliday,canEnableHoliday,isValidRotationDay);
 
 @override
 String toString() {
-  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText, canSkipNext: $canSkipNext, canSkipPrevious: $canSkipPrevious)';
+  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText, canSkipNext: $canSkipNext, canSkipPrevious: $canSkipPrevious, canDisableHoliday: $canDisableHoliday, canEnableHoliday: $canEnableHoliday, isValidRotationDay: $isValidRotationDay)';
 }
 
 
@@ -323,7 +323,7 @@ abstract mixin class $ScheduleDayResponseCopyWith<$Res>  {
   factory $ScheduleDayResponseCopyWith(ScheduleDayResponse value, $Res Function(ScheduleDayResponse) _then) = _$ScheduleDayResponseCopyWithImpl;
 @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious
+ NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious, bool canDisableHoliday, bool canEnableHoliday, bool isValidRotationDay
 });
 
 
@@ -340,7 +340,7 @@ class _$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,Object? canDisableHoliday = null,Object? canEnableHoliday = null,Object? isValidRotationDay = null,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
@@ -349,6 +349,9 @@ as DayType,memberColor: null == memberColor ? _self.memberColor : memberColor //
 as MemberColor,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
 as String,canSkipNext: null == canSkipNext ? _self.canSkipNext : canSkipNext // ignore: cast_nullable_to_non_nullable
 as bool,canSkipPrevious: null == canSkipPrevious ? _self.canSkipPrevious : canSkipPrevious // ignore: cast_nullable_to_non_nullable
+as bool,canDisableHoliday: null == canDisableHoliday ? _self.canDisableHoliday : canDisableHoliday // ignore: cast_nullable_to_non_nullable
+as bool,canEnableHoliday: null == canEnableHoliday ? _self.canEnableHoliday : canEnableHoliday // ignore: cast_nullable_to_non_nullable
+as bool,isValidRotationDay: null == isValidRotationDay ? _self.isValidRotationDay : isValidRotationDay // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -431,10 +434,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse() when $default != null:
-return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious);case _:
+return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious,_that.canDisableHoliday,_that.canEnableHoliday,_that.isValidRotationDay);case _:
   return orElse();
 
 }
@@ -452,10 +455,10 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse():
-return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious);}
+return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious,_that.canDisableHoliday,_that.canEnableHoliday,_that.isValidRotationDay);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -469,10 +472,10 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse() when $default != null:
-return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious);case _:
+return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious,_that.canDisableHoliday,_that.canEnableHoliday,_that.isValidRotationDay);case _:
   return null;
 
 }
@@ -484,7 +487,7 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 
 
 class _ScheduleDayResponse extends ScheduleDayResponse {
-  const _ScheduleDayResponse({required this.date, required this.memberName, required this.scheduleDayType, required this.memberColor, required this.displayText, required this.canSkipNext, required this.canSkipPrevious}): super._();
+  const _ScheduleDayResponse({required this.date, required this.memberName, required this.scheduleDayType, required this.memberColor, required this.displayText, required this.canSkipNext, required this.canSkipPrevious, required this.canDisableHoliday, required this.canEnableHoliday, required this.isValidRotationDay}): super._();
   
 
 @override final  NotificationDateTime date;
@@ -494,6 +497,9 @@ class _ScheduleDayResponse extends ScheduleDayResponse {
 @override final  String displayText;
 @override final  bool canSkipNext;
 @override final  bool canSkipPrevious;
+@override final  bool canDisableHoliday;
+@override final  bool canEnableHoliday;
+@override final  bool isValidRotationDay;
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -505,16 +511,16 @@ _$ScheduleDayResponseCopyWith<_ScheduleDayResponse> get copyWith => __$ScheduleD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText)&&(identical(other.canSkipNext, canSkipNext) || other.canSkipNext == canSkipNext)&&(identical(other.canSkipPrevious, canSkipPrevious) || other.canSkipPrevious == canSkipPrevious));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDayResponse&&(identical(other.date, date) || other.date == date)&&(identical(other.memberName, memberName) || other.memberName == memberName)&&(identical(other.scheduleDayType, scheduleDayType) || other.scheduleDayType == scheduleDayType)&&(identical(other.memberColor, memberColor) || other.memberColor == memberColor)&&(identical(other.displayText, displayText) || other.displayText == displayText)&&(identical(other.canSkipNext, canSkipNext) || other.canSkipNext == canSkipNext)&&(identical(other.canSkipPrevious, canSkipPrevious) || other.canSkipPrevious == canSkipPrevious)&&(identical(other.canDisableHoliday, canDisableHoliday) || other.canDisableHoliday == canDisableHoliday)&&(identical(other.canEnableHoliday, canEnableHoliday) || other.canEnableHoliday == canEnableHoliday)&&(identical(other.isValidRotationDay, isValidRotationDay) || other.isValidRotationDay == isValidRotationDay));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText,canSkipNext,canSkipPrevious);
+int get hashCode => Object.hash(runtimeType,date,memberName,scheduleDayType,memberColor,displayText,canSkipNext,canSkipPrevious,canDisableHoliday,canEnableHoliday,isValidRotationDay);
 
 @override
 String toString() {
-  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText, canSkipNext: $canSkipNext, canSkipPrevious: $canSkipPrevious)';
+  return 'ScheduleDayResponse(date: $date, memberName: $memberName, scheduleDayType: $scheduleDayType, memberColor: $memberColor, displayText: $displayText, canSkipNext: $canSkipNext, canSkipPrevious: $canSkipPrevious, canDisableHoliday: $canDisableHoliday, canEnableHoliday: $canEnableHoliday, isValidRotationDay: $isValidRotationDay)';
 }
 
 
@@ -525,7 +531,7 @@ abstract mixin class _$ScheduleDayResponseCopyWith<$Res> implements $ScheduleDay
   factory _$ScheduleDayResponseCopyWith(_ScheduleDayResponse value, $Res Function(_ScheduleDayResponse) _then) = __$ScheduleDayResponseCopyWithImpl;
 @override @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious
+ NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious, bool canDisableHoliday, bool canEnableHoliday, bool isValidRotationDay
 });
 
 
@@ -542,7 +548,7 @@ class __$ScheduleDayResponseCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,Object? canDisableHoliday = null,Object? canEnableHoliday = null,Object? isValidRotationDay = null,}) {
   return _then(_ScheduleDayResponse(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
@@ -551,6 +557,9 @@ as DayType,memberColor: null == memberColor ? _self.memberColor : memberColor //
 as MemberColor,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
 as String,canSkipNext: null == canSkipNext ? _self.canSkipNext : canSkipNext // ignore: cast_nullable_to_non_nullable
 as bool,canSkipPrevious: null == canSkipPrevious ? _self.canSkipPrevious : canSkipPrevious // ignore: cast_nullable_to_non_nullable
+as bool,canDisableHoliday: null == canDisableHoliday ? _self.canDisableHoliday : canDisableHoliday // ignore: cast_nullable_to_non_nullable
+as bool,canEnableHoliday: null == canEnableHoliday ? _self.canEnableHoliday : canEnableHoliday // ignore: cast_nullable_to_non_nullable
+as bool,isValidRotationDay: null == isValidRotationDay ? _self.isValidRotationDay : isValidRotationDay // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

@@ -18,7 +18,6 @@ sealed class Email with _$Email {
   const Email._();
 
   String get domain => value.split('@')[1];
-
   String get localPart => value.split('@').first;
 
   String toJson() => value;

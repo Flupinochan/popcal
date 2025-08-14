@@ -37,6 +37,7 @@ class LoginScreen extends HookConsumerWidget {
       alpha: 0.3,
     );
 
+    // サインイン/サインアップ非同期処理後の処理
     ref.listen(authNotifierProvider, (previousValue, newValue) {
       newValue.when(
         data: (result) {

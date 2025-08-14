@@ -3,26 +3,18 @@ import 'package:popcal/features/notifications/domain/value_objects/notification_
 
 // flutterではオーバーロードやパッケージは存在しない
 abstract class TimeUtils {
-  // 以下3つの処理はValueObjectに移動すべき
-  bool isSameDateKey(DateKey? a, DateKey? b);
+  // 年月日で比較
+  // カレンダーの日付判定処理で、年月日までで比較する必要があるため
   bool isSameDateKeyWithNotificationDateTime(
     DateKey? a,
     NotificationDateTime? b,
   );
   bool isSameDay(DateTime? a, DateTime? b);
-
+  // ローカル時刻取得用
   DateTime now();
 }
 
 class TimeUtilsImpl implements TimeUtils {
-  @override
-  bool isSameDateKey(DateKey? a, DateKey? b) {
-    if (a == null || b == null) return false;
-    return a.value.year == b.value.year &&
-        a.value.month == b.value.month &&
-        a.value.day == b.value.day;
-  }
-
   @override
   bool isSameDateKeyWithNotificationDateTime(
     DateKey? a,
@@ -34,9 +26,6 @@ class TimeUtilsImpl implements TimeUtils {
         a.value.day == b.value.day;
   }
 
-  /// 日付が同じかどうかを判定
-  /// 曜日ごとのローテーションであり、for文で現在時刻+1日してループ計算するため
-  /// 日付までで比較すべき
   @override
   bool isSameDay(DateTime? a, DateTime? b) {
     if (a == null || b == null) return false;

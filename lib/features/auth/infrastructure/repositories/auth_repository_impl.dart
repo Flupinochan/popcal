@@ -5,6 +5,7 @@ import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 import 'package:popcal/features/auth/infrastructure/repositories/auth_repository_firebase.dart';
 
+// 2層 Entity <=> DTO変換
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._authRepositoryFirebase);
   final AuthRepositoryFirebase _authRepositoryFirebase;

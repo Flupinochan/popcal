@@ -14,6 +14,7 @@ import 'package:popcal/shared/widgets/glass_icon.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// 環境変数にすべき値
 final Uri _url = Uri.parse('https://flupinochan.github.io/popcal-document/');
 
 class DrawerScreen extends HookConsumerWidget {
@@ -137,15 +138,17 @@ class DrawerScreen extends HookConsumerWidget {
   }
 
   Widget _buildUserInfo(TextTheme textTheme, UserResponse? userDto) {
-    final emailValue = userDto?.email.value;
-
+    final email = userDto?.email;
     return Column(
       children: [
         Text(
-          emailValue == null ? '読み込み中...' : emailValue.split('@').first,
+          email == null ? '読み込み中...' : email.localPart,
           style: textTheme.titleMedium,
         ),
-        Text(emailValue ?? 'お待ちください', style: textTheme.bodySmall),
+        Text(
+          email == null ? 'お待ちください' : email.domain,
+          style: textTheme.bodySmall,
+        ),
       ],
     );
   }

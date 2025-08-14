@@ -10,6 +10,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 
+/// CalendarScreen表示に必要な情報をまとめて取得して返却
 class GetCalendarScheduleUseCase {
   GetCalendarScheduleUseCase(
     this._authRepository,
@@ -18,7 +19,8 @@ class GetCalendarScheduleUseCase {
     this._timeUtils,
   );
   // UIで表示する期間かつUseCaseで計算に必要な値
-  // ※過去1年and未来1年
+  // 過去1年and未来1年をカレンダー表示
+  // UI側でも利用する値のため環境変数にすべき
   static const int pastDays = 365;
   static const int futureDays = 365;
 
@@ -27,10 +29,8 @@ class GetCalendarScheduleUseCase {
   final RotationCalculationService _rotationCalculationService;
   final TimeUtils _timeUtils;
 
-  // CalendarScreen表示に必要な3つの情報を取得して返却
-  // UseCaseは複数のビジネスロジックを実行するため、Entityを扱う
   Future<Result<CalendarSchedule>> execute(RotationId rotationId) async {
-    // 1. ユーザ情報を取得 ※.futureでstreamから1度だけ取得が可能
+    // 1. ユーザ情報を取得
     final authResult = await _authRepository.getUser();
     if (authResult.isFailure) {
       return Results.failure(authResult.failureOrNull!);
@@ -54,7 +54,7 @@ class GetCalendarScheduleUseCase {
     }
 
     // 3. カレンダー表示用通知情報を取得
-    // 作成時刻から計算するため、indexは0で初期化
+    // 作成時刻から(過去通知分も)表示するため、indexは0で初期化
     final initRotation = rotation.copyWith(
       currentRotationIndex: const RotationIndex(0),
     );
@@ -62,7 +62,6 @@ class GetCalendarScheduleUseCase {
     final now = _timeUtils.now();
     final toDateTime = now.add(const Duration(days: futureDays));
 
-    // カレンダー画面表示用データ取得
     final scheduleMapResult = _rotationCalculationService.getScheduleMap(
       rotation: initRotation,
       fromDateTime: fromDateTime,

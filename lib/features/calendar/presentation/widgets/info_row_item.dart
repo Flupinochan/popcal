@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 
+/// ローテーション情報のメンバー、曜日、時刻欄
 class InfoRowItem extends StatelessWidget {
   const InfoRowItem({
     required this.infoText,

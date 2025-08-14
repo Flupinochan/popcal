@@ -8,7 +8,6 @@ part 'user_id.freezed.dart';
 sealed class UserId with _$UserId {
   const factory UserId(String value) = _UserId;
 
-  // freezedでjson serialize自動生成のために必要
   factory UserId.fromJson(String json) {
     final result = create(json);
     if (result.isFailure) {
@@ -19,7 +18,6 @@ sealed class UserId with _$UserId {
   const UserId._();
 
   String toJson() => value;
-
   @override
   String toString() => value;
 

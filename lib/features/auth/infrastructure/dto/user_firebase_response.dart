@@ -10,6 +10,7 @@ import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 part 'user_firebase_response.freezed.dart'; // freezed
 part 'user_firebase_response.g.dart'; // json_serializable
 
+// requestとresponse併用
 @freezed
 sealed class UserFirebaseResponse with _$UserFirebaseResponse {
   const factory UserFirebaseResponse({
@@ -61,20 +62,4 @@ sealed class UserFirebaseResponse with _$UserFirebaseResponse {
       return Results.failure(ValidationFailure('JSON parsing failed: $e'));
     }
   }
-}
-
-// UI表示用の拡張メソッド
-extension UserDtoDisplay on UserFirebaseResponse {
-  String get displayName => toEntity().fold(
-    (error) => 'Unknown User',
-    (entity) => entity.email.localPart,
-  );
-  String get email => toEntity().fold(
-    (error) => 'Unknown Email',
-    (entity) => entity.email.value,
-  );
-  String get emailDomain => toEntity().fold(
-    (error) => 'Unknown Domain',
-    (entity) => entity.email.domain,
-  );
 }

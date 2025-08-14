@@ -37,6 +37,7 @@ class CalendarCell extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const SizedBox(),
+          // カレンダーの日付
           Container(
             width: 26,
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -49,11 +50,12 @@ class CalendarCell extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 11,
-                fontWeight: _getFontWeight(),
+                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
               ),
               textAlign: TextAlign.center,
             ),
           ),
+          // ローテーション担当者をカレンダー日付に表示
           if (scheduleDayType.isRotationDay)
             Text(
               memberName.value,
@@ -75,9 +77,5 @@ class CalendarCell extends StatelessWidget {
     if (isSelected) return Colors.blue.withValues(alpha: 0.4);
     if (isToday) return Colors.amber.withValues(alpha: 0.3);
     return dayInfo.scheduleDayType.bkColor;
-  }
-
-  FontWeight _getFontWeight() {
-    return isToday ? FontWeight.bold : FontWeight.normal;
   }
 }

@@ -9,21 +9,8 @@ class CalendarSchedule {
   const CalendarSchedule({required this.rotation, required this.scheduleMap});
 
   final Rotation rotation;
-  // 各日付のkey: 各日付の表示用データValue
+  // カレンダーの各日付: 各日付の表示用データ
   final Map<DateKey, ScheduleDay> scheduleMap;
-
-  ScheduleDay getDayInfo(DateTime date) {
-    final dateKey = DateKey.fromDateTime(date);
-    return scheduleMap[dateKey] ??
-        ScheduleDay(
-          date: NotificationDateTime(date),
-          memberName: RotationMemberName.notApplicable,
-          scheduleType: DayType.notRotationDay,
-          memberColor: MemberColor.notApplicable,
-          canSkipNext: false,
-          canSkipPrevious: false,
-        );
-  }
 }
 
 class ScheduleDay {
@@ -34,6 +21,9 @@ class ScheduleDay {
     required this.memberColor,
     required this.canSkipNext,
     required this.canSkipPrevious,
+    required this.canDisableHoliday,
+    required this.canEnableHoliday,
+    required this.isValidRotationDay,
   });
   final NotificationDateTime date;
   final RotationMemberName memberName;
@@ -41,6 +31,9 @@ class ScheduleDay {
   final MemberColor memberColor;
   final bool canSkipNext;
   final bool canSkipPrevious;
+  final bool canDisableHoliday;
+  final bool canEnableHoliday;
+  final bool isValidRotationDay;
 
   String get displayText => scheduleType.displayText;
 }

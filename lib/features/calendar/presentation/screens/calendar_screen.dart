@@ -30,6 +30,7 @@ class CalendarScreen extends HookConsumerWidget {
     final focusedDay = useState(now);
     final selectedDay = useState(now);
 
+    // 画面表示用データを取得して表示
     return calendarDataAsync.when(
       data:
           (result) => result.when(
@@ -68,7 +69,7 @@ class CalendarScreen extends HookConsumerWidget {
                                     selectedDay: selectedDay.value,
                                   ),
                                   RotationInfoCard(
-                                    calendarScheduleResponse: dto,
+                                    rotationResponse: dto.rotationResponse,
                                   ),
                                 ],
                               ),

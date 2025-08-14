@@ -138,6 +138,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             dateKey: dateKey,
             dayType: dayType,
           ),
+          canDisableHoliday: rotation.canDisableHoliday(dayType: dayType),
+          canEnableHoliday: rotation.canEnableHoliday(dayType: dayType),
+          isValidRotationDay: rotation.isValidRotationDay(dayType: dayType),
         );
         scheduleMap[dateKey] = scheduleDay;
       }

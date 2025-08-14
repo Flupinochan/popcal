@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 extension type const MemberColor(Color value) {
-  /// ローテーション対象外の場合のデフォルト色
+  // ローテーション対象外の場合のデフォルト色
   static const MemberColor notApplicable = MemberColor(Colors.white);
-
-  /// カレンダーで表示するメンバーの色
+  // カレンダーで表示するメンバーの色
   static const MemberColor member1 = MemberColor(Color(0xFF5DADE2));
   static const MemberColor member2 = MemberColor(Color(0xFF48C9B0));
   static const MemberColor member3 = MemberColor(Color(0xFFEC7063));
@@ -29,9 +28,9 @@ extension type const MemberColor(Color value) {
     member10,
   ];
 
-  /// インデックスから色を取得
+  /// メンバーのインデックスから色を取得
   static MemberColor fromIndex(int? index) {
-    if (index == null || index < 0 || index >= allColors.length) {
+    if (index == null || index < 0 || index > allColors.length) {
       return notApplicable;
     }
     return allColors[index];

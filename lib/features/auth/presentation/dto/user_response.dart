@@ -4,7 +4,7 @@ import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 
-part 'user_response.freezed.dart'; // freezed
+part 'user_response.freezed.dart';
 
 @freezed
 sealed class UserResponse with _$UserResponse {

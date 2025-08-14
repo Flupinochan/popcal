@@ -10,7 +10,8 @@ class DateKeyConverter implements JsonConverter<DateKey, String> {
   String toJson(DateKey object) => object.value.toIso8601String();
 }
 
-/// カレンダー選択日とscheduleMapのKeyは年月日で判定すべき
+/// カレンダーの各日付のローテーション情報を取得するための各日付を示す「年月日」のKey
+/// UIからはこのKeyを使用してバックエンドから返されたデータから情報を取得する
 extension type DateKey(DateTime value) {
   DateKey.fromDateTime(DateTime dateTime)
     : this(DateTime(dateTime.year, dateTime.month, dateTime.day));

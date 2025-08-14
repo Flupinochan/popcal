@@ -6,7 +6,7 @@ import 'package:popcal/features/auth/domain/value_objects/password.dart';
 
 part 'email_sign_in_request.freezed.dart';
 
-// 入力用 UI => ドメイン/データ層
+/// サインイン/サインアップ共通
 @freezed
 sealed class EmailSignInRequest with _$EmailSignInRequest {
   const factory EmailSignInRequest({

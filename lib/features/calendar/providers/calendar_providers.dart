@@ -10,7 +10,8 @@ part 'calendar_providers.g.dart';
 
 // CalendarScreen表示に必要な3つの情報を取得して返却
 // 画面表示時に取得する3つの非同期データを1つの.when()にまとめる
-// ※リアルタイムで画面更新が必要ないため全てを初期取得1回にする
+// リアルタイムで画面更新が必要ないため全てを初期取得1回にする
+// 更新する場合はref.refreshする
 @riverpod
 GetCalendarScheduleUseCase getCalendarScheduleUseCase(Ref ref) {
   return GetCalendarScheduleUseCase(

@@ -39,6 +39,9 @@ class SelectedDayInfo extends ConsumerWidget {
     final iconColor = scheduleDayType.iconColor;
     final canSkipNext = dayInfo.canSkipNext;
     final canSkipPrevious = dayInfo.canSkipPrevious;
+    final canDisableHoliday = dayInfo.canDisableHoliday;
+    final canEnableHoliday = dayInfo.canEnableHoliday;
+    final isValidRotationDay = dayInfo.isValidRotationDay;
 
     return GlassWrapper(
       child: Padding(
@@ -76,12 +79,7 @@ class SelectedDayInfo extends ConsumerWidget {
                         child: Text(
                           Weekday.fromDateTime(selectedDay!).displayName,
                           style: textTheme.titleMedium?.copyWith(
-                            color:
-                                selectedDay!.weekday == DateTime.sunday
-                                    ? Colors.redAccent.withValues(alpha: 0.8)
-                                    : selectedDay!.weekday == DateTime.saturday
-                                    ? Colors.blue.withValues(alpha: 0.9)
-                                    : glassTheme.surfaceColor,
+                            color: _getWeekdayColor(selectedDay!, glassTheme),
                           ),
                         ),
                       ),
@@ -93,7 +91,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           gradient: scheduleDayType.isRotationColor,
                         ),
                       ),
-                      if (scheduleDayType == DayType.rotationDay)
+                      if (canEnableHoliday)
                         GlassButton(
                           iconSize: 14,
                           iconData: Icons.alarm_on,
@@ -106,7 +104,7 @@ class SelectedDayInfo extends ConsumerWidget {
                                 selectedDay: selectedDay,
                               ),
                         )
-                      else if (scheduleDayType == DayType.holiday)
+                      else if (canDisableHoliday)
                         GlassButton(
                           iconSize: 14,
                           iconData: Icons.alarm_off,
@@ -146,10 +144,9 @@ class SelectedDayInfo extends ConsumerWidget {
                             height: 24,
                             alignment: Alignment.center,
                             child: Icon(
-                              (scheduleDayType == DayType.notRotationDay ||
-                                      scheduleDayType == DayType.holiday)
-                                  ? Icons.person_off
-                                  : Icons.person,
+                              isValidRotationDay
+                                  ? Icons.person
+                                  : Icons.person_off,
                               color: iconColor,
                               size: 20,
                             ),
@@ -250,6 +247,16 @@ class SelectedDayInfo extends ConsumerWidget {
     final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
     await rotationNotifier.updateRotation(updateRotation);
     final _ = ref.refresh(calendarScheduleResponseProvider(rotationId));
+  }
+
+  Color _getWeekdayColor(DateTime date, GlassTheme glassTheme) {
+    if (date.weekday == DateTime.sunday) {
+      return Colors.redAccent.withValues(alpha: 0.8);
+    }
+    if (date.weekday == DateTime.saturday) {
+      return Colors.blue.withValues(alpha: 0.9);
+    }
+    return glassTheme.surfaceColor;
   }
 
   Future<void> _skipNext({

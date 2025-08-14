@@ -40,41 +40,52 @@ class Rotation {
   final RotationUpdatedAt updatedAt;
   final List<SkipEvent> skipEvents;
 
+  /// UI表示用日付
   String get displayDays {
     return rotationDays.map((day) => day.displayName).join(', ');
   }
 
+  /// UI表示用メンバー一覧
   String get displayMembers {
     return rotationMemberNames.map((member) => member.value).join(', ');
   }
 
+  /// UI表示用通知時刻24時間表記
   String get displayNotificationTime {
     return notificationTime.display24hour;
   }
 
+  /// 休日スキップを取り消し可能かどうか
+  bool canDisableHoliday({required DayType dayType}) {
+    return dayType == DayType.holiday;
+  }
+
+  /// 休日スキップが可能かどうか
+  bool canEnableHoliday({required DayType dayType}) {
+    return dayType == DayType.rotationDay;
+  }
+
+  /// 交代無しスキップ可能かどうか
   bool canSkipNext({required DateKey dateKey, required DayType dayType}) {
     if (dayType == DayType.holiday || dayType == DayType.notRotationDay) {
       return false;
     }
-
     final skipEvent = skipEvents.firstWhereOrNull(
       (skipEvent) => skipEvent.dateKey == dateKey,
     );
-
-    // 1巡以上のskipは不可
+    // 1巡するskipは不可
     return skipEvent == null ||
         (rotationMemberNames.length - 1) > skipEvent.skipCount.skipCount;
   }
 
+  /// 交代無しスキップ取り消し可能かどうか
   bool canSkipPrevious({required DateKey dateKey, required DayType dayType}) {
     if (dayType == DayType.holiday || dayType == DayType.notRotationDay) {
       return false;
     }
-
     final skipEvent = skipEvents.firstWhereOrNull(
       (skipEvent) => skipEvent.dateKey == dateKey,
     );
-
     // 1度もskipしていない場合は不可
     return skipEvent != null && skipEvent.skipCount.skipCount > 0;
   }
@@ -105,6 +116,7 @@ class Rotation {
     );
   }
 
+  /// ローテーション回数からローテーションメンバーの配列Indexを取得
   int getRotationMemberIndex(RotationIndex rotationIndex) {
     final memberCount = getRotationMembersCount();
     if (memberCount == 0) {
@@ -113,20 +125,14 @@ class Rotation {
     return rotationIndex.value % memberCount;
   }
 
-  RotationMemberName getRotationMemberName(RotationIndex rotationIndex) {
-    if (rotationMemberNames.isEmpty) {
-      return RotationMemberName.notApplicable;
-    }
-
-    final index = getRotationMemberIndex(rotationIndex);
-    if (index >= 0 && index < rotationMemberNames.length) {
-      return rotationMemberNames[index];
-    }
-
-    return RotationMemberName.notApplicable;
-  }
-
   int getRotationMembersCount() {
     return rotationMemberNames.length;
+  }
+
+  /// 有効なローテーション日かどうか
+  bool isValidRotationDay({required DayType dayType}) {
+    return dayType == DayType.rotationDay ||
+        dayType == DayType.skipToNext ||
+        dayType == DayType.skipToPrevious;
   }
 }

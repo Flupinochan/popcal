@@ -44,6 +44,9 @@ Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
         displayText: scheduleDay.displayText,
         canSkipNext: scheduleDay.canSkipNext,
         canSkipPrevious: scheduleDay.canSkipPrevious,
+        canDisableHoliday: scheduleDay.canDisableHoliday,
+        canEnableHoliday: scheduleDay.canEnableHoliday,
+        isValidRotationDay: scheduleDay.isValidRotationDay,
       ),
     ),
   );

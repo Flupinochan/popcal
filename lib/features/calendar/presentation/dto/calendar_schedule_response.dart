@@ -17,6 +17,8 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
   const CalendarScheduleResponse._();
 
   // 指定した日付から表示用データを返却
+  // 対応する表示用データがない場合は、notRotationDayを示す
+  // ※全日付データ返却は重いため、Domainロジックに含めない
   ScheduleDayResponse getDayInfo(DateTime date) {
     final dateKey = DateKey.fromDateTime(date);
     return scheduleMap[dateKey] ??
@@ -28,6 +30,9 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
           displayText: DayType.notRotationDay.displayText,
           canSkipNext: false,
           canSkipPrevious: false,
+          canDisableHoliday: false,
+          canEnableHoliday: false,
+          isValidRotationDay: false,
         );
   }
 }
@@ -43,6 +48,9 @@ sealed class ScheduleDayResponse with _$ScheduleDayResponse {
     required String displayText,
     required bool canSkipNext,
     required bool canSkipPrevious,
+    required bool canDisableHoliday,
+    required bool canEnableHoliday,
+    required bool isValidRotationDay,
   }) = _ScheduleDayResponse;
 
   const ScheduleDayResponse._();

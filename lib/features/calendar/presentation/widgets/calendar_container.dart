@@ -29,6 +29,7 @@ class CalendarContainer extends ConsumerWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final timeUtils = ref.watch(timeUtilsProvider);
 
+    // TableCalendarを利用したカレンダー表示
     return GlassWrapper(
       child: TableCalendar<String>(
         currentDay: timeUtils.now(),
@@ -91,7 +92,6 @@ class CalendarContainer extends ConsumerWidget {
                 ),
               );
             }
-
             return Center(
               child: Text(
                 text,
