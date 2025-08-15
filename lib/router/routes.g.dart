@@ -8,10 +8,10 @@ part of 'routes.dart';
 
 List<RouteBase> get $appRoutes => [
   $calendarRoute,
+  $deadlineRoute,
   $errorRoute,
   $homeRoute,
   $loginRoute,
-  $monthEndRoute,
   $rotationCreateRoute,
   $rotationUpdateRoute,
 ];
@@ -31,6 +31,29 @@ mixin _$CalendarRoute on GoRouteData {
   @override
   String get location =>
       GoRouteData.$location('/calendar/${Uri.encodeComponent(_self.id)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $deadlineRoute =>
+    GoRouteData.$route(path: '/deadline', factory: _$DeadlineRoute._fromState);
+
+mixin _$DeadlineRoute on GoRouteData {
+  static DeadlineRoute _fromState(GoRouterState state) => const DeadlineRoute();
+
+  @override
+  String get location => GoRouteData.$location('/deadline');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -100,29 +123,6 @@ mixin _$LoginRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/login');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $monthEndRoute =>
-    GoRouteData.$route(path: '/month-end', factory: _$MonthEndRoute._fromState);
-
-mixin _$MonthEndRoute on GoRouteData {
-  static MonthEndRoute _fromState(GoRouterState state) => const MonthEndRoute();
-
-  @override
-  String get location => GoRouteData.$location('/month-end');
 
   @override
   void go(BuildContext context) => context.go(location);

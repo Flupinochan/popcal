@@ -1,52 +1,50 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'month_end_settings_providers.dart';
+part of 'deadline_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$monthEndSettingsRepositoryHash() =>
-    r'4915537eb6170dffa927a7d219246d8cadd65ed4';
+String _$deadlineRepositoryHash() =>
+    r'bf9e011831eeff2f6c8cc6d1886d57e26188ea15';
 
-/// See also [monthEndSettingsRepository].
-@ProviderFor(monthEndSettingsRepository)
-final monthEndSettingsRepositoryProvider =
-    Provider<MonthEndSettingsRepository>.internal(
-      monthEndSettingsRepository,
-      name: r'monthEndSettingsRepositoryProvider',
+/// See also [deadlineRepository].
+@ProviderFor(deadlineRepository)
+final deadlineRepositoryProvider = Provider<DeadlineRepository>.internal(
+  deadlineRepository,
+  name: r'deadlineRepositoryProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$deadlineRepositoryHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DeadlineRepositoryRef = ProviderRef<DeadlineRepository>;
+String _$deadlineSharedPreferencesHash() =>
+    r'd5a2db1198d99781bfea52f322b5834ce73bbc66';
+
+/// See also [deadlineSharedPreferences].
+@ProviderFor(deadlineSharedPreferences)
+final deadlineSharedPreferencesProvider =
+    Provider<DeadlineSharedPreferences>.internal(
+      deadlineSharedPreferences,
+      name: r'deadlineSharedPreferencesProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$monthEndSettingsRepositoryHash,
+              : _$deadlineSharedPreferencesHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef MonthEndSettingsRepositoryRef = ProviderRef<MonthEndSettingsRepository>;
-String _$monthEndSettingsSharedPreferencesHash() =>
-    r'ce7e2c9f3b520f5a4a0eb7dc3c7471330f6127f7';
-
-/// See also [monthEndSettingsSharedPreferences].
-@ProviderFor(monthEndSettingsSharedPreferences)
-final monthEndSettingsSharedPreferencesProvider =
-    Provider<MonthEndSettingsSharedPreferences>.internal(
-      monthEndSettingsSharedPreferences,
-      name: r'monthEndSettingsSharedPreferencesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$monthEndSettingsSharedPreferencesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef MonthEndSettingsSharedPreferencesRef =
-    ProviderRef<MonthEndSettingsSharedPreferences>;
+typedef DeadlineSharedPreferencesRef = ProviderRef<DeadlineSharedPreferences>;
 String _$sharedPreferencesHash() => r'5af3ef89b977886088ad52f3137331e474544957';
 
 /// See also [sharedPreferences].

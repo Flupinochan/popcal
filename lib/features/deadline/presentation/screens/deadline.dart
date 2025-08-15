@@ -9,8 +9,8 @@ import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
-class MonthEndScreen extends HookConsumerWidget {
-  MonthEndScreen({super.key});
+class DeadlineScreen extends HookConsumerWidget {
+  DeadlineScreen({super.key});
 
   final List<DateTime> monthList = [
     DateTime(2025),

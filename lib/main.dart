@@ -7,7 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:popcal/core/logger/logger.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/month_end/providers/month_end_settings_providers.dart';
+import 'package:popcal/features/deadline/providers/deadline_providers.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/firebase_options.dart';
 import 'package:popcal/router/router.dart';

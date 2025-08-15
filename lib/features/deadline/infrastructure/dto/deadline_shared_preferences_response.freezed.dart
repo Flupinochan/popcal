@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'month_end_settings_shared_preferences_response.dart';
+part of 'deadline_shared_preferences_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,20 +12,20 @@ part of 'month_end_settings_shared_preferences_response.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$MonthEndSettingsSharedPreferencesResponse {
+mixin _$DeadlineSharedPreferencesResponse {
 
  bool get isEnabled;
-/// Create a copy of MonthEndSettingsSharedPreferencesResponse
+/// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MonthEndSettingsSharedPreferencesResponseCopyWith<MonthEndSettingsSharedPreferencesResponse> get copyWith => _$MonthEndSettingsSharedPreferencesResponseCopyWithImpl<MonthEndSettingsSharedPreferencesResponse>(this as MonthEndSettingsSharedPreferencesResponse, _$identity);
+$DeadlineSharedPreferencesResponseCopyWith<DeadlineSharedPreferencesResponse> get copyWith => _$DeadlineSharedPreferencesResponseCopyWithImpl<DeadlineSharedPreferencesResponse>(this as DeadlineSharedPreferencesResponse, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MonthEndSettingsSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeadlineSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
 }
 
 
@@ -34,15 +34,15 @@ int get hashCode => Object.hash(runtimeType,isEnabled);
 
 @override
 String toString() {
-  return 'MonthEndSettingsSharedPreferencesResponse(isEnabled: $isEnabled)';
+  return 'DeadlineSharedPreferencesResponse(isEnabled: $isEnabled)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MonthEndSettingsSharedPreferencesResponseCopyWith<$Res>  {
-  factory $MonthEndSettingsSharedPreferencesResponseCopyWith(MonthEndSettingsSharedPreferencesResponse value, $Res Function(MonthEndSettingsSharedPreferencesResponse) _then) = _$MonthEndSettingsSharedPreferencesResponseCopyWithImpl;
+abstract mixin class $DeadlineSharedPreferencesResponseCopyWith<$Res>  {
+  factory $DeadlineSharedPreferencesResponseCopyWith(DeadlineSharedPreferencesResponse value, $Res Function(DeadlineSharedPreferencesResponse) _then) = _$DeadlineSharedPreferencesResponseCopyWithImpl;
 @useResult
 $Res call({
  bool isEnabled
@@ -53,14 +53,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$MonthEndSettingsSharedPreferencesResponseCopyWithImpl<$Res>
-    implements $MonthEndSettingsSharedPreferencesResponseCopyWith<$Res> {
-  _$MonthEndSettingsSharedPreferencesResponseCopyWithImpl(this._self, this._then);
+class _$DeadlineSharedPreferencesResponseCopyWithImpl<$Res>
+    implements $DeadlineSharedPreferencesResponseCopyWith<$Res> {
+  _$DeadlineSharedPreferencesResponseCopyWithImpl(this._self, this._then);
 
-  final MonthEndSettingsSharedPreferencesResponse _self;
-  final $Res Function(MonthEndSettingsSharedPreferencesResponse) _then;
+  final DeadlineSharedPreferencesResponse _self;
+  final $Res Function(DeadlineSharedPreferencesResponse) _then;
 
-/// Create a copy of MonthEndSettingsSharedPreferencesResponse
+/// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? isEnabled = null,}) {
   return _then(_self.copyWith(
@@ -72,8 +72,8 @@ as bool,
 }
 
 
-/// Adds pattern-matching-related methods to [MonthEndSettingsSharedPreferencesResponse].
-extension MonthEndSettingsSharedPreferencesResponsePatterns on MonthEndSettingsSharedPreferencesResponse {
+/// Adds pattern-matching-related methods to [DeadlineSharedPreferencesResponse].
+extension DeadlineSharedPreferencesResponsePatterns on DeadlineSharedPreferencesResponse {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -86,10 +86,10 @@ extension MonthEndSettingsSharedPreferencesResponsePatterns on MonthEndSettingsS
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MonthEndSettingsSharedPreferencesResponse value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DeadlineSharedPreferencesResponse value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _MonthEndSettingsSharedPreferencesResponse() when $default != null:
+case _DeadlineSharedPreferencesResponse() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -108,10 +108,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MonthEndSettingsSharedPreferencesResponse value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DeadlineSharedPreferencesResponse value)  $default,){
 final _that = this;
 switch (_that) {
-case _MonthEndSettingsSharedPreferencesResponse():
+case _DeadlineSharedPreferencesResponse():
 return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -126,10 +126,10 @@ return $default(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MonthEndSettingsSharedPreferencesResponse value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DeadlineSharedPreferencesResponse value)?  $default,){
 final _that = this;
 switch (_that) {
-case _MonthEndSettingsSharedPreferencesResponse() when $default != null:
+case _DeadlineSharedPreferencesResponse() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -149,7 +149,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _MonthEndSettingsSharedPreferencesResponse() when $default != null:
+case _DeadlineSharedPreferencesResponse() when $default != null:
 return $default(_that.isEnabled);case _:
   return orElse();
 
@@ -170,7 +170,7 @@ return $default(_that.isEnabled);case _:
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isEnabled)  $default,) {final _that = this;
 switch (_that) {
-case _MonthEndSettingsSharedPreferencesResponse():
+case _DeadlineSharedPreferencesResponse():
 return $default(_that.isEnabled);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -187,7 +187,7 @@ return $default(_that.isEnabled);}
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isEnabled)?  $default,) {final _that = this;
 switch (_that) {
-case _MonthEndSettingsSharedPreferencesResponse() when $default != null:
+case _DeadlineSharedPreferencesResponse() when $default != null:
 return $default(_that.isEnabled);case _:
   return null;
 
@@ -199,23 +199,23 @@ return $default(_that.isEnabled);case _:
 /// @nodoc
 
 
-class _MonthEndSettingsSharedPreferencesResponse extends MonthEndSettingsSharedPreferencesResponse {
-  const _MonthEndSettingsSharedPreferencesResponse({required this.isEnabled}): super._();
+class _DeadlineSharedPreferencesResponse extends DeadlineSharedPreferencesResponse {
+  const _DeadlineSharedPreferencesResponse({required this.isEnabled}): super._();
   
 
 @override final  bool isEnabled;
 
-/// Create a copy of MonthEndSettingsSharedPreferencesResponse
+/// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$MonthEndSettingsSharedPreferencesResponseCopyWith<_MonthEndSettingsSharedPreferencesResponse> get copyWith => __$MonthEndSettingsSharedPreferencesResponseCopyWithImpl<_MonthEndSettingsSharedPreferencesResponse>(this, _$identity);
+_$DeadlineSharedPreferencesResponseCopyWith<_DeadlineSharedPreferencesResponse> get copyWith => __$DeadlineSharedPreferencesResponseCopyWithImpl<_DeadlineSharedPreferencesResponse>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MonthEndSettingsSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeadlineSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
 }
 
 
@@ -224,15 +224,15 @@ int get hashCode => Object.hash(runtimeType,isEnabled);
 
 @override
 String toString() {
-  return 'MonthEndSettingsSharedPreferencesResponse(isEnabled: $isEnabled)';
+  return 'DeadlineSharedPreferencesResponse(isEnabled: $isEnabled)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$MonthEndSettingsSharedPreferencesResponseCopyWith<$Res> implements $MonthEndSettingsSharedPreferencesResponseCopyWith<$Res> {
-  factory _$MonthEndSettingsSharedPreferencesResponseCopyWith(_MonthEndSettingsSharedPreferencesResponse value, $Res Function(_MonthEndSettingsSharedPreferencesResponse) _then) = __$MonthEndSettingsSharedPreferencesResponseCopyWithImpl;
+abstract mixin class _$DeadlineSharedPreferencesResponseCopyWith<$Res> implements $DeadlineSharedPreferencesResponseCopyWith<$Res> {
+  factory _$DeadlineSharedPreferencesResponseCopyWith(_DeadlineSharedPreferencesResponse value, $Res Function(_DeadlineSharedPreferencesResponse) _then) = __$DeadlineSharedPreferencesResponseCopyWithImpl;
 @override @useResult
 $Res call({
  bool isEnabled
@@ -243,17 +243,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$MonthEndSettingsSharedPreferencesResponseCopyWithImpl<$Res>
-    implements _$MonthEndSettingsSharedPreferencesResponseCopyWith<$Res> {
-  __$MonthEndSettingsSharedPreferencesResponseCopyWithImpl(this._self, this._then);
+class __$DeadlineSharedPreferencesResponseCopyWithImpl<$Res>
+    implements _$DeadlineSharedPreferencesResponseCopyWith<$Res> {
+  __$DeadlineSharedPreferencesResponseCopyWithImpl(this._self, this._then);
 
-  final _MonthEndSettingsSharedPreferencesResponse _self;
-  final $Res Function(_MonthEndSettingsSharedPreferencesResponse) _then;
+  final _DeadlineSharedPreferencesResponse _self;
+  final $Res Function(_DeadlineSharedPreferencesResponse) _then;
 
-/// Create a copy of MonthEndSettingsSharedPreferencesResponse
+/// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? isEnabled = null,}) {
-  return _then(_MonthEndSettingsSharedPreferencesResponse(
+  return _then(_DeadlineSharedPreferencesResponse(
 isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

@@ -166,7 +166,7 @@ class DrawerScreen extends HookConsumerWidget {
 
   void _onMonthEndTap(BuildContext context) {
     context.pop();
-    const MonthEndRoute().go(context);
+    const DeadlineRoute().go(context);
   }
 
   Future<void> _showDocumentPage() async {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:popcal/features/deadline/presentation/screens/deadline.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
-import 'package:popcal/features/month_end/presentation/screens/month_end_screen.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
@@ -20,6 +20,16 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
   Widget build(BuildContext context, GoRouterState state) {
     final rotationId = RotationId(id);
     return CalendarScreen(rotationId: rotationId);
+  }
+}
+
+@TypedGoRoute<DeadlineRoute>(path: '/deadline')
+class DeadlineRoute extends GoRouteData with _$DeadlineRoute {
+  const DeadlineRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return DeadlineScreen();
   }
 }
 
@@ -48,16 +58,6 @@ class LoginRoute extends GoRouteData with _$LoginRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const LoginScreen();
-  }
-}
-
-@TypedGoRoute<MonthEndRoute>(path: '/month-end')
-class MonthEndRoute extends GoRouteData with _$MonthEndRoute {
-  const MonthEndRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MonthEndScreen();
   }
 }
 
