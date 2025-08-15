@@ -1,42 +1,28 @@
-import 'dart:developer' as developer;
-
+import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 
 void setupLogging() {
+  Logger.root.clearListeners();
+  hierarchicalLoggingEnabled = true;
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
-    final message =
-        record.level >= Level.WARNING
-            ? _formatDetailed(record)
-            : _formatSimple(record);
-
-    developer.log(
-      message,
-      time: record.time,
-      level: record.level.value,
-      name: record.loggerName,
-      // errorとstackTraceは「WARNING」以上
-      error: record.level >= Level.WARNING ? record.error : null,
-      stackTrace: record.level >= Level.WARNING ? record.stackTrace : null,
-    );
+    final message = _logFormat(record);
+    debugPrint(message);
   });
 }
 
-// 詳細なログフォーマット定義
-String _formatDetailed(LogRecord record) {
-  final buffer = StringBuffer()
-    ..write(
-      '[${record.level.name}] ${record.loggerName}: ${record.message}',
-    );
+String _logFormat(LogRecord record) {
+  final dateTimeFormat = DateFormat('yyyy-MM-dd HH:mm:ss.SSS');
+
+  final buffer =
+      StringBuffer()..write(
+        '[${record.level.name}] [${dateTimeFormat.format(record.time)}] [${record.loggerName}] ${record.message}',
+      );
 
   if (record.error != null) {
     buffer.write(' | Error: ${record.error.runtimeType} - ${record.error}');
   }
 
   return buffer.toString();
-}
-
-// 簡潔なログフォーマット定義
-String _formatSimple(LogRecord record) {
-  return '[${record.level.name}] ${record.loggerName}: ${record.message}';
 }

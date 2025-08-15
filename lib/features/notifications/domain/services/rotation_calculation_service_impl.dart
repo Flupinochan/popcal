@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
@@ -21,7 +22,9 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_member_na
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
-  RotationCalculationServiceImpl();
+  RotationCalculationServiceImpl(this._logger);
+
+  final Logger _logger;
 
   @override
   Result<NotificationSchedule> calculationNotificationSchedule({
@@ -75,6 +78,8 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           ),
         );
       }
+
+      _printNotifications(notificationEntries);
 
       return Results.success(
         NotificationSchedule(
@@ -312,10 +317,11 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
 
   // ログ出力
   // ignore: unused_element
-  void _printNotifications(List<NotificationEntry> notificationEntry) {
-    for (final notification in notificationEntry) {
-      print(
-        '通知予定: ${notification.notificationDateTime.value} ${notification.memberName}',
+  void _printNotifications(List<NotificationEntry> notificationEntries) {
+    _logger.fine('通知設定一覧');
+    for (final notificationEntry in notificationEntries) {
+      _logger.fine(
+        '${notificationEntry.notificationDateTime.value} ${notificationEntry.memberName}',
       );
     }
   }

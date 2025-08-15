@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
@@ -26,7 +27,7 @@ import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 void main() {
   group('getNotificationEntry', () {
     final RotationCalculationService rotationCalculationService =
-        RotationCalculationServiceImpl();
+        RotationCalculationServiceImpl(Logger('RotationCalculationService'));
 
     test('通常ローテーション', () {
       // Mockデータ
