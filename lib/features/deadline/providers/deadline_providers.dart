@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:popcal/features/deadline/domain/repositories/deadline_repository.dart';
 import 'package:popcal/features/deadline/infrastructure/repositories/deadline_shared_preferences.dart';
 import 'package:popcal/features/deadline/infrastructure/repositories/deadline_shared_preferences_impl.dart';
+import 'package:popcal/features/deadline/use_case/toggle_deadline_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,4 +24,9 @@ DeadlineSharedPreferences deadlineSharedPreferences(Ref ref) {
 SharedPreferences sharedPreferences(Ref _) {
   /// SharedPreferencesの初期化が非同期のためmain.dartでoverrideして初期化
   throw UnimplementedError('SharedPreferences not initialized');
+}
+
+@riverpod
+ToggleDeadlineUseCase toggleDeadlineUseCase(Ref ref) {
+  return ToggleDeadlineUseCase(ref.watch(deadlineRepositoryProvider));
 }

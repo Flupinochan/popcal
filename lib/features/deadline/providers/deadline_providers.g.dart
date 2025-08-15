@@ -63,5 +63,26 @@ final sharedPreferencesProvider = Provider<SharedPreferences>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SharedPreferencesRef = ProviderRef<SharedPreferences>;
+String _$toggleDeadlineUseCaseHash() =>
+    r'1d67b0ce238d1449c3ae09183481e1770169dcaf';
+
+/// See also [toggleDeadlineUseCase].
+@ProviderFor(toggleDeadlineUseCase)
+final toggleDeadlineUseCaseProvider =
+    AutoDisposeProvider<ToggleDeadlineUseCase>.internal(
+      toggleDeadlineUseCase,
+      name: r'toggleDeadlineUseCaseProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$toggleDeadlineUseCaseHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ToggleDeadlineUseCaseRef =
+    AutoDisposeProviderRef<ToggleDeadlineUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

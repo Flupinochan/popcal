@@ -30,6 +30,7 @@ class GlassFormTime extends StatelessWidget {
 
     return GlassWrapper(
       padding: padding ?? const EdgeInsets.all(12),
+      height: 50,
       width: width ?? 100,
       child: FormBuilderField<TimeOfDay>(
         name: 'notificationTime',

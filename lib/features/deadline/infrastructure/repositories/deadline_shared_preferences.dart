@@ -1,4 +1,4 @@
-import 'package:popcal/core/utils/failures/month_end_settings_failure.dart';
+import 'package:popcal/core/utils/failures/deadline_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/infrastructure/dto/deadline_shared_preferences_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +17,7 @@ class DeadlineSharedPreferences {
       );
     } on Exception catch (error) {
       return Results.failure(
-        MonthEndSettingsFailure('月末営業日通知の設定取得に失敗しました: $error'),
+        DeadlineFailure('月末営業日通知の設定取得に失敗しました: $error'),
       );
     }
   }
@@ -33,7 +33,7 @@ class DeadlineSharedPreferences {
       return Results.success(null);
     } on Exception catch (error) {
       return Results.failure(
-        MonthEndSettingsFailure('月末営業日通知の設定保存に失敗しました: $error'),
+        DeadlineFailure('月末営業日通知の設定保存に失敗しました: $error'),
       );
     }
   }
