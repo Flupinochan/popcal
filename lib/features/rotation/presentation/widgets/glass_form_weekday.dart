@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
+import 'package:popcal/shared/widgets/glass_dialog.dart';
 
 class GlassFormWeekday extends StatelessWidget {
   const GlassFormWeekday({required this.now, super.key, this.initialValue});
 
-  final List<Weekday>? initialValue;
+  final RotationDays? initialValue;
   final DateTime now;
 
   @override
@@ -15,13 +18,19 @@ class GlassFormWeekday extends StatelessWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
-    return FormBuilderField<List<Weekday>>(
+    final nowRotationDaysResult = RotationDays.create([now.weekday]);
+    if (nowRotationDaysResult.isFailure) {
+      showErrorDialog(context, nowRotationDaysResult.displayText);
+    }
+    final nowRotationDays = nowRotationDaysResult.valueOrNull!;
+
+    return FormBuilderField<RotationDays>(
       name: 'rotationDays',
-      initialValue: initialValue ?? [Weekday.fromDateTime(now)],
+      initialValue: initialValue ?? nowRotationDays,
       validator:
           (value) =>
               (value == null || value.isEmpty) ? '曜日を1つ以上選択してください' : null,
-      builder: (FormFieldState<List<Weekday>> field) {
+      builder: (FormFieldState<RotationDays> field) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,7 +72,7 @@ class GlassFormWeekday extends StatelessWidget {
 
   Widget _buildWeekdayButton(
     Weekday weekday,
-    FormFieldState<List<Weekday>> field,
+    FormFieldState<RotationDays> field,
     GlassTheme glass,
   ) {
     final isSelected = field.value?.contains(weekday) ?? false;
@@ -84,15 +93,12 @@ class GlassFormWeekday extends StatelessWidget {
 
   void _onWeekdayPressed(
     Weekday weekday,
-    FormFieldState<List<Weekday>> field,
+    FormFieldState<RotationDays> field,
     bool isSelected,
   ) {
-    final currentValue = List<Weekday>.from(field.value ?? []);
-    if (isSelected) {
-      currentValue.remove(weekday);
-    } else {
-      currentValue.add(weekday);
-    }
-    field.didChange(currentValue);
+    final currentValue = field.value ?? RotationDays.empty();
+    final newValue =
+        isSelected ? currentValue.remove(weekday) : currentValue.add(weekday);
+    field.didChange(newValue);
   }
 }

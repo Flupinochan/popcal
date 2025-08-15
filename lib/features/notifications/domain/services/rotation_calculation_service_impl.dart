@@ -16,6 +16,7 @@ import 'package:popcal/features/notifications/domain/value_objects/notification_
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
@@ -265,7 +266,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   DayTypeResult _getScheduleDayType({
     required DateTime fromDateTime,
     required NotificationDateTime notificationDateTime,
-    required List<Weekday> rotationDays,
+    required RotationDays rotationDays,
     required List<SkipEvent> skipEvents,
   }) {
     final checkDay = Weekday.fromDateTime(notificationDateTime.value);

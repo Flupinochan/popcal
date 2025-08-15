@@ -18,6 +18,7 @@ import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
@@ -47,7 +48,7 @@ void main() {
       'user3',
       'user4',
     ]),
-    rotationDays: [Weekday.monday, Weekday.friday],
+    rotationDays: const RotationDays([Weekday.monday, Weekday.friday]),
     notificationTime: NotificationTime(const TimeOfDay(hour: 9, minute: 0)),
     currentRotationIndex: const RotationIndex(0),
     createdAt: RotationCreatedAt(DateTime(2025, 8, 14, 9)),

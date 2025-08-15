@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
-import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
@@ -32,7 +32,7 @@ class Rotation {
   final UserId userId;
   final RotationName rotationName;
   final RotationMemberNames rotationMemberNames;
-  final List<Weekday> rotationDays;
+  final RotationDays rotationDays;
   final NotificationTime notificationTime;
   // ローテーションした回数
   final RotationIndex currentRotationIndex;
@@ -41,9 +41,7 @@ class Rotation {
   final List<SkipEvent> skipEvents;
 
   /// UI表示用日付
-  String get displayDays {
-    return rotationDays.map((day) => day.displayName).join(', ');
-  }
+  String get displayDays => rotationDays.toString();
 
   /// UI表示用メンバー一覧
   String get displayMembers {
@@ -95,7 +93,7 @@ class Rotation {
     UserId? userId,
     RotationName? rotationName,
     RotationMemberNames? rotationMemberNames,
-    List<Weekday>? rotationDays,
+    RotationDays? rotationDays,
     NotificationTime? notificationTime,
     RotationIndex? currentRotationIndex,
     RotationCreatedAt? createdAt,

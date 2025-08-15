@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
@@ -194,7 +194,7 @@ class RotationScreen extends HookConsumerWidget {
             rotationId: originalRotation!.rotationId,
             rotationName: rotationNameResult.valueOrNull!,
             rotationMembers: rotationMemberNamesResult.valueOrNull!,
-            rotationDays: formData['rotationDays'] as List<Weekday>,
+            rotationDays: formData['rotationDays'] as RotationDays,
             notificationTime: NotificationTime(
               formData['notificationTime'] as TimeOfDay,
             ),
@@ -207,7 +207,7 @@ class RotationScreen extends HookConsumerWidget {
             userId: userDto.userId,
             rotationName: RotationName(formData['rotationName'] as String),
             rotationMembers: rotationMemberNamesResult.valueOrNull!,
-            rotationDays: formData['rotationDays'] as List<Weekday>,
+            rotationDays: formData['rotationDays'] as RotationDays,
             notificationTime: NotificationTime(
               formData['notificationTime'] as TimeOfDay,
             ),

@@ -17,6 +17,7 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
@@ -41,7 +42,7 @@ void main() {
         'tester1-1',
         'tester1-2',
       ]),
-      rotationDays: [Weekday.monday, Weekday.sunday],
+      rotationDays: const RotationDays([Weekday.monday, Weekday.sunday]),
       notificationTime: NotificationTime(const TimeOfDay(hour: 15, minute: 0)),
       currentRotationIndex: const RotationIndex(0),
       createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
@@ -59,7 +60,7 @@ void main() {
         'tester2-1',
         'tester2-2',
       ]),
-      rotationDays: [Weekday.monday, Weekday.sunday],
+      rotationDays: const RotationDays([Weekday.monday, Weekday.sunday]),
       notificationTime: NotificationTime(const TimeOfDay(hour: 16, minute: 0)),
       currentRotationIndex: const RotationIndex(0),
       createdAt: RotationCreatedAt(DateTime(2025, 9, 1, 9)),

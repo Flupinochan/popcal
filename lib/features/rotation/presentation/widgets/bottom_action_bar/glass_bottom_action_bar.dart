@@ -29,19 +29,13 @@ class GlassBottomActionBar extends StatelessWidget {
         children: [
           // キャンセル
           Expanded(
-            child:
-                isLoading
-                    ? const CustomCircularIndicator(
-                      height: widgetHeight,
-                      circleHeight: circleHeight,
-                    )
-                    : GlassButton(
-                      width: double.infinity,
-                      height: widgetHeight,
-                      showBackground: false,
-                      text: 'キャンセル',
-                      onPressed: onCancel,
-                    ),
+            child: GlassButton(
+              width: double.infinity,
+              height: widgetHeight,
+              showBackground: false,
+              text: 'キャンセル',
+              onPressed: isLoading ? null : onCancel,
+            ),
           ),
           // 作成/更新
           Expanded(

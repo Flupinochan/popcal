@@ -14,6 +14,7 @@ import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
@@ -41,11 +42,11 @@ void main() {
           'user2',
           'user3',
         ]),
-        rotationDays: [
+        rotationDays: const RotationDays([
           Weekday.monday,
           Weekday.wednesday,
           Weekday.friday,
-        ],
+        ]),
         notificationTime: NotificationTime(
           const TimeOfDay(hour: 10, minute: 0),
         ),
@@ -139,11 +140,11 @@ void main() {
           'user2',
           'user3',
         ]),
-        rotationDays: [
+        rotationDays: const RotationDays([
           Weekday.monday,
           Weekday.wednesday,
           Weekday.friday,
-        ],
+        ]),
         // 通知時刻は10:00
         notificationTime: NotificationTime(
           const TimeOfDay(hour: 10, minute: 0),
@@ -238,11 +239,11 @@ void main() {
           'user2',
           'user3',
         ]),
-        rotationDays: [
+        rotationDays: const RotationDays([
           Weekday.monday,
           Weekday.wednesday,
           Weekday.friday,
-        ],
+        ]),
         // 通知時刻は10:00のため、作成時刻11:00をすぎている
         notificationTime: NotificationTime(
           const TimeOfDay(hour: 10, minute: 0),
@@ -337,11 +338,11 @@ void main() {
           'user2',
           'user3',
         ]),
-        rotationDays: [
+        rotationDays: const RotationDays([
           Weekday.monday,
           Weekday.wednesday,
           Weekday.friday,
-        ],
+        ]),
         notificationTime: NotificationTime(
           const TimeOfDay(hour: 10, minute: 0),
         ),
@@ -446,11 +447,11 @@ void main() {
           'user2',
           'user3',
         ]),
-        rotationDays: [
+        rotationDays: const RotationDays([
           Weekday.monday,
           Weekday.wednesday,
           Weekday.friday,
-        ],
+        ]),
         notificationTime: NotificationTime(
           const TimeOfDay(hour: 10, minute: 0),
         ),
@@ -551,11 +552,11 @@ void main() {
           'user2',
           'user3',
         ]),
-        rotationDays: [
+        rotationDays: const RotationDays([
           Weekday.monday,
           Weekday.wednesday,
           Weekday.friday,
-        ],
+        ]),
         notificationTime: NotificationTime(
           const TimeOfDay(hour: 10, minute: 0),
         ),
