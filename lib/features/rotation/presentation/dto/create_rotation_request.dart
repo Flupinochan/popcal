@@ -10,7 +10,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 part 'create_rotation_request.freezed.dart';
 
@@ -22,7 +22,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
     required RotationMemberNames rotationMembers,
     required RotationDays rotationDays,
     required NotificationTime notificationTime,
-    required List<SkipEvent> skipEvents,
+    required SkipEvents skipEvents,
   }) = _CreateRotationRequest;
 
   /// Entity => DTO

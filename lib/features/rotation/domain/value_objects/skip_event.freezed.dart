@@ -11,6 +11,7 @@ part of 'skip_event.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$SkipEvent {
 
@@ -21,6 +22,8 @@ mixin _$SkipEvent {
 @pragma('vm:prefer-inline')
 $SkipEventCopyWith<SkipEvent> get copyWith => _$SkipEventCopyWithImpl<SkipEvent>(this as SkipEvent, _$identity);
 
+  /// Serializes this SkipEvent to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is SkipEvent&&(identical(other.dateKey, dateKey) || other.dateKey == dateKey)&&(identical(other.dayType, dayType) || other.dayType == dayType)&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,dateKey,dayType,skipCount);
 
@@ -49,7 +52,7 @@ $Res call({
 });
 
 
-$SkipCountCopyWith<$Res> get skipCount;
+$DateKeyCopyWith<$Res> get dateKey;$SkipCountCopyWith<$Res> get skipCount;
 
 }
 /// @nodoc
@@ -71,6 +74,15 @@ as SkipCount,
   ));
 }
 /// Create a copy of SkipEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DateKeyCopyWith<$Res> get dateKey {
+  
+  return $DateKeyCopyWith<$Res>(_self.dateKey, (value) {
+    return _then(_self.copyWith(dateKey: value));
+  });
+}/// Create a copy of SkipEvent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -208,11 +220,11 @@ return $default(_that.dateKey,_that.dayType,_that.skipCount);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _SkipEvent extends SkipEvent {
   const _SkipEvent({required this.dateKey, required this.dayType, required this.skipCount}): super._();
-  
+  factory _SkipEvent.fromJson(Map<String, dynamic> json) => _$SkipEventFromJson(json);
 
 @override final  DateKey dateKey;
 @override final  DayType dayType;
@@ -224,14 +236,17 @@ class _SkipEvent extends SkipEvent {
 @pragma('vm:prefer-inline')
 _$SkipEventCopyWith<_SkipEvent> get copyWith => __$SkipEventCopyWithImpl<_SkipEvent>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$SkipEventToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _SkipEvent&&(identical(other.dateKey, dateKey) || other.dateKey == dateKey)&&(identical(other.dayType, dayType) || other.dayType == dayType)&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,dateKey,dayType,skipCount);
 
@@ -252,7 +267,7 @@ $Res call({
 });
 
 
-@override $SkipCountCopyWith<$Res> get skipCount;
+@override $DateKeyCopyWith<$Res> get dateKey;@override $SkipCountCopyWith<$Res> get skipCount;
 
 }
 /// @nodoc
@@ -275,6 +290,15 @@ as SkipCount,
 }
 
 /// Create a copy of SkipEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DateKeyCopyWith<$Res> get dateKey {
+  
+  return $DateKeyCopyWith<$Res>(_self.dateKey, (value) {
+    return _then(_self.copyWith(dateKey: value));
+  });
+}/// Create a copy of SkipEvent
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

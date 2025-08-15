@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
@@ -10,7 +9,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 // ローテーション設定
 class Rotation {
@@ -23,8 +22,8 @@ class Rotation {
     required this.currentRotationIndex,
     required this.createdAt,
     required this.updatedAt,
+    required this.skipEvents,
     this.rotationId,
-    this.skipEvents = const [],
   });
 
   // Firestoreに保存した後に付与されるためオプショナル
@@ -38,7 +37,7 @@ class Rotation {
   final RotationIndex currentRotationIndex;
   final RotationCreatedAt createdAt;
   final RotationUpdatedAt updatedAt;
-  final List<SkipEvent> skipEvents;
+  final SkipEvents skipEvents;
 
   /// UI表示用日付
   String get displayDays => rotationDays.toString();
@@ -68,9 +67,7 @@ class Rotation {
     if (dayType == DayType.holiday || dayType == DayType.notRotationDay) {
       return false;
     }
-    final skipEvent = skipEvents.firstWhereOrNull(
-      (skipEvent) => skipEvent.dateKey == dateKey,
-    );
+    final skipEvent = skipEvents.getByDateKey(dateKey);
     // 1巡するskipは不可
     return skipEvent == null ||
         (rotationMemberNames.length - 1) > skipEvent.skipCount.skipCount;
@@ -81,9 +78,7 @@ class Rotation {
     if (dayType == DayType.holiday || dayType == DayType.notRotationDay) {
       return false;
     }
-    final skipEvent = skipEvents.firstWhereOrNull(
-      (skipEvent) => skipEvent.dateKey == dateKey,
-    );
+    final skipEvent = skipEvents.getByDateKey(dateKey);
     // 1度もskipしていない場合は不可
     return skipEvent != null && skipEvent.skipCount.skipCount > 0;
   }
@@ -98,7 +93,7 @@ class Rotation {
     RotationIndex? currentRotationIndex,
     RotationCreatedAt? createdAt,
     RotationUpdatedAt? updatedAt,
-    List<SkipEvent>? skipEvents,
+    SkipEvents? skipEvents,
   }) {
     return Rotation(
       rotationId: rotationId ?? this.rotationId,

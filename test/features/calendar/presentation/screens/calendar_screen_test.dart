@@ -27,6 +27,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
@@ -53,27 +54,27 @@ void main() {
     currentRotationIndex: const RotationIndex(0),
     createdAt: RotationCreatedAt(DateTime(2025, 8, 14, 9)),
     updatedAt: RotationUpdatedAt(DateTime(2025, 8, 14, 9)),
-    skipEvents: [
+    skipEvents: SkipEvents([
       // 20日をholiday skip
       SkipEvent(
-        dateKey: DateKey.fromDateTime(DateTime(2025, 8, 20)),
+        dateKey: DateKey.create(DateTime(2025, 8, 20)).valueOrNull!,
         dayType: DayType.holiday,
         skipCount: const SkipCount(skipCount: 1),
       ),
       // 27日を2回交代無しskip
       SkipEvent(
-        dateKey: DateKey.fromDateTime(DateTime(2025, 8, 27)),
+        dateKey: DateKey.create(DateTime(2025, 8, 27)).valueOrNull!,
         dayType: DayType.skipToNext,
         skipCount: const SkipCount(skipCount: 2),
       ),
-    ],
+    ]),
     displayDays: '月, 金',
     displayMembers: 'user1, user2, user3, user4',
     displayNotificationTime: '09:00',
   );
   final scheduleMap = <DateKey, ScheduleDayResponse>{
     // 15日: user1 (index 0)
-    DateKey.fromDateTime(DateTime(2025, 8, 15)): ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 15)).valueOrNull!: ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 15, 9)),
       memberName: const RotationMemberName('user1'),
       scheduleDayType: DayType.rotationDay,
@@ -86,7 +87,7 @@ void main() {
       isValidRotationDay: true,
     ),
     // 18日: user2 (index 1)
-    DateKey.fromDateTime(DateTime(2025, 8, 18)): ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 18)).valueOrNull!: ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 18, 9)),
       memberName: const RotationMemberName('user2'),
       scheduleDayType: DayType.rotationDay,
@@ -99,7 +100,7 @@ void main() {
       isValidRotationDay: true,
     ),
     // 20日休日
-    DateKey.fromDateTime(DateTime(2025, 8, 20)): ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 20)).valueOrNull!: ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 20, 9)),
       memberName: RotationMemberName.notApplicable,
       scheduleDayType: DayType.holiday,
@@ -112,7 +113,7 @@ void main() {
       isValidRotationDay: false,
     ),
     // 22日: user3 (index 2)
-    DateKey.fromDateTime(DateTime(2025, 8, 22)): ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 22)).valueOrNull!: ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 22, 9)),
       memberName: const RotationMemberName('user3'),
       scheduleDayType: DayType.rotationDay,
@@ -125,7 +126,7 @@ void main() {
       isValidRotationDay: true,
     ),
     // 25日: user4 (index 3)
-    DateKey.fromDateTime(DateTime(2025, 8, 25)): ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 25)).valueOrNull!: ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 25, 9)),
       memberName: const RotationMemberName('user4'),
       scheduleDayType: DayType.rotationDay,
@@ -138,7 +139,7 @@ void main() {
       isValidRotationDay: true,
     ),
     // 27日: user1 (index 0に戻る)
-    DateKey.fromDateTime(DateTime(2025, 8, 27)): ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 27)).valueOrNull!: ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 27, 9)),
       memberName: const RotationMemberName('user3'),
       scheduleDayType: DayType.skipToNext,
@@ -151,7 +152,7 @@ void main() {
       isValidRotationDay: true,
     ),
     // 29日: user2 (index 1)
-    DateKey.fromDateTime(DateTime(2025, 8, 29)): ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 29)).valueOrNull!: ScheduleDayResponse(
       date: NotificationDateTime(DateTime(2025, 8, 29, 9)),
       memberName: const RotationMemberName('user4'),
       scheduleDayType: DayType.rotationDay,

@@ -7,14 +7,11 @@ import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/auth/providers/auth_notifier.dart';
 
-// モック ※デフォルトでは全てエラーがスローされる
-class MockAuthNotifier extends Mock implements AuthNotifier {}
-
 void main() {
   group('LoginScreen', () {
     // すべてのtestWidgetsで1度だけ初期化
-    final screenSize = Size(411, 914);
-    final testScreen = LoginScreen();
+    const screenSize = Size(411, 914);
+    const testScreen = LoginScreen();
 
     // WidgetでRiverPodのref.watch()を使用している場合はモックする必要がある
     late MockAuthNotifier mockNotifier;
@@ -70,3 +67,6 @@ void main() {
     );
   });
 }
+
+// モック ※デフォルトでは全てエラーがスローされる
+class MockAuthNotifier extends Mock implements AuthNotifier {}

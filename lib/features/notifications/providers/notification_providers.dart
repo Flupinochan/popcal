@@ -41,8 +41,8 @@ Future<Result<void>> notificationInitialization(Ref ref) async {
 }
 
 @riverpod
-RotationCalculationService rotationCalculationService(Ref ref) {
-  return RotationCalculationServiceImpl(ref.watch(timeUtilsProvider));
+RotationCalculationService rotationCalculationService(Ref _) {
+  return RotationCalculationServiceImpl();
 }
 
 @riverpod

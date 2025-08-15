@@ -17,6 +17,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
@@ -50,7 +51,7 @@ void main() {
     displayDays: '月, 金',
     displayMembers: 'user1, user2',
     displayNotificationTime: '09:00',
-    skipEvents: [],
+    skipEvents: SkipEvents.empty(),
   );
 
   group('RotationScreen', () {

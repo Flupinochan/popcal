@@ -1,15 +1,23 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 
 part 'skip_count.freezed.dart';
+part 'skip_count.g.dart';
 
 @freezed
 sealed class SkipCount with _$SkipCount {
+  @Deprecated('SkipCount.create()を使用してインスタンスを生成してください')
   const factory SkipCount({
     required int skipCount,
   }) = _SkipCount;
+
+  factory SkipCount.fromJson(Map<String, dynamic> json) =>
+      _$SkipCountFromJson(json);
+
   const SkipCount._();
 
   SkipCount decrement() {

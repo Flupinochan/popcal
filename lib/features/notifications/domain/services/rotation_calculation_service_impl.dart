@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
@@ -19,12 +18,10 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 class RotationCalculationServiceImpl implements RotationCalculationService {
-  RotationCalculationServiceImpl(this._timeUtils);
-  final TimeUtils _timeUtils;
+  RotationCalculationServiceImpl();
 
   @override
   Result<NotificationSchedule> calculationNotificationSchedule({
@@ -122,9 +119,10 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         final dayType = dayCalculationData.dayType;
         final notificationDateTime = dayCalculationData.notificationDateTime;
 
-        final dateKey = DateKey.fromDateTime(
+        final dateKeyResult = DateKey.create(
           dayCalculationData.notificationDateTime.value,
         );
+        final dateKey = dateKeyResult.valueOrNull!;
 
         final scheduleDay = ScheduleDay(
           date: notificationDateTime,
@@ -178,7 +176,13 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       ) {
         // ローテーション日(checkDateTime)と通知時刻(notificationTime)から
         // NotificationDateTime(通知日時)を生成
-        final dateKey = DateKey.fromDateTime(checkDateTime);
+        final dateKeyResult = DateKey.create(checkDateTime);
+        if (dateKeyResult.isFailure) {
+          return Results.failure(
+            RotationFailure(dateKeyResult.displayText),
+          );
+        }
+        final dateKey = dateKeyResult.valueOrNull!;
         final notificationTime = rotation.notificationTime;
         final notificationDateTime = NotificationDateTime.fromDateAndTime(
           date: dateKey,
@@ -267,7 +271,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     required DateTime fromDateTime,
     required NotificationDateTime notificationDateTime,
     required RotationDays rotationDays,
-    required List<SkipEvent> skipEvents,
+    required SkipEvents skipEvents,
   }) {
     final checkDay = Weekday.fromDateTime(notificationDateTime.value);
 
@@ -282,13 +286,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     }
 
     // 3. Skip日かどうか
-    final skipEvent = skipEvents.firstWhereOrNull(
-      (event) => _timeUtils.isSameDateKeyWithNotificationDateTime(
-        event.dateKey,
-        notificationDateTime,
-      ),
-    );
-
+    final skipEvent = skipEvents.getByDateKey(notificationDateTime.toDateKey());
     if (skipEvent == null) {
       return const DayTypeResult(dayType: DayType.rotationDay);
     }

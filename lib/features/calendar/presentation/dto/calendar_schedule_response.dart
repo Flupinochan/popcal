@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
@@ -19,11 +20,15 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
   // 指定した日付から表示用データを返却
   // 対応する表示用データがない場合は、notRotationDayを示す
   // ※全日付データ返却は重いため、Domainロジックに含めない
-  ScheduleDayResponse getDayInfo(DateTime date) {
-    final dateKey = DateKey.fromDateTime(date);
-    return scheduleMap[dateKey] ??
+  ScheduleDayResponse getDayInfo(DateTime dateTime) {
+    final dateKeyResult = DateKey.create(dateTime);
+    if (dateKeyResult.isFailure) {
+      throw Exception(dateKeyResult.failureOrNull);
+    }
+
+    return scheduleMap[dateKeyResult.valueOrNull!] ??
         ScheduleDayResponse(
-          date: NotificationDateTime(date),
+          date: NotificationDateTime(dateTime),
           memberName: RotationMemberName.notApplicable,
           scheduleDayType: DayType.notRotationDay,
           memberColor: MemberColor.notApplicable,

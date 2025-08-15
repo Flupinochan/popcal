@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
@@ -22,12 +21,12 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 void main() {
   group('getNotificationEntry', () {
     final RotationCalculationService rotationCalculationService =
-        RotationCalculationServiceImpl(_MockTimeUtilsImpl());
+        RotationCalculationServiceImpl();
 
     test('通常ローテーション', () {
       // Mockデータ
@@ -53,7 +52,7 @@ void main() {
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
-        skipEvents: [],
+        skipEvents: SkipEvents.empty(),
       );
 
       // 実行
@@ -152,7 +151,7 @@ void main() {
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
-        skipEvents: [],
+        skipEvents: SkipEvents.empty(),
       );
 
       // 実行
@@ -251,7 +250,7 @@ void main() {
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
-        skipEvents: [],
+        skipEvents: SkipEvents.empty(),
       );
 
       // 実行
@@ -350,13 +349,15 @@ void main() {
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
         // 2回目のローテーション日を休日とする
-        skipEvents: [
-          SkipEvent(
-            dateKey: DateKey(DateTime(2025, 8, 11, 10)),
-            dayType: DayType.holiday,
-            skipCount: const SkipCount(skipCount: 1),
-          ),
-        ],
+        skipEvents: SkipEvents(
+          [
+            SkipEvent(
+              dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).valueOrNull!,
+              dayType: DayType.holiday,
+              skipCount: const SkipCount(skipCount: 1),
+            ),
+          ],
+        ),
       );
 
       // 実行
@@ -459,13 +460,13 @@ void main() {
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
         // 2回目のローテーション日のuser2をスキップする
-        skipEvents: [
+        skipEvents: SkipEvents([
           SkipEvent(
-            dateKey: DateKey(DateTime(2025, 8, 11, 10)),
+            dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).valueOrNull!,
             dayType: DayType.skipToNext,
             skipCount: const SkipCount(skipCount: 1),
           ),
-        ],
+        ]),
       );
 
       // 実行
@@ -563,26 +564,28 @@ void main() {
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
-        skipEvents: [
-          // 2回交代無しスキップ
-          SkipEvent(
-            dateKey: DateKey(DateTime(2025, 8, 11, 10)),
-            dayType: DayType.skipToNext,
-            skipCount: const SkipCount(skipCount: 2),
-          ),
-          // 休日スキップ
-          SkipEvent(
-            dateKey: DateKey(DateTime(2025, 8, 15, 10)),
-            dayType: DayType.holiday,
-            skipCount: const SkipCount(skipCount: 1),
-          ),
-          // 1回交代無しスキップ
-          SkipEvent(
-            dateKey: DateKey(DateTime(2025, 8, 22, 10)),
-            dayType: DayType.skipToNext,
-            skipCount: const SkipCount(skipCount: 1),
-          ),
-        ],
+        skipEvents: SkipEvents(
+          [
+            // 2回交代無しスキップ
+            SkipEvent(
+              dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).valueOrNull!,
+              dayType: DayType.skipToNext,
+              skipCount: const SkipCount(skipCount: 2),
+            ),
+            // 休日スキップ
+            SkipEvent(
+              dateKey: DateKey.create(DateTime(2025, 8, 15, 10)).valueOrNull!,
+              dayType: DayType.holiday,
+              skipCount: const SkipCount(skipCount: 1),
+            ),
+            // 1回交代無しスキップ
+            SkipEvent(
+              dateKey: DateKey.create(DateTime(2025, 8, 22, 10)).valueOrNull!,
+              dayType: DayType.skipToNext,
+              skipCount: const SkipCount(skipCount: 1),
+            ),
+          ],
+        ),
       );
 
       // 実行
@@ -662,37 +665,4 @@ void main() {
       );
     });
   });
-}
-
-class _MockTimeUtilsImpl extends Mock implements TimeUtils {
-  @override
-  bool isSameDateKey(DateKey? a, DateKey? b) {
-    if (a == null || b == null) return false;
-    return a.value.year == b.value.year &&
-        a.value.month == b.value.month &&
-        a.value.day == b.value.day;
-  }
-
-  @override
-  bool isSameDateKeyWithNotificationDateTime(
-    DateKey? a,
-    NotificationDateTime? b,
-  ) {
-    if (a == null || b == null) return false;
-    return a.value.year == b.value.year &&
-        a.value.month == b.value.month &&
-        a.value.day == b.value.day;
-  }
-
-  @override
-  bool isSameDay(DateTime? a, DateTime? b) {
-    if (a == null || b == null) return false;
-    return a.year == b.year && a.month == b.month && a.day == b.day;
-  }
-
-  // 実行タイミングから更新日より5分後に設定
-  @override
-  DateTime now() {
-    return DateTime(2025, 8, 7, 9, 5);
-  }
 }

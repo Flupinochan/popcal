@@ -11,6 +11,7 @@ part of 'skip_count.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$SkipCount {
 
@@ -21,6 +22,8 @@ mixin _$SkipCount {
 @pragma('vm:prefer-inline')
 $SkipCountCopyWith<SkipCount> get copyWith => _$SkipCountCopyWithImpl<SkipCount>(this as SkipCount, _$identity);
 
+  /// Serializes this SkipCount to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is SkipCount&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,skipCount);
 
@@ -197,11 +200,11 @@ return $default(_that.skipCount);case _:
 }
 
 /// @nodoc
-
-
+@JsonSerializable()
+@Deprecated('SkipCount.create()を使用してインスタンスを生成してください')
 class _SkipCount extends SkipCount {
   const _SkipCount({required this.skipCount}): super._();
-  
+  factory _SkipCount.fromJson(Map<String, dynamic> json) => _$SkipCountFromJson(json);
 
 @override final  int skipCount;
 
@@ -211,14 +214,17 @@ class _SkipCount extends SkipCount {
 @pragma('vm:prefer-inline')
 _$SkipCountCopyWith<_SkipCount> get copyWith => __$SkipCountCopyWithImpl<_SkipCount>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$SkipCountToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _SkipCount&&(identical(other.skipCount, skipCount) || other.skipCount == skipCount));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,skipCount);
 

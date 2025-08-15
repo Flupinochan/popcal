@@ -11,6 +11,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
@@ -199,7 +200,7 @@ class RotationScreen extends HookConsumerWidget {
               formData['notificationTime'] as TimeOfDay,
             ),
             createdAt: originalRotation.createdAt,
-            skipEvents: [],
+            skipEvents: const SkipEvents([]),
           );
           await rotationNotifier.updateRotation(dto);
         } else {
@@ -211,7 +212,7 @@ class RotationScreen extends HookConsumerWidget {
             notificationTime: NotificationTime(
               formData['notificationTime'] as TimeOfDay,
             ),
-            skipEvents: [],
+            skipEvents: const SkipEvents([]),
           );
           await rotationNotifier.createRotation(dto);
         }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
@@ -12,6 +13,7 @@ import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
+import 'package:popcal/shared/widgets/glass_dialog.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class SelectedDayInfo extends ConsumerWidget {
@@ -100,6 +102,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           borderRadius: 4,
                           onPressed:
                               () => _enableHoliday(
+                                context: context,
                                 ref: ref,
                                 calendarScheduleResponse:
                                     calendarScheduleResponse,
@@ -113,6 +116,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           borderRadius: 4,
                           onPressed:
                               () => _disableHoliday(
+                                context: context,
                                 ref: ref,
                                 calendarScheduleResponse:
                                     calendarScheduleResponse,
@@ -131,6 +135,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           borderRadius: 4,
                           onPressed:
                               () => _skipPrevious(
+                                context: context,
                                 ref: ref,
                                 calendarScheduleResponse:
                                     calendarScheduleResponse,
@@ -172,6 +177,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           borderRadius: 4,
                           onPressed:
                               () => _skipNext(
+                                context: context,
                                 ref: ref,
                                 calendarScheduleResponse:
                                     calendarScheduleResponse,
@@ -190,6 +196,7 @@ class SelectedDayInfo extends ConsumerWidget {
   }
 
   Future<void> _disableHoliday({
+    required BuildContext context,
     required WidgetRef ref,
     required CalendarScheduleResponse calendarScheduleResponse,
     required DateTime? selectedDay,
@@ -197,10 +204,16 @@ class SelectedDayInfo extends ConsumerWidget {
     if (selectedDay == null) {
       return;
     }
+    final dateKeyResult = DateKey.create(selectedDay);
+    if (dateKeyResult.isFailure) {
+      showErrorDialog(context, dateKeyResult.displayText);
+      return;
+    }
+
     final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
     final rotationResponse = calendarScheduleResponse.rotationResponse;
-    final skipEvents = List.of(rotationResponse.skipEvents)..removeWhere(
-      (skipEvent) => skipEvent.dateKey == DateKey.fromDateTime(selectedDay),
+    final skipEvents = rotationResponse.skipEvents.removeByDateKey(
+      dateKeyResult.valueOrNull!,
     );
     final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(
@@ -218,6 +231,7 @@ class SelectedDayInfo extends ConsumerWidget {
   }
 
   Future<void> _enableHoliday({
+    required BuildContext context,
     required WidgetRef ref,
     required CalendarScheduleResponse calendarScheduleResponse,
     required DateTime? selectedDay,
@@ -225,16 +239,27 @@ class SelectedDayInfo extends ConsumerWidget {
     if (selectedDay == null) {
       return;
     }
+    final dateKeyResult = DateKey.create(selectedDay);
+    if (dateKeyResult.isFailure) {
+      showErrorDialog(context, dateKeyResult.displayText);
+      return;
+    }
+
     final rotationResponse = calendarScheduleResponse.rotationResponse;
     // holidayの場合はskipCount1で固定
-    final skipEvent = [
+    final skipEventsResult = rotationResponse.skipEvents.add(
       SkipEvent(
-        dateKey: DateKey.fromDateTime(selectedDay),
+        dateKey: dateKeyResult.valueOrNull!,
         dayType: DayType.holiday,
         skipCount: const SkipCount(skipCount: 1),
       ),
-      ...rotationResponse.skipEvents,
-    ];
+    );
+    if (skipEventsResult.isFailure) {
+      showErrorDialog(context, skipEventsResult.displayText);
+      return;
+    }
+    final skipEvents = skipEventsResult.valueOrNull!;
+
     final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(
       userId: rotationResponse.userId,
@@ -244,7 +269,7 @@ class SelectedDayInfo extends ConsumerWidget {
       rotationDays: rotationResponse.rotationDays,
       notificationTime: rotationResponse.notificationTime,
       createdAt: rotationResponse.createdAt,
-      skipEvents: skipEvent,
+      skipEvents: skipEvents,
     );
     final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
     await rotationNotifier.updateRotation(updateRotation);
@@ -252,6 +277,7 @@ class SelectedDayInfo extends ConsumerWidget {
   }
 
   Future<void> _skipNext({
+    required BuildContext context,
     required WidgetRef ref,
     required CalendarScheduleResponse calendarScheduleResponse,
     required DateTime? selectedDay,
@@ -260,34 +286,15 @@ class SelectedDayInfo extends ConsumerWidget {
     if (selectedDay == null) {
       return;
     }
-
-    final targetDateKey = DateKey.fromDateTime(selectedDay);
-    final updateSkipEvents = <SkipEvent>[];
-    var foundTarget = false;
-
-    for (final skipEvent in rotationResponse.skipEvents) {
-      if (skipEvent.dayType == DayType.skipToNext &&
-          skipEvent.dateKey == targetDateKey) {
-        updateSkipEvents.add(
-          skipEvent.copyWith(
-            skipCount: SkipCount(skipCount: skipEvent.skipCount.skipCount + 1),
-          ),
-        );
-        foundTarget = true;
-      } else {
-        updateSkipEvents.add(skipEvent);
-      }
+    final targetDateKeyResult = DateKey.create(selectedDay);
+    if (targetDateKeyResult.isFailure) {
+      showErrorDialog(context, targetDateKeyResult.displayText);
+      return;
     }
 
-    if (!foundTarget) {
-      updateSkipEvents.add(
-        SkipEvent(
-          dateKey: targetDateKey,
-          dayType: DayType.skipToNext,
-          skipCount: const SkipCount(skipCount: 1),
-        ),
-      );
-    }
+    final updateSkipEvents = rotationResponse.skipEvents.incrementSkipToNext(
+      targetDateKeyResult.valueOrNull!,
+    );
 
     final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(
@@ -306,6 +313,7 @@ class SelectedDayInfo extends ConsumerWidget {
   }
 
   Future<void> _skipPrevious({
+    required BuildContext context,
     required WidgetRef ref,
     required CalendarScheduleResponse calendarScheduleResponse,
     required DateTime? selectedDay,
@@ -314,28 +322,15 @@ class SelectedDayInfo extends ConsumerWidget {
     if (selectedDay == null) {
       return;
     }
-
-    final targetDateKey = DateKey.fromDateTime(selectedDay);
-    final updateSkipEvents = <SkipEvent>[];
-
-    for (final skipEvent in rotationResponse.skipEvents) {
-      if (skipEvent.dayType == DayType.skipToNext &&
-          skipEvent.dateKey == targetDateKey) {
-        final skipCount = skipEvent.skipCount.skipCount;
-        if (skipCount > 1) {
-          // skipCountが1以下の場合は追加しない == 削除
-          updateSkipEvents.add(
-            skipEvent.copyWith(
-              skipCount: SkipCount(
-                skipCount: skipCount - 1,
-              ),
-            ),
-          );
-        }
-      } else {
-        updateSkipEvents.add(skipEvent);
-      }
+    final targetDateKeyResult = DateKey.create(selectedDay);
+    if (targetDateKeyResult.isFailure) {
+      showErrorDialog(context, targetDateKeyResult.displayText);
+      return;
     }
+
+    final updateSkipEvents = rotationResponse.skipEvents.decrementSkipToNext(
+      targetDateKeyResult.valueOrNull!,
+    );
 
     final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(

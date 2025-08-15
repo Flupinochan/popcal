@@ -10,7 +10,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 part 'rotation_response.freezed.dart';
 
@@ -26,7 +26,7 @@ sealed class RotationResponse with _$RotationResponse {
     required RotationIndex currentRotationIndex,
     required RotationCreatedAt createdAt,
     required RotationUpdatedAt updatedAt,
-    required List<SkipEvent> skipEvents,
+    required SkipEvents skipEvents,
     required String displayDays,
     required String displayMembers,
     required String displayNotificationTime,

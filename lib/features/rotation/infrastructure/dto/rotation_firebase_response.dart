@@ -16,6 +16,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
+import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 part 'rotation_firebase_response.freezed.dart';
 
@@ -33,7 +34,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     // Widget(UI)はDateTimeが適切
     required RotationCreatedAt createdAt,
     required RotationUpdatedAt updatedAt,
-    required List<SkipEvent> skipEvents,
+    required SkipEvents skipEvents,
   }) = _RotationFirebaseResponse;
   // Entity => DTO (factory method)
   factory RotationFirebaseResponse.fromEntity(Rotation entity) {
@@ -163,8 +164,8 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   }
 
   // ignore: avoid-dynamic
-  static List<SkipEvent> _parseSkipEvents(dynamic data) {
-    if (data == null) return [];
+  static SkipEvents _parseSkipEvents(dynamic data) {
+    if (data == null) return const SkipEvents([]);
 
     if (data is! List) {
       throw FormatException(
@@ -172,32 +173,43 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       );
     }
 
-    return data.map((item) {
-      if (item is! Map<String, dynamic>) {
-        throw const FormatException('SkipEvent item must be a Map');
-      }
+    final skipEventsList =
+        data.map((item) {
+          if (item is! Map<String, dynamic>) {
+            throw const FormatException('SkipEvent item must be a Map');
+          }
 
-      final timestamp = item['date'] as Timestamp;
-      final typeString = item['type'] as String;
-      final skipCount = (item['skipCount'] ?? 1) as int;
+          final timestamp = item['date'] as Timestamp;
+          final typeString = item['type'] as String;
+          final skipCount = (item['skipCount'] ?? 1) as int;
 
-      final type = DayType.values.firstWhere(
-        (e) => e.name == typeString,
-        orElse: () => throw FormatException('Invalid SkipType: $typeString'),
-      );
+          final type = DayType.values.firstWhere(
+            (e) => e.name == typeString,
+            orElse:
+                () => throw FormatException('Invalid SkipType: $typeString'),
+          );
 
-      return SkipEvent(
-        dateKey: DateKey.fromDateTime(timestamp.toDate()),
-        dayType: type,
-        skipCount: SkipCount(skipCount: skipCount),
-      );
-    }).toList();
+          final dateKeyResult = DateKey.create(timestamp.toDate());
+          if (dateKeyResult.isFailure) {
+            throw FormatException(
+              'Invalid dateKey: ${timestamp.toDate()}',
+            );
+          }
+
+          return SkipEvent(
+            dateKey: dateKeyResult.valueOrNull!,
+            dayType: type,
+            skipCount: SkipCount(skipCount: skipCount),
+          );
+        }).toList();
+
+    return SkipEvents(skipEventsList);
   }
 
   static List<Map<String, dynamic>> _skipEventsToFirestore(
-    List<SkipEvent> skipEvents,
+    SkipEvents skipEvents,
   ) {
-    return skipEvents
+    return skipEvents.value
         .map(
           (event) => {
             'date': Timestamp.fromDate(event.dateKey.value),

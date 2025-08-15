@@ -12,6 +12,7 @@ sealed class RotationMemberNames with _$RotationMemberNames {
 
   factory RotationMemberNames.fromJson(Map<String, dynamic> json) =>
       _$RotationMemberNamesFromJson(json);
+
   const RotationMemberNames._();
 
   int get length => value.length;

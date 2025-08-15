@@ -24,7 +24,6 @@ class CalendarCell extends StatelessWidget {
 
     final dayInfo = calendarDataDto.getDayInfo(day);
     final memberName = dayInfo.memberName;
-    final scheduleDayType = dayInfo.scheduleDayType;
     final isValidRotationDay = dayInfo.isValidRotationDay;
 
     return Container(
