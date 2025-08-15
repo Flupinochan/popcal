@@ -90,7 +90,7 @@ final notificationInitializationProvider =
 typedef NotificationInitializationRef =
     AutoDisposeFutureProviderRef<Result<void>>;
 String _$rotationCalculationServiceHash() =>
-    r'2b9ef47ef21b8d2a327b0185d8752df8b6fd5571';
+    r'9ba830fddc454c109d434cdae282ccba1bde3486';
 
 /// See also [rotationCalculationService].
 @ProviderFor(rotationCalculationService)

@@ -4,9 +4,19 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassFormTime extends StatelessWidget {
-  const GlassFormTime({required this.now, super.key, this.initialValue});
+  const GlassFormTime({
+    required this.now,
+    super.key,
+    this.initialValue,
+    this.padding,
+    this.width,
+    this.isEnabled = true,
+  });
   final TimeOfDay? initialValue;
   final DateTime now;
+  final EdgeInsets? padding;
+  final double? width;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +29,8 @@ class GlassFormTime extends StatelessWidget {
     final surfaceColorMedium = glassTheme.surfaceColor.withValues(alpha: 0.4);
 
     return GlassWrapper(
+      padding: padding ?? const EdgeInsets.all(12),
+      width: width ?? 100,
       child: FormBuilderField<TimeOfDay>(
         name: 'notificationTime',
         initialValue: initialValue ?? currentTime,
@@ -31,30 +43,29 @@ class GlassFormTime extends StatelessWidget {
 
           return InkWell(
             onTap:
-                () => _onTimeTap(
-                  context,
-                  field,
-                  glassTheme,
-                  surfaceColorLight,
-                  surfaceColorMedium,
-                ),
+                isEnabled
+                    ? () => _onTimeTap(
+                      context,
+                      field,
+                      glassTheme,
+                      surfaceColorLight,
+                      surfaceColorMedium,
+                    )
+                    : null,
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            child: Container(
-              height: 56,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                spacing: 12,
-                children: [
-                  // Time Icon
-                  Icon(
-                    Icons.access_time,
-                    color: glassTheme.surfaceColor.withValues(alpha: 0.8),
-                    size: 20,
-                  ),
-                  // Time Text
-                  Expanded(child: Text(timeText, style: textTheme.bodyLarge)),
-                ],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 8,
+              children: [
+                // Time Icon
+                Icon(
+                  Icons.access_time,
+                  color: glassTheme.surfaceColor.withValues(alpha: 0.8),
+                  size: 20,
+                ),
+                // Time Text
+                Text(timeText, style: textTheme.bodyLarge),
+              ],
             ),
           );
         },

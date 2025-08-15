@@ -13,6 +13,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     required this.borderWidth, // 境界線の太さ
     required this.borderRadius, // 角の丸み
     required this.iconColor, // IconColor
+    required this.background,
+    required this.backgroundStrong,
     required this.backgroundGradient, // 背景グラデーション
     required this.backgroundGradientStrong,
     required this.transparentGradient,
@@ -35,6 +37,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     borderWidth: 1,
     borderRadius: 12,
     iconColor: Colors.white.withValues(alpha: 0.8),
+    background: Colors.white.withValues(alpha: 0.1),
+    backgroundStrong: Colors.white.withValues(alpha: 0.3),
     backgroundGradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
@@ -88,6 +92,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
   final double borderWidth;
   final double borderRadius;
   final Color iconColor;
+  final Color background;
+  final Color backgroundStrong;
   final LinearGradient backgroundGradient;
   final LinearGradient backgroundGradientStrong;
   final LinearGradient transparentGradient;
@@ -118,6 +124,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
     double? borderWidth,
     double? borderRadius,
     Color? iconColor,
+    Color? background,
+    Color? backgroundStrong,
     LinearGradient? backgroundGradient,
     LinearGradient? backgroundGradientStrong,
     LinearGradient? transparentGradient,
@@ -138,6 +146,8 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
       borderWidth: borderWidth ?? this.borderWidth,
       borderRadius: borderRadius ?? this.borderRadius,
       iconColor: iconColor ?? this.iconColor,
+      background: background ?? this.background,
+      backgroundStrong: backgroundStrong ?? this.backgroundStrong,
       backgroundGradient: backgroundGradient ?? this.backgroundGradient,
       backgroundGradientStrong:
           backgroundGradientStrong ?? this.backgroundGradientStrong,
@@ -167,6 +177,9 @@ class GlassTheme extends ThemeExtension<GlassTheme> {
       borderWidth: lerpDouble(borderWidth, other.borderWidth, t)!,
       borderRadius: lerpDouble(borderRadius, other.borderRadius, t)!,
       iconColor: Color.lerp(iconColor, other.iconColor, t)!,
+      background: Color.lerp(background, other.background, t)!,
+      backgroundStrong:
+          Color.lerp(backgroundStrong, other.backgroundStrong, t)!,
       backgroundGradient:
           LinearGradient.lerp(backgroundGradient, other.backgroundGradient, t)!,
       backgroundGradientStrong:

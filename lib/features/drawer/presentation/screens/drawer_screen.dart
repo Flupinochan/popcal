@@ -73,12 +73,18 @@ class DrawerScreen extends HookConsumerWidget {
                 const SizedBox(height: 16),
                 // Menu
                 Expanded(
-                  child: ListView(
+                  child: Column(
+                    spacing: 12,
                     children: [
                       GlassMenuItem(
                         icon: Icons.home,
                         title: 'ホーム',
                         onTap: () => _onHomeTap(context),
+                      ),
+                      GlassMenuItem(
+                        icon: Icons.event_note,
+                        title: '月末営業日通知',
+                        onTap: () => _onMonthEndTap(context),
                       ),
                     ],
                   ),
@@ -156,6 +162,11 @@ class DrawerScreen extends HookConsumerWidget {
   void _onHomeTap(BuildContext context) {
     context.pop();
     const HomeRoute().go(context);
+  }
+
+  void _onMonthEndTap(BuildContext context) {
+    context.pop();
+    const MonthEndRoute().go(context);
   }
 
   Future<void> _showDocumentPage() async {

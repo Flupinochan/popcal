@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
+import 'package:popcal/features/month_end/presentation/screens/month_end_screen.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
@@ -47,6 +48,16 @@ class LoginRoute extends GoRouteData with _$LoginRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const LoginScreen();
+  }
+}
+
+@TypedGoRoute<MonthEndRoute>(path: '/month-end')
+class MonthEndRoute extends GoRouteData with _$MonthEndRoute {
+  const MonthEndRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const MonthEndScreen();
   }
 }
 
