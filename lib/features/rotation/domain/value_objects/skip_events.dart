@@ -19,6 +19,7 @@ sealed class SkipEvents with _$SkipEvents {
 
   const SkipEvents._();
 
+  @useResult
   Result<SkipEvents> add(SkipEvent skipEvent) {
     if (value.any((e) => e.dateKey == skipEvent.dateKey)) {
       return Results.failure<SkipEvents>(
