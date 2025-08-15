@@ -56,7 +56,7 @@ class DeadlineScreen extends HookConsumerWidget {
               spacing: 12,
               children: [
                 SizedBox(
-                  height: 100,
+                  height: 60,
                   child: Row(
                     children: [
                       Column(
