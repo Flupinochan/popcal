@@ -57,7 +57,7 @@ class MonthEndRoute extends GoRouteData with _$MonthEndRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const MonthEndScreen();
+    return MonthEndScreen();
   }
 }
 

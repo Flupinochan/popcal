@@ -7,13 +7,17 @@ import 'package:logging/logging.dart';
 import 'package:popcal/core/logger/logger.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/month_end/providers/month_end_settings_providers.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/firebase_options.dart';
 import 'package:popcal/router/router.dart';
 import 'package:popcal/router/routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   /// ロガー初期化
   setupLogging();
   final logger = Logger('main');
@@ -22,7 +26,6 @@ void main() async {
   initializeTimeZones();
 
   // Firebase初期化
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Firebase Crashlytics初期化
@@ -35,9 +38,17 @@ void main() async {
     return true;
   };
 
+  // Local Storage初期化
+  final prefs = await SharedPreferences.getInstance();
+
   // RiverPod Scope
   logger.info('runApp実行');
-  runApp(ProviderScope(child: MainApp()));
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends ConsumerWidget {

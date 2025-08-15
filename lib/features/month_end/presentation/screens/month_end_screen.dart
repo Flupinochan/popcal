@@ -7,9 +7,25 @@ import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
+import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class MonthEndScreen extends HookConsumerWidget {
-  const MonthEndScreen({super.key});
+  MonthEndScreen({super.key});
+
+  final List<DateTime> monthList = [
+    DateTime(2025),
+    DateTime(2025, 2),
+    DateTime(2025, 3),
+    DateTime(2025, 4),
+    DateTime(2025, 5),
+    DateTime(2025, 6),
+    DateTime(2025, 7),
+    DateTime(2025, 8),
+    DateTime(2025, 9),
+    DateTime(2025, 10),
+    DateTime(2025, 11),
+    DateTime(2025, 12),
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,6 +52,7 @@ class MonthEndScreen extends HookConsumerWidget {
           child: FormBuilder(
             key: formKey,
             child: Column(
+              spacing: 12,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,9 +102,25 @@ class MonthEndScreen extends HookConsumerWidget {
                             },
                           ),
                       value: isSwitched.value,
-                      onChanged: (value) => isSwitched.value = value,
+                      onChanged: (value) {
+                        isSwitched.value = value;
+                      },
                     ),
                   ],
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: monthList.length,
+                    itemBuilder: (context, index) {
+                      return GlassWrapper(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        margin: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text(
+                          monthList[index].toString(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
