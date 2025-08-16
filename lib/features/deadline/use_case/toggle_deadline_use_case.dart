@@ -28,8 +28,8 @@ class ToggleDeadlineUseCase {
     // 2-1. on時 通知登録
     if (deadline.isEnabled) {
       // 通知スケジュール計算
-      final calculateResult =
-          _deadlineCalculationService.calculationDeadlineSchedule();
+      final calculateResult = _deadlineCalculationService
+          .calculationDeadlineSchedule(deadline: deadline);
       if (calculateResult.isFailure) {
         return Results.failure(DeadlineFailure(calculateResult.displayText));
       }

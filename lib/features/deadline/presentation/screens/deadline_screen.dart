@@ -34,6 +34,7 @@ class DeadlineScreen extends HookConsumerWidget {
     final timeUtils = ref.watch(timeUtilsProvider);
     final now = TimeOfDay.fromDateTime(timeUtils.now());
     final lastNotificationTime = useState(now);
+    final lastIsEnabled = useState(false);
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -71,20 +72,20 @@ class DeadlineScreen extends HookConsumerWidget {
                               context: context,
                               ref: ref,
                               formKey: formKey,
-                              isEnabled: false,
+                              lastIsEnabled: lastIsEnabled,
                               isLoading: true,
                               lastNotificationTime: lastNotificationTime,
                             );
                           }
                           final deadlineRequest = result.valueOrNull!;
-                          final isEnabled = deadlineRequest.isEnabled;
+                          lastIsEnabled.value = deadlineRequest.isEnabled;
                           lastNotificationTime.value =
                               deadlineRequest.notificationTime.timeOfDay;
                           return _buildScreen(
                             context: context,
                             ref: ref,
                             formKey: formKey,
-                            isEnabled: isEnabled,
+                            lastIsEnabled: lastIsEnabled,
                             isLoading: false,
                             lastNotificationTime: lastNotificationTime,
                           );
@@ -94,7 +95,7 @@ class DeadlineScreen extends HookConsumerWidget {
                               context: context,
                               ref: ref,
                               formKey: formKey,
-                              isEnabled: false,
+                              lastIsEnabled: lastIsEnabled,
                               isLoading: true,
                               lastNotificationTime: lastNotificationTime,
                             ),
@@ -103,7 +104,7 @@ class DeadlineScreen extends HookConsumerWidget {
                               context: context,
                               ref: ref,
                               formKey: formKey,
-                              isEnabled: false,
+                              lastIsEnabled: lastIsEnabled,
                               isLoading: true,
                               lastNotificationTime: lastNotificationTime,
                             ),
@@ -170,7 +171,7 @@ class DeadlineScreen extends HookConsumerWidget {
     required BuildContext context,
     required WidgetRef ref,
     required GlobalKey<FormBuilderState> formKey,
-    required bool isEnabled,
+    required ValueNotifier<bool> lastIsEnabled,
     required bool isLoading,
     required ValueNotifier<TimeOfDay> lastNotificationTime,
   }) {
@@ -183,17 +184,19 @@ class DeadlineScreen extends HookConsumerWidget {
         spacing: 10,
         children: [
           Opacity(
-            opacity: (isEnabled && !isLoading) ? 1 : 0.5,
+            opacity: (lastIsEnabled.value && !isLoading) ? 1 : 0.5,
             child: GlassFormTime(
-              isEnabled: isEnabled,
+              isEnabled: lastIsEnabled.value,
               initialValue: lastNotificationTime.value,
-              onTimeChanged:
-                  (TimeOfDay selectedTime) => _updateDeadlineSettings(
-                    ref,
-                    formKey,
-                    isEnabled: isEnabled,
-                    selectedTime: selectedTime,
-                  ),
+              onTimeChanged: (TimeOfDay selectedTime) {
+                lastNotificationTime.value = selectedTime;
+                _updateDeadlineSettings(
+                  ref,
+                  formKey,
+                  isEnabled: lastIsEnabled.value,
+                  selectedTime: selectedTime,
+                );
+              },
             ),
           ),
           Switch(
@@ -224,15 +227,12 @@ class DeadlineScreen extends HookConsumerWidget {
                 return glassTheme.borderColor;
               },
             ),
-            value: isEnabled,
+            value: lastIsEnabled.value,
             onChanged:
                 isLoading
                     ? null
-                    : (bool? value) {
-                      if (value != null) {
-                        _updateDeadlineSettings(ref, formKey, isEnabled: value);
-                      }
-                    },
+                    : (value) =>
+                        _updateDeadlineSettings(ref, formKey, isEnabled: value),
           ),
         ],
       ),

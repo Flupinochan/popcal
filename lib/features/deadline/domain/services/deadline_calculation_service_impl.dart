@@ -1,7 +1,10 @@
 import 'package:holiday_jp/holiday_jp.dart' as holiday_jp;
 import 'package:logging/logging.dart';
+import 'package:popcal/core/utils/failures/deadline_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
+import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/deadline/domain/entities/deadline.dart';
 import 'package:popcal/features/deadline/domain/services/deadline_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_content.dart';
@@ -18,7 +21,9 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
   final Logger _logger;
 
   @override
-  Result<List<NotificationEntry>> calculationDeadlineSchedule() {
+  Result<List<NotificationEntry>> calculationDeadlineSchedule({
+    required Deadline deadline,
+  }) {
     final notificationEntries = <NotificationEntry>[];
     final now = DateTime.now().toUtc();
 
@@ -45,12 +50,20 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
       final description = NotificationDescription(value: '$month月の最終平日です');
       final sourceId = SourceId.createDeadlineId();
       final notificationId = NotificationId.create(sourceId, lastWeekdays);
+      final dateKeyResult = DateKey.create(lastWeekdays);
+      if (dateKeyResult.isFailure) {
+        return Results.failure(DeadlineFailure(dateKeyResult.displayText));
+      }
+      final notificationDateTime = NotificationDateTime.fromDateAndTime(
+        date: dateKeyResult.valueOrNull!,
+        notificationTime: deadline.notificationTime,
+      );
 
       final notificationEntry = NotificationEntry(
         notificationId: notificationId,
         sourceId: sourceId,
         userId: UserId(sourceId.value),
-        notificationDateTime: NotificationDateTime(lastWeekdays),
+        notificationDateTime: notificationDateTime,
         title: title,
         content: content,
         description: description,
