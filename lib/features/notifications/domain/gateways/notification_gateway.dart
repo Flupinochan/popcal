@@ -29,5 +29,6 @@ abstract class NotificationGateway {
   Future<Result<void>> initializeNotification();
 
   /// 0-2. アプリが起動していない場合に、通知タップからアプリを起動した場合
-  Future<Result<void>> initializeNotificationLaunch();
+  /// 通知タップからアプリを起動した場合は、Calendar画面に遷移するためのSourceIdを返す
+  Future<Result<SourceId?>> isLaunchedFromNotification();
 }

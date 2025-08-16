@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
@@ -9,6 +8,7 @@ import 'package:popcal/features/calendar/presentation/widgets/rotation_info_card
 import 'package:popcal/features/calendar/presentation/widgets/selected_day_info.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
+import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
 import 'package:popcal/shared/screens/custom_loading_screen.dart';
@@ -41,7 +41,7 @@ class CalendarScreen extends HookConsumerWidget {
                   appBar: GlassAppBar(
                     title: dto.rotationResponse.rotationName.value,
                     leadingIcon: Icons.arrow_back_ios_new,
-                    onLeadingPressed: () => context.pop(),
+                    onLeadingPressed: () => const HomeRoute().go(context),
                   ),
                   body: Container(
                     height: double.infinity,
@@ -82,7 +82,7 @@ class CalendarScreen extends HookConsumerWidget {
                 ),
             failure: (error) => CustomErrorScreen(message: error.message),
           ),
-      loading: CustomLoadingScreen.new,
+      loading: () => const CustomLoadingScreen(),
       error: (error, stack) => const CustomErrorScreen(),
     );
   }

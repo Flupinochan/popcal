@@ -156,7 +156,15 @@ class NotificationGatewayLocal {
         settings,
         // 1.アプリ起動中に通知をタップした際の動作
         onDidReceiveNotificationResponse: (response) {
-          _handleNotificationTap(response.payload);
+          final sourceId = _getSourceIdFromPayload(response.payload);
+          if (sourceId == null) {
+            _router.push(const ErrorRoute().location);
+          }
+          _router.push(
+            CalendarRoute(
+              id: sourceId!,
+            ).location,
+          );
         },
         // 2.アプリが起動していない場合に通知をタップした際の動作
         // ※通知をタップしたらデフォルトでアプリが起動するため、アプリ起動時の処理で遷移するため不要
@@ -172,7 +180,7 @@ class NotificationGatewayLocal {
   }
 
   /// 0-2. アプリが起動していない場合に、通知タップからアプリを起動した場合
-  Future<Result<void>> initializeNotificationLaunch() async {
+  Future<Result<String?>> isLaunchedFromNotification() async {
     try {
       final notificationAppLaunchDetails =
           await _flutterLocalNotificationsPlugin
@@ -182,7 +190,8 @@ class NotificationGatewayLocal {
           notificationAppLaunchDetails.didNotificationLaunchApp) {
         final payload =
             notificationAppLaunchDetails.notificationResponse?.payload;
-        _handleNotificationTap(payload);
+        final sourceId = _getSourceIdFromPayload(payload);
+        return Results.success(sourceId);
       }
       return Results.success(null);
     } on Exception catch (error) {
@@ -193,27 +202,19 @@ class NotificationGatewayLocal {
   }
 
   /// 通知タップ時の共通処理
-  void _handleNotificationTap(String? payload) {
+  String? _getSourceIdFromPayload(String? payload) {
     try {
       if (payload != null) {
-        LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
-          payload,
-        ).when(
-          // deadlineの場合はcalendarに移動せず、deadlineに移動させる必要がある
-          success:
-              (localNotificationSettingDto) => _router.push(
-                CalendarRoute(
-                  id: localNotificationSettingDto.sourceId.value,
-                ).location,
-              ),
-          failure: (error) => _router.go(const ErrorRoute().location),
-        );
-      } else {
-        _router.go(const ErrorRoute().location);
+        final localNotificationSettingDtoResult =
+            LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+              payload,
+            );
+        if (localNotificationSettingDtoResult.isSuccess) {
+          return localNotificationSettingDtoResult.valueOrNull!.sourceId.value;
+        }
       }
-    } on Exception catch (_) {
-      _router.go(const ErrorRoute().location);
-    }
+    } on Exception catch (_) {}
+    return null;
   }
 
   /// 通知権限状態の確認

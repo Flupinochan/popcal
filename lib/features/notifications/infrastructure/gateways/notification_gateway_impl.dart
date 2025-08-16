@@ -88,12 +88,13 @@ class NotificationGatewayImpl implements NotificationGateway {
 
   /// 0-2. 通知タップからアプリを起動した場合の画面遷移
   @override
-  Future<Result<void>> initializeNotificationLaunch() async {
+  Future<Result<SourceId?>> isLaunchedFromNotification() async {
     final result =
-        await _localNotificationsDatasource.initializeNotificationLaunch();
-    return result.when(
-      success: (_) => Results.success(null),
-      failure: Results.failure,
-    );
+        await _localNotificationsDatasource.isLaunchedFromNotification();
+    if (result.isFailure) {
+      return Results.failure(result.failureOrNull!);
+    }
+    final sourceId = SourceId(value: result.valueOrNull!);
+    return Results.success(sourceId);
   }
 }

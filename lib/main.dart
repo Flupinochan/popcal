@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/logger/logger.dart';
 import 'package:popcal/core/themes/app_theme.dart';
@@ -67,7 +68,10 @@ class MainApp extends ConsumerWidget {
       next.when(
         data:
             (result) => result.when(
-              success: (_) => logger.info('通知初期化成功'),
+              success: (_) {
+                logger.info('通知初期化成功');
+                _checkNotificationLaunch(ref, router);
+              },
               failure: (error) {
                 logger.severe('通知初期化失敗: ${error.message}');
                 // 通知機能無効化フラグをグローバルに設定すべき
@@ -82,6 +86,20 @@ class MainApp extends ConsumerWidget {
     return MaterialApp.router(
       theme: AppTheme.lightTheme,
       routerConfig: router,
+    );
+  }
+
+  /// 通知タップからアプリを起動した場合の画面遷移処理
+  Future<void> _checkNotificationLaunch(WidgetRef ref, GoRouter router) async {
+    final notificationGateway = ref.read(notificationGatewayProvider);
+    final result = await notificationGateway.isLaunchedFromNotification();
+    result.when(
+      success: (sourceId) {
+        if (sourceId != null) {
+          router.go(CalendarRoute(id: sourceId.value).location);
+        }
+      },
+      failure: (_) => logger.warning('通知チェック失敗'),
     );
   }
 }
