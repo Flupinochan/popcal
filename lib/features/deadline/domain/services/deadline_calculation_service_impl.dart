@@ -13,7 +13,6 @@ import 'package:popcal/features/notifications/domain/value_objects/notification_
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_title.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
-import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
 class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
   DeadlineCalculationServiceImpl(this._logger);
@@ -72,7 +71,6 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
       notificationEntries.add(notificationEntry);
 
       // ログ出力
-      final weekDay = Weekday.fromInt(lastWeekdays.weekday);
       final message =
           '$month月: ${notificationDateTime.getDisplayDeadline()} 通知を作成';
       _logger.fine(message);
