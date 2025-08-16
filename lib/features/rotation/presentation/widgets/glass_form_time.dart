@@ -10,11 +10,13 @@ class GlassFormTime extends StatelessWidget {
     this.padding,
     this.width,
     this.isEnabled = true,
+    this.onTimeChanged,
   });
   final TimeOfDay initialValue;
   final EdgeInsets? padding;
   final double? width;
   final bool isEnabled;
+  final ValueChanged<TimeOfDay>? onTimeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +150,7 @@ class GlassFormTime extends StatelessWidget {
     );
     if (picked != null) {
       field.didChange(picked);
+      onTimeChanged?.call(picked);
     }
   }
 }

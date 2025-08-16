@@ -24,10 +24,16 @@ class DeadlineScreen extends HookConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final formKey = useMemoized(GlobalKey<FormBuilderState>.new);
     final deadlineState = ref.watch(deadlineNotifierProvider);
+    // formKeyが同一の場合は再レンダリングされても初期値が更新されない
+    // deadlineStateを条件にformKeyを再生成することで
+    // 初期値がloading状態のnowからdata状態のnotificationTimeに更新される
+    final formKey = useMemoized(GlobalKey<FormBuilderState>.new, [
+      deadlineState,
+    ]);
     final timeUtils = ref.watch(timeUtilsProvider);
     final now = TimeOfDay.fromDateTime(timeUtils.now());
+    final lastNotificationTime = useState(now);
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -62,44 +68,44 @@ class DeadlineScreen extends HookConsumerWidget {
                         data: (result) {
                           if (result.isFailure) {
                             return _buildScreen(
-                              context,
-                              ref,
-                              formKey,
-                              false,
-                              true,
-                              now,
+                              context: context,
+                              ref: ref,
+                              formKey: formKey,
+                              isEnabled: false,
+                              isLoading: true,
+                              lastNotificationTime: lastNotificationTime,
                             );
                           }
                           final deadlineRequest = result.valueOrNull!;
                           final isEnabled = deadlineRequest.isEnabled;
-                          final notificationTime =
-                              deadlineRequest.notificationTime;
+                          lastNotificationTime.value =
+                              deadlineRequest.notificationTime.timeOfDay;
                           return _buildScreen(
-                            context,
-                            ref,
-                            formKey,
-                            isEnabled,
-                            false,
-                            notificationTime.timeOfDay,
+                            context: context,
+                            ref: ref,
+                            formKey: formKey,
+                            isEnabled: isEnabled,
+                            isLoading: false,
+                            lastNotificationTime: lastNotificationTime,
                           );
                         },
                         loading:
                             () => _buildScreen(
-                              context,
-                              ref,
-                              formKey,
-                              false,
-                              true,
-                              now,
+                              context: context,
+                              ref: ref,
+                              formKey: formKey,
+                              isEnabled: false,
+                              isLoading: true,
+                              lastNotificationTime: lastNotificationTime,
                             ),
                         error:
                             (error, stackTrace) => _buildScreen(
-                              context,
-                              ref,
-                              formKey,
-                              false,
-                              true,
-                              now,
+                              context: context,
+                              ref: ref,
+                              formKey: formKey,
+                              isEnabled: false,
+                              isLoading: true,
+                              lastNotificationTime: lastNotificationTime,
                             ),
                       ),
                     ],
@@ -160,14 +166,14 @@ class DeadlineScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildScreen(
-    BuildContext context,
-    WidgetRef ref,
-    GlobalKey<FormBuilderState> formKey,
-    bool isEnabled,
-    bool isLoading,
-    TimeOfDay notificationTime,
-  ) {
+  Widget _buildScreen({
+    required BuildContext context,
+    required WidgetRef ref,
+    required GlobalKey<FormBuilderState> formKey,
+    required bool isEnabled,
+    required bool isLoading,
+    required ValueNotifier<TimeOfDay> lastNotificationTime,
+  }) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
 
@@ -180,7 +186,14 @@ class DeadlineScreen extends HookConsumerWidget {
             opacity: (isEnabled && !isLoading) ? 1 : 0.5,
             child: GlassFormTime(
               isEnabled: isEnabled,
-              initialValue: notificationTime,
+              initialValue: lastNotificationTime.value,
+              onTimeChanged:
+                  (TimeOfDay selectedTime) => _updateDeadlineSettings(
+                    ref,
+                    formKey,
+                    isEnabled: isEnabled,
+                    selectedTime: selectedTime,
+                  ),
             ),
           ),
           Switch(
@@ -215,33 +228,41 @@ class DeadlineScreen extends HookConsumerWidget {
             onChanged:
                 isLoading
                     ? null
-                    : (value) => _onSwitchChanged(
-                      ref,
-                      formKey,
-                      value,
-                    ),
+                    : (bool? value) {
+                      if (value != null) {
+                        _updateDeadlineSettings(ref, formKey, isEnabled: value);
+                      }
+                    },
           ),
         ],
       ),
     );
   }
 
-  Future<void> _onSwitchChanged(
+  Future<void> _updateDeadlineSettings(
     WidgetRef ref,
-    GlobalKey<FormBuilderState> formKey,
-    bool? value,
-  ) async {
-    if (value == null) return;
+    GlobalKey<FormBuilderState> formKey, {
+    required bool isEnabled,
+    TimeOfDay? selectedTime,
+  }) async {
+    if (formKey.currentState == null) return;
+    if (selectedTime != null) {
+      formKey.currentState!.fields['notificationTime']?.didChange(selectedTime);
+    }
+
     if (formKey.currentState!.saveAndValidate()) {
       final formData = formKey.currentState!.value;
-      final selectTime = formData['notificationTime'] as TimeOfDay;
+      final timeOfDay =
+          selectedTime ?? (formData['notificationTime'] as TimeOfDay);
+
       final dto = DeadlineRequest(
-        isEnabled: value,
+        isEnabled: isEnabled,
         notificationTime: NotificationTime(
-          hour: selectTime.hour,
-          minute: selectTime.minute,
+          hour: timeOfDay.hour,
+          minute: timeOfDay.minute,
         ),
       );
+
       final deadlineNotifier = ref.watch(deadlineNotifierProvider.notifier);
       await deadlineNotifier.execute(dto);
       final _ = ref.refresh(getDeadlineNotificationsProvider);
