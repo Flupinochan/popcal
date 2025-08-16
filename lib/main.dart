@@ -9,6 +9,7 @@ import 'package:popcal/core/logger/logger.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/providers/deadline_providers.dart';
+import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/firebase_options.dart';
 import 'package:popcal/router/router.dart';
@@ -96,7 +97,11 @@ class MainApp extends ConsumerWidget {
     result.when(
       success: (sourceId) {
         if (sourceId != null) {
-          router.go(CalendarRoute(id: sourceId.value).location);
+          if (sourceId != SourceId.createDeadlineId()) {
+            router.go(CalendarRoute(id: sourceId.value).location);
+          } else {
+            router.go(const HomeRoute().location);
+          }
         }
       },
       failure: (_) => logger.warning('通知チェック失敗'),

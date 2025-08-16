@@ -197,11 +197,15 @@ class NotificationGatewayLocal {
           if (sourceId == null) {
             _router.push(const ErrorRoute().location);
           }
-          _router.push(
-            CalendarRoute(
-              id: sourceId!,
-            ).location,
-          );
+          if (sourceId != SourceId.createDeadlineId().toString()) {
+            _router.go(
+              CalendarRoute(
+                id: sourceId!,
+              ).location,
+            );
+          } else {
+            _router.go(const HomeRoute().location);
+          }
         },
         // 2.アプリが起動していない場合に通知をタップした際の動作
         // ※通知をタップしたらデフォルトでアプリが起動するため、アプリ起動時の処理で遷移するため不要
