@@ -1,7 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service_impl.dart';
@@ -34,12 +33,6 @@ NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
     ref.watch(timeUtilsProvider),
     Logger('NotificationGatewayLocal'),
   );
-}
-
-@riverpod
-Future<Result<void>> notificationInitialization(Ref ref) async {
-  final notificationRepository = ref.watch(notificationGatewayProvider);
-  return notificationRepository.initializeNotification();
 }
 
 @riverpod

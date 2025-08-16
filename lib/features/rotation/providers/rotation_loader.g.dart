@@ -7,7 +7,7 @@ part of 'rotation_loader.dart';
 // **************************************************************************
 
 String _$rotationDataResponseHash() =>
-    r'2bfbb0bfe181494e6a3f91e52eeb1c1dfc93dff3';
+    r'f155c81bef8222a14c49e4f6f930253d51810ab5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -157,6 +157,136 @@ class _RotationDataResponseProviderElement
   @override
   RotationId? get rotationId =>
       (origin as RotationDataResponseProvider).rotationId;
+}
+
+String _$rotationResponsesStreamHash() =>
+    r'9571c1b1df024e2e4d11ed63e481d05010463340';
+
+/// See also [rotationResponsesStream].
+@ProviderFor(rotationResponsesStream)
+const rotationResponsesStreamProvider = RotationResponsesStreamFamily();
+
+/// See also [rotationResponsesStream].
+class RotationResponsesStreamFamily
+    extends Family<AsyncValue<Result<List<RotationResponse>>>> {
+  /// See also [rotationResponsesStream].
+  const RotationResponsesStreamFamily();
+
+  /// See also [rotationResponsesStream].
+  RotationResponsesStreamProvider call(UserId userId) {
+    return RotationResponsesStreamProvider(userId);
+  }
+
+  @override
+  RotationResponsesStreamProvider getProviderOverride(
+    covariant RotationResponsesStreamProvider provider,
+  ) {
+    return call(provider.userId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'rotationResponsesStreamProvider';
+}
+
+/// See also [rotationResponsesStream].
+class RotationResponsesStreamProvider
+    extends AutoDisposeStreamProvider<Result<List<RotationResponse>>> {
+  /// See also [rotationResponsesStream].
+  RotationResponsesStreamProvider(UserId userId)
+    : this._internal(
+        (ref) =>
+            rotationResponsesStream(ref as RotationResponsesStreamRef, userId),
+        from: rotationResponsesStreamProvider,
+        name: r'rotationResponsesStreamProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$rotationResponsesStreamHash,
+        dependencies: RotationResponsesStreamFamily._dependencies,
+        allTransitiveDependencies:
+            RotationResponsesStreamFamily._allTransitiveDependencies,
+        userId: userId,
+      );
+
+  RotationResponsesStreamProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.userId,
+  }) : super.internal();
+
+  final UserId userId;
+
+  @override
+  Override overrideWith(
+    Stream<Result<List<RotationResponse>>> Function(
+      RotationResponsesStreamRef provider,
+    )
+    create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: RotationResponsesStreamProvider._internal(
+        (ref) => create(ref as RotationResponsesStreamRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        userId: userId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<Result<List<RotationResponse>>>
+  createElement() {
+    return _RotationResponsesStreamProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RotationResponsesStreamProvider && other.userId == userId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, userId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin RotationResponsesStreamRef
+    on AutoDisposeStreamProviderRef<Result<List<RotationResponse>>> {
+  /// The parameter `userId` of this provider.
+  UserId get userId;
+}
+
+class _RotationResponsesStreamProviderElement
+    extends AutoDisposeStreamProviderElement<Result<List<RotationResponse>>>
+    with RotationResponsesStreamRef {
+  _RotationResponsesStreamProviderElement(super.provider);
+
+  @override
+  UserId get userId => (origin as RotationResponsesStreamProvider).userId;
 }
 
 // ignore_for_file: type=lint

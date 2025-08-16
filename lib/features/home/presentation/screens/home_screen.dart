@@ -6,15 +6,15 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
-import 'package:popcal/features/auth/providers/auth_stream.dart';
+import 'package:popcal/features/auth/providers/auth_loader.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
+import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
-import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
 import 'package:popcal/shared/screens/custom_error_simple_screen.dart';
@@ -79,7 +79,7 @@ class HomeScreen extends HookConsumerWidget {
     });
 
     // ユーザ情報取得
-    final authState = ref.watch(authStateChangesForUIProvider);
+    final authState = ref.watch(authStateChangesProvider);
     return authState.when(
       data:
           (dtoResult) => dtoResult.when(

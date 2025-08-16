@@ -45,25 +45,6 @@ final authRepositoryFirebaseProvider =
 // ignore: unused_element
 typedef AuthRepositoryFirebaseRef =
     AutoDisposeProviderRef<AuthRepositoryFirebase>;
-String _$authStateChangesHash() => r'21588219b6116bc68eb8c3facdf887075c745c4c';
-
-/// See also [authStateChanges].
-@ProviderFor(authStateChanges)
-final authStateChangesProvider =
-    AutoDisposeStreamProvider<Result<AppUser?>>.internal(
-      authStateChanges,
-      name: r'authStateChangesProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$authStateChangesHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef AuthStateChangesRef = AutoDisposeStreamProviderRef<Result<AppUser?>>;
 String _$firebaseAuthHash() => r'1128c042dbcfaf0703442bc9b30ebba69dd8cbf4';
 
 /// See also [firebaseAuth].

@@ -38,11 +38,12 @@ dependencies:
 dev_dependencies:
   alchemist: ^0.12.1
   build_runner: ^2.5.3
-  custom_lint: ^0.7.5
+  custom_lint: ^0.7.6
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
   flutter_test:
     sdk: flutter
+  freezed_lint: ^0.0.10
   json_serializable: ^6.9.5
   mocktail: ^1.0.4
   pubspec_dependency_sorter: ^1.0.5

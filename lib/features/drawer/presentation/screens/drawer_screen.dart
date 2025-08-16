@@ -5,8 +5,8 @@ import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
+import 'package:popcal/features/auth/providers/auth_loader.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
-import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/drawer/presentation/widgets/glass_menu_item.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/widgets/glass_button.dart';
@@ -50,9 +50,7 @@ class DrawerScreen extends HookConsumerWidget {
                     // name & email
                     Consumer(
                       builder: (context, ref, child) {
-                        final authResult = ref.watch(
-                          authStateChangesForUIProvider,
-                        );
+                        final authResult = ref.watch(authStateChangesProvider);
                         return authResult.when(
                           data:
                               (result) => result.when(

@@ -8,7 +8,7 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/auth/providers/auth_stream.dart';
+import 'package:popcal/features/auth/providers/auth_loader.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
@@ -25,8 +25,8 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
+import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
-import 'package:popcal/features/rotation/providers/rotation_stream.dart';
 
 void main() {
   const screenSize = Size(411, 914);
@@ -80,7 +80,7 @@ void main() {
           notificationGatewayProvider.overrideWith((ref) {
             return MockNotificationGateway();
           }),
-          authStateChangesForUIProvider.overrideWith(
+          authStateChangesProvider.overrideWith(
             (ref) => Stream.value(Results.success(mockUser)),
           ),
           syncNotificationsUseCaseProvider.overrideWith((ref) {

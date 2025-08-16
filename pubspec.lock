@@ -589,6 +589,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  freezed_lint:
+    dependency: "direct dev"
+    description:
+      name: freezed_lint
+      sha256: "389451a2a3d220c4ec7e057dea0ded1757c78af42680f42b3f12391f3188396a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.10"
   frontend_server_client:
     dependency: transitive
     description:

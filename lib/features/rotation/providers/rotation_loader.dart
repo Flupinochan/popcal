@@ -1,8 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/auth/providers/auth_stream.dart';
+import 'package:popcal/features/auth/providers/auth_loader.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
@@ -16,7 +17,7 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
   RotationId? rotationId,
 ) async {
   // 1. ユーザ情報を取得
-  final authResult = await ref.watch(authStateChangesForUIProvider.future);
+  final authResult = await ref.watch(authStateChangesProvider.future);
   if (authResult.isFailure) {
     return Results.failure(authResult.failureOrNull!);
   }
@@ -42,6 +43,25 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
     rotationResult.valueOrNull!,
   );
   return Results.success(RotationDataResponse(userDto, rotationResponse));
+}
+
+@riverpod
+Stream<Result<List<RotationResponse>>> rotationResponsesStream(
+  Ref ref,
+  UserId userId,
+) {
+  final rotationRepository = ref.watch(rotationRepositoryProvider);
+  return rotationRepository.watchRotations(userId).asyncMap((
+    entityResult,
+  ) async {
+    return entityResult.when(
+      success: (rotations) {
+        final dtoList = rotations.map(RotationResponse.fromEntity).toList();
+        return Results.success(dtoList);
+      },
+      failure: Results.failure,
+    );
+  });
 }
 
 class RotationDataResponse {

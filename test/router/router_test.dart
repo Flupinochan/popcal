@@ -10,13 +10,13 @@ import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
+import 'package:popcal/features/auth/providers/auth_loader.dart';
 import 'package:popcal/features/auth/providers/auth_notifier.dart';
-import 'package:popcal/features/auth/providers/auth_stream.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
-import 'package:popcal/features/rotation/providers/rotation_stream.dart';
+import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/router/router.dart';
 import 'package:popcal/router/routes.dart';
 
@@ -77,7 +77,7 @@ void main() {
       builder:
           // 1. 認証済かつ認証画面にいる => ホーム画面へ
           () => buildTestWidget([
-            authStateChangesForUIProvider.overrideWith(
+            authStateChangesProvider.overrideWith(
               (ref) => Stream.value(Results.success(mockUser)),
             ),
           ], const LoginRoute().location),
@@ -99,7 +99,7 @@ void main() {
       builder:
           // 2. 未認証かつ認証画面にいない => 認証画面へ
           () => buildTestWidget([
-            authStateChangesForUIProvider.overrideWith(
+            authStateChangesProvider.overrideWith(
               (ref) => Stream.value(Results.success(null)),
             ),
           ], const HomeRoute().location),
@@ -121,7 +121,7 @@ void main() {
       builder:
           // 3. 認証済かつ認証画面にいない => 画面遷移しない
           () => buildTestWidget([
-            authStateChangesForUIProvider.overrideWith(
+            authStateChangesProvider.overrideWith(
               (ref) => Stream.value(Results.success(mockUser)),
             ),
           ], const HomeRoute().location),
@@ -143,7 +143,7 @@ void main() {
       builder:
           // 4. 認証エラー時に認証画面にいない => 認証画面へ
           () => buildTestWidget([
-            authStateChangesForUIProvider.overrideWith(
+            authStateChangesProvider.overrideWith(
               (ref) =>
                   Stream.value(Results.failure(const AuthFailure('認証エラー'))),
             ),

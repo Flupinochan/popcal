@@ -4,13 +4,13 @@ import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'auth_stream.g.dart';
+part 'auth_loader.g.dart';
 
 // Stream Entity => Stream Dto
 // UIでStreamを受け取る際に直接Entityを受け取らないようにする
 // Dtoに変換して返却
 @riverpod
-Stream<Result<UserResponse?>> authStateChangesForUI(Ref ref) {
+Stream<Result<UserResponse?>> authStateChanges(Ref ref) {
   final entityStream = ref.watch(authRepositoryProvider).authStateChanges;
 
   return entityStream.asyncMap((entityResult) async {

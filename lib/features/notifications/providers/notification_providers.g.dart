@@ -68,27 +68,6 @@ final notificationGatewayLocalProvider =
 // ignore: unused_element
 typedef NotificationGatewayLocalRef =
     AutoDisposeProviderRef<NotificationGatewayLocal>;
-String _$notificationInitializationHash() =>
-    r'28b0878e8878862ca7da8bfc30553aa918bd56cc';
-
-/// See also [notificationInitialization].
-@ProviderFor(notificationInitialization)
-final notificationInitializationProvider =
-    AutoDisposeFutureProvider<Result<void>>.internal(
-      notificationInitialization,
-      name: r'notificationInitializationProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$notificationInitializationHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef NotificationInitializationRef =
-    AutoDisposeFutureProviderRef<Result<void>>;
 String _$rotationCalculationServiceHash() =>
     r'9ba830fddc454c109d434cdae282ccba1bde3486';
 
