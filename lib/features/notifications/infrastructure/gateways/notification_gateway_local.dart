@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
@@ -13,10 +14,12 @@ class NotificationGatewayLocal {
     this._router,
     this._flutterLocalNotificationsPlugin,
     this._timeUtils,
+    this._logger,
   );
   final GoRouter _router;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   final TimeUtils _timeUtils;
+  final Logger _logger;
 
   /// 1. 通知スケジュールを作成
   Future<Result<void>> createNotification(
@@ -93,33 +96,31 @@ class NotificationGatewayLocal {
     String sourceId,
   ) async {
     try {
-      final pendingNotifications =
-          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+      final notificationsResult = await getNotificationsBySourceId(sourceId);
+      if (notificationsResult.isFailure) {
+        return Results.failure(
+          NotificationFailure(
+            '通知の削除に失敗しました: ${notificationsResult.failureOrNull!}',
+          ),
+        );
+      }
 
       String? errorMessage;
-      for (final notification in pendingNotifications) {
-        if (notification.payload != null) {
-          try {
-            LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
-              notification.payload!,
-            ).when(
-              success: (localNotificationSettingDto) {
-                if (localNotificationSettingDto.sourceId ==
-                    SourceId(value: sourceId)) {
-                  _flutterLocalNotificationsPlugin.cancel(notification.id);
-                }
-              },
-              failure: (error) => errorMessage = error.message,
-            );
-          } on Exception catch (error) {
-            // 1つの通知削除でエラーが発生してもほかの通知削除は試みる
-            errorMessage = error.toString();
-            continue;
-          }
+      for (final notification in notificationsResult.valueOrNull!) {
+        try {
+          final notificationId = notification.notificationId.value;
+          await _flutterLocalNotificationsPlugin.cancel(notificationId);
+          _logger.fine(
+            'SourceId: $sourceId NotificationId: $notification 通知を削除',
+          );
+        } on Exception catch (error) {
+          // 1つの通知削除でエラーが発生してもほかの通知削除は試みる
+          errorMessage = error.toString();
+          continue;
         }
       }
       return errorMessage != null
-          ? Results.failure(NotificationFailure(errorMessage!))
+          ? Results.failure(NotificationFailure(errorMessage))
           : Results.success(null);
     } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の削除に失敗しました: $error'));
@@ -136,6 +137,42 @@ class NotificationGatewayLocal {
               .map((notification) => notification.id)
               .toList();
       return Results.success(notificationIds);
+    } on Exception catch (error) {
+      return Results.failure(NotificationFailure('通知の取得に失敗しました: $error'));
+    }
+  }
+
+  /// 特定のSourceIdの通知一覧を取得
+  Future<Result<List<NotificationEntryLocalResponse>>>
+  getNotificationsBySourceId(String sourceId) async {
+    try {
+      /// 全通知を取得
+      final pendingNotifications =
+          await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+      final notifications = <NotificationEntryLocalResponse>[];
+      for (final pendingNotification in pendingNotifications) {
+        if (pendingNotification.payload != null) {
+          try {
+            LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+              pendingNotification.payload!,
+            ).when(
+              success: (localNotificationSettingDto) {
+                /// 特定のSourceIdの通知を取得
+                if (localNotificationSettingDto.sourceId ==
+                    SourceId(value: sourceId)) {
+                  notifications.add(localNotificationSettingDto);
+                }
+              },
+              failure: (error) => _logger.severe(error.message),
+            );
+          } on Exception catch (error) {
+            _logger.severe(error.toString());
+            continue;
+          }
+        }
+      }
+      return Results.success(notifications);
     } on Exception catch (error) {
       return Results.failure(NotificationFailure('通知の取得に失敗しました: $error'));
     }
@@ -201,7 +238,7 @@ class NotificationGatewayLocal {
     }
   }
 
-  /// 通知タップ時の共通処理
+  /// 通知タップ時のpayloadからSourceIdを取得
   String? _getSourceIdFromPayload(String? payload) {
     try {
       if (payload != null) {

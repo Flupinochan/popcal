@@ -1,3 +1,4 @@
+import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
@@ -74,6 +75,20 @@ class NotificationGatewayImpl implements NotificationGateway {
           ),
       failure: Results.failure,
     );
+  }
+
+  @override
+  Future<Result<List<NotificationEntry>>> getNotificationsBySourceId(
+    SourceId sourceId,
+  ) async {
+    final result = await _localNotificationsDatasource
+        .getNotificationsBySourceId(sourceId.value);
+    if (result.isFailure) {
+      return Results.failure(NotificationFailure(result.displayText));
+    }
+    final dtos = result.valueOrNull!;
+    final entities = dtos.map((dto) => dto.toEntity()).toList();
+    return Results.success(entities);
   }
 
   /// 0-1. 初期化 ※とりあえず必要

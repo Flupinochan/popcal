@@ -48,7 +48,7 @@ final notificationGatewayProvider =
 // ignore: unused_element
 typedef NotificationGatewayRef = AutoDisposeProviderRef<NotificationGateway>;
 String _$notificationGatewayLocalHash() =>
-    r'427fa38b62d202d773f5f1e59a5e0b18e1ed3327';
+    r'223665841f60873af312445ad4f96a421742ce38';
 
 /// See also [notificationGatewayLocal].
 @ProviderFor(notificationGatewayLocal)

@@ -6,6 +6,27 @@ part of 'deadline_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$deadlineCalculationServiceHash() =>
+    r'b0fcf66c40c2ddd22e0beba20a68591f7cd64bfe';
+
+/// See also [deadlineCalculationService].
+@ProviderFor(deadlineCalculationService)
+final deadlineCalculationServiceProvider =
+    AutoDisposeProvider<DeadlineCalculationService>.internal(
+      deadlineCalculationService,
+      name: r'deadlineCalculationServiceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$deadlineCalculationServiceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DeadlineCalculationServiceRef =
+    AutoDisposeProviderRef<DeadlineCalculationService>;
 String _$deadlineRepositoryHash() =>
     r'bf9e011831eeff2f6c8cc6d1886d57e26188ea15';
 
@@ -45,7 +66,28 @@ final deadlineSharedPreferencesProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeadlineSharedPreferencesRef = ProviderRef<DeadlineSharedPreferences>;
-String _$sharedPreferencesHash() => r'5af3ef89b977886088ad52f3137331e474544957';
+String _$getDeadlineNotificationsHash() =>
+    r'428c6233e2c7dda6c3f5ba20079aa15eee4ca439';
+
+/// See also [getDeadlineNotifications].
+@ProviderFor(getDeadlineNotifications)
+final getDeadlineNotificationsProvider =
+    AutoDisposeFutureProvider<Result<List<NotificationEntry>>>.internal(
+      getDeadlineNotifications,
+      name: r'getDeadlineNotificationsProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$getDeadlineNotificationsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef GetDeadlineNotificationsRef =
+    AutoDisposeFutureProviderRef<Result<List<NotificationEntry>>>;
+String _$sharedPreferencesHash() => r'225e34d1d5293ff0304837a7ce3d6fdc21c7747c';
 
 /// See also [sharedPreferences].
 @ProviderFor(sharedPreferences)
@@ -64,7 +106,7 @@ final sharedPreferencesProvider = Provider<SharedPreferences>.internal(
 // ignore: unused_element
 typedef SharedPreferencesRef = ProviderRef<SharedPreferences>;
 String _$toggleDeadlineUseCaseHash() =>
-    r'1d67b0ce238d1449c3ae09183481e1770169dcaf';
+    r'eb35aaa8ff0839d8242403837db5f220e22f4e36';
 
 /// See also [toggleDeadlineUseCase].
 @ProviderFor(toggleDeadlineUseCase)

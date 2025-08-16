@@ -6,9 +6,12 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/presentation/dto/deadline_request.dart';
 import 'package:popcal/features/deadline/providers/deadline_notifier.dart';
+import 'package:popcal/features/deadline/providers/deadline_providers.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
+import 'package:popcal/shared/screens/custom_error_simple_screen.dart';
+import 'package:popcal/shared/screens/custom_loading_simple_screen.dart';
 import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
@@ -89,20 +92,53 @@ class DeadlineScreen extends HookConsumerWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: monthList.length,
-                    itemBuilder: (context, index) {
-                      return GlassWrapper(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        child: Text(
-                          monthList[index].toString(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                ref
+                    .watch(getDeadlineNotificationsProvider)
+                    .when(
+                      data: (result) {
+                        if (result.isFailure) {
+                          return const SizedBox.shrink();
+                        }
+                        final deadlineResponse = result.valueOrNull!;
+                        if (deadlineResponse.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Expanded(
+                          child: Column(
+                            children: [
+                              Text('通知予定日', style: textTheme.bodyLarge),
+                              const SizedBox(height: 12),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: deadlineResponse.length,
+                                  itemBuilder: (context, index) {
+                                    return GlassWrapper(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                      ),
+                                      child: Text(
+                                        deadlineResponse[index]
+                                            .notificationDateTime
+                                            .value
+                                            .toString(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      error:
+                          (error, stackTrace) => CustomErrorSimpleScreen(
+                            message: error.toString(),
+                          ),
+                      loading: CustomLoadingSimpleScreen.new,
+                    ),
               ],
             ),
           ),
@@ -181,6 +217,7 @@ class DeadlineScreen extends HookConsumerWidget {
       final dto = DeadlineRequest(isEnabled: value);
       final deadlineNotifier = ref.watch(deadlineNotifierProvider.notifier);
       await deadlineNotifier.execute(dto);
+      final _ = ref.refresh(getDeadlineNotificationsProvider);
     }
   }
 }

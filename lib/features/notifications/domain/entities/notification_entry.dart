@@ -20,6 +20,7 @@ class NotificationEntry {
 
   final NotificationId notificationId;
   // sourceIdはポップアップをタップした際に、カレンダー画面を表示(画面遷移)するために必要
+  // sourceIdはrotationIdなどの通知グループの役割
   final SourceId sourceId;
   final UserId userId;
   final NotificationDateTime notificationDateTime;

@@ -12,6 +12,10 @@ sealed class SourceId with _$SourceId {
     required String value,
   }) = _SourceId;
 
+  factory SourceId.createDeadlineId() {
+    return const SourceId(value: 'popcal-deadline');
+  }
+
   factory SourceId.fromJson(Map<String, dynamic> json) =>
       _$SourceIdFromJson(json);
 

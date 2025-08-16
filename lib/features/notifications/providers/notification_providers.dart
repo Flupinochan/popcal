@@ -32,6 +32,7 @@ NotificationGatewayLocal notificationGatewayLocal(Ref ref) {
     ref.watch(routerProvider(initialLocation: const HomeRoute().location)),
     ref.watch(flutterLocalNotificationsPluginProvider),
     ref.watch(timeUtilsProvider),
+    Logger('NotificationGatewayLocal'),
   );
 }
 

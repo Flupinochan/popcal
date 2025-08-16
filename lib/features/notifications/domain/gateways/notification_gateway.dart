@@ -17,11 +17,16 @@ abstract class NotificationGateway {
   /// 4-1. 特定の通知を削除
   Future<Result<void>> deleteNotification(NotificationId notificationId);
 
-  /// 4-2 特定のSourceIdの通知を削除
+  /// 4-2 特定のSourceIdの通知を全削除
   Future<Result<void>> deleteNotificationsBySourceId(SourceId sourceId);
 
-  /// 2. 通知予定のスケジュールを一覧取得
+  /// 2-1. 通知予定のスケジュールを一覧取得
   Future<Result<List<NotificationId>>> getNotifications();
+
+  // 2-2 特定のSourceIdの通知一覧を取得
+  Future<Result<List<NotificationEntry>>> getNotificationsBySourceId(
+    SourceId sourceId,
+  );
 
   /// 0-1. 初期化
   /// 通知アイコン設定

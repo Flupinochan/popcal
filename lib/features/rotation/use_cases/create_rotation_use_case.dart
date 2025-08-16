@@ -12,6 +12,7 @@ class CreateRotationUseCase {
     this._notificationRepository,
     this._rotationCalculationService,
   );
+
   final RotationRepository _rotationRepository;
   final NotificationGateway _notificationRepository;
   final RotationCalculationService _rotationCalculationService;

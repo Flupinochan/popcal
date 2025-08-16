@@ -36,24 +36,16 @@ sealed class NotificationEntryLocalResponse
   const NotificationEntryLocalResponse._();
 
   // DTO => Entity
-  Result<NotificationEntry> toEntity() {
-    try {
-      return Results.success(
-        NotificationEntry(
-          notificationId: notificationId,
-          sourceId: sourceId,
-          userId: userId,
-          notificationDateTime: notificationDateTime,
-          title: title,
-          content: content,
-          description: description,
-        ),
-      );
-    } on Exception catch (e) {
-      return Results.failure(
-        ValidationFailure('DTO to NotificationSetting conversion failed: $e'),
-      );
-    }
+  NotificationEntry toEntity() {
+    return NotificationEntry(
+      notificationId: notificationId,
+      sourceId: sourceId,
+      userId: userId,
+      notificationDateTime: notificationDateTime,
+      title: title,
+      content: content,
+      description: description,
+    );
   }
 
   // Entity => DTO
