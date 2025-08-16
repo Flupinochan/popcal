@@ -6,6 +6,8 @@ linter:
     use_setters_to_change_properties: false
     lines_longer_than_80_chars: false
     document_ignores: false
+    depend_on_referenced_packages: false
+    deprecated_member_use_from_same_package: false
 
 analyzer:
   language:

@@ -31,6 +31,10 @@ extension type NotificationDateTime(DateTime value) {
     );
   }
 
+  String getMonth() {
+    return value.month.toString();
+  }
+
   bool isBeforeDateTime(DateTime datetime) {
     return value.isBefore(datetime);
   }

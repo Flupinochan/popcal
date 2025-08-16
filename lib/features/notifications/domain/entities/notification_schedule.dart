@@ -11,7 +11,4 @@ class NotificationSchedule {
   final List<NotificationEntry> notificationEntries;
   // 通知計算の後にローテーション情報を更新するために必要
   final RotationIndex newCurrentRotationIndex;
-
-  bool get hasNotifications => notificationEntries.isNotEmpty;
-  int get notificationCount => notificationEntries.length;
 }
