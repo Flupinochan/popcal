@@ -5,15 +5,13 @@ import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class GlassFormTime extends StatelessWidget {
   const GlassFormTime({
-    required this.now,
+    required this.initialValue,
     super.key,
-    this.initialValue,
     this.padding,
     this.width,
     this.isEnabled = true,
   });
-  final TimeOfDay? initialValue;
-  final DateTime now;
+  final TimeOfDay initialValue;
   final EdgeInsets? padding;
   final double? width;
   final bool isEnabled;
@@ -23,8 +21,6 @@ class GlassFormTime extends StatelessWidget {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final textTheme = Theme.of(context).textTheme;
-    // ローカル日時で指定
-    final currentTime = TimeOfDay(hour: now.hour, minute: now.minute);
     final surfaceColorLight = glassTheme.surfaceColor.withValues(alpha: 0.15);
     final surfaceColorMedium = glassTheme.surfaceColor.withValues(alpha: 0.4);
 
@@ -34,7 +30,7 @@ class GlassFormTime extends StatelessWidget {
       width: width ?? 100,
       child: FormBuilderField<TimeOfDay>(
         name: 'notificationTime',
-        initialValue: initialValue ?? currentTime,
+        initialValue: initialValue,
         validator: (value) => value == null ? '通知時刻を選択してください' : null,
         builder: (FormFieldState<TimeOfDay> field) {
           final timeText =

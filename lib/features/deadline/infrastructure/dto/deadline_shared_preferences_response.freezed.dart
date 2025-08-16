@@ -210,8 +210,8 @@ return $default(_that.isEnabled,_that.notificationTime);case _:
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
 class _DeadlineSharedPreferencesResponse extends DeadlineSharedPreferencesResponse {
   const _DeadlineSharedPreferencesResponse({required this.isEnabled, required this.notificationTime}): super._();
   factory _DeadlineSharedPreferencesResponse.fromJson(Map<String, dynamic> json) => _$DeadlineSharedPreferencesResponseFromJson(json);

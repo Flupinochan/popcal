@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
@@ -36,6 +35,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     required RotationUpdatedAt updatedAt,
     required SkipEvents skipEvents,
   }) = _RotationFirebaseResponse;
+
   // Entity => DTO (factory method)
   factory RotationFirebaseResponse.fromEntity(Rotation entity) {
     return RotationFirebaseResponse(
@@ -64,9 +64,6 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     final updatedAt = data['updatedAt'] as Timestamp;
     final rotationIndex = RotationIndex.create(
       data['currentRotationIndex'] as int,
-    );
-    final notificationTime = _mapToTimeOfDay(
-      data['notificationTime'] as Map<String, dynamic>,
     );
 
     if (rotationIndex.isFailure) {
@@ -100,9 +97,9 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       rotationName: RotationName(data['rotationName'] as String),
       rotationMemberNames: rotationMemberNamesResult.valueOrNull!,
       rotationDays: rotationDaysResult.valueOrNull!,
-      notificationTime: NotificationTime(
-        hour: notificationTime.hour,
-        minute: notificationTime.minute,
+      // NotificationTimeクラスのfromMapメソッドを使用
+      notificationTime: NotificationTime.fromMap(
+        data['notificationTime'] as Map<String, dynamic>,
       ),
       currentRotationIndex: rotationIndex.valueOrNull!,
       createdAt: RotationCreatedAt(createdAt.toDate()),
@@ -138,20 +135,13 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       'rotationMemberNames':
           rotationMemberNames.map((member) => member.value).toList(),
       'rotationDays': rotationDays.toIntList(),
-      'notificationTime': _timeOfDayToMap(notificationTime.timeOfDay),
+      // NotificationTimeクラスのtoMapメソッドを使用
+      'notificationTime': notificationTime.toMap(),
       'currentRotationIndex': currentRotationIndex.value,
       'createdAt': Timestamp.fromDate(createdAt.value),
       'updatedAt': Timestamp.fromDate(updatedAt.value),
       'skipEvents': _skipEventsToFirestore(skipEvents),
     };
-  }
-
-  // Map => TimeOfDay ※firebaseでは値はdynamic判定
-  static TimeOfDay _mapToTimeOfDay(Map<String, dynamic> map) {
-    return TimeOfDay(
-      hour: (map['hour'] ?? 0) as int,
-      minute: (map['minute'] ?? 0) as int,
-    );
   }
 
   // ignore: avoid-dynamic
@@ -221,10 +211,5 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
           },
         )
         .toList();
-  }
-
-  // TimeOfDay => Map 変換 ※FirebaseにはTimeOfDay型がないためMapで保存
-  static Map<String, int> _timeOfDayToMap(TimeOfDay timeOfDay) {
-    return {'hour': timeOfDay.hour, 'minute': timeOfDay.minute};
   }
 }

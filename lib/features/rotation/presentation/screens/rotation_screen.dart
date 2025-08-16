@@ -125,8 +125,10 @@ class RotationScreen extends HookConsumerWidget {
                     child: Text('通知時刻', style: textTheme.titleMedium),
                   ),
                   GlassFormTime(
-                    initialValue: initialRotation?.notificationTime.timeOfDay,
-                    now: now,
+                    initialValue:
+                        initialRotation == null
+                            ? TimeOfDay.fromDateTime(now)
+                            : initialRotation.notificationTime.timeOfDay,
                   ),
                 ],
               ),

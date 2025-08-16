@@ -19,5 +19,5 @@ Map<String, dynamic> _$DeadlineSharedPreferencesResponseToJson(
   _DeadlineSharedPreferencesResponse instance,
 ) => <String, dynamic>{
   'isEnabled': instance.isEnabled,
-  'notificationTime': instance.notificationTime.toJson(),
+  'notificationTime': instance.notificationTime,
 };

@@ -17,22 +17,7 @@ import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 import 'package:popcal/shared/widgets/glass_wrapper.dart';
 
 class DeadlineScreen extends HookConsumerWidget {
-  DeadlineScreen({super.key});
-
-  final List<DateTime> monthList = [
-    DateTime(2025),
-    DateTime(2025, 2),
-    DateTime(2025, 3),
-    DateTime(2025, 4),
-    DateTime(2025, 5),
-    DateTime(2025, 6),
-    DateTime(2025, 7),
-    DateTime(2025, 8),
-    DateTime(2025, 9),
-    DateTime(2025, 10),
-    DateTime(2025, 11),
-    DateTime(2025, 12),
-  ];
+  const DeadlineScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,6 +26,8 @@ class DeadlineScreen extends HookConsumerWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final formKey = useMemoized(GlobalKey<FormBuilderState>.new);
     final deadlineState = ref.watch(deadlineNotifierProvider);
+    final timeUtils = ref.watch(timeUtilsProvider);
+    final now = TimeOfDay.fromDateTime(timeUtils.now());
 
     return Scaffold(
       backgroundColor: glassTheme.backgroundColor,
@@ -80,16 +67,20 @@ class DeadlineScreen extends HookConsumerWidget {
                               formKey,
                               false,
                               true,
+                              now,
                             );
                           }
                           final deadlineRequest = result.valueOrNull!;
                           final isEnabled = deadlineRequest.isEnabled;
+                          final notificationTime =
+                              deadlineRequest.notificationTime;
                           return _buildScreen(
                             context,
                             ref,
                             formKey,
                             isEnabled,
                             false,
+                            notificationTime.timeOfDay,
                           );
                         },
                         loading:
@@ -99,6 +90,7 @@ class DeadlineScreen extends HookConsumerWidget {
                               formKey,
                               false,
                               true,
+                              now,
                             ),
                         error:
                             (error, stackTrace) => _buildScreen(
@@ -107,6 +99,7 @@ class DeadlineScreen extends HookConsumerWidget {
                               formKey,
                               false,
                               true,
+                              now,
                             ),
                       ),
                     ],
@@ -173,11 +166,10 @@ class DeadlineScreen extends HookConsumerWidget {
     GlobalKey<FormBuilderState> formKey,
     bool isEnabled,
     bool isLoading,
+    TimeOfDay notificationTime,
   ) {
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
-    final timeUtils = ref.watch(timeUtilsProvider);
-    final now = timeUtils.now();
 
     return Expanded(
       child: Row(
@@ -187,8 +179,8 @@ class DeadlineScreen extends HookConsumerWidget {
           Opacity(
             opacity: (isEnabled && !isLoading) ? 1 : 0.5,
             child: GlassFormTime(
-              now: now,
               isEnabled: isEnabled,
+              initialValue: notificationTime,
             ),
           ),
           Switch(

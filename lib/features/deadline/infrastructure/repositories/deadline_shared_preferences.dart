@@ -10,7 +10,7 @@ class DeadlineSharedPreferences {
 
   final SharedPreferences _sharedPreferences;
   final TimeUtils _timeUtils;
-  final String _key = 'popcal_deadline';
+  final String _key = 'popcalDeadline';
 
   Future<Result<DeadlineSharedPreferencesResponse>> getSettings() async {
     try {
@@ -51,7 +51,7 @@ class DeadlineSharedPreferences {
     DeadlineSharedPreferencesResponse dto,
   ) async {
     try {
-      final jsonString = dto.toJson().toString();
+      final jsonString = dto.toJsonString();
       await _sharedPreferences.setString(_key, jsonString);
       return Results.success(null);
     } on Exception catch (error) {

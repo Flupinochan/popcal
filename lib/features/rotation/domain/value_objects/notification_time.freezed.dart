@@ -202,7 +202,7 @@ return $default(_that.hour,_that.minute);case _:
 
 /// @nodoc
 @JsonSerializable()
-
+@Deprecated('NotificationTime.fromTimeOfDayを使用してインスタンスを生成してください')
 class _NotificationTime extends NotificationTime {
   const _NotificationTime({required this.hour, required this.minute}): super._();
   factory _NotificationTime.fromJson(Map<String, dynamic> json) => _$NotificationTimeFromJson(json);
