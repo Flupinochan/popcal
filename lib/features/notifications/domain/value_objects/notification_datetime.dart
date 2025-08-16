@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 
 class NotificationDateConverter
@@ -29,6 +31,11 @@ extension type NotificationDateTime(DateTime value) {
         notificationTime.minute,
       ),
     );
+  }
+
+  String getDisplayDeadline() {
+    final formattedDate = DateFormat('yyyy/MM/dd HH:mm').format(value);
+    return '$formattedDate ${Weekday.fromInt(value.weekday).displayName}曜日';
   }
 
   String getMonth() {

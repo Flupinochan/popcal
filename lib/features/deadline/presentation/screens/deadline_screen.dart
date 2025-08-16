@@ -140,10 +140,7 @@ class DeadlineScreen extends HookConsumerWidget {
                                         vertical: 4,
                                       ),
                                       child: Text(
-                                        deadlineResponse[index]
-                                            .notificationDateTime
-                                            .value
-                                            .toString(),
+                                        deadlineResponse[index].displayTime,
                                       ),
                                     );
                                   },

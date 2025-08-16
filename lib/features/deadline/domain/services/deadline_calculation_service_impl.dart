@@ -74,7 +74,7 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
       // ログ出力
       final weekDay = Weekday.fromInt(lastWeekdays.weekday);
       final message =
-          '$month月: $lastWeekdays ${weekDay.displayName} ${notificationId.value} 通知を作成';
+          '$month月: ${notificationDateTime.getDisplayDeadline()} 通知を作成';
       _logger.fine(message);
     }
 

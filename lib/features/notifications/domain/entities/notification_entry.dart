@@ -27,4 +27,6 @@ class NotificationEntry {
   final NotificationTitle title;
   final NotificationContent content;
   final NotificationDescription description;
+
+  String get displayTime => notificationDateTime.getDisplayDeadline();
 }

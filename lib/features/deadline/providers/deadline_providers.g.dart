@@ -67,12 +67,12 @@ final deadlineSharedPreferencesProvider =
 // ignore: unused_element
 typedef DeadlineSharedPreferencesRef = ProviderRef<DeadlineSharedPreferences>;
 String _$getDeadlineNotificationsHash() =>
-    r'428c6233e2c7dda6c3f5ba20079aa15eee4ca439';
+    r'8f7e60fe8f0042e7731df1616adcb2c1c6a71638';
 
 /// See also [getDeadlineNotifications].
 @ProviderFor(getDeadlineNotifications)
 final getDeadlineNotificationsProvider =
-    AutoDisposeFutureProvider<Result<List<NotificationEntry>>>.internal(
+    AutoDisposeFutureProvider<Result<List<DeadlineResponse>>>.internal(
       getDeadlineNotifications,
       name: r'getDeadlineNotificationsProvider',
       debugGetCreateSourceHash:
@@ -86,7 +86,7 @@ final getDeadlineNotificationsProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetDeadlineNotificationsRef =
-    AutoDisposeFutureProviderRef<Result<List<NotificationEntry>>>;
+    AutoDisposeFutureProviderRef<Result<List<DeadlineResponse>>>;
 String _$sharedPreferencesHash() => r'225e34d1d5293ff0304837a7ce3d6fdc21c7747c';
 
 /// See also [sharedPreferences].

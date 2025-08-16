@@ -4,7 +4,6 @@ import 'package:popcal/features/rotation/domain/value_objects/notification_time.
 
 part 'deadline_request.freezed.dart';
 
-/// request/response共通
 @freezed
 sealed class DeadlineRequest with _$DeadlineRequest {
   factory DeadlineRequest({
