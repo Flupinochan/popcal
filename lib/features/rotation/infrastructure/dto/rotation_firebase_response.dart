@@ -100,7 +100,10 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       rotationName: RotationName(data['rotationName'] as String),
       rotationMemberNames: rotationMemberNamesResult.valueOrNull!,
       rotationDays: rotationDaysResult.valueOrNull!,
-      notificationTime: NotificationTime(notificationTime),
+      notificationTime: NotificationTime(
+        hour: notificationTime.hour,
+        minute: notificationTime.minute,
+      ),
       currentRotationIndex: rotationIndex.valueOrNull!,
       createdAt: RotationCreatedAt(createdAt.toDate()),
       updatedAt: RotationUpdatedAt(updatedAt.toDate()),
@@ -135,7 +138,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       'rotationMemberNames':
           rotationMemberNames.map((member) => member.value).toList(),
       'rotationDays': rotationDays.toIntList(),
-      'notificationTime': _timeOfDayToMap(notificationTime.value),
+      'notificationTime': _timeOfDayToMap(notificationTime.timeOfDay),
       'currentRotationIndex': currentRotationIndex.value,
       'createdAt': Timestamp.fromDate(createdAt.value),
       'updatedAt': Timestamp.fromDate(updatedAt.value),

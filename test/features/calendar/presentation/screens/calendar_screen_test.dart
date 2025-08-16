@@ -50,7 +50,10 @@ void main() {
       'user4',
     ]),
     rotationDays: const RotationDays([Weekday.monday, Weekday.friday]),
-    notificationTime: NotificationTime(const TimeOfDay(hour: 9, minute: 0)),
+    notificationTime: const NotificationTime(
+      hour: 9,
+      minute: 0,
+    ),
     currentRotationIndex: const RotationIndex(0),
     createdAt: RotationCreatedAt(DateTime(2025, 8, 14, 9)),
     updatedAt: RotationUpdatedAt(DateTime(2025, 8, 14, 9)),

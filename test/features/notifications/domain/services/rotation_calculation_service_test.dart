@@ -1,6 +1,5 @@
 // ignore_for_file: prefer-first, prefer-moving-to-variable
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/results.dart';
@@ -47,9 +46,7 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: NotificationTime(
-          const TimeOfDay(hour: 10, minute: 0),
-        ),
+        notificationTime: const NotificationTime(hour: 10, minute: 0),
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
@@ -146,9 +143,7 @@ void main() {
           Weekday.friday,
         ]),
         // 通知時刻は10:00
-        notificationTime: NotificationTime(
-          const TimeOfDay(hour: 10, minute: 0),
-        ),
+        notificationTime: const NotificationTime(hour: 10, minute: 0),
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
@@ -245,9 +240,7 @@ void main() {
           Weekday.friday,
         ]),
         // 通知時刻は10:00のため、作成時刻11:00をすぎている
-        notificationTime: NotificationTime(
-          const TimeOfDay(hour: 10, minute: 0),
-        ),
+        notificationTime: const NotificationTime(hour: 10, minute: 0),
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
@@ -343,9 +336,7 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: NotificationTime(
-          const TimeOfDay(hour: 10, minute: 0),
-        ),
+        notificationTime: const NotificationTime(hour: 10, minute: 0),
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
@@ -454,9 +445,7 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: NotificationTime(
-          const TimeOfDay(hour: 10, minute: 0),
-        ),
+        notificationTime: const NotificationTime(hour: 10, minute: 0),
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),
@@ -558,9 +547,7 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: NotificationTime(
-          const TimeOfDay(hour: 10, minute: 0),
-        ),
+        notificationTime: const NotificationTime(hour: 10, minute: 0),
         currentRotationIndex: const RotationIndex(0),
         createdAt: RotationCreatedAt(createdAt),
         updatedAt: RotationUpdatedAt(createdAt),

@@ -25,8 +25,8 @@ extension type NotificationDateTime(DateTime value) {
         date.value.year,
         date.value.month,
         date.value.day,
-        notificationTime.value.hour,
-        notificationTime.value.minute,
+        notificationTime.hour,
+        notificationTime.minute,
       ),
     );
   }

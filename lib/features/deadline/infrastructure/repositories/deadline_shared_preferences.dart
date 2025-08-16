@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:popcal/core/utils/failures/deadline_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/infrastructure/dto/deadline_shared_preferences_response.dart';
@@ -19,12 +18,14 @@ class DeadlineSharedPreferences {
       // 通知設定有効化: false
       // 通知時刻: 現在時刻
       final jsonString = _sharedPreferences.getString(_key);
+      final now = _timeUtils.now();
       if (jsonString == null) {
         return Results.success(
           DeadlineSharedPreferencesResponse(
             isEnabled: false,
             notificationTime: NotificationTime(
-              value: TimeOfDay.fromDateTime(_timeUtils.now()),
+              hour: now.hour,
+              minute: now.minute,
             ),
           ),
         );

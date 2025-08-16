@@ -49,7 +49,7 @@ $Res call({
 });
 
 
-$UserIdCopyWith<$Res> get userId;$RotationNameCopyWith<$Res> get rotationName;$RotationMemberNamesCopyWith<$Res> get rotationMembers;$RotationDaysCopyWith<$Res> get rotationDays;$RotationIndexCopyWith<$Res> get currentRotationIndex;$SkipEventsCopyWith<$Res> get skipEvents;
+$UserIdCopyWith<$Res> get userId;$RotationNameCopyWith<$Res> get rotationName;$RotationMemberNamesCopyWith<$Res> get rotationMembers;$RotationDaysCopyWith<$Res> get rotationDays;$NotificationTimeCopyWith<$Res> get notificationTime;$RotationIndexCopyWith<$Res> get currentRotationIndex;$SkipEventsCopyWith<$Res> get skipEvents;
 
 }
 /// @nodoc
@@ -115,6 +115,15 @@ $RotationDaysCopyWith<$Res> get rotationDays {
   
   return $RotationDaysCopyWith<$Res>(_self.rotationDays, (value) {
     return _then(_self.copyWith(rotationDays: value));
+  });
+}/// Create a copy of RotationResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NotificationTimeCopyWith<$Res> get notificationTime {
+  
+  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
+    return _then(_self.copyWith(notificationTime: value));
   });
 }/// Create a copy of RotationResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -317,7 +326,7 @@ $Res call({
 });
 
 
-@override $UserIdCopyWith<$Res> get userId;@override $RotationNameCopyWith<$Res> get rotationName;@override $RotationMemberNamesCopyWith<$Res> get rotationMembers;@override $RotationDaysCopyWith<$Res> get rotationDays;@override $RotationIndexCopyWith<$Res> get currentRotationIndex;@override $SkipEventsCopyWith<$Res> get skipEvents;
+@override $UserIdCopyWith<$Res> get userId;@override $RotationNameCopyWith<$Res> get rotationName;@override $RotationMemberNamesCopyWith<$Res> get rotationMembers;@override $RotationDaysCopyWith<$Res> get rotationDays;@override $NotificationTimeCopyWith<$Res> get notificationTime;@override $RotationIndexCopyWith<$Res> get currentRotationIndex;@override $SkipEventsCopyWith<$Res> get skipEvents;
 
 }
 /// @nodoc
@@ -384,6 +393,15 @@ $RotationDaysCopyWith<$Res> get rotationDays {
   
   return $RotationDaysCopyWith<$Res>(_self.rotationDays, (value) {
     return _then(_self.copyWith(rotationDays: value));
+  });
+}/// Create a copy of RotationResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NotificationTimeCopyWith<$Res> get notificationTime {
+  
+  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
+    return _then(_self.copyWith(notificationTime: value));
   });
 }/// Create a copy of RotationResponse
 /// with the given fields replaced by the non-null parameter values.

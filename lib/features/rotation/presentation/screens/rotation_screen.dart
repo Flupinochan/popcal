@@ -125,7 +125,7 @@ class RotationScreen extends HookConsumerWidget {
                     child: Text('通知時刻', style: textTheme.titleMedium),
                   ),
                   GlassFormTime(
-                    initialValue: initialRotation?.notificationTime.value,
+                    initialValue: initialRotation?.notificationTime.timeOfDay,
                     now: now,
                   ),
                 ],
@@ -188,6 +188,8 @@ class RotationScreen extends HookConsumerWidget {
         return;
       }
 
+      final selectedTime = formData['notificationTime'] as TimeOfDay;
+
       try {
         if (isUpdateMode) {
           final dto = UpdateRotationRequest(
@@ -197,7 +199,8 @@ class RotationScreen extends HookConsumerWidget {
             rotationMembers: rotationMemberNamesResult.valueOrNull!,
             rotationDays: formData['rotationDays'] as RotationDays,
             notificationTime: NotificationTime(
-              formData['notificationTime'] as TimeOfDay,
+              hour: selectedTime.hour,
+              minute: selectedTime.minute,
             ),
             createdAt: originalRotation.createdAt,
             skipEvents: const SkipEvents([]),
@@ -210,7 +213,8 @@ class RotationScreen extends HookConsumerWidget {
             rotationMembers: rotationMemberNamesResult.valueOrNull!,
             rotationDays: formData['rotationDays'] as RotationDays,
             notificationTime: NotificationTime(
-              formData['notificationTime'] as TimeOfDay,
+              hour: selectedTime.hour,
+              minute: selectedTime.minute,
             ),
             skipEvents: const SkipEvents([]),
           );

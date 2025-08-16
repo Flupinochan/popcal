@@ -1,31 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-// Mockできないextenstionやdtoでstatic methodは利用しない
-extension type NotificationTime(TimeOfDay value) {
-  // 表示用
+part 'notification_time.freezed.dart';
+part 'notification_time.g.dart';
+
+/// TimeOfDayはfreezedサポート対象外のため、intのhourとminuteを組み合わせることにする
+@freezed
+sealed class NotificationTime with _$NotificationTime {
+  const factory NotificationTime({
+    required int hour,
+    required int minute,
+  }) = _NotificationTime;
+
+  factory NotificationTime.fromJson(Map<String, dynamic> json) =>
+      _$NotificationTimeFromJson(json);
+
+  const NotificationTime._();
+
   String get display24hour =>
-      '${value.hour.toString().padLeft(2, '0')}:${value.minute.toString().padLeft(2, '0')}';
+      '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
 
-  Timestamp get timestamp =>
-      Timestamp.fromDate(DateTime(1970, 1, 1, value.hour, value.minute));
-}
-
-class NotificationTimeConverter
-    implements JsonConverter<NotificationTime, Map<String, dynamic>> {
-  const NotificationTimeConverter();
-
-  @override
-  NotificationTime fromJson(Map<String, dynamic> json) {
-    return NotificationTime(
-      TimeOfDay(hour: json['hour'] as int, minute: json['minute'] as int),
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson(NotificationTime object) => {
-    'hour': object.value.hour,
-    'minute': object.value.minute,
-  };
+  TimeOfDay get timeOfDay => TimeOfDay(hour: hour, minute: minute);
 }

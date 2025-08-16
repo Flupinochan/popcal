@@ -242,10 +242,12 @@ class DeadlineScreen extends HookConsumerWidget {
     if (value == null) return;
     if (formKey.currentState!.saveAndValidate()) {
       final formData = formKey.currentState!.value;
+      final selectTime = formData['notificationTime'] as TimeOfDay;
       final dto = DeadlineRequest(
         isEnabled: value,
         notificationTime: NotificationTime(
-          value: formData['notificationTime'] as TimeOfDay,
+          hour: selectTime.hour,
+          minute: selectTime.minute,
         ),
       );
       final deadlineNotifier = ref.watch(deadlineNotifierProvider.notifier);

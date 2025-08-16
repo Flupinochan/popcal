@@ -13,7 +13,6 @@ part 'deadline_shared_preferences_response.g.dart';
 @freezed
 sealed class DeadlineSharedPreferencesResponse
     with _$DeadlineSharedPreferencesResponse {
-  @JsonSerializable(explicitToJson: true)
   const factory DeadlineSharedPreferencesResponse({
     required bool isEnabled,
     required NotificationTime notificationTime,
