@@ -11,8 +11,12 @@ import 'package:popcal/features/notifications/domain/services/result/day_calcula
 import 'package:popcal/features/notifications/domain/services/result/day_type_result.dart';
 import 'package:popcal/features/notifications/domain/services/result/rotation_calculation_data.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_content.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_description.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_title.dart';
+import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -47,7 +51,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
 
     // 通知設定用データに整形
     try {
-      if (rotation.rotationId == null) {
+      final rotationId = rotation.rotationId;
+      final rotationName = rotation.rotationName;
+      if (rotationId == null) {
         return Results.failure(
           const NotificationFailure('ローテーションIDがnullです。'),
         );
@@ -64,17 +70,51 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           continue;
         }
 
+        final sourceIdResult = SourceId.createFromRotationId(rotationId!);
+        if (sourceIdResult.isFailure) {
+          return Results.failure(
+            NotificationFailure(sourceIdResult.displayText),
+          );
+        }
+
+        final titleResult = NotificationTitle.createFromRotationName(
+          rotationName,
+        );
+        if (titleResult.isFailure) {
+          return Results.failure(
+            NotificationFailure(titleResult.displayText),
+          );
+        }
+
+        final contentResult = NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(memberIndex),
+        );
+        if (contentResult.isFailure) {
+          return Results.failure(
+            NotificationFailure(contentResult.displayText),
+          );
+        }
+
+        final descriptionResult =
+            NotificationDescription.createFromRotationName(rotationName);
+        if (descriptionResult.isFailure) {
+          return Results.failure(
+            NotificationFailure(descriptionResult.displayText),
+          );
+        }
+
         notificationEntries.add(
           NotificationEntry(
             notificationId: NotificationId.create(
-              rotation.rotationId!,
+              sourceIdResult.valueOrNull!,
               notificationDateTime.value,
             ),
-            rotationId: rotation.rotationId!,
+            sourceId: sourceIdResult.valueOrNull!,
             userId: rotation.userId,
-            rotationName: rotation.rotationName,
+            title: titleResult.valueOrNull!,
             notificationDateTime: notificationDateTime,
-            memberName: rotation.rotationMemberNames.memberAt(memberIndex),
+            content: contentResult.valueOrNull!,
+            description: descriptionResult.valueOrNull!,
           ),
         );
       }
@@ -321,7 +361,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
     _logger.fine('通知設定一覧');
     for (final notificationEntry in notificationEntries) {
       _logger.fine(
-        '${notificationEntry.notificationDateTime.value} ${notificationEntry.memberName}',
+        '${notificationEntry.notificationDateTime.value} ${notificationEntry.content}',
       );
     }
   }

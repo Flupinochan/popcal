@@ -2,8 +2,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -24,30 +24,33 @@ class NotificationGatewayLocal {
   ) async {
     try {
       final now = _timeUtils.now();
-      if (notificationSettingDto.notificationDate.isBeforeDateTime(now)) {
+      final notificationDateTime = notificationSettingDto.notificationDateTime;
+      final dateTime = tz.TZDateTime.from(notificationDateTime.value, tz.local);
+      final notificationId = notificationSettingDto.notificationId.value;
+      final title = notificationSettingDto.title.value;
+      final content = notificationSettingDto.content.value;
+      final description = notificationSettingDto.description.value;
+      final payloadJson = notificationSettingDto.toJsonString();
+
+      if (notificationDateTime.isBeforeDateTime(now)) {
         return Results.failure(
           NotificationFailure(
-            '警告: 過去の通知作成が要求されました - ${notificationSettingDto.notificationDate} - ${notificationSettingDto.memberName}',
+            '警告: 過去の通知作成が要求されました - $title - $content - $description',
           ),
         );
       }
 
-      final payloadJson = notificationSettingDto.toJsonString();
-
       await _flutterLocalNotificationsPlugin.zonedSchedule(
-        notificationSettingDto.notificationId.value,
-        notificationSettingDto.title,
-        notificationSettingDto.content,
-        tz.TZDateTime.from(
-          notificationSettingDto.notificationDate.value,
-          tz.local,
-        ),
+        notificationId,
+        title,
+        content,
+        dateTime,
         NotificationDetails(
           // channel情報はOS通知設定に表示され、それをもとにユーザがON/OFF可能
           android: AndroidNotificationDetails(
-            notificationSettingDto.rotationId.value,
-            notificationSettingDto.title,
-            channelDescription: notificationSettingDto.description,
+            notificationId.toString(),
+            title,
+            channelDescription: description,
             priority: Priority.high,
             importance: Importance.high,
             icon: 'notification_small_icon',
@@ -85,9 +88,9 @@ class NotificationGatewayLocal {
     }
   }
 
-  /// 4-2 特定のrotationIdの通知を削除
-  Future<Result<void>> deleteNotificationsByRotationId(
-    String rotationId,
+  /// 4-2 特定のsourceIdの通知を削除
+  Future<Result<void>> deleteNotificationsBySourceId(
+    String sourceId,
   ) async {
     try {
       final pendingNotifications =
@@ -96,21 +99,23 @@ class NotificationGatewayLocal {
       String? errorMessage;
       for (final notification in pendingNotifications) {
         if (notification.payload != null) {
-          LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
-            notification.payload!,
-          ).when(
-            success: (localNotificationSettingDto) {
-              if (localNotificationSettingDto.rotationId ==
-                  RotationId(rotationId)) {
-                try {
+          try {
+            LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
+              notification.payload!,
+            ).when(
+              success: (localNotificationSettingDto) {
+                if (localNotificationSettingDto.sourceId ==
+                    SourceId(value: sourceId)) {
                   _flutterLocalNotificationsPlugin.cancel(notification.id);
-                } on Exception catch (error) {
-                  errorMessage = error.toString();
                 }
-              }
-            },
-            failure: (error) => errorMessage = error.message,
-          );
+              },
+              failure: (error) => errorMessage = error.message,
+            );
+          } on Exception catch (error) {
+            // 1つの通知削除でエラーが発生してもほかの通知削除は試みる
+            errorMessage = error.toString();
+            continue;
+          }
         }
       }
       return errorMessage != null
@@ -194,10 +199,11 @@ class NotificationGatewayLocal {
         LocalNotificationSettingDtoJsonX.fromJsonStringSafe(
           payload,
         ).when(
+          // deadlineの場合はcalendarに移動せず、deadlineに移動させる必要がある
           success:
               (localNotificationSettingDto) => _router.push(
                 CalendarRoute(
-                  id: localNotificationSettingDto.rotationId.value,
+                  id: localNotificationSettingDto.sourceId.value,
                 ).location,
               ),
           failure: (error) => _router.go(const ErrorRoute().location),

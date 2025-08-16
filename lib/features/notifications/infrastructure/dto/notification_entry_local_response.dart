@@ -5,11 +5,12 @@ import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_content.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_description.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_title.dart';
+import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 
 part 'notification_entry_local_response.freezed.dart';
 part 'notification_entry_local_response.g.dart';
@@ -20,14 +21,13 @@ sealed class NotificationEntryLocalResponse
   const factory NotificationEntryLocalResponse({
     // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
     @NotificationIdConverter() required NotificationId notificationId,
-    @RotationIdConverter() required RotationId rotationId,
+    required SourceId sourceId,
     required UserId userId,
-    @NotificationDateConverter() required NotificationDateTime notificationDate,
-    required RotationName rotationName,
-    @RotationMemberNameConverter() required RotationMemberName memberName,
-    required String title,
-    required String description,
-    required String content,
+    @NotificationDateConverter()
+    required NotificationDateTime notificationDateTime,
+    required NotificationTitle title,
+    required NotificationContent content,
+    required NotificationDescription description,
   }) = _NotificationEntryLocalResponse;
 
   // JSON => DTO
@@ -41,11 +41,12 @@ sealed class NotificationEntryLocalResponse
       return Results.success(
         NotificationEntry(
           notificationId: notificationId,
-          rotationId: rotationId,
+          sourceId: sourceId,
           userId: userId,
-          rotationName: rotationName,
-          notificationDateTime: notificationDate,
-          memberName: memberName,
+          notificationDateTime: notificationDateTime,
+          title: title,
+          content: content,
+          description: description,
         ),
       );
     } on Exception catch (e) {
@@ -63,14 +64,12 @@ sealed class NotificationEntryLocalResponse
       return Results.success(
         NotificationEntryLocalResponse(
           notificationId: notification.notificationId,
-          rotationId: notification.rotationId,
+          sourceId: notification.sourceId,
           userId: notification.userId,
-          notificationDate: notification.notificationDateTime,
-          rotationName: notification.rotationName,
-          memberName: notification.memberName,
+          notificationDateTime: notification.notificationDateTime,
           title: notification.title,
-          description: notification.description,
           content: notification.content,
+          description: notification.description,
         ),
       );
     } on Exception catch (e) {

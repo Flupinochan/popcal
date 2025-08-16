@@ -12,22 +12,18 @@ _NotificationEntryLocalResponse _$NotificationEntryLocalResponseFromJson(
   notificationId: const NotificationIdConverter().fromJson(
     (json['notificationId'] as num).toInt(),
   ),
-  rotationId: const RotationIdConverter().fromJson(
-    json['rotationId'] as String,
-  ),
+  sourceId: SourceId.fromJson(json['sourceId'] as Map<String, dynamic>),
   userId: UserId.fromJson(json['userId'] as String),
-  notificationDate: const NotificationDateConverter().fromJson(
-    json['notificationDate'] as String,
+  notificationDateTime: const NotificationDateConverter().fromJson(
+    json['notificationDateTime'] as String,
   ),
-  rotationName: RotationName.fromJson(
-    json['rotationName'] as Map<String, dynamic>,
+  title: NotificationTitle.fromJson(json['title'] as Map<String, dynamic>),
+  content: NotificationContent.fromJson(
+    json['content'] as Map<String, dynamic>,
   ),
-  memberName: const RotationMemberNameConverter().fromJson(
-    json['memberName'] as String,
+  description: NotificationDescription.fromJson(
+    json['description'] as Map<String, dynamic>,
   ),
-  title: json['title'] as String,
-  description: json['description'] as String,
-  content: json['content'] as String,
 );
 
 Map<String, dynamic> _$NotificationEntryLocalResponseToJson(
@@ -36,14 +32,12 @@ Map<String, dynamic> _$NotificationEntryLocalResponseToJson(
   'notificationId': const NotificationIdConverter().toJson(
     instance.notificationId,
   ),
-  'rotationId': const RotationIdConverter().toJson(instance.rotationId),
+  'sourceId': instance.sourceId,
   'userId': instance.userId,
-  'notificationDate': const NotificationDateConverter().toJson(
-    instance.notificationDate,
+  'notificationDateTime': const NotificationDateConverter().toJson(
+    instance.notificationDateTime,
   ),
-  'rotationName': instance.rotationName,
-  'memberName': const RotationMemberNameConverter().toJson(instance.memberName),
   'title': instance.title,
-  'description': instance.description,
   'content': instance.content,
+  'description': instance.description,
 };

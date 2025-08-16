@@ -20,8 +20,8 @@ sealed class RotationMemberNames with _$RotationMemberNames {
       RotationMemberName(value[position]);
 
   static Result<RotationMemberNames> create(List<String>? input) {
-    if (input == null || input.isEmpty) {
-      return Results.failure(const ValidationFailure('メンバーを1つ以上追加してください'));
+    if (input == null || input.isEmpty || input.length < 2) {
+      return Results.failure(const ValidationFailure('メンバーを2つ以上追加してください'));
     }
 
     return Results.success(RotationMemberNames(input));
@@ -29,8 +29,8 @@ sealed class RotationMemberNames with _$RotationMemberNames {
 
   // ignore: avoid-dynamic
   static Result<RotationMemberNames> createFromDynamic(List<dynamic>? input) {
-    if (input == null || input.isEmpty) {
-      return Results.failure(const ValidationFailure('メンバーを1つ以上追加してください'));
+    if (input == null || input.isEmpty || input.length < 2) {
+      return Results.failure(const ValidationFailure('メンバーを2つ以上追加してください'));
     }
 
     // dynamicをStringに変換

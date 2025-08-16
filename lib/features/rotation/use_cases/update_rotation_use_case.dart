@@ -3,6 +3,7 @@ import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
+import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 
@@ -18,8 +19,15 @@ class UpdateRotationUseCase {
 
   Future<Result<Rotation>> execute(Rotation rotation) async {
     // 1. 通知設定を削除
+    final sourceId = SourceId.createFromRotationId(rotation.rotationId!);
+    if (sourceId.isFailure) {
+      return Results.failure(
+        NotificationFailure(sourceId.displayText),
+      );
+    }
+
     final deleteResult = await _notificationRepository
-        .deleteNotificationsByRotationId(rotation.rotationId!);
+        .deleteNotificationsBySourceId(sourceId.valueOrNull!);
     if (deleteResult.isFailure) {
       return Results.failure(deleteResult.failureOrNull!);
     }

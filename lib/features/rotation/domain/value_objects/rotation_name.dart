@@ -16,6 +16,14 @@ sealed class RotationName with _$RotationName {
 
   const RotationName._();
 
+  String getNotificationDescription() {
+    return '$valueの通知';
+  }
+
+  String getNotificationTitle() {
+    return value;
+  }
+
   @override
   String toString() => value;
 

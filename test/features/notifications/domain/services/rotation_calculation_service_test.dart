@@ -75,28 +75,28 @@ void main() {
 
       // 順番どおりのメンバー名であること
       expect(
-        notificationEntries[0].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[0].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[1].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[1].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[2].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[2].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
       expect(
-        notificationEntries[3].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[3].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[4].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[4].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[5].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[5].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
 
       // 意図した通知設定日時であること
@@ -174,28 +174,28 @@ void main() {
 
       // 順番どおりのメンバー名であること
       expect(
-        notificationEntries[0].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[0].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[1].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[1].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[2].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[2].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
       expect(
-        notificationEntries[3].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[3].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[4].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[4].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[5].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[5].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
 
       // 意図した通知設定日時であること
@@ -273,28 +273,28 @@ void main() {
 
       // 順番どおりのメンバー名であること
       expect(
-        notificationEntries[0].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[0].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[1].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[1].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[2].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[2].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
       expect(
-        notificationEntries[3].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[3].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[4].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[4].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[5].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[5].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
 
       // 意図した通知設定日時であること
@@ -380,28 +380,28 @@ void main() {
 
       // 順番どおりのメンバー名であること
       expect(
-        notificationEntries[0].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[0].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[1].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[1].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[2].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[2].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
       expect(
-        notificationEntries[3].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[3].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[4].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[4].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[5].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[5].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
 
       // 意図した通知設定日時であること
@@ -489,29 +489,28 @@ void main() {
 
       // 順番どおりのメンバー名であること
       expect(
-        notificationEntries[0].memberName,
-        rotation.rotationMemberNames.memberAt(0),
-      );
-      // 2回目のuser2はスキップ
-      expect(
-        notificationEntries[1].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[0].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[2].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[1].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
       expect(
-        notificationEntries[3].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[2].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[4].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[3].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[5].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[4].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+      );
+      expect(
+        notificationEntries[5].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
 
       // 意図した通知設定日時であること
@@ -608,30 +607,30 @@ void main() {
 
       // 順番どおりのメンバー名であること
       expect(
-        notificationEntries[0].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[0].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       // 2回交代無しスキップ
       expect(
-        notificationEntries[1].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[1].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       expect(
-        notificationEntries[2].memberName,
-        rotation.rotationMemberNames.memberAt(1),
+        notificationEntries[2].content.value,
+        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
       );
       expect(
-        notificationEntries[3].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[3].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
       expect(
-        notificationEntries[4].memberName,
-        rotation.rotationMemberNames.memberAt(0),
+        notificationEntries[4].content.value,
+        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
       );
       // 1回交代無しスキップ
       expect(
-        notificationEntries[5].memberName,
-        rotation.rotationMemberNames.memberAt(2),
+        notificationEntries[5].content.value,
+        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
       );
 
       // 意図した通知設定日時であること

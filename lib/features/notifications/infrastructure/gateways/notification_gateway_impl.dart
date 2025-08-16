@@ -2,9 +2,9 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
+import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
 import 'package:popcal/features/notifications/infrastructure/gateways/notification_gateway_local.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 
 class NotificationGatewayImpl implements NotificationGateway {
   NotificationGatewayImpl(this._localNotificationsDatasource);
@@ -54,11 +54,9 @@ class NotificationGatewayImpl implements NotificationGateway {
 
   /// 4-2 特定のrotationIdの通知を削除
   @override
-  Future<Result<void>> deleteNotificationsByRotationId(
-    RotationId rotationId,
-  ) async {
+  Future<Result<void>> deleteNotificationsBySourceId(SourceId sourceId) async {
     final result = await _localNotificationsDatasource
-        .deleteNotificationsByRotationId(rotationId.value);
+        .deleteNotificationsBySourceId(sourceId.value);
     return result.when(
       success: (_) => Results.success(null),
       failure: Results.failure,

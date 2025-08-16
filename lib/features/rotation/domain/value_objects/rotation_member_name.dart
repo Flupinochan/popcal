@@ -19,6 +19,10 @@ extension type const RotationMemberName(String value) {
     'ローテーション対象外',
   );
 
+  String getNotificationContent() {
+    return '今日は$valueの番です';
+  }
+
   static Result<RotationMemberName> create(String? input) {
     if (input == null || input.trim().isEmpty) {
       return Results.failure(const ValidationFailure('メンバーを1つ以上追加してください'));
