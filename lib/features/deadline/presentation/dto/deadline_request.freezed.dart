@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DeadlineRequest {
 
- bool get isEnabled;
+ bool get isEnabled; NotificationTime get notificationTime;
 /// Create a copy of DeadlineRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $DeadlineRequestCopyWith<DeadlineRequest> get copyWith => _$DeadlineRequestCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeadlineRequest&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeadlineRequest&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isEnabled);
+int get hashCode => Object.hash(runtimeType,isEnabled,notificationTime);
 
 @override
 String toString() {
-  return 'DeadlineRequest(isEnabled: $isEnabled)';
+  return 'DeadlineRequest(isEnabled: $isEnabled, notificationTime: $notificationTime)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $DeadlineRequestCopyWith<$Res>  {
   factory $DeadlineRequestCopyWith(DeadlineRequest value, $Res Function(DeadlineRequest) _then) = _$DeadlineRequestCopyWithImpl;
 @useResult
 $Res call({
- bool isEnabled
+ bool isEnabled, NotificationTime notificationTime
 });
 
 
-
+$NotificationTimeCopyWith<$Res> get notificationTime;
 
 }
 /// @nodoc
@@ -62,13 +62,23 @@ class _$DeadlineRequestCopyWithImpl<$Res>
 
 /// Create a copy of DeadlineRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isEnabled = null,Object? notificationTime = null,}) {
   return _then(_self.copyWith(
 isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
+as NotificationTime,
   ));
 }
-
+/// Create a copy of DeadlineRequest
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NotificationTimeCopyWith<$Res> get notificationTime {
+  
+  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
+    return _then(_self.copyWith(notificationTime: value));
+  });
+}
 }
 
 
@@ -147,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isEnabled,  NotificationTime notificationTime)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeadlineRequest() when $default != null:
-return $default(_that.isEnabled);case _:
+return $default(_that.isEnabled,_that.notificationTime);case _:
   return orElse();
 
 }
@@ -168,10 +178,10 @@ return $default(_that.isEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isEnabled,  NotificationTime notificationTime)  $default,) {final _that = this;
 switch (_that) {
 case _DeadlineRequest():
-return $default(_that.isEnabled);}
+return $default(_that.isEnabled,_that.notificationTime);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -185,10 +195,10 @@ return $default(_that.isEnabled);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isEnabled,  NotificationTime notificationTime)?  $default,) {final _that = this;
 switch (_that) {
 case _DeadlineRequest() when $default != null:
-return $default(_that.isEnabled);case _:
+return $default(_that.isEnabled,_that.notificationTime);case _:
   return null;
 
 }
@@ -200,10 +210,11 @@ return $default(_that.isEnabled);case _:
 
 
 class _DeadlineRequest extends DeadlineRequest {
-  const _DeadlineRequest({required this.isEnabled}): super._();
+   _DeadlineRequest({required this.isEnabled, required this.notificationTime}): super._();
   
 
 @override final  bool isEnabled;
+@override final  NotificationTime notificationTime;
 
 /// Create a copy of DeadlineRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -215,16 +226,16 @@ _$DeadlineRequestCopyWith<_DeadlineRequest> get copyWith => __$DeadlineRequestCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeadlineRequest&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeadlineRequest&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isEnabled);
+int get hashCode => Object.hash(runtimeType,isEnabled,notificationTime);
 
 @override
 String toString() {
-  return 'DeadlineRequest(isEnabled: $isEnabled)';
+  return 'DeadlineRequest(isEnabled: $isEnabled, notificationTime: $notificationTime)';
 }
 
 
@@ -235,11 +246,11 @@ abstract mixin class _$DeadlineRequestCopyWith<$Res> implements $DeadlineRequest
   factory _$DeadlineRequestCopyWith(_DeadlineRequest value, $Res Function(_DeadlineRequest) _then) = __$DeadlineRequestCopyWithImpl;
 @override @useResult
 $Res call({
- bool isEnabled
+ bool isEnabled, NotificationTime notificationTime
 });
 
 
-
+@override $NotificationTimeCopyWith<$Res> get notificationTime;
 
 }
 /// @nodoc
@@ -252,14 +263,24 @@ class __$DeadlineRequestCopyWithImpl<$Res>
 
 /// Create a copy of DeadlineRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isEnabled = null,Object? notificationTime = null,}) {
   return _then(_DeadlineRequest(
 isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
+as NotificationTime,
   ));
 }
 
-
+/// Create a copy of DeadlineRequest
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NotificationTimeCopyWith<$Res> get notificationTime {
+  
+  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
+    return _then(_self.copyWith(notificationTime: value));
+  });
+}
 }
 
 // dart format on

@@ -111,7 +111,7 @@ class NotificationGatewayLocal {
           final notificationId = notification.notificationId.value;
           await _flutterLocalNotificationsPlugin.cancel(notificationId);
           _logger.fine(
-            'SourceId: $sourceId NotificationId: $notification 通知を削除',
+            'SourceId: $sourceId NotificationId: ${notification.notificationDateTime.value} 通知を削除',
           );
         } on Exception catch (error) {
           // 1つの通知削除でエラーが発生してもほかの通知削除は試みる

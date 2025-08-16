@@ -10,6 +10,7 @@ import 'package:popcal/features/deadline/use_case/toggle_deadline_use_case.dart'
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
+import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,7 +30,10 @@ DeadlineRepository deadlineRepository(Ref ref) {
 
 @Riverpod(keepAlive: true)
 DeadlineSharedPreferences deadlineSharedPreferences(Ref ref) {
-  return DeadlineSharedPreferences(ref.watch(sharedPreferencesProvider));
+  return DeadlineSharedPreferences(
+    ref.watch(sharedPreferencesProvider),
+    ref.watch(timeUtilsProvider),
+  );
 }
 
 @riverpod

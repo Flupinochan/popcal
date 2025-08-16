@@ -33,6 +33,7 @@ sealed class NotificationEntryLocalResponse
   // JSON => DTO
   factory NotificationEntryLocalResponse.fromJson(Map<String, dynamic> json) =>
       _$NotificationEntryLocalResponseFromJson(json);
+
   const NotificationEntryLocalResponse._();
 
   // DTO => Entity

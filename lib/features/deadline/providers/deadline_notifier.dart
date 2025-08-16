@@ -16,7 +16,12 @@ class DeadlineNotifier extends _$DeadlineNotifier {
       return Results.failure(DeadlineFailure(result.displayText));
     }
     final entity = result.valueOrNull!;
-    return Results.success(DeadlineRequest(isEnabled: entity.isEnabled));
+    return Results.success(
+      DeadlineRequest(
+        isEnabled: entity.isEnabled,
+        notificationTime: entity.notificationTime,
+      ),
+    );
   }
 
   Future<void> execute(DeadlineRequest dto) async {
@@ -29,7 +34,12 @@ class DeadlineNotifier extends _$DeadlineNotifier {
         return Results.failure(DeadlineFailure(result.displayText));
       }
       final finalEntity = result.valueOrNull!;
-      return Results.success(DeadlineRequest(isEnabled: finalEntity.isEnabled));
+      return Results.success(
+        DeadlineRequest(
+          isEnabled: finalEntity.isEnabled,
+          notificationTime: finalEntity.notificationTime,
+        ),
+      );
     });
   }
 }

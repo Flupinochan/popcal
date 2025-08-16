@@ -11,30 +11,33 @@ part of 'deadline_shared_preferences_response.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$DeadlineSharedPreferencesResponse {
 
- bool get isEnabled;
+ bool get isEnabled; NotificationTime get notificationTime;
 /// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $DeadlineSharedPreferencesResponseCopyWith<DeadlineSharedPreferencesResponse> get copyWith => _$DeadlineSharedPreferencesResponseCopyWithImpl<DeadlineSharedPreferencesResponse>(this as DeadlineSharedPreferencesResponse, _$identity);
 
+  /// Serializes this DeadlineSharedPreferencesResponse to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeadlineSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeadlineSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isEnabled);
+int get hashCode => Object.hash(runtimeType,isEnabled,notificationTime);
 
 @override
 String toString() {
-  return 'DeadlineSharedPreferencesResponse(isEnabled: $isEnabled)';
+  return 'DeadlineSharedPreferencesResponse(isEnabled: $isEnabled, notificationTime: $notificationTime)';
 }
 
 
@@ -45,11 +48,11 @@ abstract mixin class $DeadlineSharedPreferencesResponseCopyWith<$Res>  {
   factory $DeadlineSharedPreferencesResponseCopyWith(DeadlineSharedPreferencesResponse value, $Res Function(DeadlineSharedPreferencesResponse) _then) = _$DeadlineSharedPreferencesResponseCopyWithImpl;
 @useResult
 $Res call({
- bool isEnabled
+ bool isEnabled, NotificationTime notificationTime
 });
 
 
-
+$NotificationTimeCopyWith<$Res> get notificationTime;
 
 }
 /// @nodoc
@@ -62,13 +65,23 @@ class _$DeadlineSharedPreferencesResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isEnabled = null,Object? notificationTime = null,}) {
   return _then(_self.copyWith(
 isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
+as NotificationTime,
   ));
 }
-
+/// Create a copy of DeadlineSharedPreferencesResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NotificationTimeCopyWith<$Res> get notificationTime {
+  
+  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
+    return _then(_self.copyWith(notificationTime: value));
+  });
+}
 }
 
 
@@ -147,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isEnabled,  NotificationTime notificationTime)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DeadlineSharedPreferencesResponse() when $default != null:
-return $default(_that.isEnabled);case _:
+return $default(_that.isEnabled,_that.notificationTime);case _:
   return orElse();
 
 }
@@ -168,10 +181,10 @@ return $default(_that.isEnabled);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isEnabled,  NotificationTime notificationTime)  $default,) {final _that = this;
 switch (_that) {
 case _DeadlineSharedPreferencesResponse():
-return $default(_that.isEnabled);}
+return $default(_that.isEnabled,_that.notificationTime);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -185,10 +198,10 @@ return $default(_that.isEnabled);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isEnabled,  NotificationTime notificationTime)?  $default,) {final _that = this;
 switch (_that) {
 case _DeadlineSharedPreferencesResponse() when $default != null:
-return $default(_that.isEnabled);case _:
+return $default(_that.isEnabled,_that.notificationTime);case _:
   return null;
 
 }
@@ -198,12 +211,13 @@ return $default(_that.isEnabled);case _:
 
 /// @nodoc
 
-
+@JsonSerializable(explicitToJson: true)
 class _DeadlineSharedPreferencesResponse extends DeadlineSharedPreferencesResponse {
-  const _DeadlineSharedPreferencesResponse({required this.isEnabled}): super._();
-  
+  const _DeadlineSharedPreferencesResponse({required this.isEnabled, required this.notificationTime}): super._();
+  factory _DeadlineSharedPreferencesResponse.fromJson(Map<String, dynamic> json) => _$DeadlineSharedPreferencesResponseFromJson(json);
 
 @override final  bool isEnabled;
+@override final  NotificationTime notificationTime;
 
 /// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -211,20 +225,23 @@ class _DeadlineSharedPreferencesResponse extends DeadlineSharedPreferencesRespon
 @pragma('vm:prefer-inline')
 _$DeadlineSharedPreferencesResponseCopyWith<_DeadlineSharedPreferencesResponse> get copyWith => __$DeadlineSharedPreferencesResponseCopyWithImpl<_DeadlineSharedPreferencesResponse>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$DeadlineSharedPreferencesResponseToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeadlineSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeadlineSharedPreferencesResponse&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isEnabled);
+int get hashCode => Object.hash(runtimeType,isEnabled,notificationTime);
 
 @override
 String toString() {
-  return 'DeadlineSharedPreferencesResponse(isEnabled: $isEnabled)';
+  return 'DeadlineSharedPreferencesResponse(isEnabled: $isEnabled, notificationTime: $notificationTime)';
 }
 
 
@@ -235,11 +252,11 @@ abstract mixin class _$DeadlineSharedPreferencesResponseCopyWith<$Res> implement
   factory _$DeadlineSharedPreferencesResponseCopyWith(_DeadlineSharedPreferencesResponse value, $Res Function(_DeadlineSharedPreferencesResponse) _then) = __$DeadlineSharedPreferencesResponseCopyWithImpl;
 @override @useResult
 $Res call({
- bool isEnabled
+ bool isEnabled, NotificationTime notificationTime
 });
 
 
-
+@override $NotificationTimeCopyWith<$Res> get notificationTime;
 
 }
 /// @nodoc
@@ -252,14 +269,24 @@ class __$DeadlineSharedPreferencesResponseCopyWithImpl<$Res>
 
 /// Create a copy of DeadlineSharedPreferencesResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isEnabled = null,Object? notificationTime = null,}) {
   return _then(_DeadlineSharedPreferencesResponse(
 isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
+as NotificationTime,
   ));
 }
 
-
+/// Create a copy of DeadlineSharedPreferencesResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NotificationTimeCopyWith<$Res> get notificationTime {
+  
+  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
+    return _then(_self.copyWith(notificationTime: value));
+  });
+}
 }
 
 // dart format on

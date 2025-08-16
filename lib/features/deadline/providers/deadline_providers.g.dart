@@ -47,7 +47,7 @@ final deadlineRepositoryProvider = Provider<DeadlineRepository>.internal(
 // ignore: unused_element
 typedef DeadlineRepositoryRef = ProviderRef<DeadlineRepository>;
 String _$deadlineSharedPreferencesHash() =>
-    r'd5a2db1198d99781bfea52f322b5834ce73bbc66';
+    r'968c0d9819d3bc6c56b10e743cdde0ba6f91c9ec';
 
 /// See also [deadlineSharedPreferences].
 @ProviderFor(deadlineSharedPreferences)

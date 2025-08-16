@@ -109,7 +109,9 @@ class NotificationGatewayImpl implements NotificationGateway {
     if (result.isFailure) {
       return Results.failure(result.failureOrNull!);
     }
-    final sourceId = SourceId(value: result.valueOrNull!);
-    return Results.success(sourceId);
+    if (result.valueOrNull == null) {
+      return Results.success(null);
+    }
+    return Results.success(SourceId(value: result.valueOrNull!));
   }
 }

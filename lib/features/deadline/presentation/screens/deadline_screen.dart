@@ -8,6 +8,7 @@ import 'package:popcal/features/deadline/presentation/dto/deadline_request.dart'
 import 'package:popcal/features/deadline/providers/deadline_notifier.dart';
 import 'package:popcal/features/deadline/providers/deadline_providers.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
+import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_simple_screen.dart';
@@ -73,21 +74,40 @@ class DeadlineScreen extends HookConsumerWidget {
                       deadlineState.when(
                         data: (result) {
                           if (result.isFailure) {
-                            return _buildScreen(context, ref, false, true);
+                            return _buildScreen(
+                              context,
+                              ref,
+                              formKey,
+                              false,
+                              true,
+                            );
                           }
                           final deadlineRequest = result.valueOrNull!;
                           final isEnabled = deadlineRequest.isEnabled;
                           return _buildScreen(
                             context,
                             ref,
+                            formKey,
                             isEnabled,
                             false,
                           );
                         },
-                        loading: () => _buildScreen(context, ref, false, true),
+                        loading:
+                            () => _buildScreen(
+                              context,
+                              ref,
+                              formKey,
+                              false,
+                              true,
+                            ),
                         error:
-                            (error, stackTrace) =>
-                                _buildScreen(context, ref, false, true),
+                            (error, stackTrace) => _buildScreen(
+                              context,
+                              ref,
+                              formKey,
+                              false,
+                              true,
+                            ),
                       ),
                     ],
                   ),
@@ -150,6 +170,7 @@ class DeadlineScreen extends HookConsumerWidget {
   Widget _buildScreen(
     BuildContext context,
     WidgetRef ref,
+    GlobalKey<FormBuilderState> formKey,
     bool isEnabled,
     bool isLoading,
   ) {
@@ -204,6 +225,7 @@ class DeadlineScreen extends HookConsumerWidget {
                     ? null
                     : (value) => _onSwitchChanged(
                       ref,
+                      formKey,
                       value,
                     ),
           ),
@@ -212,9 +234,20 @@ class DeadlineScreen extends HookConsumerWidget {
     );
   }
 
-  Future<void> _onSwitchChanged(WidgetRef ref, bool? value) async {
-    if (value != null) {
-      final dto = DeadlineRequest(isEnabled: value);
+  Future<void> _onSwitchChanged(
+    WidgetRef ref,
+    GlobalKey<FormBuilderState> formKey,
+    bool? value,
+  ) async {
+    if (value == null) return;
+    if (formKey.currentState!.saveAndValidate()) {
+      final formData = formKey.currentState!.value;
+      final dto = DeadlineRequest(
+        isEnabled: value,
+        notificationTime: NotificationTime(
+          value: formData['notificationTime'] as TimeOfDay,
+        ),
+      );
       final deadlineNotifier = ref.watch(deadlineNotifierProvider.notifier);
       await deadlineNotifier.execute(dto);
       final _ = ref.refresh(getDeadlineNotificationsProvider);
