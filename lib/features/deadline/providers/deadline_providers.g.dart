@@ -67,26 +67,27 @@ final deadlineSharedPreferencesProvider =
 // ignore: unused_element
 typedef DeadlineSharedPreferencesRef = ProviderRef<DeadlineSharedPreferences>;
 String _$getDeadlineNotificationsHash() =>
-    r'8f7e60fe8f0042e7731df1616adcb2c1c6a71638';
+    r'2d3d3cc165738fbfca6391d8ac83b28a8e61a50e';
 
 /// See also [getDeadlineNotifications].
 @ProviderFor(getDeadlineNotifications)
-final getDeadlineNotificationsProvider =
-    AutoDisposeFutureProvider<Result<List<DeadlineResponse>>>.internal(
-      getDeadlineNotifications,
-      name: r'getDeadlineNotificationsProvider',
-      debugGetCreateSourceHash:
-          const bool.fromEnvironment('dart.vm.product')
-              ? null
-              : _$getDeadlineNotificationsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final getDeadlineNotificationsProvider = AutoDisposeFutureProvider<
+  Result<List<DeadlineNotificationsResponse>>
+>.internal(
+  getDeadlineNotifications,
+  name: r'getDeadlineNotificationsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$getDeadlineNotificationsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef GetDeadlineNotificationsRef =
-    AutoDisposeFutureProviderRef<Result<List<DeadlineResponse>>>;
+    AutoDisposeFutureProviderRef<Result<List<DeadlineNotificationsResponse>>>;
 String _$sharedPreferencesHash() => r'225e34d1d5293ff0304837a7ce3d6fdc21c7747c';
 
 /// See also [sharedPreferences].

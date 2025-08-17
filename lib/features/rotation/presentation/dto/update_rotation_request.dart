@@ -8,6 +8,7 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
@@ -38,6 +39,11 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
       return Results.failure(ValidationFailure(userIdResult.displayText));
     }
 
+    final rotationIdResult = RotationId.create(rotationId);
+    if (rotationIdResult.isFailure) {
+      return Results.failure(ValidationFailure(rotationIdResult.displayText));
+    }
+
     final rotationNameResult = RotationName.create(rotationName);
     if (rotationNameResult.isFailure) {
       return Results.failure(ValidationFailure(rotationNameResult.displayText));
@@ -65,6 +71,7 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
 
     return Results.success(
       Rotation(
+        rotationId: rotationIdResult.valueOrNull,
         userId: userIdResult.valueOrNull!,
         rotationName: rotationNameResult.valueOrNull!,
         rotationMemberNames: rotationMembersResult.valueOrNull!,

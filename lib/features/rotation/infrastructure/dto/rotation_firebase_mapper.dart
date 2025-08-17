@@ -127,8 +127,7 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
 
       final rotationDaysInt =
           (data['rotationDays'] as List<dynamic>?)?.cast<int>() ?? [];
-      final rotationDays =
-          rotationDaysInt.map((index) => Weekday.values[index]).toList();
+      final rotationDays = rotationDaysInt.map(Weekday.fromInt).toList();
 
       final notificationTimeTimestamp = data['notificationTime'] as Timestamp?;
       if (notificationTimeTimestamp == null) {

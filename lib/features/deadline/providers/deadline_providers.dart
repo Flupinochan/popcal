@@ -7,7 +7,7 @@ import 'package:popcal/features/deadline/domain/services/deadline_calculation_se
 import 'package:popcal/features/deadline/domain/services/deadline_calculation_service_impl.dart';
 import 'package:popcal/features/deadline/infrastructure/repositories/deadline_shared_preferences.dart';
 import 'package:popcal/features/deadline/infrastructure/repositories/deadline_shared_preferences_impl.dart';
-import 'package:popcal/features/deadline/presentation/dto/deadline_response.dart';
+import 'package:popcal/features/deadline/presentation/dto/deadline_notifications_response.dart';
 import 'package:popcal/features/deadline/use_case/toggle_deadline_use_case.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
@@ -38,7 +38,7 @@ DeadlineSharedPreferences deadlineSharedPreferences(Ref ref) {
 }
 
 @riverpod
-Future<Result<List<DeadlineResponse>>> getDeadlineNotifications(
+Future<Result<List<DeadlineNotificationsResponse>>> getDeadlineNotifications(
   Ref ref,
 ) async {
   final result = await ref
@@ -47,7 +47,9 @@ Future<Result<List<DeadlineResponse>>> getDeadlineNotifications(
   if (result.isFailure) {
     return Results.failure(DeadlineFailure(result.displayText));
   }
-  return Results.success(DeadlineResponse.fromEntity(result.valueOrNull!));
+  return Results.success(
+    DeadlineNotificationsResponse.fromEntity(result.valueOrNull!),
+  );
 }
 
 @Riverpod(keepAlive: true)

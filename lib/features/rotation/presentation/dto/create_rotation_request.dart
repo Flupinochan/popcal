@@ -58,6 +58,7 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
       notificationTime,
     );
 
+    // Create時はRotationIdは不要
     return Results.success(
       Rotation(
         userId: userIdResult.valueOrNull!,

@@ -16,10 +16,11 @@ class DeadlineNotifier extends _$DeadlineNotifier {
       return Results.failure(DeadlineFailure(result.displayText));
     }
     final entity = result.valueOrNull!;
+
     return Results.success(
       DeadlineRequest(
         isEnabled: entity.isEnabled,
-        notificationTime: entity.notificationTime,
+        notificationTime: entity.notificationTime.timeOfDay,
       ),
     );
   }
@@ -37,7 +38,7 @@ class DeadlineNotifier extends _$DeadlineNotifier {
       return Results.success(
         DeadlineRequest(
           isEnabled: finalEntity.isEnabled,
-          notificationTime: finalEntity.notificationTime,
+          notificationTime: finalEntity.notificationTime.timeOfDay,
         ),
       );
     });

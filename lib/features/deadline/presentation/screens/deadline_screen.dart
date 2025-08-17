@@ -8,7 +8,6 @@ import 'package:popcal/features/deadline/presentation/dto/deadline_request.dart'
 import 'package:popcal/features/deadline/providers/deadline_notifier.dart';
 import 'package:popcal/features/deadline/providers/deadline_providers.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_simple_screen.dart';
@@ -80,7 +79,7 @@ class DeadlineScreen extends HookConsumerWidget {
                           final deadlineRequest = result.valueOrNull!;
                           lastIsEnabled.value = deadlineRequest.isEnabled;
                           lastNotificationTime.value =
-                              deadlineRequest.notificationTime.timeOfDay;
+                              deadlineRequest.notificationTime;
                           return _buildScreen(
                             context: context,
                             ref: ref,
@@ -249,15 +248,12 @@ class DeadlineScreen extends HookConsumerWidget {
 
     if (formKey.currentState!.saveAndValidate()) {
       final formData = formKey.currentState!.value;
-      final timeOfDay =
+      final notificationTime =
           selectedTime ?? (formData['notificationTime'] as TimeOfDay);
 
       final dto = DeadlineRequest(
         isEnabled: isEnabled,
-        notificationTime: NotificationTime(
-          hour: timeOfDay.hour,
-          minute: timeOfDay.minute,
-        ),
+        notificationTime: notificationTime,
       );
 
       final deadlineNotifier = ref.watch(deadlineNotifierProvider.notifier);

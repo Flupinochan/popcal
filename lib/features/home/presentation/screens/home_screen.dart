@@ -241,11 +241,6 @@ class HomeScreen extends HookConsumerWidget {
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    // sync処理が完了していない可能性があるためチェック
-    // 未実装だが、dismissibleを戻す操作が必要
-    final loading = ref.watch(syncRotationNotifierProvider).isLoading;
-    if (loading) return;
-
     // 削除処理
     final result = await ref.watch(
       deleteRotationProvider(

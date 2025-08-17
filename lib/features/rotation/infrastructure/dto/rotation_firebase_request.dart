@@ -10,23 +10,24 @@ part 'rotation_firebase_request.freezed.dart';
 
 @freezed
 sealed class RotationFirebaseRequest with _$RotationFirebaseRequest {
+  // EnumはMapperでintやStringに変換
   const factory RotationFirebaseRequest({
-    required String? rotationId,
-    required String userId,
     required String rotationName,
     required List<String> rotationMemberNames,
-    // EnumはMapperでintやStringに変換
     required List<Weekday> rotationDays,
     required TimeOfDay notificationTime,
     required int currentRotationIndex,
     required DateTime createdAt,
     required DateTime updatedAt,
     required SkipEvents skipEvents,
+    required String userId,
+    String? rotationId,
   }) = _RotationFirebaseRequest;
 
+  // Create/Update共通はよくない。Create時のみrotationIdはoptional
   factory RotationFirebaseRequest.fromEntity(Rotation rotation) {
     return RotationFirebaseRequest(
-      rotationId: rotation.rotationId!.value,
+      rotationId: rotation.rotationId?.value,
       userId: rotation.userId.value,
       rotationName: rotation.rotationName.value,
       rotationMemberNames:
