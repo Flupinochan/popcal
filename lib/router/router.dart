@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/auth/providers/auth_loader.dart';
+import 'package:popcal/features/auth/providers/auth_handlers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

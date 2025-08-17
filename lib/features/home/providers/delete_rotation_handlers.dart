@@ -6,7 +6,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'delete_rotation_loader.g.dart';
+part 'delete_rotation_handlers.g.dart';
 
 /// state管理不要な削除メソッド
 @riverpod

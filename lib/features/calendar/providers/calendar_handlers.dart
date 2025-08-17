@@ -8,7 +8,7 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'calendar_loader.g.dart';
+part 'calendar_handlers.g.dart';
 
 @riverpod
 Future<Result<CalendarScheduleResponse>> calendarScheduleResponse(
@@ -31,6 +31,7 @@ Future<Result<CalendarScheduleResponse>> calendarScheduleResponse(
   );
 }
 
+// DTO変換
 Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
   Map<DateKey, ScheduleDay> domainMap,
 ) {

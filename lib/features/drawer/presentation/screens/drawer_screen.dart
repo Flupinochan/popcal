@@ -5,7 +5,7 @@ import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/auth/providers/auth_loader.dart';
+import 'package:popcal/features/auth/providers/auth_handlers.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
 import 'package:popcal/features/drawer/presentation/widgets/glass_menu_item.dart';
 import 'package:popcal/router/routes.dart';

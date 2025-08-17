@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'rotation_loader.dart';
+part of 'rotation_handlers.dart';
 
 // **************************************************************************
 // RiverpodGenerator

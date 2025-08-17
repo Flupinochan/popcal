@@ -18,7 +18,7 @@ import 'package:popcal/features/rotation/presentation/widgets/bottom_action_bar/
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_list.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_time.dart';
 import 'package:popcal/features/rotation/presentation/widgets/glass_form_weekday.dart';
-import 'package:popcal/features/rotation/providers/rotation_loader.dart';
+import 'package:popcal/features/rotation/providers/rotation_handlers.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';

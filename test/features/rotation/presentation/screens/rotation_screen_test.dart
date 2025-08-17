@@ -11,7 +11,7 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
-import 'package:popcal/features/rotation/providers/rotation_loader.dart';
+import 'package:popcal/features/rotation/providers/rotation_handlers.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 

@@ -17,7 +17,6 @@ AuthRepositoryFirebase authRepositoryFirebase(Ref ref) {
   return AuthRepositoryFirebase(ref.watch(firebaseAuthProvider));
 }
 
-// DI
 @riverpod
 FirebaseAuth firebaseAuth(Ref _) {
   return FirebaseAuth.instance;

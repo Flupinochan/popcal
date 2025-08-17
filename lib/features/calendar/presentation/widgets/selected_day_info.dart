@@ -5,7 +5,7 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
-import 'package:popcal/features/calendar/providers/calendar_loader.dart';
+import 'package:popcal/features/calendar/providers/calendar_handlers.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';

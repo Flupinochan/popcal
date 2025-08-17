@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calendar_loader.dart';
+part of 'calendar_handlers.dart';
 
 // **************************************************************************
 // RiverpodGenerator

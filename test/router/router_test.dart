@@ -9,13 +9,13 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
-import 'package:popcal/features/auth/providers/auth_loader.dart';
+import 'package:popcal/features/auth/providers/auth_handlers.dart';
 import 'package:popcal/features/auth/providers/auth_notifier.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
-import 'package:popcal/features/rotation/providers/rotation_loader.dart';
+import 'package:popcal/features/rotation/providers/rotation_handlers.dart';
 import 'package:popcal/router/router.dart';
 import 'package:popcal/router/routes.dart';
 

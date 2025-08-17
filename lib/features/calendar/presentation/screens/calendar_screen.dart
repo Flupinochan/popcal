@@ -6,7 +6,7 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/presentation/widgets/calendar_container.dart';
 import 'package:popcal/features/calendar/presentation/widgets/rotation_info_card.dart';
 import 'package:popcal/features/calendar/presentation/widgets/selected_day_info.dart';
-import 'package:popcal/features/calendar/providers/calendar_loader.dart';
+import 'package:popcal/features/calendar/providers/calendar_handlers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';

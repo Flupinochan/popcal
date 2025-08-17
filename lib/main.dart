@@ -10,7 +10,7 @@ import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/providers/deadline_providers.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
-import 'package:popcal/features/notifications/providers/notification_loader.dart';
+import 'package:popcal/features/notifications/providers/notification_handlers.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
 import 'package:popcal/firebase_options.dart';
 import 'package:popcal/router/router.dart';

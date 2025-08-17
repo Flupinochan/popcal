@@ -3,13 +3,13 @@ import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/auth/providers/auth_loader.dart';
+import 'package:popcal/features/auth/providers/auth_handlers.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'rotation_loader.g.dart';
+part 'rotation_handlers.g.dart';
 
 @riverpod
 Future<Result<RotationDataResponse>> rotationDataResponse(
