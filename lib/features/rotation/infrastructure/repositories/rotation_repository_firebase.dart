@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/create_rotation_firebase_request.dart';
 import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_mapper.dart';
-import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_request.dart';
 import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_response.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/update_rotation_firebase_request.dart';
 
 class RotationRepositoryFirebase {
   RotationRepositoryFirebase(this._firebaseFirestore);
@@ -11,7 +12,7 @@ class RotationRepositoryFirebase {
 
   // 4. ローテーショングループ作成
   Future<Result<RotationFirebaseResponse>> createRotation(
-    RotationFirebaseRequest dto,
+    CreateRotationFirebaseRequest dto,
   ) async {
     try {
       // 作成するdocumentへのrefを作成 ※collectionとdocは交互にしなければならない
@@ -22,12 +23,15 @@ class RotationRepositoryFirebase {
               .collection('rotations')
               .doc();
 
+      // rotationId生成
       final rotationId = docRef.id;
 
       final dtoWithRotationId = dto.copyWith(
         rotationId: rotationId,
       );
-      final mapperResult = RotationFirebaseMapper.fromDto(dtoWithRotationId);
+      final mapperResult = RotationFirebaseMapper.fromCreateDto(
+        dtoWithRotationId,
+      );
       if (mapperResult.isFailure) {
         return Results.failure(
           RotationFailure('ローテーショングループの作成に失敗しました: $mapperResult'),
@@ -138,7 +142,7 @@ class RotationRepositoryFirebase {
 
   // 5. ローテーショングループ更新
   Future<Result<RotationFirebaseResponse>> updateRotation(
-    RotationFirebaseRequest dto,
+    UpdateRotationFirebaseRequest dto,
   ) async {
     try {
       final docRef = _firebaseFirestore
@@ -147,7 +151,7 @@ class RotationRepositoryFirebase {
           .collection('rotations')
           .doc(dto.rotationId);
 
-      final mapperResult = RotationFirebaseMapper.fromDto(dto);
+      final mapperResult = RotationFirebaseMapper.fromUpdateDto(dto);
       if (mapperResult.isFailure) {
         return Results.failure(
           RotationFailure('ローテーショングループの更新に失敗しました: $mapperResult'),
@@ -159,7 +163,7 @@ class RotationRepositoryFirebase {
       // RotationId必須のUpdate用を用意すべき
       // そもそもレスポンスはvoidでよいのでは
       final result = RotationFirebaseResponse(
-        rotationId: dto.rotationId!,
+        rotationId: dto.rotationId,
         userId: dto.userId,
         rotationName: dto.rotationName,
         rotationMemberNames: dto.rotationMemberNames,

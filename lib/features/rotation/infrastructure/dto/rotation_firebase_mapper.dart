@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/core/utils/time_of_day_extention.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
@@ -12,8 +11,9 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
-import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_request.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/create_rotation_firebase_request.dart';
 import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_response.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/update_rotation_firebase_request.dart';
 
 part 'rotation_firebase_mapper.freezed.dart';
 
@@ -71,11 +71,10 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
     };
   }
 
-  // DTO=>Mapper
-  static Result<RotationFirebaseMapper> fromDto(RotationFirebaseRequest dto) {
-    if (dto.rotationId == null) {
-      return Results.failure(const ValidationFailure('RotationIdがnullです'));
-    }
+  static Result<RotationFirebaseMapper> fromCreateDto(
+    CreateRotationFirebaseRequest dto,
+  ) {
+    // DtoでrotationIdをnullチェックしているため不要
     return Results.success(
       RotationFirebaseMapper(
         rotationId: dto.rotationId!,
@@ -169,6 +168,26 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
         stackTrace,
       );
     }
+  }
+
+  // DTO=>Mapper
+  static Result<RotationFirebaseMapper> fromUpdateDto(
+    UpdateRotationFirebaseRequest dto,
+  ) {
+    return Results.success(
+      RotationFirebaseMapper(
+        rotationId: dto.rotationId,
+        userId: dto.userId,
+        rotationName: dto.rotationName,
+        rotationMemberNames: dto.rotationMemberNames,
+        rotationDays: dto.rotationDays,
+        notificationTime: dto.notificationTime,
+        currentRotationIndex: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        skipEvents: dto.skipEvents,
+      ),
+    );
   }
 
   static SkipEvents _parseSkipEvents(dynamic data) {

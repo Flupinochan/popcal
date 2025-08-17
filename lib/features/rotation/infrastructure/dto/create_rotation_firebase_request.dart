@@ -6,12 +6,13 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
-part 'rotation_firebase_request.freezed.dart';
+part 'create_rotation_firebase_request.freezed.dart';
 
 @freezed
-sealed class RotationFirebaseRequest with _$RotationFirebaseRequest {
+sealed class CreateRotationFirebaseRequest
+    with _$CreateRotationFirebaseRequest {
   // EnumはMapperでintやStringに変換
-  const factory RotationFirebaseRequest({
+  const factory CreateRotationFirebaseRequest({
     required String rotationName,
     required List<String> rotationMemberNames,
     required List<Weekday> rotationDays,
@@ -22,11 +23,12 @@ sealed class RotationFirebaseRequest with _$RotationFirebaseRequest {
     required SkipEvents skipEvents,
     required String userId,
     String? rotationId,
-  }) = _RotationFirebaseRequest;
+  }) = _CreateRotationFirebaseRequest;
 
   // Create/Update共通はよくない。Create時のみrotationIdはoptional
-  factory RotationFirebaseRequest.fromEntity(Rotation rotation) {
-    return RotationFirebaseRequest(
+  // 第3層でrotationIdを生成
+  factory CreateRotationFirebaseRequest.fromEntity(Rotation rotation) {
+    return CreateRotationFirebaseRequest(
       rotationId: rotation.rotationId?.value,
       userId: rotation.userId.value,
       rotationName: rotation.rotationName.value,
@@ -44,5 +46,5 @@ sealed class RotationFirebaseRequest with _$RotationFirebaseRequest {
     );
   }
 
-  const RotationFirebaseRequest._();
+  const CreateRotationFirebaseRequest._();
 }

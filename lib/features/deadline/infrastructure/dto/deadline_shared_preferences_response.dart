@@ -13,6 +13,7 @@ part 'deadline_shared_preferences_response.g.dart';
 @freezed
 sealed class DeadlineSharedPreferencesResponse
     with _$DeadlineSharedPreferencesResponse {
+  /// freezedはTimeOfDayに対応していないため、intのhourとminuteを組み合わせたNotificationTimeをそのまま利用
   const factory DeadlineSharedPreferencesResponse({
     required bool isEnabled,
     required NotificationTime notificationTime,

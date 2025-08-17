@@ -52,6 +52,8 @@ class Rotation {
     return notificationTime.display24hour;
   }
 
+  bool get isRotationIdExist => rotationId != null;
+
   /// 休日スキップを取り消し可能かどうか
   bool canDisableHoliday({required DayType dayType}) {
     return dayType == DayType.holiday;

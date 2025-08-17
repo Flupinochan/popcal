@@ -4,7 +4,8 @@ import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_request.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/create_rotation_firebase_request.dart';
+import 'package:popcal/features/rotation/infrastructure/dto/update_rotation_firebase_request.dart';
 import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_firebase.dart';
 
 class RotationRepositoryImpl implements RotationRepository {
@@ -14,7 +15,7 @@ class RotationRepositoryImpl implements RotationRepository {
   // 4. ローテーショングループ作成
   @override
   Future<Result<Rotation>> createRotation(Rotation rotation) async {
-    final dto = RotationFirebaseRequest.fromEntity(rotation);
+    final dto = CreateRotationFirebaseRequest.fromEntity(rotation);
 
     final firebaseResult = await _firebaseRotationDatasource.createRotation(
       dto,
@@ -94,10 +95,13 @@ class RotationRepositoryImpl implements RotationRepository {
   // 5. ローテーショングループ更新
   @override
   Future<Result<Rotation>> updateRotation(Rotation rotation) async {
-    final dto = RotationFirebaseRequest.fromEntity(rotation);
+    final dtoResult = UpdateRotationFirebaseRequest.fromEntity(rotation);
+    if (dtoResult.isFailure) {
+      return Results.failure(RotationFailure(dtoResult.displayText));
+    }
 
     final firebaseResult = await _firebaseRotationDatasource.updateRotation(
-      dto,
+      dtoResult.valueOrNull!,
     );
     if (firebaseResult.isFailure) {
       return Results.failure(RotationFailure(firebaseResult.displayText));
