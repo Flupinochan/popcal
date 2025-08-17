@@ -292,7 +292,7 @@ $RotationResponseCopyWith<$Res> get rotationResponse {
 /// @nodoc
 mixin _$ScheduleDayResponse {
 
- NotificationDateTime get date; RotationMemberName get memberName; DayType get scheduleDayType; MemberColor get memberColor; String get displayText; bool get canSkipNext; bool get canSkipPrevious; bool get canDisableHoliday; bool get canEnableHoliday; bool get isValidRotationDay;
+ DateTime get date; String get memberName; DayType get scheduleDayType; Color get memberColor; String get displayText; bool get canSkipNext; bool get canSkipPrevious; bool get canDisableHoliday; bool get canEnableHoliday; bool get isValidRotationDay;
 /// Create a copy of ScheduleDayResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -323,7 +323,7 @@ abstract mixin class $ScheduleDayResponseCopyWith<$Res>  {
   factory $ScheduleDayResponseCopyWith(ScheduleDayResponse value, $Res Function(ScheduleDayResponse) _then) = _$ScheduleDayResponseCopyWithImpl;
 @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious, bool canDisableHoliday, bool canEnableHoliday, bool isValidRotationDay
+ DateTime date, String memberName, DayType scheduleDayType, Color memberColor, String displayText, bool canSkipNext, bool canSkipPrevious, bool canDisableHoliday, bool canEnableHoliday, bool isValidRotationDay
 });
 
 
@@ -343,10 +343,10 @@ class _$ScheduleDayResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,Object? canDisableHoliday = null,Object? canEnableHoliday = null,Object? isValidRotationDay = null,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
-as RotationMemberName,scheduleDayType: null == scheduleDayType ? _self.scheduleDayType : scheduleDayType // ignore: cast_nullable_to_non_nullable
+as DateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
+as String,scheduleDayType: null == scheduleDayType ? _self.scheduleDayType : scheduleDayType // ignore: cast_nullable_to_non_nullable
 as DayType,memberColor: null == memberColor ? _self.memberColor : memberColor // ignore: cast_nullable_to_non_nullable
-as MemberColor,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
+as Color,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
 as String,canSkipNext: null == canSkipNext ? _self.canSkipNext : canSkipNext // ignore: cast_nullable_to_non_nullable
 as bool,canSkipPrevious: null == canSkipPrevious ? _self.canSkipPrevious : canSkipPrevious // ignore: cast_nullable_to_non_nullable
 as bool,canDisableHoliday: null == canDisableHoliday ? _self.canDisableHoliday : canDisableHoliday // ignore: cast_nullable_to_non_nullable
@@ -434,7 +434,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime date,  String memberName,  DayType scheduleDayType,  Color memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse() when $default != null:
 return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious,_that.canDisableHoliday,_that.canEnableHoliday,_that.isValidRotationDay);case _:
@@ -455,7 +455,7 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime date,  String memberName,  DayType scheduleDayType,  Color memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse():
 return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious,_that.canDisableHoliday,_that.canEnableHoliday,_that.isValidRotationDay);}
@@ -472,7 +472,7 @@ return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( NotificationDateTime date,  RotationMemberName memberName,  DayType scheduleDayType,  MemberColor memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime date,  String memberName,  DayType scheduleDayType,  Color memberColor,  String displayText,  bool canSkipNext,  bool canSkipPrevious,  bool canDisableHoliday,  bool canEnableHoliday,  bool isValidRotationDay)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDayResponse() when $default != null:
 return $default(_that.date,_that.memberName,_that.scheduleDayType,_that.memberColor,_that.displayText,_that.canSkipNext,_that.canSkipPrevious,_that.canDisableHoliday,_that.canEnableHoliday,_that.isValidRotationDay);case _:
@@ -490,10 +490,10 @@ class _ScheduleDayResponse extends ScheduleDayResponse {
   const _ScheduleDayResponse({required this.date, required this.memberName, required this.scheduleDayType, required this.memberColor, required this.displayText, required this.canSkipNext, required this.canSkipPrevious, required this.canDisableHoliday, required this.canEnableHoliday, required this.isValidRotationDay}): super._();
   
 
-@override final  NotificationDateTime date;
-@override final  RotationMemberName memberName;
+@override final  DateTime date;
+@override final  String memberName;
 @override final  DayType scheduleDayType;
-@override final  MemberColor memberColor;
+@override final  Color memberColor;
 @override final  String displayText;
 @override final  bool canSkipNext;
 @override final  bool canSkipPrevious;
@@ -531,7 +531,7 @@ abstract mixin class _$ScheduleDayResponseCopyWith<$Res> implements $ScheduleDay
   factory _$ScheduleDayResponseCopyWith(_ScheduleDayResponse value, $Res Function(_ScheduleDayResponse) _then) = __$ScheduleDayResponseCopyWithImpl;
 @override @useResult
 $Res call({
- NotificationDateTime date, RotationMemberName memberName, DayType scheduleDayType, MemberColor memberColor, String displayText, bool canSkipNext, bool canSkipPrevious, bool canDisableHoliday, bool canEnableHoliday, bool isValidRotationDay
+ DateTime date, String memberName, DayType scheduleDayType, Color memberColor, String displayText, bool canSkipNext, bool canSkipPrevious, bool canDisableHoliday, bool canEnableHoliday, bool isValidRotationDay
 });
 
 
@@ -551,10 +551,10 @@ class __$ScheduleDayResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? memberName = null,Object? scheduleDayType = null,Object? memberColor = null,Object? displayText = null,Object? canSkipNext = null,Object? canSkipPrevious = null,Object? canDisableHoliday = null,Object? canEnableHoliday = null,Object? isValidRotationDay = null,}) {
   return _then(_ScheduleDayResponse(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as NotificationDateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
-as RotationMemberName,scheduleDayType: null == scheduleDayType ? _self.scheduleDayType : scheduleDayType // ignore: cast_nullable_to_non_nullable
+as DateTime,memberName: null == memberName ? _self.memberName : memberName // ignore: cast_nullable_to_non_nullable
+as String,scheduleDayType: null == scheduleDayType ? _self.scheduleDayType : scheduleDayType // ignore: cast_nullable_to_non_nullable
 as DayType,memberColor: null == memberColor ? _self.memberColor : memberColor // ignore: cast_nullable_to_non_nullable
-as MemberColor,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
+as Color,displayText: null == displayText ? _self.displayText : displayText // ignore: cast_nullable_to_non_nullable
 as String,canSkipNext: null == canSkipNext ? _self.canSkipNext : canSkipNext // ignore: cast_nullable_to_non_nullable
 as bool,canSkipPrevious: null == canSkipPrevious ? _self.canSkipPrevious : canSkipPrevious // ignore: cast_nullable_to_non_nullable
 as bool,canDisableHoliday: null == canDisableHoliday ? _self.canDisableHoliday : canDisableHoliday // ignore: cast_nullable_to_non_nullable

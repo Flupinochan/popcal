@@ -7,7 +7,7 @@ part of 'rotation_loader.dart';
 // **************************************************************************
 
 String _$rotationDataResponseHash() =>
-    r'f155c81bef8222a14c49e4f6f930253d51810ab5';
+    r'08426e88118d8680c0df0359e905602220d8f853';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -160,7 +160,7 @@ class _RotationDataResponseProviderElement
 }
 
 String _$rotationResponsesStreamHash() =>
-    r'9571c1b1df024e2e4d11ed63e481d05010463340';
+    r'5fd5f1e614481e403498f972c95a37846a15bcd6';
 
 /// See also [rotationResponsesStream].
 @ProviderFor(rotationResponsesStream)
@@ -173,7 +173,7 @@ class RotationResponsesStreamFamily
   const RotationResponsesStreamFamily();
 
   /// See also [rotationResponsesStream].
-  RotationResponsesStreamProvider call(UserId userId) {
+  RotationResponsesStreamProvider call(String userId) {
     return RotationResponsesStreamProvider(userId);
   }
 
@@ -203,7 +203,7 @@ class RotationResponsesStreamFamily
 class RotationResponsesStreamProvider
     extends AutoDisposeStreamProvider<Result<List<RotationResponse>>> {
   /// See also [rotationResponsesStream].
-  RotationResponsesStreamProvider(UserId userId)
+  RotationResponsesStreamProvider(String userId)
     : this._internal(
         (ref) =>
             rotationResponsesStream(ref as RotationResponsesStreamRef, userId),
@@ -229,7 +229,7 @@ class RotationResponsesStreamProvider
     required this.userId,
   }) : super.internal();
 
-  final UserId userId;
+  final String userId;
 
   @override
   Override overrideWith(
@@ -277,7 +277,7 @@ class RotationResponsesStreamProvider
 mixin RotationResponsesStreamRef
     on AutoDisposeStreamProviderRef<Result<List<RotationResponse>>> {
   /// The parameter `userId` of this provider.
-  UserId get userId;
+  String get userId;
 }
 
 class _RotationResponsesStreamProviderElement
@@ -286,7 +286,7 @@ class _RotationResponsesStreamProviderElement
   _RotationResponsesStreamProviderElement(super.provider);
 
   @override
-  UserId get userId => (origin as RotationResponsesStreamProvider).userId;
+  String get userId => (origin as RotationResponsesStreamProvider).userId;
 }
 
 // ignore_for_file: type=lint

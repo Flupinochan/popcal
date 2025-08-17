@@ -6,7 +6,6 @@ import 'package:popcal/features/rotation/infrastructure/repositories/rotation_re
 import 'package:popcal/features/rotation/infrastructure/repositories/rotation_repository_impl.dart';
 import 'package:popcal/features/rotation/use_cases/create_rotation_use_case.dart';
 import 'package:popcal/features/rotation/use_cases/update_rotation_use_case.dart';
-import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'rotation_providers.g.dart';
@@ -32,10 +31,7 @@ RotationRepository rotationRepository(Ref ref) {
 
 @riverpod
 RotationRepositoryFirebase rotationRepositoryFirebase(Ref ref) {
-  return RotationRepositoryFirebase(
-    ref.watch(firebaseFirestoreProvider),
-    ref.watch(timeUtilsProvider),
-  );
+  return RotationRepositoryFirebase(ref.watch(firebaseFirestoreProvider));
 }
 
 @riverpod

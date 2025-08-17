@@ -1,5 +1,5 @@
+import 'package:popcal/features/calendar/domain/enum/member_color.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
-import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';

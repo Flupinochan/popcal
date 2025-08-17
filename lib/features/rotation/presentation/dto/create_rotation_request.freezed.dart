@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateRotationRequest {
 
- UserId get userId; RotationName get rotationName; RotationMemberNames get rotationMembers; RotationDays get rotationDays; NotificationTime get notificationTime; SkipEvents get skipEvents;
+ String get userId; String get rotationName; List<String> get rotationMembers; List<Weekday> get rotationDays; TimeOfDay get notificationTime; SkipEvents get skipEvents;
 /// Create a copy of CreateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,12 +25,12 @@ $CreateRotationRequestCopyWith<CreateRotationRequest> get copyWith => _$CreateRo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateRotationRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.rotationMembers, rotationMembers) || other.rotationMembers == rotationMembers)&&(identical(other.rotationDays, rotationDays) || other.rotationDays == rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.skipEvents, skipEvents) || other.skipEvents == skipEvents));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateRotationRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other.rotationMembers, rotationMembers)&&const DeepCollectionEquality().equals(other.rotationDays, rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.skipEvents, skipEvents) || other.skipEvents == skipEvents));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,rotationName,rotationMembers,rotationDays,notificationTime,skipEvents);
+int get hashCode => Object.hash(runtimeType,userId,rotationName,const DeepCollectionEquality().hash(rotationMembers),const DeepCollectionEquality().hash(rotationDays),notificationTime,skipEvents);
 
 @override
 String toString() {
@@ -45,11 +45,11 @@ abstract mixin class $CreateRotationRequestCopyWith<$Res>  {
   factory $CreateRotationRequestCopyWith(CreateRotationRequest value, $Res Function(CreateRotationRequest) _then) = _$CreateRotationRequestCopyWithImpl;
 @useResult
 $Res call({
- UserId userId, RotationName rotationName, RotationMemberNames rotationMembers, RotationDays rotationDays, NotificationTime notificationTime, SkipEvents skipEvents
+ String userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, SkipEvents skipEvents
 });
 
 
-$UserIdCopyWith<$Res> get userId;$RotationNameCopyWith<$Res> get rotationName;$RotationMemberNamesCopyWith<$Res> get rotationMembers;$RotationDaysCopyWith<$Res> get rotationDays;$NotificationTimeCopyWith<$Res> get notificationTime;$SkipEventsCopyWith<$Res> get skipEvents;
+$SkipEventsCopyWith<$Res> get skipEvents;
 
 }
 /// @nodoc
@@ -65,60 +65,15 @@ class _$CreateRotationRequestCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? skipEvents = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
-as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
-as RotationMemberNames,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
-as RotationDays,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as NotificationTime,skipEvents: null == skipEvents ? _self.skipEvents : skipEvents // ignore: cast_nullable_to_non_nullable
+as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as String,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
+as List<String>,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
+as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
+as TimeOfDay,skipEvents: null == skipEvents ? _self.skipEvents : skipEvents // ignore: cast_nullable_to_non_nullable
 as SkipEvents,
   ));
 }
 /// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RotationNameCopyWith<$Res> get rotationName {
-  
-  return $RotationNameCopyWith<$Res>(_self.rotationName, (value) {
-    return _then(_self.copyWith(rotationName: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RotationMemberNamesCopyWith<$Res> get rotationMembers {
-  
-  return $RotationMemberNamesCopyWith<$Res>(_self.rotationMembers, (value) {
-    return _then(_self.copyWith(rotationMembers: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RotationDaysCopyWith<$Res> get rotationDays {
-  
-  return $RotationDaysCopyWith<$Res>(_self.rotationDays, (value) {
-    return _then(_self.copyWith(rotationDays: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationTimeCopyWith<$Res> get notificationTime {
-  
-  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
-    return _then(_self.copyWith(notificationTime: value));
-  });
-}/// Create a copy of CreateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -206,7 +161,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( UserId userId,  RotationName rotationName,  RotationMemberNames rotationMembers,  RotationDays rotationDays,  NotificationTime notificationTime,  SkipEvents skipEvents)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String rotationName,  List<String> rotationMembers,  List<Weekday> rotationDays,  TimeOfDay notificationTime,  SkipEvents skipEvents)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateRotationRequest() when $default != null:
 return $default(_that.userId,_that.rotationName,_that.rotationMembers,_that.rotationDays,_that.notificationTime,_that.skipEvents);case _:
@@ -227,7 +182,7 @@ return $default(_that.userId,_that.rotationName,_that.rotationMembers,_that.rota
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( UserId userId,  RotationName rotationName,  RotationMemberNames rotationMembers,  RotationDays rotationDays,  NotificationTime notificationTime,  SkipEvents skipEvents)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String rotationName,  List<String> rotationMembers,  List<Weekday> rotationDays,  TimeOfDay notificationTime,  SkipEvents skipEvents)  $default,) {final _that = this;
 switch (_that) {
 case _CreateRotationRequest():
 return $default(_that.userId,_that.rotationName,_that.rotationMembers,_that.rotationDays,_that.notificationTime,_that.skipEvents);}
@@ -244,7 +199,7 @@ return $default(_that.userId,_that.rotationName,_that.rotationMembers,_that.rota
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( UserId userId,  RotationName rotationName,  RotationMemberNames rotationMembers,  RotationDays rotationDays,  NotificationTime notificationTime,  SkipEvents skipEvents)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String rotationName,  List<String> rotationMembers,  List<Weekday> rotationDays,  TimeOfDay notificationTime,  SkipEvents skipEvents)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateRotationRequest() when $default != null:
 return $default(_that.userId,_that.rotationName,_that.rotationMembers,_that.rotationDays,_that.notificationTime,_that.skipEvents);case _:
@@ -259,14 +214,26 @@ return $default(_that.userId,_that.rotationName,_that.rotationMembers,_that.rota
 
 
 class _CreateRotationRequest extends CreateRotationRequest {
-  const _CreateRotationRequest({required this.userId, required this.rotationName, required this.rotationMembers, required this.rotationDays, required this.notificationTime, required this.skipEvents}): super._();
+  const _CreateRotationRequest({required this.userId, required this.rotationName, required final  List<String> rotationMembers, required final  List<Weekday> rotationDays, required this.notificationTime, required this.skipEvents}): _rotationMembers = rotationMembers,_rotationDays = rotationDays,super._();
   
 
-@override final  UserId userId;
-@override final  RotationName rotationName;
-@override final  RotationMemberNames rotationMembers;
-@override final  RotationDays rotationDays;
-@override final  NotificationTime notificationTime;
+@override final  String userId;
+@override final  String rotationName;
+ final  List<String> _rotationMembers;
+@override List<String> get rotationMembers {
+  if (_rotationMembers is EqualUnmodifiableListView) return _rotationMembers;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_rotationMembers);
+}
+
+ final  List<Weekday> _rotationDays;
+@override List<Weekday> get rotationDays {
+  if (_rotationDays is EqualUnmodifiableListView) return _rotationDays;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_rotationDays);
+}
+
+@override final  TimeOfDay notificationTime;
 @override final  SkipEvents skipEvents;
 
 /// Create a copy of CreateRotationRequest
@@ -279,12 +246,12 @@ _$CreateRotationRequestCopyWith<_CreateRotationRequest> get copyWith => __$Creat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateRotationRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&(identical(other.rotationMembers, rotationMembers) || other.rotationMembers == rotationMembers)&&(identical(other.rotationDays, rotationDays) || other.rotationDays == rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.skipEvents, skipEvents) || other.skipEvents == skipEvents));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateRotationRequest&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.rotationName, rotationName) || other.rotationName == rotationName)&&const DeepCollectionEquality().equals(other._rotationMembers, _rotationMembers)&&const DeepCollectionEquality().equals(other._rotationDays, _rotationDays)&&(identical(other.notificationTime, notificationTime) || other.notificationTime == notificationTime)&&(identical(other.skipEvents, skipEvents) || other.skipEvents == skipEvents));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,rotationName,rotationMembers,rotationDays,notificationTime,skipEvents);
+int get hashCode => Object.hash(runtimeType,userId,rotationName,const DeepCollectionEquality().hash(_rotationMembers),const DeepCollectionEquality().hash(_rotationDays),notificationTime,skipEvents);
 
 @override
 String toString() {
@@ -299,11 +266,11 @@ abstract mixin class _$CreateRotationRequestCopyWith<$Res> implements $CreateRot
   factory _$CreateRotationRequestCopyWith(_CreateRotationRequest value, $Res Function(_CreateRotationRequest) _then) = __$CreateRotationRequestCopyWithImpl;
 @override @useResult
 $Res call({
- UserId userId, RotationName rotationName, RotationMemberNames rotationMembers, RotationDays rotationDays, NotificationTime notificationTime, SkipEvents skipEvents
+ String userId, String rotationName, List<String> rotationMembers, List<Weekday> rotationDays, TimeOfDay notificationTime, SkipEvents skipEvents
 });
 
 
-@override $UserIdCopyWith<$Res> get userId;@override $RotationNameCopyWith<$Res> get rotationName;@override $RotationMemberNamesCopyWith<$Res> get rotationMembers;@override $RotationDaysCopyWith<$Res> get rotationDays;@override $NotificationTimeCopyWith<$Res> get notificationTime;@override $SkipEventsCopyWith<$Res> get skipEvents;
+@override $SkipEventsCopyWith<$Res> get skipEvents;
 
 }
 /// @nodoc
@@ -319,61 +286,16 @@ class __$CreateRotationRequestCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? rotationName = null,Object? rotationMembers = null,Object? rotationDays = null,Object? notificationTime = null,Object? skipEvents = null,}) {
   return _then(_CreateRotationRequest(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
-as RotationName,rotationMembers: null == rotationMembers ? _self.rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
-as RotationMemberNames,rotationDays: null == rotationDays ? _self.rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
-as RotationDays,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
-as NotificationTime,skipEvents: null == skipEvents ? _self.skipEvents : skipEvents // ignore: cast_nullable_to_non_nullable
+as String,rotationName: null == rotationName ? _self.rotationName : rotationName // ignore: cast_nullable_to_non_nullable
+as String,rotationMembers: null == rotationMembers ? _self._rotationMembers : rotationMembers // ignore: cast_nullable_to_non_nullable
+as List<String>,rotationDays: null == rotationDays ? _self._rotationDays : rotationDays // ignore: cast_nullable_to_non_nullable
+as List<Weekday>,notificationTime: null == notificationTime ? _self.notificationTime : notificationTime // ignore: cast_nullable_to_non_nullable
+as TimeOfDay,skipEvents: null == skipEvents ? _self.skipEvents : skipEvents // ignore: cast_nullable_to_non_nullable
 as SkipEvents,
   ));
 }
 
 /// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RotationNameCopyWith<$Res> get rotationName {
-  
-  return $RotationNameCopyWith<$Res>(_self.rotationName, (value) {
-    return _then(_self.copyWith(rotationName: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RotationMemberNamesCopyWith<$Res> get rotationMembers {
-  
-  return $RotationMemberNamesCopyWith<$Res>(_self.rotationMembers, (value) {
-    return _then(_self.copyWith(rotationMembers: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$RotationDaysCopyWith<$Res> get rotationDays {
-  
-  return $RotationDaysCopyWith<$Res>(_self.rotationDays, (value) {
-    return _then(_self.copyWith(rotationDays: value));
-  });
-}/// Create a copy of CreateRotationRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationTimeCopyWith<$Res> get notificationTime {
-  
-  return $NotificationTimeCopyWith<$Res>(_self.notificationTime, (value) {
-    return _then(_self.copyWith(notificationTime: value));
-  });
-}/// Create a copy of CreateRotationRequest
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

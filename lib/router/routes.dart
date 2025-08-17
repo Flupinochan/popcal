@@ -18,8 +18,7 @@ class CalendarRoute extends GoRouteData with _$CalendarRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    final rotationId = RotationId(id);
-    return CalendarScreen(rotationId: rotationId);
+    return CalendarScreen(rotationId: id);
   }
 }
 
@@ -29,7 +28,7 @@ class DeadlineRoute extends GoRouteData with _$DeadlineRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return DeadlineScreen();
+    return const DeadlineScreen();
   }
 }
 

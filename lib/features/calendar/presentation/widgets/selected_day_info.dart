@@ -162,7 +162,7 @@ class SelectedDayInfo extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.only(right: 4),
                             child: Text(
-                              memberName.value,
+                              memberName,
                               style: textTheme.titleMedium!.copyWith(
                                 color: iconColor,
                               ),

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserResponse {
 
- UserId get userId; Email get email;
+ String get userId; String get emailLocalPart; String get emailDomain;
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UserResponseCopyWith<UserResponse> get copyWith => _$UserResponseCopyWithImpl<U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserResponse&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserResponse&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.emailLocalPart, emailLocalPart) || other.emailLocalPart == emailLocalPart)&&(identical(other.emailDomain, emailDomain) || other.emailDomain == emailDomain));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,email);
+int get hashCode => Object.hash(runtimeType,userId,emailLocalPart,emailDomain);
 
 @override
 String toString() {
-  return 'UserResponse(userId: $userId, email: $email)';
+  return 'UserResponse(userId: $userId, emailLocalPart: $emailLocalPart, emailDomain: $emailDomain)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $UserResponseCopyWith<$Res>  {
   factory $UserResponseCopyWith(UserResponse value, $Res Function(UserResponse) _then) = _$UserResponseCopyWithImpl;
 @useResult
 $Res call({
- UserId userId, Email email
+ String userId, String emailLocalPart, String emailDomain
 });
 
 
-$UserIdCopyWith<$Res> get userId;$EmailCopyWith<$Res> get email;
+
 
 }
 /// @nodoc
@@ -62,32 +62,15 @@ class _$UserResponseCopyWithImpl<$Res>
 
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? email = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? emailLocalPart = null,Object? emailDomain = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as Email,
+as String,emailLocalPart: null == emailLocalPart ? _self.emailLocalPart : emailLocalPart // ignore: cast_nullable_to_non_nullable
+as String,emailDomain: null == emailDomain ? _self.emailDomain : emailDomain // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
-/// Create a copy of UserResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of UserResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EmailCopyWith<$Res> get email {
-  
-  return $EmailCopyWith<$Res>(_self.email, (value) {
-    return _then(_self.copyWith(email: value));
-  });
-}
+
 }
 
 
@@ -166,10 +149,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( UserId userId,  Email email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String emailLocalPart,  String emailDomain)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserResponse() when $default != null:
-return $default(_that.userId,_that.email);case _:
+return $default(_that.userId,_that.emailLocalPart,_that.emailDomain);case _:
   return orElse();
 
 }
@@ -187,10 +170,10 @@ return $default(_that.userId,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( UserId userId,  Email email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String emailLocalPart,  String emailDomain)  $default,) {final _that = this;
 switch (_that) {
 case _UserResponse():
-return $default(_that.userId,_that.email);}
+return $default(_that.userId,_that.emailLocalPart,_that.emailDomain);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -204,10 +187,10 @@ return $default(_that.userId,_that.email);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( UserId userId,  Email email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String emailLocalPart,  String emailDomain)?  $default,) {final _that = this;
 switch (_that) {
 case _UserResponse() when $default != null:
-return $default(_that.userId,_that.email);case _:
+return $default(_that.userId,_that.emailLocalPart,_that.emailDomain);case _:
   return null;
 
 }
@@ -219,11 +202,12 @@ return $default(_that.userId,_that.email);case _:
 
 
 class _UserResponse extends UserResponse {
-  const _UserResponse({required this.userId, required this.email}): super._();
+  const _UserResponse({required this.userId, required this.emailLocalPart, required this.emailDomain}): super._();
   
 
-@override final  UserId userId;
-@override final  Email email;
+@override final  String userId;
+@override final  String emailLocalPart;
+@override final  String emailDomain;
 
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +219,16 @@ _$UserResponseCopyWith<_UserResponse> get copyWith => __$UserResponseCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserResponse&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserResponse&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.emailLocalPart, emailLocalPart) || other.emailLocalPart == emailLocalPart)&&(identical(other.emailDomain, emailDomain) || other.emailDomain == emailDomain));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,email);
+int get hashCode => Object.hash(runtimeType,userId,emailLocalPart,emailDomain);
 
 @override
 String toString() {
-  return 'UserResponse(userId: $userId, email: $email)';
+  return 'UserResponse(userId: $userId, emailLocalPart: $emailLocalPart, emailDomain: $emailDomain)';
 }
 
 
@@ -255,11 +239,11 @@ abstract mixin class _$UserResponseCopyWith<$Res> implements $UserResponseCopyWi
   factory _$UserResponseCopyWith(_UserResponse value, $Res Function(_UserResponse) _then) = __$UserResponseCopyWithImpl;
 @override @useResult
 $Res call({
- UserId userId, Email email
+ String userId, String emailLocalPart, String emailDomain
 });
 
 
-@override $UserIdCopyWith<$Res> get userId;@override $EmailCopyWith<$Res> get email;
+
 
 }
 /// @nodoc
@@ -272,33 +256,16 @@ class __$UserResponseCopyWithImpl<$Res>
 
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? email = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? emailLocalPart = null,Object? emailDomain = null,}) {
   return _then(_UserResponse(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as Email,
+as String,emailLocalPart: null == emailLocalPart ? _self.emailLocalPart : emailLocalPart // ignore: cast_nullable_to_non_nullable
+as String,emailDomain: null == emailDomain ? _self.emailDomain : emailDomain // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
-/// Create a copy of UserResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of UserResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EmailCopyWith<$Res> get email {
-  
-  return $EmailCopyWith<$Res>(_self.email, (value) {
-    return _then(_self.copyWith(email: value));
-  });
-}
+
 }
 
 // dart format on

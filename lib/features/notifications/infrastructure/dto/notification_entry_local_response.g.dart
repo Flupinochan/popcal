@@ -13,7 +13,7 @@ _NotificationEntryLocalResponse _$NotificationEntryLocalResponseFromJson(
     (json['notificationId'] as num).toInt(),
   ),
   sourceId: SourceId.fromJson(json['sourceId'] as Map<String, dynamic>),
-  userId: UserId.fromJson(json['userId'] as String),
+  userId: UserId.fromJson(json['userId'] as Map<String, dynamic>),
   notificationDateTime: const NotificationDateConverter().fromJson(
     json['notificationDateTime'] as String,
   ),

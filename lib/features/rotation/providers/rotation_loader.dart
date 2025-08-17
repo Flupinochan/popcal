@@ -30,9 +30,11 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
   }
 
   // 2. ローテーショングループ情報を取得
+  // responseのuseridのため.create()で作成する必要はない
+  final userId = UserId(userDto.userId);
   final rotationRepository = ref.watch(rotationRepositoryProvider);
   final rotationResult = await rotationRepository.getRotation(
-    userDto.userId,
+    userId,
     rotationId,
   );
   if (rotationResult.isFailure) {
@@ -48,10 +50,11 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
 @riverpod
 Stream<Result<List<RotationResponse>>> rotationResponsesStream(
   Ref ref,
-  UserId userId,
+  String userId,
 ) {
+  final userIdResult = UserId(userId);
   final rotationRepository = ref.watch(rotationRepositoryProvider);
-  return rotationRepository.watchRotations(userId).asyncMap((
+  return rotationRepository.watchRotations(userIdResult).asyncMap((
     entityResult,
   ) async {
     return entityResult.when(

@@ -9,12 +9,12 @@ import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/auth/providers/auth_loader.dart';
 import 'package:popcal/features/drawer/presentation/screens/drawer_screen.dart';
 import 'package:popcal/features/home/presentation/widgets/glass_list_item.dart';
-import 'package:popcal/features/notifications/providers/notification_providers.dart';
+import 'package:popcal/features/home/providers/delete_rotation_loader.dart';
+import 'package:popcal/features/home/providers/sync_rotation_notifier.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
-import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
 import 'package:popcal/shared/screens/custom_error_simple_screen.dart';
@@ -58,7 +58,7 @@ class HomeScreen extends HookConsumerWidget {
                 textTheme: textTheme,
                 glassTheme: glassTheme,
                 scaffoldMessenger: scaffoldMessenger,
-                flexibleMessage: result.valueOrNull!.rotationName.value,
+                flexibleMessage: result.valueOrNull!.rotationName,
                 fixedMessage: 'を復元しました',
               );
             }
@@ -88,7 +88,13 @@ class HomeScreen extends HookConsumerWidget {
 
               // バックグラウンドで通知同期処理
               useEffect(() {
-                ref.read(syncNotificationsUseCaseProvider).execute(dto.userId);
+                // Widget構築後に実行
+                Future(() {
+                  ref
+                      .read(syncRotationNotifierProvider.notifier)
+                      .syncRotation(dto.userId);
+                });
+
                 return null;
               }, [dto.userId]);
 
@@ -137,7 +143,6 @@ class HomeScreen extends HookConsumerWidget {
                               : _buildRotations(
                                 context,
                                 ref,
-                                dto,
                                 rotationResponses,
                               ),
                   failure:
@@ -203,7 +208,6 @@ class HomeScreen extends HookConsumerWidget {
   Widget _buildRotations(
     BuildContext context,
     WidgetRef ref,
-    UserResponse userDto,
     List<RotationResponse> rotationResponses,
   ) {
     return CustomScrollView(
@@ -217,9 +221,7 @@ class HomeScreen extends HookConsumerWidget {
                 rotationResponse: rotationResponse,
                 onTap: () => _onTapRotation(context, rotationResponse),
                 onEdit: () => _onEditRotation(context, rotationResponse),
-                onDelete:
-                    () =>
-                        _handleDelete(context, ref, rotationResponse, userDto),
+                onDelete: () => _handleDelete(context, ref, rotationResponse),
               );
             }, childCount: rotationResponses.length),
           ),
@@ -233,18 +235,23 @@ class HomeScreen extends HookConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     RotationResponse rotationResponse,
-    UserResponse userDto,
   ) async {
     final textTheme = Theme.of(context).textTheme;
     final glassTheme =
         Theme.of(context).extension<GlassTheme>() ?? GlassTheme.defaultTheme;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final rotationRepository = ref.read(rotationRepositoryProvider);
+
+    // sync処理が完了していない可能性があるためチェック
+    // 未実装だが、dismissibleを戻す操作が必要
+    final loading = ref.watch(syncRotationNotifierProvider).isLoading;
+    if (loading) return;
 
     // 削除処理
-    final result = await rotationRepository.deleteRotation(
-      userDto.userId,
-      rotationResponse.rotationId,
+    final result = await ref.watch(
+      deleteRotationProvider(
+        rotationResponse.userId,
+        rotationResponse.rotationId,
+      ).future,
     );
 
     result.when(
@@ -253,7 +260,7 @@ class HomeScreen extends HookConsumerWidget {
           textTheme: textTheme,
           glassTheme: glassTheme,
           scaffoldMessenger: scaffoldMessenger,
-          flexibleMessage: rotationResponse.rotationName.value,
+          flexibleMessage: rotationResponse.rotationName,
           fixedMessage: 'を削除しました',
           onAction:
               () => _handleRestore(
@@ -297,13 +304,13 @@ class HomeScreen extends HookConsumerWidget {
     RotationResponse rotationResponse,
   ) {
     RotationUpdateRoute(
-      id: rotationResponse.rotationId.value,
+      id: rotationResponse.rotationId,
     ).push<void>(context);
   }
 
   void _onTapRotation(BuildContext context, RotationResponse rotationResponse) {
     CalendarRoute(
-      id: rotationResponse.rotationId.value,
+      id: rotationResponse.rotationId,
     ).push<void>(context);
   }
 }

@@ -11,6 +11,7 @@ part of 'email.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$Email {
 
@@ -21,6 +22,8 @@ mixin _$Email {
 @pragma('vm:prefer-inline')
 $EmailCopyWith<Email> get copyWith => _$EmailCopyWithImpl<Email>(this as Email, _$identity);
 
+  /// Serializes this Email to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,10 +31,14 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is Email&&(identical(other.value, value) || other.value == value));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,value);
 
+@override
+String toString() {
+  return 'Email(value: $value)';
+}
 
 
 }
@@ -193,11 +200,11 @@ return $default(_that.value);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _Email extends Email {
   const _Email(this.value): super._();
-  
+  factory _Email.fromJson(Map<String, dynamic> json) => _$EmailFromJson(json);
 
 @override final  String value;
 
@@ -207,17 +214,24 @@ class _Email extends Email {
 @pragma('vm:prefer-inline')
 _$EmailCopyWith<_Email> get copyWith => __$EmailCopyWithImpl<_Email>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$EmailToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _Email&&(identical(other.value, value) || other.value == value));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,value);
 
+@override
+String toString() {
+  return 'Email(value: $value)';
+}
 
 
 }

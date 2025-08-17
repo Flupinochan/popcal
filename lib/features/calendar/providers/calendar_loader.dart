@@ -13,10 +13,11 @@ part 'calendar_loader.g.dart';
 @riverpod
 Future<Result<CalendarScheduleResponse>> calendarScheduleResponse(
   Ref ref,
-  RotationId rotationId,
+  String rotationId,
 ) async {
+  final rotationIdResult = RotationId(rotationId);
   final useCase = ref.watch(getCalendarScheduleUseCaseProvider);
-  final domainResult = await useCase.execute(rotationId);
+  final domainResult = await useCase.execute(rotationIdResult);
 
   return domainResult.when(
     success: (calendarData) {
@@ -37,10 +38,10 @@ Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
     (key, scheduleDay) => MapEntry(
       key,
       ScheduleDayResponse(
-        date: scheduleDay.date,
-        memberName: scheduleDay.memberName,
+        date: scheduleDay.date.value,
+        memberName: scheduleDay.memberName.value,
         scheduleDayType: scheduleDay.scheduleType,
-        memberColor: scheduleDay.memberColor,
+        memberColor: scheduleDay.memberColor.color,
         displayText: scheduleDay.displayText,
         canSkipNext: scheduleDay.canSkipNext,
         canSkipPrevious: scheduleDay.canSkipPrevious,

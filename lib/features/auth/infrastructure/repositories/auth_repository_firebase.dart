@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/infrastructure/dto/user_firebase_response.dart';
+import 'package:popcal/features/auth/infrastructure/dto/user_firebase_response_mapper.dart';
 
 class AuthRepositoryFirebase {
   AuthRepositoryFirebase(this._firebaseAuth);
@@ -12,7 +13,9 @@ class AuthRepositoryFirebase {
     return _firebaseAuth.authStateChanges().asyncMap((firebaseUser) async {
       try {
         if (firebaseUser != null) {
-          final dtoResult = UserFirebaseResponse.fromFirebaseUser(firebaseUser);
+          final dtoResult = UserFirebaseResponseMapper.fromFirebaseUser(
+            firebaseUser,
+          );
           return dtoResult.when(
             success: Results.success,
             failure: (error) => Results.failure(AuthFailure(error.message)),
@@ -35,7 +38,9 @@ class AuthRepositoryFirebase {
       if (firebaseUser == null) {
         return Results.success(null);
       }
-      final dtoResult = UserFirebaseResponse.fromFirebaseUser(firebaseUser);
+      final dtoResult = UserFirebaseResponseMapper.fromFirebaseUser(
+        firebaseUser,
+      );
       return dtoResult.when(
         success: Results.success,
         failure: (error) => Results.failure(AuthFailure(error.message)),
@@ -60,7 +65,9 @@ class AuthRepositoryFirebase {
       if (credential.user == null) {
         return Results.failure(const AuthFailure('メールアドレス認証認証に失敗しました'));
       }
-      final dtoResult = UserFirebaseResponse.fromFirebaseUser(credential.user!);
+      final dtoResult = UserFirebaseResponseMapper.fromFirebaseUser(
+        credential.user!,
+      );
       return dtoResult.when(
         success: Results.success,
         failure: (error) => Results.failure(AuthFailure(error.message)),
@@ -97,7 +104,9 @@ class AuthRepositoryFirebase {
       if (credential.user == null) {
         return Results.failure(const AuthFailure('サインアップに失敗しました'));
       }
-      final dtoResult = UserFirebaseResponse.fromFirebaseUser(credential.user!);
+      final dtoResult = UserFirebaseResponseMapper.fromFirebaseUser(
+        credential.user!,
+      );
       return dtoResult.when(
         success: Results.success,
         failure: (error) => Results.failure(AuthFailure(error.message)),

@@ -58,9 +58,9 @@ class CalendarCell extends StatelessWidget {
           // ローテーション担当者をカレンダー日付に表示
           if (isValidRotationDay)
             Text(
-              memberName.value,
+              memberName,
               style: textTheme.labelMedium!.copyWith(
-                color: dayInfo.memberColor.value,
+                color: dayInfo.memberColor,
               ),
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,

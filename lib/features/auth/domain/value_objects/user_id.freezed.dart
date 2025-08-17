@@ -11,6 +11,7 @@ part of 'user_id.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$UserId {
 
@@ -21,6 +22,8 @@ mixin _$UserId {
 @pragma('vm:prefer-inline')
 $UserIdCopyWith<UserId> get copyWith => _$UserIdCopyWithImpl<UserId>(this as UserId, _$identity);
 
+  /// Serializes this UserId to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,10 +31,14 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is UserId&&(identical(other.value, value) || other.value == value));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,value);
 
+@override
+String toString() {
+  return 'UserId(value: $value)';
+}
 
 
 }
@@ -193,11 +200,11 @@ return $default(_that.value);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _UserId extends UserId {
   const _UserId(this.value): super._();
-  
+  factory _UserId.fromJson(Map<String, dynamic> json) => _$UserIdFromJson(json);
 
 @override final  String value;
 
@@ -207,17 +214,24 @@ class _UserId extends UserId {
 @pragma('vm:prefer-inline')
 _$UserIdCopyWith<_UserId> get copyWith => __$UserIdCopyWithImpl<_UserId>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$UserIdToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserId&&(identical(other.value, value) || other.value == value));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,value);
 
+@override
+String toString() {
+  return 'UserId(value: $value)';
+}
 
 
 }

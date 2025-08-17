@@ -6,8 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
@@ -26,7 +25,6 @@ import 'package:popcal/shared/screens/custom_error_screen.dart';
 import 'package:popcal/shared/screens/custom_loading_screen.dart';
 import 'package:popcal/shared/utils/snackbar_utils.dart';
 import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
-import 'package:popcal/shared/widgets/glass_dialog.dart';
 import 'package:popcal/shared/widgets/glass_form_text.dart';
 
 class RotationScreen extends HookConsumerWidget {
@@ -93,7 +91,7 @@ class RotationScreen extends HookConsumerWidget {
                   // ローテーション名を入力
                   GlassFormText(
                     name: 'rotationName',
-                    initialValue: initialRotation?.rotationName.value,
+                    initialValue: initialRotation?.rotationName,
                     hintText: 'ローテーション名を入力',
                     validator: _validateRotationName,
                   ),
@@ -105,7 +103,7 @@ class RotationScreen extends HookConsumerWidget {
                       hintText: 'メンバー名を入力',
                       initialValue:
                           initialRotation?.rotationMembers
-                              .map((member) => member.value)
+                              .map((member) => member)
                               .toList(),
                       validator: _validateRotationMemberNames,
                     ),
@@ -128,7 +126,7 @@ class RotationScreen extends HookConsumerWidget {
                     initialValue:
                         initialRotation == null
                             ? TimeOfDay.fromDateTime(now)
-                            : initialRotation.notificationTime.timeOfDay,
+                            : initialRotation.notificationTime,
                   ),
                 ],
               ),
@@ -171,58 +169,31 @@ class RotationScreen extends HookConsumerWidget {
       final formData = formKey.currentState!.value;
       final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
 
-      final rotationNameResult = RotationName.create(
-        formData['rotationName'] as String,
-      );
-      if (rotationNameResult.isFailure) {
-        showErrorDialog(context, rotationNameResult.failureOrNull!.message);
-        return;
-      }
-
-      final rotationMemberNamesResult = RotationMemberNames.createFromDynamic(
-        formData['rotationMembers'] as List,
-      );
-      if (rotationMemberNamesResult.isFailure) {
-        showErrorDialog(
-          context,
-          rotationMemberNamesResult.failureOrNull!.message,
+      if (isUpdateMode) {
+        final dto = UpdateRotationRequest(
+          userId: userDto.userId,
+          rotationId: originalRotation!.rotationId,
+          rotationName: formData['rotationName'] as String,
+          rotationMembers: formData['rotationMembers'] as List<String>,
+          rotationDays: formData['rotationDays'] as List<Weekday>,
+          notificationTime: formData['notificationTime'] as TimeOfDay,
+          createdAt: originalRotation.createdAt,
+          skipEvents: const SkipEvents([]),
         );
-        return;
+        await rotationNotifier.updateRotation(dto);
+      } else {
+        final dto = CreateRotationRequest(
+          userId: userDto.userId,
+          rotationName: formData['rotationName'] as String,
+          rotationMembers: formData['rotationMembers'] as List<String>,
+          rotationDays: formData['rotationDays'] as List<Weekday>,
+          notificationTime: formData['notificationTime'] as TimeOfDay,
+          skipEvents: const SkipEvents([]),
+        );
+        await rotationNotifier.createRotation(dto);
       }
-
-      final selectedTime = formData['notificationTime'] as TimeOfDay;
 
       try {
-        if (isUpdateMode) {
-          final dto = UpdateRotationRequest(
-            userId: userDto.userId,
-            rotationId: originalRotation!.rotationId,
-            rotationName: rotationNameResult.valueOrNull!,
-            rotationMembers: rotationMemberNamesResult.valueOrNull!,
-            rotationDays: formData['rotationDays'] as RotationDays,
-            notificationTime: NotificationTime(
-              hour: selectedTime.hour,
-              minute: selectedTime.minute,
-            ),
-            createdAt: originalRotation.createdAt,
-            skipEvents: const SkipEvents([]),
-          );
-          await rotationNotifier.updateRotation(dto);
-        } else {
-          final dto = CreateRotationRequest(
-            userId: userDto.userId,
-            rotationName: RotationName(formData['rotationName'] as String),
-            rotationMembers: rotationMemberNamesResult.valueOrNull!,
-            rotationDays: formData['rotationDays'] as RotationDays,
-            notificationTime: NotificationTime(
-              hour: selectedTime.hour,
-              minute: selectedTime.minute,
-            ),
-            skipEvents: const SkipEvents([]),
-          );
-          await rotationNotifier.createRotation(dto);
-        }
-
         if (context.mounted) {
           SnackBarUtils.showGlassSnackBar(
             textTheme: textTheme,

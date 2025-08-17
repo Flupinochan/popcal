@@ -6,7 +6,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
@@ -23,8 +22,9 @@ import 'package:popcal/router/routes.dart';
 void main() {
   const screenSize = Size(411, 914);
   const mockUser = UserResponse(
-    userId: UserId('test-user-id'),
-    email: Email('test@example.com'),
+    userId: 'test-user-id',
+    emailLocalPart: 'test',
+    emailDomain: 'example.com',
   );
 
   group('Router', () {

@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
-import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
-import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
@@ -13,8 +13,6 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dar
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 part 'rotation_firebase_response.freezed.dart';
@@ -22,194 +20,79 @@ part 'rotation_firebase_response.freezed.dart';
 @freezed
 sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
   const factory RotationFirebaseResponse({
-    required RotationId? rotationId,
-    required UserId userId,
-    required RotationName rotationName,
-    required RotationMemberNames rotationMemberNames,
-    required RotationDays rotationDays,
-    required NotificationTime notificationTime,
-    required RotationIndex currentRotationIndex,
-    // firestoreに保存する際はTimestampが適切
-    // Widget(UI)はDateTimeが適切
-    required RotationCreatedAt createdAt,
-    required RotationUpdatedAt updatedAt,
+    required String rotationId,
+    required String userId,
+    required String rotationName,
+    required List<String> rotationMemberNames,
+    required List<Weekday> rotationDays,
+    required TimeOfDay notificationTime,
+    required int currentRotationIndex,
+    required DateTime createdAt,
+    required DateTime updatedAt,
     required SkipEvents skipEvents,
   }) = _RotationFirebaseResponse;
 
-  // Entity => DTO (factory method)
-  factory RotationFirebaseResponse.fromEntity(Rotation entity) {
-    return RotationFirebaseResponse(
-      rotationId: entity.rotationId,
-      userId: entity.userId,
-      rotationName: entity.rotationName,
-      rotationMemberNames: entity.rotationMemberNames,
-      rotationDays: entity.rotationDays,
-      notificationTime: entity.notificationTime,
-      currentRotationIndex: entity.currentRotationIndex,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      skipEvents: entity.skipEvents,
-    );
-  }
-
-  // Firestore => DTO (factory method)
-  // ※Firestore カスタムオブジェクトを参照
-  // https://firebase.google.com/docs/firestore/query-data/get-data?hl=ja#dart_4
-  factory RotationFirebaseResponse.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? _,
-  ) {
-    final data = snapshot.data()!;
-    final createdAt = data['createdAt'] as Timestamp;
-    final updatedAt = data['updatedAt'] as Timestamp;
-    final rotationIndex = RotationIndex.create(
-      data['currentRotationIndex'] as int,
-    );
-
-    if (rotationIndex.isFailure) {
-      throw FormatException(
-        'currentRotationIndex is invalid: ${data['currentRotationIndex']}',
-      );
-    }
-
-    final rotationMemberNamesResult = _parseRotationMembers(
-      data['rotationMemberNames'],
-    );
-    if (rotationMemberNamesResult.isFailure) {
-      throw FormatException(
-        'rotationMemberNames is invalid: ${data['rotationMemberNames']}',
-      );
-    }
-
-    final rotationDaysResult = RotationDays.createFromDynamic(
-      // ignore: avoid-dynamic
-      data['rotationDays'] as List<dynamic>,
-    );
-    if (rotationDaysResult.isFailure) {
-      throw FormatException(
-        'rotationDays is invalid: ${data['rotationDays']}',
-      );
-    }
-
-    return RotationFirebaseResponse(
-      rotationId: RotationId(snapshot.id),
-      userId: UserId(data['userId'] as String),
-      rotationName: RotationName(data['rotationName'] as String),
-      rotationMemberNames: rotationMemberNamesResult.valueOrNull!,
-      rotationDays: rotationDaysResult.valueOrNull!,
-      // NotificationTimeクラスのfromMapメソッドを使用
-      notificationTime: NotificationTime.fromMap(
-        data['notificationTime'] as Map<String, dynamic>,
-      ),
-      currentRotationIndex: rotationIndex.valueOrNull!,
-      createdAt: RotationCreatedAt(createdAt.toDate()),
-      updatedAt: RotationUpdatedAt(updatedAt.toDate()),
-      skipEvents: _parseSkipEvents(data['skipEvents']),
-    );
-  }
-
   const RotationFirebaseResponse._();
 
-  // DTO => Entity (instance method)
-  Rotation toEntity() {
-    return Rotation(
-      rotationId: rotationId,
-      userId: userId,
-      rotationName: rotationName,
-      rotationMemberNames: rotationMemberNames,
-      rotationDays: rotationDays,
-      notificationTime: notificationTime,
-      currentRotationIndex: currentRotationIndex,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      skipEvents: skipEvents,
+  Result<Rotation> toEntity() {
+    final rotationIdResult = RotationId.create(rotationId);
+    if (rotationIdResult.isFailure) {
+      return Results.failure(ValidationFailure(rotationIdResult.displayText));
+    }
+
+    final userIdResult = UserId.create(userId);
+    if (userIdResult.isFailure) {
+      return Results.failure(ValidationFailure(userIdResult.displayText));
+    }
+
+    final rotationNameResult = RotationName.create(rotationName);
+    if (rotationNameResult.isFailure) {
+      return Results.failure(ValidationFailure(rotationNameResult.displayText));
+    }
+
+    final rotationMemberNamesResult = RotationMemberNames.create(
+      rotationMemberNames,
     );
-  }
-
-  // DTO => Firestore (instance method)
-  // Security Ruleでバリデーションされている
-  Map<String, dynamic> toFirestore() {
-    return {
-      'userId': userId.value,
-      'rotationName': rotationName.value,
-      'rotationMemberNames':
-          rotationMemberNames.map((member) => member.value).toList(),
-      'rotationDays': rotationDays.toIntList(),
-      // NotificationTimeクラスのtoMapメソッドを使用
-      'notificationTime': notificationTime.toMap(),
-      'currentRotationIndex': currentRotationIndex.value,
-      'createdAt': Timestamp.fromDate(createdAt.value),
-      'updatedAt': Timestamp.fromDate(updatedAt.value),
-      'skipEvents': _skipEventsToFirestore(skipEvents),
-    };
-  }
-
-  // ignore: avoid-dynamic
-  static Result<RotationMemberNames> _parseRotationMembers(dynamic data) {
-    if (data is! List) {
-      throw FormatException(
-        'rotationMemberNames must be a List, got ${data.runtimeType}',
+    if (rotationMemberNamesResult.isFailure) {
+      return Results.failure(
+        ValidationFailure(rotationMemberNamesResult.displayText),
       );
     }
 
-    final memberNames = data.whereType<String>().toList();
-    return RotationMemberNames.create(memberNames);
-  }
+    final rotationDaysResult = RotationDays.create(rotationDays);
+    if (rotationDaysResult.isFailure) {
+      return Results.failure(ValidationFailure(rotationDaysResult.displayText));
+    }
 
-  // ignore: avoid-dynamic
-  static SkipEvents _parseSkipEvents(dynamic data) {
-    if (data == null) return const SkipEvents([]);
+    final notificationTimeResult = NotificationTime.fromTimeOfDay(
+      notificationTime,
+    );
 
-    if (data is! List) {
-      throw FormatException(
-        'skipEvents must be a List, got ${data.runtimeType}',
+    final currentRotationIndexResult = RotationIndex.create(
+      currentRotationIndex,
+    );
+    if (currentRotationIndexResult.isFailure) {
+      return Results.failure(
+        ValidationFailure(currentRotationIndexResult.displayText),
       );
     }
 
-    final skipEventsList =
-        data.map((item) {
-          if (item is! Map<String, dynamic>) {
-            throw const FormatException('SkipEvent item must be a Map');
-          }
+    final createdAtResult = RotationCreatedAt(createdAt);
+    final updatedAtResult = RotationUpdatedAt(updatedAt);
 
-          final timestamp = item['date'] as Timestamp;
-          final typeString = item['type'] as String;
-          final skipCount = (item['skipCount'] ?? 1) as int;
-
-          final type = DayType.values.firstWhere(
-            (e) => e.name == typeString,
-            orElse:
-                () => throw FormatException('Invalid SkipType: $typeString'),
-          );
-
-          final dateKeyResult = DateKey.create(timestamp.toDate());
-          if (dateKeyResult.isFailure) {
-            throw FormatException(
-              'Invalid dateKey: ${timestamp.toDate()}',
-            );
-          }
-
-          return SkipEvent(
-            dateKey: dateKeyResult.valueOrNull!,
-            dayType: type,
-            skipCount: SkipCount(skipCount: skipCount),
-          );
-        }).toList();
-
-    return SkipEvents(skipEventsList);
-  }
-
-  static List<Map<String, dynamic>> _skipEventsToFirestore(
-    SkipEvents skipEvents,
-  ) {
-    return skipEvents.value
-        .map(
-          (event) => {
-            'date': Timestamp.fromDate(event.dateKey.value),
-            'type': event.dayType.name,
-            'skipCount': event.skipCount.skipCount,
-          },
-        )
-        .toList();
+    return Results.success(
+      Rotation(
+        rotationId: rotationIdResult.valueOrNull,
+        userId: userIdResult.valueOrNull!,
+        rotationName: rotationNameResult.valueOrNull!,
+        rotationMemberNames: rotationMemberNamesResult.valueOrNull!,
+        rotationDays: rotationDaysResult.valueOrNull!,
+        notificationTime: notificationTimeResult,
+        currentRotationIndex: currentRotationIndexResult.valueOrNull!,
+        createdAt: createdAtResult,
+        updatedAt: updatedAtResult,
+        skipEvents: skipEvents,
+      ),
+    );
   }
 }

@@ -3,26 +3,18 @@ import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 
 part 'email.freezed.dart';
+part 'email.g.dart';
 
 @freezed
 sealed class Email with _$Email {
   const factory Email(String value) = _Email;
 
-  factory Email.fromJson(String json) {
-    final result = create(json);
-    if (result.isFailure) {
-      throw FormatException('Invalid Email: ${result.displayText}');
-    }
-    return result.valueOrNull!;
-  }
+  factory Email.fromJson(Map<String, dynamic> json) => _$EmailFromJson(json);
+
   const Email._();
 
   String get domain => value.split('@')[1];
   String get localPart => value.split('@').first;
-
-  String toJson() => value;
-  @override
-  String toString() => value;
 
   static Result<Email> create(String? input) {
     if (input == null || input.trim().isEmpty) {

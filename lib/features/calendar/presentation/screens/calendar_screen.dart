@@ -7,7 +7,6 @@ import 'package:popcal/features/calendar/presentation/widgets/calendar_container
 import 'package:popcal/features/calendar/presentation/widgets/rotation_info_card.dart';
 import 'package:popcal/features/calendar/presentation/widgets/selected_day_info.dart';
 import 'package:popcal/features/calendar/providers/calendar_loader.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
 import 'package:popcal/shared/screens/custom_error_screen.dart';
@@ -16,7 +15,7 @@ import 'package:popcal/shared/widgets/glass_app_bar/glass_app_bar.dart';
 
 class CalendarScreen extends HookConsumerWidget {
   const CalendarScreen({required this.rotationId, super.key});
-  final RotationId rotationId;
+  final String rotationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +38,7 @@ class CalendarScreen extends HookConsumerWidget {
                   backgroundColor: glassTheme.backgroundColor,
                   extendBodyBehindAppBar: true,
                   appBar: GlassAppBar(
-                    title: dto.rotationResponse.rotationName.value,
+                    title: dto.rotationResponse.rotationName,
                     leadingIcon: Icons.arrow_back_ios_new,
                     onLeadingPressed: () => const HomeRoute().go(context),
                   ),

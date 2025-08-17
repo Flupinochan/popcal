@@ -3,10 +3,15 @@ import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 
 part 'password.freezed.dart';
+part 'password.g.dart';
 
 @freezed
 sealed class Password with _$Password {
   const factory Password(String value) = _Password;
+
+  factory Password.fromJson(Map<String, dynamic> json) =>
+      _$PasswordFromJson(json);
+
   const Password._();
 
   // セキュリティ上 パスワードを文字列で取得しない

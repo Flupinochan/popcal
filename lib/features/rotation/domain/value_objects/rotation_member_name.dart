@@ -14,7 +14,7 @@ class RotationMemberNameConverter
 }
 
 extension type const RotationMemberName(String value) {
-  // nullの代わりに指定する文字列
+  static const String notApplicableText = 'ローテーション対象外';
   static const RotationMemberName notApplicable = RotationMemberName(
     'ローテーション対象外',
   );

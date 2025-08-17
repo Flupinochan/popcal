@@ -11,19 +11,16 @@ part of 'user_firebase_response.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$UserFirebaseResponse {
 
- UserId get userId; Email get email;
+ String get userId; String get email;
 /// Create a copy of UserFirebaseResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $UserFirebaseResponseCopyWith<UserFirebaseResponse> get copyWith => _$UserFirebaseResponseCopyWithImpl<UserFirebaseResponse>(this as UserFirebaseResponse, _$identity);
 
-  /// Serializes this UserFirebaseResponse to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFirebaseResponse&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,userId,email);
 
@@ -48,11 +45,11 @@ abstract mixin class $UserFirebaseResponseCopyWith<$Res>  {
   factory $UserFirebaseResponseCopyWith(UserFirebaseResponse value, $Res Function(UserFirebaseResponse) _then) = _$UserFirebaseResponseCopyWithImpl;
 @useResult
 $Res call({
- UserId userId, Email email
+ String userId, String email
 });
 
 
-$UserIdCopyWith<$Res> get userId;$EmailCopyWith<$Res> get email;
+
 
 }
 /// @nodoc
@@ -68,29 +65,11 @@ class _$UserFirebaseResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? email = null,}) {
   return _then(_self.copyWith(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as Email,
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
-/// Create a copy of UserFirebaseResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of UserFirebaseResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EmailCopyWith<$Res> get email {
-  
-  return $EmailCopyWith<$Res>(_self.email, (value) {
-    return _then(_self.copyWith(email: value));
-  });
-}
+
 }
 
 
@@ -169,7 +148,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( UserId userId,  Email email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String userId,  String email)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserFirebaseResponse() when $default != null:
 return $default(_that.userId,_that.email);case _:
@@ -190,7 +169,7 @@ return $default(_that.userId,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( UserId userId,  Email email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String userId,  String email)  $default,) {final _that = this;
 switch (_that) {
 case _UserFirebaseResponse():
 return $default(_that.userId,_that.email);}
@@ -207,7 +186,7 @@ return $default(_that.userId,_that.email);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( UserId userId,  Email email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String userId,  String email)?  $default,) {final _that = this;
 switch (_that) {
 case _UserFirebaseResponse() when $default != null:
 return $default(_that.userId,_that.email);case _:
@@ -219,14 +198,14 @@ return $default(_that.userId,_that.email);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _UserFirebaseResponse extends UserFirebaseResponse {
   const _UserFirebaseResponse({required this.userId, required this.email}): super._();
-  factory _UserFirebaseResponse.fromJson(Map<String, dynamic> json) => _$UserFirebaseResponseFromJson(json);
+  
 
-@override final  UserId userId;
-@override final  Email email;
+@override final  String userId;
+@override final  String email;
 
 /// Create a copy of UserFirebaseResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -234,17 +213,14 @@ class _UserFirebaseResponse extends UserFirebaseResponse {
 @pragma('vm:prefer-inline')
 _$UserFirebaseResponseCopyWith<_UserFirebaseResponse> get copyWith => __$UserFirebaseResponseCopyWithImpl<_UserFirebaseResponse>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$UserFirebaseResponseToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFirebaseResponse&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,userId,email);
 
@@ -261,11 +237,11 @@ abstract mixin class _$UserFirebaseResponseCopyWith<$Res> implements $UserFireba
   factory _$UserFirebaseResponseCopyWith(_UserFirebaseResponse value, $Res Function(_UserFirebaseResponse) _then) = __$UserFirebaseResponseCopyWithImpl;
 @override @useResult
 $Res call({
- UserId userId, Email email
+ String userId, String email
 });
 
 
-@override $UserIdCopyWith<$Res> get userId;@override $EmailCopyWith<$Res> get email;
+
 
 }
 /// @nodoc
@@ -281,30 +257,12 @@ class __$UserFirebaseResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? email = null,}) {
   return _then(_UserFirebaseResponse(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as Email,
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
-/// Create a copy of UserFirebaseResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of UserFirebaseResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EmailCopyWith<$Res> get email {
-  
-  return $EmailCopyWith<$Res>(_self.email, (value) {
-    return _then(_self.copyWith(email: value));
-  });
-}
+
 }
 
 // dart format on

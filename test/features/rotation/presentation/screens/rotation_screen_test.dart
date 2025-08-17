@@ -5,49 +5,40 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/auth/domain/value_objects/email.dart';
-import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
+import 'package:popcal/core/utils/time_utils.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/presentation/screens/rotation_screen.dart';
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
 import 'package:popcal/features/rotation/providers/rotation_notifier.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 
 void main() {
   const screenSize = Size(411, 914);
   const mockUser = UserResponse(
-    userId: UserId('test-user-id'),
-    email: Email('test@example.com'),
+    userId: 'test-user-id',
+    emailLocalPart: 'test',
+    emailDomain: 'example.com',
   );
-  final rotationId = RotationId('test-rotation-id');
+  const rotationId = 'test-rotation-id';
   final rotationResponse = RotationResponse(
     rotationId: rotationId,
     userId: mockUser.userId,
-    rotationName: const RotationName('test-rotation-name'),
-    rotationMembers: const RotationMemberNames([
+    rotationName: 'test-rotation-name',
+    rotationMembers: [
       'user1',
       'user2',
-    ]),
-    rotationDays: const RotationDays([
+    ],
+    rotationDays: [
       Weekday.monday,
       Weekday.friday,
-    ]),
-    notificationTime: const NotificationTime(hour: 9, minute: 0),
-    currentRotationIndex: const RotationIndex(0),
-    createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
-    updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9)),
+    ],
+    notificationTime: const TimeOfDay(hour: 9, minute: 0),
+    currentRotationIndex: 0,
+    createdAt: DateTime(2025, 8, 31, 9),
+    updatedAt: DateTime(2025, 8, 31, 9),
     displayDays: '月, 金',
     displayMembers: 'user1, user2',
     displayNotificationTime: '09:00',

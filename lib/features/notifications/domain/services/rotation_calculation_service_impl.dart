@@ -2,9 +2,9 @@ import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/calendar/domain/enum/member_color.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
-import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/notifications/domain/services/result/day_calculation_data.dart';
@@ -70,7 +70,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           continue;
         }
 
-        final sourceIdResult = SourceId.createFromRotationId(rotationId!);
+        final sourceIdResult = SourceId.createFromRotationId(rotationId);
         if (sourceIdResult.isFailure) {
           return Results.failure(
             NotificationFailure(sourceIdResult.displayText),

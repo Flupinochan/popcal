@@ -141,16 +141,15 @@ class DrawerScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildUserInfo(TextTheme textTheme, UserResponse? userDto) {
-    final email = userDto?.email;
+  Widget _buildUserInfo(TextTheme textTheme, UserResponse? dto) {
     return Column(
       children: [
         Text(
-          email == null ? '読み込み中...' : email.localPart,
+          dto == null ? '読み込み中...' : dto.emailLocalPart,
           style: textTheme.titleMedium,
         ),
         Text(
-          email == null ? 'お待ちください' : email.domain,
+          dto == null ? 'お待ちください' : dto.emailDomain,
           style: textTheme.bodySmall,
         ),
       ],

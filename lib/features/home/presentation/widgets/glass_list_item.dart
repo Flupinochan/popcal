@@ -27,7 +27,7 @@ class GlassListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Dismissible(
-        key: Key(rotationResponse.rotationId.value),
+        key: Key(rotationResponse.rotationId),
         // Dismissによる削除時の背景色
         background: GlassWrapper(
           borderColor: glassTheme.errorBorderColor,
@@ -57,7 +57,7 @@ class GlassListItem extends StatelessWidget {
                         children: [
                           // RotationName
                           Text(
-                            rotationResponse.rotationName.value,
+                            rotationResponse.rotationName,
                             style: textTheme.titleMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

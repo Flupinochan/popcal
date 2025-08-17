@@ -3,23 +3,15 @@ import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 
 part 'user_id.freezed.dart';
+part 'user_id.g.dart';
 
 @freezed
 sealed class UserId with _$UserId {
   const factory UserId(String value) = _UserId;
 
-  factory UserId.fromJson(String json) {
-    final result = create(json);
-    if (result.isFailure) {
-      throw FormatException('Invalid UserId: ${result.displayText}');
-    }
-    return result.valueOrNull!;
-  }
-  const UserId._();
+  factory UserId.fromJson(Map<String, dynamic> json) => _$UserIdFromJson(json);
 
-  String toJson() => value;
-  @override
-  String toString() => value;
+  const UserId._();
 
   static Result<UserId> create(String? input) {
     if (input == null || input.trim().isEmpty) {

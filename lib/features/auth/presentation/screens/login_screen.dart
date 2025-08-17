@@ -194,7 +194,6 @@ class LoginScreen extends HookConsumerWidget {
                             height: 50,
                             onPressed:
                                 () => _handleSubmit(
-                                  context,
                                   ref,
                                   formKey,
                                   selectedMode,
@@ -280,7 +279,6 @@ class LoginScreen extends HookConsumerWidget {
 
   // サインイン/サインアップ処理
   Future<void> _handleSubmit(
-    BuildContext context,
     WidgetRef ref,
     GlobalKey<FormBuilderState> formKey,
     ValueNotifier<AuthMode> selectedMode,
@@ -293,15 +291,10 @@ class LoginScreen extends HookConsumerWidget {
     final email = formData[loginFormKey] as String;
     final password = formData[passwordFormKey] as String;
 
-    final dtoResult = EmailSignInRequest.create(
+    final dto = EmailSignInRequest(
       email: email,
       password: password,
     );
-    if (dtoResult.isFailure) {
-      showErrorDialog(context, dtoResult.displayText);
-      return;
-    }
-    final dto = dtoResult.valueOrNull!;
 
     final authViewModel = ref.read(authNotifierProvider.notifier);
     selectedMode.value == AuthMode.signIn

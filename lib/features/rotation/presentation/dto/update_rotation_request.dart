@@ -1,12 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
+import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
@@ -18,52 +19,62 @@ part 'update_rotation_request.freezed.dart';
 @freezed
 sealed class UpdateRotationRequest with _$UpdateRotationRequest {
   const factory UpdateRotationRequest({
-    required UserId userId,
-    required RotationId rotationId,
-    required RotationName rotationName,
-    required RotationMemberNames rotationMembers,
-    required RotationDays rotationDays,
-    required NotificationTime notificationTime,
-    required RotationCreatedAt createdAt,
+    required String userId,
+    required String rotationId,
+    required String rotationName,
+    required List<String> rotationMembers,
+    required List<Weekday> rotationDays,
+    required TimeOfDay notificationTime,
+    required DateTime createdAt,
     required SkipEvents skipEvents,
   }) = _UpdateRotationRequest;
 
-  /// Entity => DTO
-  factory UpdateRotationRequest.fromEntity(Rotation entity) {
-    return UpdateRotationRequest(
-      rotationId: entity.rotationId!,
-      userId: entity.userId,
-      rotationName: entity.rotationName,
-      rotationMembers: entity.rotationMemberNames,
-      rotationDays: entity.rotationDays,
-      notificationTime: entity.notificationTime,
-      createdAt: entity.createdAt,
-      skipEvents: entity.skipEvents,
-    );
-  }
   const UpdateRotationRequest._();
 
   // DTO => Entity
   Result<Rotation> toEntity({required DateTime currentTime}) {
-    try {
-      return Results.success(
-        Rotation(
-          rotationId: rotationId,
-          userId: userId,
-          rotationName: rotationName,
-          rotationMemberNames: rotationMembers,
-          rotationDays: rotationDays,
-          notificationTime: notificationTime,
-          currentRotationIndex: const RotationIndex(0),
-          createdAt: createdAt,
-          updatedAt: RotationUpdatedAt(currentTime),
-          skipEvents: skipEvents,
-        ),
-      );
-    } on Exception catch (e) {
+    final userIdResult = UserId.create(userId);
+    if (userIdResult.isFailure) {
+      return Results.failure(ValidationFailure(userIdResult.displayText));
+    }
+
+    final rotationNameResult = RotationName.create(rotationName);
+    if (rotationNameResult.isFailure) {
+      return Results.failure(ValidationFailure(rotationNameResult.displayText));
+    }
+
+    final rotationMembersResult = RotationMemberNames.create(rotationMembers);
+    if (rotationMembersResult.isFailure) {
       return Results.failure(
-        ValidationFailure('UpdateRotation to Rotation conversion failed: $e'),
+        ValidationFailure(rotationMembersResult.displayText),
       );
     }
+
+    final rotationDaysResult = RotationDays.create(rotationDays);
+    if (rotationDaysResult.isFailure) {
+      return Results.failure(ValidationFailure(rotationDaysResult.displayText));
+    }
+
+    // 時刻入力はデフォルト値があり、未入力にできないため、バリデーション不要
+    final notificationTimeResult = NotificationTime.fromTimeOfDay(
+      notificationTime,
+    );
+
+    // ユーザが入力するわけではないため、バリデーション不要
+    final createdAtResult = RotationCreatedAt(createdAt);
+
+    return Results.success(
+      Rotation(
+        userId: userIdResult.valueOrNull!,
+        rotationName: rotationNameResult.valueOrNull!,
+        rotationMemberNames: rotationMembersResult.valueOrNull!,
+        rotationDays: rotationDaysResult.valueOrNull!,
+        notificationTime: notificationTimeResult,
+        currentRotationIndex: const RotationIndex(0),
+        createdAt: createdAtResult,
+        updatedAt: RotationUpdatedAt(currentTime),
+        skipEvents: skipEvents,
+      ),
+    );
   }
 }

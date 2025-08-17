@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EmailSignInRequest {
 
- Email get email; Password get password;
+ String get email; String get password;
 /// Create a copy of EmailSignInRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,11 +45,11 @@ abstract mixin class $EmailSignInRequestCopyWith<$Res>  {
   factory $EmailSignInRequestCopyWith(EmailSignInRequest value, $Res Function(EmailSignInRequest) _then) = _$EmailSignInRequestCopyWithImpl;
 @useResult
 $Res call({
- Email email, Password password
+ String email, String password
 });
 
 
-$EmailCopyWith<$Res> get email;$PasswordCopyWith<$Res> get password;
+
 
 }
 /// @nodoc
@@ -65,29 +65,11 @@ class _$EmailSignInRequestCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,}) {
   return _then(_self.copyWith(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as Email,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as Password,
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
-/// Create a copy of EmailSignInRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EmailCopyWith<$Res> get email {
-  
-  return $EmailCopyWith<$Res>(_self.email, (value) {
-    return _then(_self.copyWith(email: value));
-  });
-}/// Create a copy of EmailSignInRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$PasswordCopyWith<$Res> get password {
-  
-  return $PasswordCopyWith<$Res>(_self.password, (value) {
-    return _then(_self.copyWith(password: value));
-  });
-}
+
 }
 
 
@@ -166,7 +148,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Email email,  Password password)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String password)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EmailSignInRequest() when $default != null:
 return $default(_that.email,_that.password);case _:
@@ -187,7 +169,7 @@ return $default(_that.email,_that.password);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Email email,  Password password)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String password)  $default,) {final _that = this;
 switch (_that) {
 case _EmailSignInRequest():
 return $default(_that.email,_that.password);}
@@ -204,7 +186,7 @@ return $default(_that.email,_that.password);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Email email,  Password password)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String password)?  $default,) {final _that = this;
 switch (_that) {
 case _EmailSignInRequest() when $default != null:
 return $default(_that.email,_that.password);case _:
@@ -222,8 +204,8 @@ class _EmailSignInRequest extends EmailSignInRequest {
   const _EmailSignInRequest({required this.email, required this.password}): super._();
   
 
-@override final  Email email;
-@override final  Password password;
+@override final  String email;
+@override final  String password;
 
 /// Create a copy of EmailSignInRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -255,11 +237,11 @@ abstract mixin class _$EmailSignInRequestCopyWith<$Res> implements $EmailSignInR
   factory _$EmailSignInRequestCopyWith(_EmailSignInRequest value, $Res Function(_EmailSignInRequest) _then) = __$EmailSignInRequestCopyWithImpl;
 @override @useResult
 $Res call({
- Email email, Password password
+ String email, String password
 });
 
 
-@override $EmailCopyWith<$Res> get email;@override $PasswordCopyWith<$Res> get password;
+
 
 }
 /// @nodoc
@@ -275,30 +257,12 @@ class __$EmailSignInRequestCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,}) {
   return _then(_EmailSignInRequest(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as Email,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as Password,
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
-/// Create a copy of EmailSignInRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EmailCopyWith<$Res> get email {
-  
-  return $EmailCopyWith<$Res>(_self.email, (value) {
-    return _then(_self.copyWith(email: value));
-  });
-}/// Create a copy of EmailSignInRequest
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$PasswordCopyWith<$Res> get password {
-  
-  return $PasswordCopyWith<$Res>(_self.password, (value) {
-    return _then(_self.copyWith(password: value));
-  });
-}
+
 }
 
 // dart format on

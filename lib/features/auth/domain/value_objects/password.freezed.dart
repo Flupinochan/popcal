@@ -11,6 +11,7 @@ part of 'password.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$Password {
 
@@ -21,6 +22,8 @@ mixin _$Password {
 @pragma('vm:prefer-inline')
 $PasswordCopyWith<Password> get copyWith => _$PasswordCopyWithImpl<Password>(this as Password, _$identity);
 
+  /// Serializes this Password to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is Password&&(identical(other.value, value) || other.value == value));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,value);
 
@@ -193,11 +196,11 @@ return $default(_that.value);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _Password extends Password {
   const _Password(this.value): super._();
-  
+  factory _Password.fromJson(Map<String, dynamic> json) => _$PasswordFromJson(json);
 
 @override final  String value;
 
@@ -207,14 +210,17 @@ class _Password extends Password {
 @pragma('vm:prefer-inline')
 _$PasswordCopyWith<_Password> get copyWith => __$PasswordCopyWithImpl<_Password>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$PasswordToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _Password&&(identical(other.value, value) || other.value == value));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,value);
 

@@ -1,11 +1,11 @@
 import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/core/utils/time_utils.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 import 'package:popcal/shared/providers/utils_providers.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'rotation_notifier.g.dart';

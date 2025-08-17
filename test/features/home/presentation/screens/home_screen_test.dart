@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_loader.dart';
@@ -15,14 +14,7 @@ import 'package:popcal/features/notifications/providers/notification_providers.d
 import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_loader.dart';
@@ -31,41 +23,42 @@ import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 void main() {
   const screenSize = Size(411, 914);
   const mockUser = UserResponse(
-    userId: UserId('test-user-id'),
-    email: Email('test@example.com'),
+    userId: 'test-user-id',
+    emailLocalPart: 'test',
+    emailDomain: 'example.com',
   );
   final rotations = <RotationResponse>[
     RotationResponse(
-      rotationId: RotationId('test-rotation-id-1'),
-      userId: const UserId('test-user-id-1'),
-      rotationName: const RotationName('test-rotation-name-1'),
-      rotationMembers: const RotationMemberNames([
+      rotationId: 'test-rotation-id-1',
+      userId: 'test-user-id-1',
+      rotationName: 'test-rotation-name-1',
+      rotationMembers: [
         'tester1-1',
         'tester1-2',
-      ]),
-      rotationDays: const RotationDays([Weekday.monday, Weekday.sunday]),
-      notificationTime: const NotificationTime(hour: 15, minute: 0),
-      currentRotationIndex: const RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime(2025, 8, 31, 9)),
-      updatedAt: RotationUpdatedAt(DateTime(2025, 8, 31, 9)),
+      ],
+      rotationDays: [Weekday.monday, Weekday.sunday],
+      notificationTime: const TimeOfDay(hour: 15, minute: 0),
+      currentRotationIndex: 0,
+      createdAt: DateTime(2025, 8, 31, 9),
+      updatedAt: DateTime(2025, 8, 31, 9),
       displayDays: '月, 日',
       displayMembers: 'tester1-1, tester1-2',
       displayNotificationTime: '09:00',
       skipEvents: SkipEvents.empty(),
     ),
     RotationResponse(
-      rotationId: RotationId('test-rotation-id-2'),
-      userId: const UserId('test-user-id-2'),
-      rotationName: const RotationName('test-rotation-name-2'),
-      rotationMembers: const RotationMemberNames([
+      rotationId: 'test-rotation-id-2',
+      userId: 'test-user-id-2',
+      rotationName: 'test-rotation-name-2',
+      rotationMembers: [
         'tester2-1',
         'tester2-2',
-      ]),
-      rotationDays: const RotationDays([Weekday.monday, Weekday.sunday]),
-      notificationTime: const NotificationTime(hour: 16, minute: 0),
-      currentRotationIndex: const RotationIndex(0),
-      createdAt: RotationCreatedAt(DateTime(2025, 9, 1, 9)),
-      updatedAt: RotationUpdatedAt(DateTime(2025, 9, 1, 9)),
+      ],
+      rotationDays: [Weekday.monday, Weekday.sunday],
+      notificationTime: const TimeOfDay(hour: 16, minute: 0),
+      currentRotationIndex: 0,
+      createdAt: DateTime(2025, 9, 1, 9),
+      updatedAt: DateTime(2025, 9, 1, 9),
       displayDays: '月, 日',
       displayMembers: 'tester2-1, tester2-2',
       displayNotificationTime: '09:00',

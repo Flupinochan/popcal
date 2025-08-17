@@ -7,7 +7,6 @@ part 'notification_time.g.dart';
 /// TimeOfDayはfreezedサポート対象外のため、intのhourとminuteを組み合わせることにする
 @freezed
 sealed class NotificationTime with _$NotificationTime {
-  @Deprecated('NotificationTime.fromTimeOfDayを使用してインスタンスを生成してください')
   const factory NotificationTime({
     required int hour,
     required int minute,

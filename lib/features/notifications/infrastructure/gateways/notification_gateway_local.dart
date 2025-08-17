@@ -3,10 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/core/utils/time_utils.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/notifications/infrastructure/dto/notification_entry_local_response.dart';
 import 'package:popcal/router/routes.dart';
-import 'package:popcal/shared/utils/time_utils.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationGatewayLocal {

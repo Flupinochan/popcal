@@ -42,7 +42,15 @@ sealed class RotationDays with _$RotationDays {
   @override
   String toString() => value.map((day) => day.displayName).join(', ');
 
-  static Result<RotationDays> create(List<int>? input) {
+  static Result<RotationDays> create(List<Weekday>? input) {
+    if (input == null || input.isEmpty) {
+      return Results.failure(const ValidationFailure('ローテーション曜日を1つ以上追加してください'));
+    }
+
+    return Results.success(RotationDays(input));
+  }
+
+  static Result<RotationDays> createFromInt(List<int>? input) {
     if (input == null || input.isEmpty) {
       return Results.failure(const ValidationFailure('ローテーション曜日を1つ以上追加してください'));
     }
@@ -51,27 +59,6 @@ sealed class RotationDays with _$RotationDays {
         input
             .where((value) => value >= 1 && value <= 7)
             .map(Weekday.fromInt)
-            .toList();
-
-    if (weekdays.isEmpty) {
-      return Results.failure(const ValidationFailure('有効な曜日データがありません'));
-    }
-
-    return Results.success(RotationDays(weekdays));
-  }
-
-  // ignore: avoid-dynamic
-  static Result<RotationDays> createFromDynamic(List<dynamic>? input) {
-    if (input == null || input.isEmpty) {
-      return Results.failure(const ValidationFailure('ローテーション曜日を1つ以上追加してください'));
-    }
-
-    final weekdays =
-        input
-            .where((item) => item != null)
-            .map((item) => int.tryParse(item.toString()))
-            .where((value) => value != null && value >= 1 && value <= 7)
-            .map((value) => Weekday.fromInt(value!))
             .toList();
 
     if (weekdays.isEmpty) {

@@ -66,6 +66,16 @@ enum DayType {
     }
   }
 
+  // キャスト、失敗時はnullを返却
+  static DayType? fromString(String? value) {
+    if (value == null) return null;
+    try {
+      return DayType.values.byName(value);
+    } on Exception catch (_) {
+      return null;
+    }
+  }
+
   /// 色(UI)はここで定義
   /// isValidRotationDayなどの条件、ロジックはEntity側で定義?
   /// 考慮が必要

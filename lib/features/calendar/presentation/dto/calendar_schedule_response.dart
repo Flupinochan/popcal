@@ -1,8 +1,8 @@
+import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/results.dart';
+import 'package:popcal/features/calendar/domain/enum/member_color.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
-import 'package:popcal/features/calendar/domain/value_objects/member_color.dart';
-import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
@@ -11,10 +11,12 @@ part 'calendar_schedule_response.freezed.dart';
 
 @freezed
 sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
+  // DateKeyはUIでも利用するため共通
   const factory CalendarScheduleResponse({
     required RotationResponse rotationResponse,
     required Map<DateKey, ScheduleDayResponse> scheduleMap,
   }) = _CalendarScheduleResponse;
+
   const CalendarScheduleResponse._();
 
   // 指定した日付から表示用データを返却
@@ -28,10 +30,10 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
 
     return scheduleMap[dateKeyResult.valueOrNull!] ??
         ScheduleDayResponse(
-          date: NotificationDateTime(dateTime),
-          memberName: RotationMemberName.notApplicable,
+          date: dateTime,
+          memberName: RotationMemberName.notApplicableText,
           scheduleDayType: DayType.notRotationDay,
-          memberColor: MemberColor.notApplicable,
+          memberColor: MemberColor.notApplicable.color,
           displayText: DayType.notRotationDay.displayText,
           canSkipNext: false,
           canSkipPrevious: false,
@@ -46,10 +48,10 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
 @freezed
 sealed class ScheduleDayResponse with _$ScheduleDayResponse {
   const factory ScheduleDayResponse({
-    required NotificationDateTime date,
-    required RotationMemberName memberName,
+    required DateTime date,
+    required String memberName,
     required DayType scheduleDayType,
-    required MemberColor memberColor,
+    required Color memberColor,
     required String displayText,
     required bool canSkipNext,
     required bool canSkipPrevious,
