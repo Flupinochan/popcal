@@ -1,0 +1,70 @@
+{
+	"Extension Type String": {
+		"prefix": "exts",
+		"body": [
+			"import 'package:popcal/core/utils/failures/validation_failure.dart';",
+			"import 'package:popcal/core/utils/results.dart';",
+			"",
+			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(String value) {",
+			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create({required String input}) {",
+			"\t\tif (input.trim().isEmpty) {",
+			"\t\t\treturn Results.failure(const ValidationFailure('バリデーションに失敗しました'));",
+			"\t\t}",
+			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input.trim()));",
+			"\t}$0",
+			"}",
+			""
+		],
+		"description": "String型extension type"
+	},
+	"Extension Type Int": {
+		"prefix": "exti",
+		"body": [
+			"import 'package:popcal/core/utils/failures/validation_failure.dart';",
+			"import 'package:popcal/core/utils/results.dart';",
+			"",
+			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(int value) {",
+			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create({required int input}) {",
+			"\t\tif (input < 0) {",
+			"\t\t\treturn Results.failure(const ValidationFailure('値は0以上である必要があります'));",
+			"\t\t}",
+			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
+			"\t}$0",
+			"}",
+			""
+		],
+		"description": "int型extension type"
+	},
+	"Extension Type Double": {
+		"prefix": "extd",
+		"body": [
+			"import 'package:popcal/core/utils/failures/validation_failure.dart';",
+			"import 'package:popcal/core/utils/results.dart';",
+			"",
+			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(double value) {",
+			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create({required double input}) {",
+			"\t\tif (input < 0.0) {",
+			"\t\t\treturn Results.failure(const ValidationFailure('値は0以上である必要があります'));",
+			"\t\t}",
+			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
+			"\t}$0",
+			"}",
+			""
+		],
+		"description": "double型extension type"
+	},
+	"Extension Type Bool": {
+		"prefix": "extb",
+		"body": [
+			"import 'package:popcal/core/utils/results.dart';",
+			"",
+			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(bool value) {",
+			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create({required bool input}) {",
+			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
+			"\t}$0",
+			"}",
+			""
+		],
+		"description": "bool型extension type"
+	}
+}
