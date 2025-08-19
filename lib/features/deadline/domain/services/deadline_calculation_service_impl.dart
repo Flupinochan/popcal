@@ -44,24 +44,36 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
       );
 
       final month = lastWeekdays.month;
-      const title = NotificationTitle(value: '月末営業日通知');
-      final content = NotificationContent(value: '$month月の最終平日です');
-      final description = NotificationDescription(value: '$month月の最終平日です');
+      final title = NotificationTitle.createDeadline();
+      final contentResult = NotificationContent.createForDeadline(month);
+      if (contentResult.isFailure) {
+        return Results.failure(DeadlineFailure(contentResult.displayText));
+      }
+      final content = contentResult.valueOrNull!;
+      final descriptionResult = NotificationDescription.createForDeadline(
+        month,
+      );
+      final description = descriptionResult.valueOrNull!;
       final sourceId = SourceId.createDeadlineId();
-      final notificationId = NotificationId.create(sourceId, lastWeekdays);
+      final notificationId = NotificationId.create(
+        sourceId,
+        lastWeekdays,
+      );
+
       final dateKeyResult = DateKey.create(lastWeekdays);
       if (dateKeyResult.isFailure) {
         return Results.failure(DeadlineFailure(dateKeyResult.displayText));
       }
-      final notificationDateTime = NotificationDateTime.fromDateAndTime(
-        date: dateKeyResult.valueOrNull!,
-        notificationTime: deadline.notificationTime,
-      );
+      final notificationDateTime =
+          NotificationDateTime.fromDateKeyAndNotificationTime(
+            date: dateKeyResult.valueOrNull!,
+            notificationTime: deadline.notificationTime,
+          );
 
       final notificationEntry = NotificationEntry(
         notificationId: notificationId,
         sourceId: sourceId,
-        userId: UserId(sourceId.value),
+        userId: UserId.empty(),
         notificationDateTime: notificationDateTime,
         title: title,
         content: content,

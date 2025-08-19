@@ -1,42 +1,35 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 
-part 'rotation_index.freezed.dart';
-
-@freezed
-sealed class RotationIndex with _$RotationIndex {
-  const factory RotationIndex(int value) = _RotationIndex;
-  const RotationIndex._();
+extension type RotationIndex._(int value) {
+  // 初期化用
+  RotationIndex() : this._(0);
 
   int getMemberIndex(int memberCount) {
-    if (memberCount <= 0) {
-      throw ArgumentError('メンバー数は1以上である必要があります');
-    }
     return value % memberCount;
   }
 
   RotationIndex increment() {
-    return RotationIndex(value + 1);
+    return RotationIndex._(value + 1);
   }
 
-  RotationIndex incrementBy(int count) {
-    if (count < 0) {
-      throw ArgumentError('インクリメント数は0以上である必要があります');
-    }
-    return RotationIndex(value + count);
-  }
-
-  @override
-  String toString() => value.toString();
-
-  static Result<RotationIndex> create(int? input) {
-    if (input == null || input < 0) {
-      return Results.failure(
-        const ValidationFailure('ローテーションインデックスは0以上である必要があります'),
+  Result<RotationIndex> incrementBy(int count) {
+    if (count < 1) {
+      return Results.failure<RotationIndex>(
+        const ValidationFailure('インクリメント数は1以上である必要があります'),
       );
     }
 
-    return Results.success(RotationIndex(input));
+    return Results.success(RotationIndex._(value + count));
+  }
+
+  static Result<RotationIndex> createFromInt(int input) {
+    if (input < 0) {
+      Results.failure<RotationIndex>(
+        const ValidationFailure('値は0以上である必要があります'),
+      );
+    }
+
+    return Results.success(RotationIndex._(input));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/failures/rotation_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/enum/member_color.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
@@ -86,47 +87,55 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           );
         }
 
-        final contentResult = NotificationContent.createFromRotationMemberName(
-          rotation.rotationMemberNames.memberAt(memberIndex),
+        final memberNameResult = rotation.rotationMemberNames.memberAt(
+          memberIndex,
         );
-        if (contentResult.isFailure) {
+        if (memberNameResult.isFailure) {
           return Results.failure(
-            NotificationFailure(contentResult.displayText),
+            ValidationFailure(memberNameResult.displayText),
           );
         }
+        final content = NotificationContent.createFromRotationMemberName(
+          memberNameResult.valueOrNull!,
+        );
 
-        final descriptionResult =
-            NotificationDescription.createFromRotationName(rotationName);
-        if (descriptionResult.isFailure) {
-          return Results.failure(
-            NotificationFailure(descriptionResult.displayText),
-          );
-        }
+        final description = NotificationDescription.createForRotation(
+          rotationName,
+        );
+
+        final notificationId = NotificationId.create(
+          sourceIdResult.valueOrNull!,
+          notificationDateTime.value,
+        );
 
         notificationEntries.add(
           NotificationEntry(
-            notificationId: NotificationId.create(
-              sourceIdResult.valueOrNull!,
-              notificationDateTime.value,
-            ),
+            notificationId: notificationId,
             sourceId: sourceIdResult.valueOrNull!,
             userId: rotation.userId,
             title: titleResult.valueOrNull!,
             notificationDateTime: notificationDateTime,
-            content: contentResult.valueOrNull!,
-            description: descriptionResult.valueOrNull!,
+            content: content,
+            description: description,
           ),
         );
       }
 
       _printNotifications(notificationEntries);
 
+      final rotationIndexResult = RotationIndex.createFromInt(
+        rotationCalculationData.newRotationIndex,
+      );
+      if (rotationIndexResult.isFailure) {
+        return Results.failure(
+          ValidationFailure(rotationIndexResult.displayText),
+        );
+      }
+
       return Results.success(
         NotificationSchedule(
           notificationEntries: notificationEntries,
-          newCurrentRotationIndex: RotationIndex(
-            rotationCalculationData.newRotationIndex,
-          ),
+          newCurrentRotationIndex: rotationIndexResult.valueOrNull!,
         ),
       );
     } on Exception catch (error) {
@@ -169,12 +178,19 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
         final dateKey = dateKeyResult.valueOrNull!;
 
+        RotationMemberName? memberName;
+        if (memberIndex != null) {
+          final memberNameResult = rotation.rotationMemberNames.memberAt(
+            memberIndex,
+          );
+          memberName = memberNameResult.valueOrNull;
+        } else {
+          memberName = RotationMemberName.notApplicable;
+        }
+
         final scheduleDay = ScheduleDay(
-          date: notificationDateTime,
-          memberName:
-              memberIndex != null
-                  ? rotation.rotationMemberNames.memberAt(memberIndex)
-                  : RotationMemberName.notApplicable,
+          notificationDateTime: notificationDateTime,
+          memberName: memberName!,
           scheduleType: dayType,
           memberColor: MemberColor.fromIndex(memberIndex),
           canSkipNext: rotation.canSkipNext(dateKey: dateKey, dayType: dayType),
@@ -229,10 +245,11 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         }
         final dateKey = dateKeyResult.valueOrNull!;
         final notificationTime = rotation.notificationTime;
-        final notificationDateTime = NotificationDateTime.fromDateAndTime(
-          date: dateKey,
-          notificationTime: notificationTime,
-        );
+        final notificationDateTime =
+            NotificationDateTime.fromDateKeyAndNotificationTime(
+              date: dateKey,
+              notificationTime: notificationTime,
+            );
 
         // タイプ判定
         final dayTypeResult = _getScheduleDayType(
@@ -243,6 +260,11 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
         final dayType = dayTypeResult.dayType;
         final skipEvent = dayTypeResult.skipEvent;
+
+        final rotationIndexResult = RotationIndex.createFromInt(
+          newRotationIndex,
+        );
+        final rotationIndex = rotationIndexResult.valueOrNull!;
 
         switch (dayType) {
           // ローテーション日でない場合は担当者を示すmemberIndexをnull
@@ -258,9 +280,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             );
           // ローテーション日の場合はシンプルにnewRotationIndexを+1
           case DayType.rotationDay:
-            final memberIndex = rotation.getRotationMemberIndex(
-              RotationIndex(newRotationIndex),
-            );
+            final memberIndex = rotation.getRotationMemberIndex(rotationIndex);
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,
@@ -274,10 +294,8 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           // 1つスキップする場合は、skipCountが1
           // 2つスキップする場合は、skipCountが2
           case DayType.skipToNext:
-            newRotationIndex += skipEvent!.skipCount.skipCount;
-            final memberIndex = rotation.getRotationMemberIndex(
-              RotationIndex(newRotationIndex),
-            );
+            newRotationIndex += skipEvent!.skipCount.value;
+            final memberIndex = rotation.getRotationMemberIndex(rotationIndex);
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,

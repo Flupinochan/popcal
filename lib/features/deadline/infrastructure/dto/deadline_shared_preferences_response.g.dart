@@ -10,14 +10,14 @@ _DeadlineSharedPreferencesResponse _$DeadlineSharedPreferencesResponseFromJson(
   Map<String, dynamic> json,
 ) => _DeadlineSharedPreferencesResponse(
   isEnabled: json['isEnabled'] as bool,
-  notificationTime: NotificationTime.fromJson(
-    json['notificationTime'] as Map<String, dynamic>,
-  ),
+  hour: (json['hour'] as num).toInt(),
+  minute: (json['minute'] as num).toInt(),
 );
 
 Map<String, dynamic> _$DeadlineSharedPreferencesResponseToJson(
   _DeadlineSharedPreferencesResponse instance,
 ) => <String, dynamic>{
   'isEnabled': instance.isEnabled,
-  'notificationTime': instance.notificationTime,
+  'hour': instance.hour,
+  'minute': instance.minute,
 };

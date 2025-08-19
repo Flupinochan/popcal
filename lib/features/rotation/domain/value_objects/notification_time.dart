@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/results.dart';
 
 part 'notification_time.freezed.dart';
-part 'notification_time.g.dart';
 
 /// TimeOfDayはfreezedサポート対象外のため、intのhourとminuteを組み合わせることにする
 @freezed
 sealed class NotificationTime with _$NotificationTime {
+  @Deprecated('.fromTimeOfDayファクトリメソッドで生成してください')
   const factory NotificationTime({
     required int hour,
     required int minute,
   }) = _NotificationTime;
-
-  factory NotificationTime.fromJson(Map<String, dynamic> json) =>
-      _$NotificationTimeFromJson(json);
 
   // TimeOfDayから生成
   factory NotificationTime.fromTimeOfDay(TimeOfDay timeOfDay) {
@@ -25,7 +24,6 @@ sealed class NotificationTime with _$NotificationTime {
 
   const NotificationTime._();
 
-  // 表示用
   String get display24hour =>
       '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
 
@@ -36,6 +34,31 @@ sealed class NotificationTime with _$NotificationTime {
     'hour': hour,
     'minute': minute,
   };
+
+  // intから作成
+  static Result<NotificationTime> createFromInt({
+    required int hour,
+    required int minute,
+  }) {
+    if (hour < 0 || hour > 23) {
+      Results.failure<NotificationTime>(
+        const ValidationFailure('hour must be between 0 and 23'),
+      );
+    }
+
+    if (minute < 0 || minute > 59) {
+      Results.failure<NotificationTime>(
+        const ValidationFailure('minute must be between 0 and 59'),
+      );
+    }
+
+    return Results.success(
+      NotificationTime(
+        hour: hour,
+        minute: minute,
+      ),
+    );
+  }
 
   static NotificationTime fromMap(Map<String, dynamic> map) {
     return NotificationTime(

@@ -53,7 +53,7 @@ class ToggleDeadlineUseCase {
     }
 
     // 2-2. off時 通知削除
-    const sourceId = SourceId(value: 'popcal-deadline');
+    final sourceId = SourceId.createDeadlineId();
     final deleteResult = await _notificationGateway
         .deleteNotificationsBySourceId(sourceId);
     if (deleteResult.isFailure) {

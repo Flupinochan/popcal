@@ -16,14 +16,16 @@ sealed class DeadlineSharedPreferencesResponse
   /// freezedはTimeOfDayに対応していないため、intのhourとminuteを組み合わせたNotificationTimeをそのまま利用
   const factory DeadlineSharedPreferencesResponse({
     required bool isEnabled,
-    required NotificationTime notificationTime,
+    required int hour,
+    required int minute,
   }) = _DeadlineSharedPreferencesResponse;
 
   factory DeadlineSharedPreferencesResponse.fromEntity(
     Deadline entity,
   ) => DeadlineSharedPreferencesResponse(
     isEnabled: entity.isEnabled,
-    notificationTime: entity.notificationTime,
+    hour: entity.notificationTime.hour,
+    minute: entity.notificationTime.minute,
   );
 
   // JSON => DTO
@@ -33,10 +35,16 @@ sealed class DeadlineSharedPreferencesResponse
 
   const DeadlineSharedPreferencesResponse._();
 
-  Deadline toEntity() => Deadline(
-    isEnabled: isEnabled,
-    notificationTime: notificationTime,
-  );
+  Result<Deadline> toEntity() {
+    final result = NotificationTime.createFromInt(hour: hour, minute: minute);
+    if (result.isFailure) {
+      return Results.failure(ValidationFailure(result.displayText));
+    }
+
+    return Results.success(
+      Deadline(isEnabled: isEnabled, notificationTime: result.valueOrNull!),
+    );
+  }
 
   // JSON => DTO
   static Result<DeadlineSharedPreferencesResponse> fromJsonSafe(

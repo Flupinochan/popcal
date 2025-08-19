@@ -23,19 +23,20 @@ class NotificationGatewayLocal {
 
   /// 1. 通知スケジュールを作成
   Future<Result<void>> createNotification(
-    NotificationEntryLocalResponse notificationSettingDto,
+    NotificationEntryLocalResponse notificationEntryLocalResponse,
   ) async {
     try {
       final now = _timeUtils.now();
-      final notificationDateTime = notificationSettingDto.notificationDateTime;
-      final dateTime = tz.TZDateTime.from(notificationDateTime.value, tz.local);
-      final notificationId = notificationSettingDto.notificationId.value;
-      final title = notificationSettingDto.title.value;
-      final content = notificationSettingDto.content.value;
-      final description = notificationSettingDto.description.value;
-      final payloadJson = notificationSettingDto.toJsonString();
+      final notificationDateTime =
+          notificationEntryLocalResponse.notificationDateTime;
+      final dateTime = tz.TZDateTime.from(notificationDateTime, tz.local);
+      final notificationId = notificationEntryLocalResponse.notificationId;
+      final title = notificationEntryLocalResponse.title;
+      final content = notificationEntryLocalResponse.content;
+      final description = notificationEntryLocalResponse.description;
+      final payloadJson = notificationEntryLocalResponse.toJsonString();
 
-      if (notificationDateTime.isBeforeDateTime(now)) {
+      if (notificationDateTime.isBefore(now)) {
         return Results.failure(
           NotificationFailure(
             '警告: 過去の通知作成が要求されました - $title - $content - $description',
@@ -108,10 +109,10 @@ class NotificationGatewayLocal {
       String? errorMessage;
       for (final notification in notificationsResult.valueOrNull!) {
         try {
-          final notificationId = notification.notificationId.value;
+          final notificationId = notification.notificationId;
           await _flutterLocalNotificationsPlugin.cancel(notificationId);
           _logger.fine(
-            'SourceId: $sourceId NotificationId: ${notification.notificationDateTime.value} 通知を削除',
+            'SourceId: $sourceId NotificationId: ${notification.notificationDateTime} 通知を削除',
           );
         } on Exception catch (error) {
           // 1つの通知削除でエラーが発生してもほかの通知削除は試みる
@@ -159,8 +160,7 @@ class NotificationGatewayLocal {
             ).when(
               success: (localNotificationSettingDto) {
                 /// 特定のSourceIdの通知を取得
-                if (localNotificationSettingDto.sourceId ==
-                    SourceId(value: sourceId)) {
+                if (localNotificationSettingDto.sourceId == sourceId) {
                   notifications.add(localNotificationSettingDto);
                 }
               },
@@ -251,7 +251,7 @@ class NotificationGatewayLocal {
               payload,
             );
         if (localNotificationSettingDtoResult.isSuccess) {
-          return localNotificationSettingDtoResult.valueOrNull!.sourceId.value;
+          return localNotificationSettingDtoResult.valueOrNull!.sourceId;
         }
       }
     } on Exception catch (_) {}

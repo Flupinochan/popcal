@@ -1,45 +1,27 @@
-// ignore_for_file: deprecated_member_use_from_same_package
-
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/rotation_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 
-part 'skip_count.freezed.dart';
-part 'skip_count.g.dart';
+extension type SkipCount._(int value) {
+  SkipCount({int skipCount = 1}) : this._(skipCount);
 
-@freezed
-sealed class SkipCount with _$SkipCount {
-  @Deprecated('SkipCount.create()を使用してインスタンスを生成してください')
-  const factory SkipCount({
-    required int skipCount,
-  }) = _SkipCount;
-
-  factory SkipCount.fromJson(Map<String, dynamic> json) =>
-      _$SkipCountFromJson(json);
-
-  const SkipCount._();
-
-  SkipCount decrement() {
+  Result<SkipCount> decrement() {
     // 0になる場合はSkipEventを削除する。decrementは不可
-    if (skipCount == 1) {
-      throw Exception('SkipCountは1以上である必要があります');
+    if (value > 1) {
+      return Results.failure(const ValidationFailure('1以上である必要があります'));
     }
-    return SkipCount(skipCount: skipCount - 1);
+
+    return Results.success(SkipCount._(value - 1));
   }
 
-  SkipCount increment(List<SkipEvent> skipEvents) {
+  Result<SkipCount> increment(RotationMemberNames input) {
     // length以上の場合は1巡するため、incrementは不可
-    if (skipEvents.length <= skipCount) {
-      throw Exception('SkipCountはSkipEventの数以上である必要があります');
+    if (input.length <= value) {
+      return Results.failure(
+        const ValidationFailure('SkipCountはSkipEventの数以上である必要があります'),
+      );
     }
-    return SkipCount(skipCount: skipCount + 1);
-  }
 
-  static Result<SkipCount> create(int? input) {
-    if (input == null || input < 1) {
-      return Results.failure(const RotationFailure('SkipCountは1以上である必要があります'));
-    }
-    return Results.success(SkipCount(skipCount: input));
+    return Results.success(SkipCount._(value + 1));
   }
 }

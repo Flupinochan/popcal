@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
@@ -15,9 +16,13 @@ Future<Result<CalendarScheduleResponse>> calendarScheduleResponse(
   Ref ref,
   String rotationId,
 ) async {
-  final rotationIdResult = RotationId(rotationId);
+  final rotationIdResult = RotationId.create(rotationId);
+  if (rotationIdResult.isFailure) {
+    return Results.failure(ValidationFailure(rotationIdResult.displayText));
+  }
+
   final useCase = ref.watch(getCalendarScheduleUseCaseProvider);
-  final domainResult = await useCase.execute(rotationIdResult);
+  final domainResult = await useCase.execute(rotationIdResult.valueOrNull!);
 
   return domainResult.when(
     success: (calendarData) {
@@ -39,7 +44,7 @@ Map<DateKey, ScheduleDayResponse> _convertDayInfoMapToDto(
     (key, scheduleDay) => MapEntry(
       key,
       ScheduleDayResponse(
-        date: scheduleDay.date.value,
+        date: scheduleDay.notificationDateTime.value,
         memberName: scheduleDay.memberName.value,
         scheduleDayType: scheduleDay.scheduleType,
         memberColor: scheduleDay.memberColor.color,

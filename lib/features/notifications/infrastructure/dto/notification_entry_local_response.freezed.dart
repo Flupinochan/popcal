@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$NotificationEntryLocalResponse {
 
 // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
-@NotificationIdConverter() NotificationId get notificationId; SourceId get sourceId; UserId get userId;@NotificationDateConverter() NotificationDateTime get notificationDateTime; NotificationTitle get title; NotificationContent get content; NotificationDescription get description;
+ int get notificationId; String get sourceId; String get userId; DateTime get notificationDateTime; String get title; String get content; String get description;
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,11 +49,11 @@ abstract mixin class $NotificationEntryLocalResponseCopyWith<$Res>  {
   factory $NotificationEntryLocalResponseCopyWith(NotificationEntryLocalResponse value, $Res Function(NotificationEntryLocalResponse) _then) = _$NotificationEntryLocalResponseCopyWithImpl;
 @useResult
 $Res call({
-@NotificationIdConverter() NotificationId notificationId, SourceId sourceId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDateTime, NotificationTitle title, NotificationContent content, NotificationDescription description
+ int notificationId, String sourceId, String userId, DateTime notificationDateTime, String title, String content, String description
 });
 
 
-$SourceIdCopyWith<$Res> get sourceId;$UserIdCopyWith<$Res> get userId;$NotificationTitleCopyWith<$Res> get title;$NotificationContentCopyWith<$Res> get content;$NotificationDescriptionCopyWith<$Res> get description;
+
 
 }
 /// @nodoc
@@ -69,61 +69,16 @@ class _$NotificationEntryLocalResponseCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? notificationId = null,Object? sourceId = null,Object? userId = null,Object? notificationDateTime = null,Object? title = null,Object? content = null,Object? description = null,}) {
   return _then(_self.copyWith(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
-as NotificationId,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
-as SourceId,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,notificationDateTime: null == notificationDateTime ? _self.notificationDateTime : notificationDateTime // ignore: cast_nullable_to_non_nullable
-as NotificationDateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as NotificationTitle,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as NotificationContent,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as NotificationDescription,
+as int,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,notificationDateTime: null == notificationDateTime ? _self.notificationDateTime : notificationDateTime // ignore: cast_nullable_to_non_nullable
+as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
-/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SourceIdCopyWith<$Res> get sourceId {
-  
-  return $SourceIdCopyWith<$Res>(_self.sourceId, (value) {
-    return _then(_self.copyWith(sourceId: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationTitleCopyWith<$Res> get title {
-  
-  return $NotificationTitleCopyWith<$Res>(_self.title, (value) {
-    return _then(_self.copyWith(title: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationContentCopyWith<$Res> get content {
-  
-  return $NotificationContentCopyWith<$Res>(_self.content, (value) {
-    return _then(_self.copyWith(content: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationDescriptionCopyWith<$Res> get description {
-  
-  return $NotificationDescriptionCopyWith<$Res>(_self.description, (value) {
-    return _then(_self.copyWith(description: value));
-  });
-}
+
 }
 
 
@@ -202,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@NotificationIdConverter()  NotificationId notificationId,  SourceId sourceId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDateTime,  NotificationTitle title,  NotificationContent content,  NotificationDescription description)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int notificationId,  String sourceId,  String userId,  DateTime notificationDateTime,  String title,  String content,  String description)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse() when $default != null:
 return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificationDateTime,_that.title,_that.content,_that.description);case _:
@@ -223,7 +178,7 @@ return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@NotificationIdConverter()  NotificationId notificationId,  SourceId sourceId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDateTime,  NotificationTitle title,  NotificationContent content,  NotificationDescription description)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int notificationId,  String sourceId,  String userId,  DateTime notificationDateTime,  String title,  String content,  String description)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse():
 return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificationDateTime,_that.title,_that.content,_that.description);}
@@ -240,7 +195,7 @@ return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@NotificationIdConverter()  NotificationId notificationId,  SourceId sourceId,  UserId userId, @NotificationDateConverter()  NotificationDateTime notificationDateTime,  NotificationTitle title,  NotificationContent content,  NotificationDescription description)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int notificationId,  String sourceId,  String userId,  DateTime notificationDateTime,  String title,  String content,  String description)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse() when $default != null:
 return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificationDateTime,_that.title,_that.content,_that.description);case _:
@@ -255,17 +210,17 @@ return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificat
 @JsonSerializable()
 
 class _NotificationEntryLocalResponse extends NotificationEntryLocalResponse {
-  const _NotificationEntryLocalResponse({@NotificationIdConverter() required this.notificationId, required this.sourceId, required this.userId, @NotificationDateConverter() required this.notificationDateTime, required this.title, required this.content, required this.description}): super._();
+  const _NotificationEntryLocalResponse({required this.notificationId, required this.sourceId, required this.userId, required this.notificationDateTime, required this.title, required this.content, required this.description}): super._();
   factory _NotificationEntryLocalResponse.fromJson(Map<String, dynamic> json) => _$NotificationEntryLocalResponseFromJson(json);
 
 // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
-@override@NotificationIdConverter() final  NotificationId notificationId;
-@override final  SourceId sourceId;
-@override final  UserId userId;
-@override@NotificationDateConverter() final  NotificationDateTime notificationDateTime;
-@override final  NotificationTitle title;
-@override final  NotificationContent content;
-@override final  NotificationDescription description;
+@override final  int notificationId;
+@override final  String sourceId;
+@override final  String userId;
+@override final  DateTime notificationDateTime;
+@override final  String title;
+@override final  String content;
+@override final  String description;
 
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -300,11 +255,11 @@ abstract mixin class _$NotificationEntryLocalResponseCopyWith<$Res> implements $
   factory _$NotificationEntryLocalResponseCopyWith(_NotificationEntryLocalResponse value, $Res Function(_NotificationEntryLocalResponse) _then) = __$NotificationEntryLocalResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@NotificationIdConverter() NotificationId notificationId, SourceId sourceId, UserId userId,@NotificationDateConverter() NotificationDateTime notificationDateTime, NotificationTitle title, NotificationContent content, NotificationDescription description
+ int notificationId, String sourceId, String userId, DateTime notificationDateTime, String title, String content, String description
 });
 
 
-@override $SourceIdCopyWith<$Res> get sourceId;@override $UserIdCopyWith<$Res> get userId;@override $NotificationTitleCopyWith<$Res> get title;@override $NotificationContentCopyWith<$Res> get content;@override $NotificationDescriptionCopyWith<$Res> get description;
+
 
 }
 /// @nodoc
@@ -320,62 +275,17 @@ class __$NotificationEntryLocalResponseCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? notificationId = null,Object? sourceId = null,Object? userId = null,Object? notificationDateTime = null,Object? title = null,Object? content = null,Object? description = null,}) {
   return _then(_NotificationEntryLocalResponse(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
-as NotificationId,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
-as SourceId,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as UserId,notificationDateTime: null == notificationDateTime ? _self.notificationDateTime : notificationDateTime // ignore: cast_nullable_to_non_nullable
-as NotificationDateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as NotificationTitle,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as NotificationContent,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as NotificationDescription,
+as int,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,notificationDateTime: null == notificationDateTime ? _self.notificationDateTime : notificationDateTime // ignore: cast_nullable_to_non_nullable
+as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
+as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
-/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SourceIdCopyWith<$Res> get sourceId {
-  
-  return $SourceIdCopyWith<$Res>(_self.sourceId, (value) {
-    return _then(_self.copyWith(sourceId: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$UserIdCopyWith<$Res> get userId {
-  
-  return $UserIdCopyWith<$Res>(_self.userId, (value) {
-    return _then(_self.copyWith(userId: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationTitleCopyWith<$Res> get title {
-  
-  return $NotificationTitleCopyWith<$Res>(_self.title, (value) {
-    return _then(_self.copyWith(title: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationContentCopyWith<$Res> get content {
-  
-  return $NotificationContentCopyWith<$Res>(_self.content, (value) {
-    return _then(_self.copyWith(content: value));
-  });
-}/// Create a copy of NotificationEntryLocalResponse
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$NotificationDescriptionCopyWith<$Res> get description {
-  
-  return $NotificationDescriptionCopyWith<$Res>(_self.description, (value) {
-    return _then(_self.copyWith(description: value));
-  });
-}
+
 }
 
 // dart format on

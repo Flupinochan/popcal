@@ -4,16 +4,13 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
 part 'rotation_days.freezed.dart';
-part 'rotation_days.g.dart';
 
+// 配列は参照型のためextention typeでは不変にできないためfreezed
 @freezed
 sealed class RotationDays with _$RotationDays {
   const factory RotationDays(
     List<Weekday> value,
   ) = _RotationDays;
-
-  factory RotationDays.fromJson(Map<String, dynamic> json) =>
-      _$RotationDaysFromJson(json);
 
   const RotationDays._();
 

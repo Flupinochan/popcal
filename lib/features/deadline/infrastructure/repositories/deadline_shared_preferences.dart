@@ -2,7 +2,6 @@ import 'package:popcal/core/utils/failures/deadline_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/core/utils/time_utils.dart';
 import 'package:popcal/features/deadline/infrastructure/dto/deadline_shared_preferences_response.dart';
-import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DeadlineSharedPreferences {
@@ -23,10 +22,8 @@ class DeadlineSharedPreferences {
         return Results.success(
           DeadlineSharedPreferencesResponse(
             isEnabled: false,
-            notificationTime: NotificationTime(
-              hour: now.hour,
-              minute: now.minute,
-            ),
+            hour: now.hour,
+            minute: now.minute,
           ),
         );
       }

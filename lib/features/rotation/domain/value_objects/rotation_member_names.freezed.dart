@@ -11,7 +11,6 @@ part of 'rotation_member_names.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$RotationMemberNames {
 
@@ -22,8 +21,6 @@ mixin _$RotationMemberNames {
 @pragma('vm:prefer-inline')
 $RotationMemberNamesCopyWith<RotationMemberNames> get copyWith => _$RotationMemberNamesCopyWithImpl<RotationMemberNames>(this as RotationMemberNames, _$identity);
 
-  /// Serializes this RotationMemberNames to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is RotationMemberNames&&const DeepCollectionEquality().equals(other.value, value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(value));
 
@@ -200,11 +197,11 @@ return $default(_that.value);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _RotationMemberNames extends RotationMemberNames {
   const _RotationMemberNames(final  List<String> value): _value = value,super._();
-  factory _RotationMemberNames.fromJson(Map<String, dynamic> json) => _$RotationMemberNamesFromJson(json);
+  
 
  final  List<String> _value;
 @override List<String> get value {
@@ -220,17 +217,14 @@ class _RotationMemberNames extends RotationMemberNames {
 @pragma('vm:prefer-inline')
 _$RotationMemberNamesCopyWith<_RotationMemberNames> get copyWith => __$RotationMemberNamesCopyWithImpl<_RotationMemberNames>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$RotationMemberNamesToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _RotationMemberNames&&const DeepCollectionEquality().equals(other._value, _value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_value));
 

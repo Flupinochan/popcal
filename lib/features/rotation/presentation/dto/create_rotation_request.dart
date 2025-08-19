@@ -58,6 +58,16 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
       notificationTime,
     );
 
+    final createdAtResult = RotationCreatedAt.create(currentTime);
+    if (createdAtResult.isFailure) {
+      return Results.failure(ValidationFailure(createdAtResult.displayText));
+    }
+
+    final updatedAtResult = RotationUpdatedAt.create(currentTime);
+    if (updatedAtResult.isFailure) {
+      return Results.failure(ValidationFailure(updatedAtResult.displayText));
+    }
+
     // Create時はRotationIdは不要
     return Results.success(
       Rotation(
@@ -66,9 +76,9 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
         rotationMemberNames: rotationMembersResult.valueOrNull!,
         rotationDays: rotationDaysResult.valueOrNull!,
         notificationTime: notificationTimeResult,
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: RotationCreatedAt(currentTime),
-        updatedAt: RotationUpdatedAt(currentTime),
+        currentRotationIndex: RotationIndex(),
+        createdAt: createdAtResult.valueOrNull!,
+        updatedAt: updatedAtResult.valueOrNull!,
         skipEvents: skipEvents,
       ),
     );

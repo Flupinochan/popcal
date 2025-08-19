@@ -1,4 +1,5 @@
 import 'package:popcal/core/utils/failures/notification_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
@@ -16,13 +17,9 @@ class NotificationGatewayImpl implements NotificationGateway {
   Future<Result<void>> createNotification(
     NotificationEntry notificationEntry,
   ) async {
-    final dtoResult = NotificationEntryLocalResponse.fromEntity(
+    final dto = NotificationEntryLocalResponse.fromEntity(
       notificationEntry,
     );
-    if (dtoResult.isFailure) {
-      return Results.failure(dtoResult.failureOrNull!);
-    }
-    final dto = dtoResult.valueOrNull!;
 
     final result = await _localNotificationsDatasource.createNotification(dto);
     return result.when(
@@ -71,7 +68,7 @@ class NotificationGatewayImpl implements NotificationGateway {
     return result.when(
       success:
           (notificationIds) => Results.success(
-            notificationIds.map(NotificationId.new).toList(),
+            notificationIds.map(NotificationId.createFromLocal).toList(),
           ),
       failure: Results.failure,
     );
@@ -87,7 +84,18 @@ class NotificationGatewayImpl implements NotificationGateway {
       return Results.failure(NotificationFailure(result.displayText));
     }
     final dtos = result.valueOrNull!;
-    final entities = dtos.map((dto) => dto.toEntity()).toList();
+
+    final entities = <NotificationEntry>[];
+    for (final dto in dtos) {
+      final entityResult = dto.toEntity();
+      if (entityResult.isFailure) {
+        return Results.failure<List<NotificationEntry>>(
+          ValidationFailure(entityResult.displayText),
+        );
+      }
+      entities.add(entityResult.valueOrNull!);
+    }
+
     return Results.success(entities);
   }
 
@@ -112,6 +120,6 @@ class NotificationGatewayImpl implements NotificationGateway {
     if (result.valueOrNull == null) {
       return Results.success(null);
     }
-    return Results.success(SourceId(value: result.valueOrNull!));
+    return Results.success(SourceId.create(result.valueOrNull!));
   }
 }

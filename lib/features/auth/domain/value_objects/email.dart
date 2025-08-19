@@ -1,23 +1,16 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 
-part 'email.freezed.dart';
-part 'email.g.dart';
-
-@freezed
-sealed class Email with _$Email {
-  const factory Email(String value) = _Email;
-
-  factory Email.fromJson(Map<String, dynamic> json) => _$EmailFromJson(json);
-
-  const Email._();
-
+// ._にすることでプライベート化
+// createメソッドで作成する
+extension type Email._(String value) {
   String get domain => value.split('@')[1];
   String get localPart => value.split('@').first;
 
-  static Result<Email> create(String? input) {
-    if (input == null || input.trim().isEmpty) {
+  // nullチェックはUIで行うため不要
+  // extention typeは値が1つのためrequiredは不要
+  static Result<Email> create(String input) {
+    if (input.trim().isEmpty) {
       return Results.failure(const ValidationFailure('メールアドレスを入力してください'));
     }
 
@@ -26,6 +19,6 @@ sealed class Email with _$Email {
       return Results.failure(const ValidationFailure('メールアドレスの形式にしてください'));
     }
 
-    return Results.success(Email(input));
+    return Results.success(Email._(input.trim()));
   }
 }

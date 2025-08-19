@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/utils/failures/auth_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -14,7 +15,7 @@ part 'rotation_handlers.g.dart';
 @riverpod
 Future<Result<RotationDataResponse>> rotationDataResponse(
   Ref ref,
-  RotationId? rotationId,
+  String? rotationId,
 ) async {
   // 1. ユーザ情報を取得
   final authResult = await ref.watch(authStateChangesProvider.future);
@@ -30,12 +31,20 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
   }
 
   // 2. ローテーショングループ情報を取得
-  // responseのuseridのため.create()で作成する必要はない
-  final userId = UserId(userDto.userId);
+  final userIdResult = UserId.create(userDto.userId);
+  if (userIdResult.isFailure) {
+    return Results.failure(ValidationFailure(userIdResult.displayText));
+  }
+
+  final rotationIdResult = RotationId.create(rotationId);
+  if (rotationIdResult.isFailure) {
+    return Results.failure(ValidationFailure(rotationIdResult.displayText));
+  }
+
   final rotationRepository = ref.watch(rotationRepositoryProvider);
   final rotationResult = await rotationRepository.getRotation(
-    userId,
-    rotationId,
+    userIdResult.valueOrNull!,
+    rotationIdResult.valueOrNull!,
   );
   if (rotationResult.isFailure) {
     return Results.failure(rotationResult.failureOrNull!);
@@ -52,9 +61,15 @@ Stream<Result<List<RotationResponse>>> rotationResponsesStream(
   Ref ref,
   String userId,
 ) {
-  final userIdResult = UserId(userId);
+  final userIdResult = UserId.create(userId);
+  if (userIdResult.isFailure) {
+    return Stream.value(
+      Results.failure(ValidationFailure(userIdResult.displayText)),
+    );
+  }
+
   final rotationRepository = ref.watch(rotationRepositoryProvider);
-  return rotationRepository.watchRotations(userIdResult).asyncMap((
+  return rotationRepository.watchRotations(userIdResult.valueOrNull!).asyncMap((
     entityResult,
   ) async {
     return entityResult.when(

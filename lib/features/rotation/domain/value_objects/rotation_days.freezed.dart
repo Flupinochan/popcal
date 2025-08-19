@@ -11,7 +11,6 @@ part of 'rotation_days.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$RotationDays {
 
@@ -22,8 +21,6 @@ mixin _$RotationDays {
 @pragma('vm:prefer-inline')
 $RotationDaysCopyWith<RotationDays> get copyWith => _$RotationDaysCopyWithImpl<RotationDays>(this as RotationDays, _$identity);
 
-  /// Serializes this RotationDays to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is RotationDays&&const DeepCollectionEquality().equals(other.value, value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(value));
 
@@ -196,11 +193,11 @@ return $default(_that.value);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _RotationDays extends RotationDays {
   const _RotationDays(final  List<Weekday> value): _value = value,super._();
-  factory _RotationDays.fromJson(Map<String, dynamic> json) => _$RotationDaysFromJson(json);
+  
 
  final  List<Weekday> _value;
 @override List<Weekday> get value {
@@ -216,17 +213,14 @@ class _RotationDays extends RotationDays {
 @pragma('vm:prefer-inline')
 _$RotationDaysCopyWith<_RotationDays> get copyWith => __$RotationDaysCopyWithImpl<_RotationDays>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$RotationDaysToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _RotationDays&&const DeepCollectionEquality().equals(other._value, _value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_value));
 

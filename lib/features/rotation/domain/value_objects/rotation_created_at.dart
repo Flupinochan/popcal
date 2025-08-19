@@ -1,22 +1,10 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
+import 'package:popcal/core/utils/results.dart';
 
-extension type RotationCreatedAt(DateTime value) {
-  bool isBeforeNotificationDateTime(NotificationDateTime notificationDate) =>
-      value.isBefore(notificationDate.value);
-
+extension type RotationCreatedAt._(DateTime value) {
   RotationCreatedAt add(Duration duration) =>
-      RotationCreatedAt(value.add(duration));
-}
+      RotationCreatedAt._(value.add(duration));
 
-class RotationCreatedAtConverter
-    implements JsonConverter<RotationCreatedAt, String> {
-  const RotationCreatedAtConverter();
-
-  @override
-  RotationCreatedAt fromJson(String json) =>
-      RotationCreatedAt(DateTime.parse(json));
-
-  @override
-  String toJson(RotationCreatedAt object) => object.value.toIso8601String();
+  static Result<RotationCreatedAt> create(DateTime input) {
+    return Results.success(RotationCreatedAt._(input));
+  }
 }

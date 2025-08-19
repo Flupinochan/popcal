@@ -20,14 +20,13 @@ sealed class NotificationEntryLocalResponse
     with _$NotificationEntryLocalResponse {
   const factory NotificationEntryLocalResponse({
     // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
-    @NotificationIdConverter() required NotificationId notificationId,
-    required SourceId sourceId,
-    required UserId userId,
-    @NotificationDateConverter()
-    required NotificationDateTime notificationDateTime,
-    required NotificationTitle title,
-    required NotificationContent content,
-    required NotificationDescription description,
+    required int notificationId,
+    required String sourceId,
+    required String userId,
+    required DateTime notificationDateTime,
+    required String title,
+    required String content,
+    required String description,
   }) = _NotificationEntryLocalResponse;
 
   // JSON => DTO
@@ -37,39 +36,53 @@ sealed class NotificationEntryLocalResponse
   const NotificationEntryLocalResponse._();
 
   // DTO => Entity
-  NotificationEntry toEntity() {
-    return NotificationEntry(
-      notificationId: notificationId,
-      sourceId: sourceId,
-      userId: userId,
-      notificationDateTime: notificationDateTime,
-      title: title,
-      content: content,
-      description: description,
+  Result<NotificationEntry> toEntity() {
+    final sourceIdExt = SourceId.create(sourceId);
+    final notificationIdExt = NotificationId.create(
+      sourceIdExt,
+      notificationDateTime,
+    );
+
+    final userIdResult = UserId.create(userId);
+    if (userIdResult.isFailure) {
+      return Results.failure(ValidationFailure(userIdResult.displayText));
+    }
+
+    final notificationDateTimeResult = NotificationDateTime.create(
+      notificationDateTime,
+    );
+    if (notificationDateTimeResult.isFailure) {
+      return Results.failure(
+        ValidationFailure(notificationDateTimeResult.displayText),
+      );
+    }
+
+    return Results.success(
+      NotificationEntry(
+        notificationId: notificationIdExt,
+        sourceId: sourceIdExt,
+        userId: userIdResult.valueOrNull!,
+        notificationDateTime: notificationDateTimeResult.valueOrNull!,
+        title: NotificationTitle.createFromLocal(title),
+        content: NotificationContent.createFromLocal(content),
+        description: NotificationDescription.createFromLocal(description),
+      ),
     );
   }
 
   // Entity => DTO
-  static Result<NotificationEntryLocalResponse> fromEntity(
+  static NotificationEntryLocalResponse fromEntity(
     NotificationEntry notification,
   ) {
-    try {
-      return Results.success(
-        NotificationEntryLocalResponse(
-          notificationId: notification.notificationId,
-          sourceId: notification.sourceId,
-          userId: notification.userId,
-          notificationDateTime: notification.notificationDateTime,
-          title: notification.title,
-          content: notification.content,
-          description: notification.description,
-        ),
-      );
-    } on Exception catch (e) {
-      return Results.failure(
-        ValidationFailure('NotificationSetting to DTO conversion failed: $e'),
-      );
-    }
+    return NotificationEntryLocalResponse(
+      notificationId: notification.notificationId.value,
+      sourceId: notification.sourceId.value,
+      userId: notification.userId.value,
+      notificationDateTime: notification.notificationDateTime.value,
+      title: notification.title.value,
+      content: notification.content.value,
+      description: notification.description.value,
+    );
   }
 
   // JSON => DTO

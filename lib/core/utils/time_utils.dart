@@ -18,4 +18,8 @@ class TimeUtilsImpl implements TimeUtils {
   DateTime now() {
     return DateTime.now().toLocal();
   }
+
+  static DateTime localTime() {
+    return DateTime.now().toLocal();
+  }
 }

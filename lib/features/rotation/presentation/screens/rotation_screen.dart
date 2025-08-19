@@ -7,7 +7,6 @@ import 'package:popcal/core/themes/glass_theme.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
@@ -29,7 +28,7 @@ import 'package:popcal/shared/widgets/glass_form_text.dart';
 
 class RotationScreen extends HookConsumerWidget {
   const RotationScreen({super.key, this.rotationId});
-  final RotationId? rotationId;
+  final String? rotationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -226,6 +225,10 @@ class RotationScreen extends HookConsumerWidget {
   }
 
   String? _validateRotationName(String? value) {
+    if (value == null) {
+      return 'ローテーション名を入力してください';
+    }
+
     final result = RotationName.create(value);
     return result.when(
       success: (_) => null,

@@ -68,7 +68,7 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       notificationTime,
     );
 
-    final currentRotationIndexResult = RotationIndex.create(
+    final currentRotationIndexResult = RotationIndex.createFromInt(
       currentRotationIndex,
     );
     if (currentRotationIndexResult.isFailure) {
@@ -77,8 +77,15 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
       );
     }
 
-    final createdAtResult = RotationCreatedAt(createdAt);
-    final updatedAtResult = RotationUpdatedAt(updatedAt);
+    final createdAtResult = RotationCreatedAt.create(createdAt);
+    if (createdAtResult.isFailure) {
+      return Results.failure(ValidationFailure(createdAtResult.displayText));
+    }
+
+    final updatedAtResult = RotationUpdatedAt.create(updatedAt);
+    if (updatedAtResult.isFailure) {
+      return Results.failure(ValidationFailure(updatedAtResult.displayText));
+    }
 
     return Results.success(
       Rotation(
@@ -89,8 +96,8 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
         rotationDays: rotationDaysResult.valueOrNull!,
         notificationTime: notificationTimeResult,
         currentRotationIndex: currentRotationIndexResult.valueOrNull!,
-        createdAt: createdAtResult,
-        updatedAt: updatedAtResult,
+        createdAt: createdAtResult.valueOrNull!,
+        updatedAt: updatedAtResult.valueOrNull!,
         skipEvents: skipEvents,
       ),
     );

@@ -72,7 +72,7 @@ class Rotation {
     final skipEvent = skipEvents.getByDateKey(dateKey);
     // 1巡するskipは不可
     return skipEvent == null ||
-        (rotationMemberNames.length - 1) > skipEvent.skipCount.skipCount;
+        (rotationMemberNames.length - 1) > skipEvent.skipCount.value;
   }
 
   /// 交代無しスキップ取り消し可能かどうか
@@ -82,7 +82,7 @@ class Rotation {
     }
     final skipEvent = skipEvents.getByDateKey(dateKey);
     // 1度もskipしていない場合は不可
-    return skipEvent != null && skipEvent.skipCount.skipCount > 0;
+    return skipEvent != null && skipEvent.skipCount.value > 0;
   }
 
   Rotation copyWith({

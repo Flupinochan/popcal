@@ -234,7 +234,7 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
           (event) => {
             'dateKey': Timestamp.fromDate(event.dateKey.value),
             'dayType': event.dayType.name,
-            'skipCount': event.skipCount.skipCount,
+            'skipCount': event.skipCount.value,
           },
         )
         .toList();

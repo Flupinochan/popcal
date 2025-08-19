@@ -303,6 +303,10 @@ class LoginScreen extends HookConsumerWidget {
   }
 
   String? _validateEmail(String? value) {
+    if (value == null) {
+      return 'メールアドレスを入力してください';
+    }
+
     final result = Email.create(value);
     return result.when(
       success: (_) => null,
@@ -311,6 +315,10 @@ class LoginScreen extends HookConsumerWidget {
   }
 
   String? _validatePassword(String? value) {
+    if (value == null) {
+      return 'パスワードを入力してください';
+    }
+
     final result = Password.create(value);
     return result.when(
       success: (_) => null,

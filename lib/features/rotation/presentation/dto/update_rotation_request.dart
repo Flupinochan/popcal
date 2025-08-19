@@ -66,8 +66,10 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
       notificationTime,
     );
 
-    // ユーザが入力するわけではないため、バリデーション不要
-    final createdAtResult = RotationCreatedAt(createdAt);
+    final createdAtResult = RotationCreatedAt.create(createdAt);
+    if (createdAtResult.isFailure) {
+      return Results.failure(ValidationFailure(createdAtResult.displayText));
+    }
 
     return Results.success(
       Rotation(
@@ -77,9 +79,9 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
         rotationMemberNames: rotationMembersResult.valueOrNull!,
         rotationDays: rotationDaysResult.valueOrNull!,
         notificationTime: notificationTimeResult,
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: createdAtResult,
-        updatedAt: RotationUpdatedAt(currentTime),
+        currentRotationIndex: RotationIndex(),
+        createdAt: createdAtResult.valueOrNull!,
+        updatedAt: RotationUpdatedAt.now(),
         skipEvents: skipEvents,
       ),
     );

@@ -56,7 +56,7 @@ class GetCalendarScheduleUseCase {
     // 3. カレンダー表示用通知情報を取得
     // 作成時刻から(過去通知分も)表示するため、indexは0で初期化
     final initRotation = rotation.copyWith(
-      currentRotationIndex: const RotationIndex(0),
+      currentRotationIndex: RotationIndex(),
     );
     final fromDateTime = initRotation.createdAt.value;
     final now = _timeUtils.now();

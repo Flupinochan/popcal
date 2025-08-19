@@ -4,18 +4,15 @@ import 'package:popcal/core/utils/failures/calendar_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 
 part 'skip_events.freezed.dart';
-part 'skip_events.g.dart';
 
 @freezed
 sealed class SkipEvents with _$SkipEvents {
   const factory SkipEvents(List<SkipEvent> value) = _SkipEvents;
-
-  factory SkipEvents.fromJson(Map<String, dynamic> json) =>
-      _$SkipEventsFromJson(json);
 
   const SkipEvents._();
 
@@ -37,12 +34,11 @@ sealed class SkipEvents with _$SkipEvents {
     for (final skipEvent in value) {
       if (skipEvent.dayType == DayType.skipToNext &&
           skipEvent.dateKey == targetDateKey) {
-        final skipCount = skipEvent.skipCount.skipCount;
-        if (skipCount > 1) {
-          // skipCountが1より大きい場合はskipCountを-1する
+        final result = skipEvent.skipCount.decrement();
+        if (result.isSuccess) {
           updateSkipEvents.add(
             skipEvent.copyWith(
-              skipCount: SkipCount(skipCount: skipCount - 1),
+              skipCount: result.valueOrNull!,
             ),
           );
         }
@@ -64,19 +60,25 @@ sealed class SkipEvents with _$SkipEvents {
 
   // 対象DateKeyのSkipEventのSkipCountを1増加させる
   // 存在しない場合はskipToNextのSkipEventを追加
-  SkipEvents incrementSkipToNext(DateKey targetDateKey) {
+  SkipEvents incrementSkipToNext({
+    required DateKey targetDateKey,
+    required RotationMemberNames rotationMemberNames,
+  }) {
     final updateSkipEvents = <SkipEvent>[];
     var foundTarget = false;
 
     for (final skipEvent in value) {
       if (skipEvent.dayType == DayType.skipToNext &&
           skipEvent.dateKey == targetDateKey) {
-        updateSkipEvents.add(
-          skipEvent.copyWith(
-            skipCount: SkipCount(skipCount: skipEvent.skipCount.skipCount + 1),
-          ),
-        );
-        foundTarget = true;
+        final result = skipEvent.skipCount.increment(rotationMemberNames);
+        if (result.isSuccess) {
+          updateSkipEvents.add(
+            skipEvent.copyWith(
+              skipCount: result.valueOrNull!,
+            ),
+          );
+          foundTarget = true;
+        }
       } else {
         updateSkipEvents.add(skipEvent);
       }
@@ -87,7 +89,7 @@ sealed class SkipEvents with _$SkipEvents {
         SkipEvent(
           dateKey: targetDateKey,
           dayType: DayType.skipToNext,
-          skipCount: const SkipCount(skipCount: 1),
+          skipCount: SkipCount(),
         ),
       );
     }

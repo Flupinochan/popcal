@@ -11,7 +11,6 @@ part of 'skip_events.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$SkipEvents {
 
@@ -22,8 +21,6 @@ mixin _$SkipEvents {
 @pragma('vm:prefer-inline')
 $SkipEventsCopyWith<SkipEvents> get copyWith => _$SkipEventsCopyWithImpl<SkipEvents>(this as SkipEvents, _$identity);
 
-  /// Serializes this SkipEvents to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is SkipEvents&&const DeepCollectionEquality().equals(other.value, value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(value));
 
@@ -200,11 +197,11 @@ return $default(_that.value);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _SkipEvents extends SkipEvents {
   const _SkipEvents(final  List<SkipEvent> value): _value = value,super._();
-  factory _SkipEvents.fromJson(Map<String, dynamic> json) => _$SkipEventsFromJson(json);
+  
 
  final  List<SkipEvent> _value;
 @override List<SkipEvent> get value {
@@ -220,17 +217,14 @@ class _SkipEvents extends SkipEvents {
 @pragma('vm:prefer-inline')
 _$SkipEventsCopyWith<_SkipEvents> get copyWith => __$SkipEventsCopyWithImpl<_SkipEvents>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$SkipEventsToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _SkipEvents&&const DeepCollectionEquality().equals(other._value, _value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_value));
 

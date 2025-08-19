@@ -8,6 +8,7 @@ import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
 import 'package:popcal/features/calendar/providers/calendar_handlers.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
+import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/features/rotation/presentation/dto/update_rotation_request.dart';
@@ -251,7 +252,7 @@ class SelectedDayInfo extends ConsumerWidget {
       SkipEvent(
         dateKey: dateKeyResult.valueOrNull!,
         dayType: DayType.holiday,
-        skipCount: const SkipCount(skipCount: 1),
+        skipCount: SkipCount(),
       ),
     );
     if (skipEventsResult.isFailure) {
@@ -286,14 +287,24 @@ class SelectedDayInfo extends ConsumerWidget {
     if (selectedDay == null) {
       return;
     }
+
     final targetDateKeyResult = DateKey.create(selectedDay);
     if (targetDateKeyResult.isFailure) {
       showErrorDialog(context, targetDateKeyResult.displayText);
       return;
     }
 
+    final rotationMembersResult = RotationMemberNames.create(
+      rotationResponse.rotationMembers,
+    );
+    if (rotationMembersResult.isFailure) {
+      showErrorDialog(context, rotationMembersResult.displayText);
+      return;
+    }
+
     final updateSkipEvents = rotationResponse.skipEvents.incrementSkipToNext(
-      targetDateKeyResult.valueOrNull!,
+      targetDateKey: targetDateKeyResult.valueOrNull!,
+      rotationMemberNames: rotationMembersResult.valueOrNull!,
     );
 
     final rotationId = rotationResponse.rotationId;

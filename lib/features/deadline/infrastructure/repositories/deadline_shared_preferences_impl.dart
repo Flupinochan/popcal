@@ -1,4 +1,5 @@
 import 'package:popcal/core/utils/failures/deadline_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/domain/entities/deadline.dart';
 import 'package:popcal/features/deadline/domain/repositories/deadline_repository.dart';
@@ -19,7 +20,13 @@ class DeadlineSharedPreferencesImpl extends DeadlineRepository {
       return Results.failure(DeadlineFailure(result.displayText));
     }
     final dto = result.valueOrNull!;
-    return Results.success(dto.toEntity());
+
+    final entityResult = dto.toEntity();
+    if (entityResult.isFailure) {
+      return Results.failure(ValidationFailure(entityResult.displayText));
+    }
+
+    return Results.success(entityResult.valueOrNull!);
   }
 
   @override

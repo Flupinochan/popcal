@@ -1,37 +1,23 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/notification_failure.dart';
+import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 
-part 'notification_content.freezed.dart';
-part 'notification_content.g.dart';
-
-@freezed
-sealed class NotificationContent with _$NotificationContent {
-  const factory NotificationContent({
-    required String value,
-  }) = _NotificationContent;
-
-  factory NotificationContent.fromJson(Map<String, dynamic> json) =>
-      _$NotificationContentFromJson(json);
-
-  const NotificationContent._();
-
-  static Result<NotificationContent> createFromRotationMemberName(
-    RotationMemberName rotationMemberName,
-  ) {
-    try {
-      return Results.success(
-        NotificationContent(
-          value: rotationMemberName.getNotificationContent(),
-        ),
-      );
-    } on Exception catch (error) {
-      return Results.failure(
-        NotificationFailure(
-          'RotationMemberNameからContentへの変換に失敗しました: $error',
-        ),
-      );
+extension type NotificationContent._(String value) {
+  static Result<NotificationContent> createForDeadline(int input) {
+    if (input < 1 || input > 12) {
+      return Results.failure(const ValidationFailure('1月から12月の範囲で指定してください'));
     }
+
+    return Results.success(NotificationContent._('$input月の最終平日です'));
+  }
+
+  static NotificationContent createFromLocal(String input) {
+    return NotificationContent._(input);
+  }
+
+  static NotificationContent createFromRotationMemberName(
+    RotationMemberName input,
+  ) {
+    return NotificationContent._('今日は$inputの番です');
   }
 }

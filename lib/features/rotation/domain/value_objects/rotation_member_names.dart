@@ -4,20 +4,24 @@ import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_name.dart';
 
 part 'rotation_member_names.freezed.dart';
-part 'rotation_member_names.g.dart';
 
 @freezed
 sealed class RotationMemberNames with _$RotationMemberNames {
   const factory RotationMemberNames(List<String> value) = _RotationMemberNames;
 
-  factory RotationMemberNames.fromJson(Map<String, dynamic> json) =>
-      _$RotationMemberNamesFromJson(json);
-
   const RotationMemberNames._();
 
   int get length => value.length;
-  RotationMemberName memberAt(int position) =>
-      RotationMemberName(value[position]);
+  Result<RotationMemberName> memberAt(int position) {
+    final result = RotationMemberName.create(value[position]);
+    if (result.isFailure) {
+      Results.failure<RotationMemberName>(
+        ValidationFailure(result.displayText),
+      );
+    }
+
+    return Results.success(result.valueOrNull!);
+  }
 
   static Result<RotationMemberNames> create(List<String>? input) {
     if (input == null || input.isEmpty || input.length < 2) {

@@ -7,7 +7,7 @@ part of 'rotation_handlers.dart';
 // **************************************************************************
 
 String _$rotationDataResponseHash() =>
-    r'08426e88118d8680c0df0359e905602220d8f853';
+    r'd5bda8e24c345fa5a5f7c991bd71050034eac859';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,7 +41,7 @@ class RotationDataResponseFamily
   const RotationDataResponseFamily();
 
   /// See also [rotationDataResponse].
-  RotationDataResponseProvider call(RotationId? rotationId) {
+  RotationDataResponseProvider call(String? rotationId) {
     return RotationDataResponseProvider(rotationId);
   }
 
@@ -71,7 +71,7 @@ class RotationDataResponseFamily
 class RotationDataResponseProvider
     extends AutoDisposeFutureProvider<Result<RotationDataResponse>> {
   /// See also [rotationDataResponse].
-  RotationDataResponseProvider(RotationId? rotationId)
+  RotationDataResponseProvider(String? rotationId)
     : this._internal(
         (ref) =>
             rotationDataResponse(ref as RotationDataResponseRef, rotationId),
@@ -97,7 +97,7 @@ class RotationDataResponseProvider
     required this.rotationId,
   }) : super.internal();
 
-  final RotationId? rotationId;
+  final String? rotationId;
 
   @override
   Override overrideWith(
@@ -146,7 +146,7 @@ class RotationDataResponseProvider
 mixin RotationDataResponseRef
     on AutoDisposeFutureProviderRef<Result<RotationDataResponse>> {
   /// The parameter `rotationId` of this provider.
-  RotationId? get rotationId;
+  String? get rotationId;
 }
 
 class _RotationDataResponseProviderElement
@@ -155,12 +155,11 @@ class _RotationDataResponseProviderElement
   _RotationDataResponseProviderElement(super.provider);
 
   @override
-  RotationId? get rotationId =>
-      (origin as RotationDataResponseProvider).rotationId;
+  String? get rotationId => (origin as RotationDataResponseProvider).rotationId;
 }
 
 String _$rotationResponsesStreamHash() =>
-    r'5fd5f1e614481e403498f972c95a37846a15bcd6';
+    r'cf47c1f4eafdc45b44f912918e8a64e0e55cdb32';
 
 /// See also [rotationResponsesStream].
 @ProviderFor(rotationResponsesStream)

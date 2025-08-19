@@ -15,7 +15,7 @@ class CalendarSchedule {
 
 class ScheduleDay {
   const ScheduleDay({
-    required this.date,
+    required this.notificationDateTime,
     required this.memberName,
     required this.scheduleType,
     required this.memberColor,
@@ -25,7 +25,7 @@ class ScheduleDay {
     required this.canEnableHoliday,
     required this.isValidRotationDay,
   });
-  final NotificationDateTime date;
+  final NotificationDateTime notificationDateTime;
   final RotationMemberName memberName;
   final DayType scheduleType;
   final MemberColor memberColor;

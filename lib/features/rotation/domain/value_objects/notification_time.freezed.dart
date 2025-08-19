@@ -11,7 +11,6 @@ part of 'notification_time.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$NotificationTime {
 
@@ -22,8 +21,6 @@ mixin _$NotificationTime {
 @pragma('vm:prefer-inline')
 $NotificationTimeCopyWith<NotificationTime> get copyWith => _$NotificationTimeCopyWithImpl<NotificationTime>(this as NotificationTime, _$identity);
 
-  /// Serializes this NotificationTime to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationTime&&(identical(other.hour, hour) || other.hour == hour)&&(identical(other.minute, minute) || other.minute == minute));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,hour,minute);
 
@@ -201,11 +198,11 @@ return $default(_that.hour,_that.minute);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
 
+@Deprecated('.fromTimeOfDayファクトリメソッドで生成してください')
 class _NotificationTime extends NotificationTime {
   const _NotificationTime({required this.hour, required this.minute}): super._();
-  factory _NotificationTime.fromJson(Map<String, dynamic> json) => _$NotificationTimeFromJson(json);
+  
 
 @override final  int hour;
 @override final  int minute;
@@ -216,17 +213,14 @@ class _NotificationTime extends NotificationTime {
 @pragma('vm:prefer-inline')
 _$NotificationTimeCopyWith<_NotificationTime> get copyWith => __$NotificationTimeCopyWithImpl<_NotificationTime>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$NotificationTimeToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationTime&&(identical(other.hour, hour) || other.hour == hour)&&(identical(other.minute, minute) || other.minute == minute));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,hour,minute);
 
