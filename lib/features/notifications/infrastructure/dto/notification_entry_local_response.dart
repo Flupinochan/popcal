@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
@@ -44,25 +44,23 @@ sealed class NotificationEntryLocalResponse
     );
 
     final userIdResult = UserId.create(userId);
-    if (userIdResult.isFailure) {
-      return Results.failure(ValidationFailure(userIdResult.displayText));
+    if (userIdResult.isError) {
+      return Result.error(userIdResult.error);
     }
 
     final notificationDateTimeResult = NotificationDateTime.create(
       notificationDateTime,
     );
-    if (notificationDateTimeResult.isFailure) {
-      return Results.failure(
-        ValidationFailure(notificationDateTimeResult.displayText),
-      );
+    if (notificationDateTimeResult.isError) {
+      return Result.error(notificationDateTimeResult.error);
     }
 
-    return Results.success(
+    return Result.ok(
       NotificationEntry(
         notificationId: notificationIdExt,
         sourceId: sourceIdExt,
-        userId: userIdResult.valueOrNull!,
-        notificationDateTime: notificationDateTimeResult.valueOrNull!,
+        userId: userIdResult.value,
+        notificationDateTime: notificationDateTimeResult.value,
         title: NotificationTitle.createFromLocal(title),
         content: NotificationContent.createFromLocal(content),
         description: NotificationDescription.createFromLocal(description),
@@ -91,9 +89,9 @@ sealed class NotificationEntryLocalResponse
   ) {
     try {
       final dto = NotificationEntryLocalResponse.fromJson(json);
-      return Results.success(dto);
+      return Result.ok(dto);
     } on Exception catch (e) {
-      return Results.failure(ValidationFailure('JSON parsing failed: $e'));
+      return Result.error(ValidationException('JSON parsing failed: $e'));
     }
   }
 }
@@ -116,8 +114,8 @@ extension LocalNotificationSettingDtoJsonX on NotificationEntryLocalResponse {
       final map = jsonDecode(jsonString) as Map<String, dynamic>;
       return NotificationEntryLocalResponse.fromJsonSafe(map);
     } on Exception catch (e) {
-      return Results.failure(
-        ValidationFailure('JSON string parsing failed: $e'),
+      return Result.error(
+        ValidationException('JSON string parsing failed: $e'),
       );
     }
   }

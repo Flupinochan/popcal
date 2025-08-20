@@ -76,7 +76,7 @@ void main() {
         return buildTestWidget([
           rotationDataResponseProvider(null).overrideWith((_) {
             return Future.value(
-              Results.success(const RotationDataResponse(mockUser, null)),
+              const Result.ok(RotationDataResponse(mockUser, null)),
             );
           }),
           rotationNotifierProvider.overrideWith(MockRotationNotifier.new),
@@ -100,14 +100,14 @@ void main() {
         return buildTestWidget([
           rotationDataResponseProvider(null).overrideWith((_) {
             return Future.value(
-              Results.success(const RotationDataResponse(mockUser, null)),
+              const Result.ok(RotationDataResponse(mockUser, null)),
             );
           }),
           rotationNotifierProvider.overrideWith(MockRotationNotifier.new),
           timeUtilsProvider.overrideWith((ref) => MockTimeUtils()),
           rotationDataResponseProvider(null).overrideWith((ref) {
             return Future.value(
-              Results.success(RotationDataResponse(mockUser, rotationResponse)),
+              Result.ok(RotationDataResponse(mockUser, rotationResponse)),
             );
           }),
         ]);

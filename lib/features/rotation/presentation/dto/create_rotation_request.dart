@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -32,25 +31,23 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
   /// DTO => Entity
   Result<Rotation> toEntity({required DateTime currentTime}) {
     final userIdResult = UserId.create(userId);
-    if (userIdResult.isFailure) {
-      return Results.failure(ValidationFailure(userIdResult.displayText));
+    if (userIdResult.isError) {
+      return Result.error(userIdResult.error);
     }
 
     final rotationNameResult = RotationName.create(rotationName);
-    if (rotationNameResult.isFailure) {
-      return Results.failure(ValidationFailure(rotationNameResult.displayText));
+    if (rotationNameResult.isError) {
+      return Result.error(rotationNameResult.error);
     }
 
     final rotationMembersResult = RotationMemberNames.create(rotationMembers);
-    if (rotationMembersResult.isFailure) {
-      return Results.failure(
-        ValidationFailure(rotationMembersResult.displayText),
-      );
+    if (rotationMembersResult.isError) {
+      return Result.error(rotationMembersResult.error);
     }
 
     final rotationDaysResult = RotationDays.create(rotationDays);
-    if (rotationDaysResult.isFailure) {
-      return Results.failure(ValidationFailure(rotationDaysResult.displayText));
+    if (rotationDaysResult.isError) {
+      return Result.error(rotationDaysResult.error);
     }
 
     // 時刻入力はデフォルト値があり、未入力にできないため、バリデーション無し
@@ -59,26 +56,26 @@ sealed class CreateRotationRequest with _$CreateRotationRequest {
     );
 
     final createdAtResult = RotationCreatedAt.create(currentTime);
-    if (createdAtResult.isFailure) {
-      return Results.failure(ValidationFailure(createdAtResult.displayText));
+    if (createdAtResult.isError) {
+      return Result.error(createdAtResult.error);
     }
 
     final updatedAtResult = RotationUpdatedAt.create(currentTime);
-    if (updatedAtResult.isFailure) {
-      return Results.failure(ValidationFailure(updatedAtResult.displayText));
+    if (updatedAtResult.isError) {
+      return Result.error(updatedAtResult.error);
     }
 
     // Create時はRotationIdは不要
-    return Results.success(
+    return Result.ok(
       Rotation(
-        userId: userIdResult.valueOrNull!,
-        rotationName: rotationNameResult.valueOrNull!,
-        rotationMemberNames: rotationMembersResult.valueOrNull!,
-        rotationDays: rotationDaysResult.valueOrNull!,
+        userId: userIdResult.value,
+        rotationName: rotationNameResult.value,
+        rotationMemberNames: rotationMembersResult.value,
+        rotationDays: rotationDaysResult.value,
         notificationTime: notificationTimeResult,
         currentRotationIndex: RotationIndex(),
-        createdAt: createdAtResult.valueOrNull!,
-        updatedAt: updatedAtResult.valueOrNull!,
+        createdAt: createdAtResult.value,
+        updatedAt: updatedAtResult.value,
         skipEvents: skipEvents,
       ),
     );

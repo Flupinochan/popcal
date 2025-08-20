@@ -1,4 +1,4 @@
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 
 extension type RotationIndex._(int value) {
@@ -15,21 +15,21 @@ extension type RotationIndex._(int value) {
 
   Result<RotationIndex> incrementBy(int count) {
     if (count < 1) {
-      return Results.failure<RotationIndex>(
-        const ValidationFailure('インクリメント数は1以上である必要があります'),
+      return const Result.error(
+        ValidationException('インクリメント数は1以上である必要があります'),
       );
     }
 
-    return Results.success(RotationIndex._(value + count));
+    return Result.ok(RotationIndex._(value + count));
   }
 
   static Result<RotationIndex> createFromInt(int input) {
     if (input < 0) {
-      Results.failure<RotationIndex>(
-        const ValidationFailure('値は0以上である必要があります'),
+      const Result<RotationIndex>.error(
+        ValidationException('値は0以上である必要があります'),
       );
     }
 
-    return Results.success(RotationIndex._(input));
+    return Result.ok(RotationIndex._(input));
   }
 }

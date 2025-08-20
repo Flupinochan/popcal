@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
 import 'package:popcal/features/auth/domain/value_objects/password.dart';
 import 'package:popcal/features/auth/presentation/dto/email_sign_in_request.dart';
@@ -42,8 +41,8 @@ class LoginScreen extends HookConsumerWidget {
       newValue.when(
         data: (result) {
           if (result == null) return;
-          if (result.isFailure) {
-            showErrorDialog(context, result.displayText);
+          if (result.isError) {
+            showErrorDialog(context, result.error.toString());
           }
           if (previousValue?.isLoading ?? false) {
             const HomeRoute().go(context);
@@ -308,10 +307,11 @@ class LoginScreen extends HookConsumerWidget {
     }
 
     final result = Email.create(value);
-    return result.when(
-      success: (_) => null,
-      failure: (error) => error.message,
-    );
+    if (result.isError) {
+      return result.error.toString();
+    }
+
+    return null;
   }
 
   String? _validatePassword(String? value) {
@@ -320,9 +320,10 @@ class LoginScreen extends HookConsumerWidget {
     }
 
     final result = Password.create(value);
-    return result.when(
-      success: (_) => null,
-      failure: (error) => error.message,
-    );
+    if (result.isError) {
+      return result.error.toString();
+    }
+
+    return null;
   }
 }

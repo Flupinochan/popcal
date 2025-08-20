@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/calendar/presentation/dto/calendar_schedule_response.dart';
 import 'package:popcal/features/calendar/presentation/widgets/glass_chip.dart';
@@ -206,15 +205,15 @@ class SelectedDayInfo extends ConsumerWidget {
       return;
     }
     final dateKeyResult = DateKey.create(selectedDay);
-    if (dateKeyResult.isFailure) {
-      showErrorDialog(context, dateKeyResult.displayText);
+    if (dateKeyResult.isError) {
+      showErrorDialog(context, dateKeyResult.error.toString());
       return;
     }
 
     final rotationNotifier = ref.read(rotationNotifierProvider.notifier);
     final rotationResponse = calendarScheduleResponse.rotationResponse;
     final skipEvents = rotationResponse.skipEvents.removeByDateKey(
-      dateKeyResult.valueOrNull!,
+      dateKeyResult.value,
     );
     final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(
@@ -241,8 +240,8 @@ class SelectedDayInfo extends ConsumerWidget {
       return;
     }
     final dateKeyResult = DateKey.create(selectedDay);
-    if (dateKeyResult.isFailure) {
-      showErrorDialog(context, dateKeyResult.displayText);
+    if (dateKeyResult.isError) {
+      showErrorDialog(context, dateKeyResult.error.toString());
       return;
     }
 
@@ -250,16 +249,16 @@ class SelectedDayInfo extends ConsumerWidget {
     // holidayの場合はskipCount1で固定
     final skipEventsResult = rotationResponse.skipEvents.add(
       SkipEvent(
-        dateKey: dateKeyResult.valueOrNull!,
+        dateKey: dateKeyResult.value,
         dayType: DayType.holiday,
         skipCount: SkipCount(),
       ),
     );
-    if (skipEventsResult.isFailure) {
-      showErrorDialog(context, skipEventsResult.displayText);
+    if (skipEventsResult.isError) {
+      showErrorDialog(context, skipEventsResult.error.toString());
       return;
     }
-    final skipEvents = skipEventsResult.valueOrNull!;
+    final skipEvents = skipEventsResult.value;
 
     final rotationId = rotationResponse.rotationId;
     final updateRotation = UpdateRotationRequest(
@@ -289,22 +288,22 @@ class SelectedDayInfo extends ConsumerWidget {
     }
 
     final targetDateKeyResult = DateKey.create(selectedDay);
-    if (targetDateKeyResult.isFailure) {
-      showErrorDialog(context, targetDateKeyResult.displayText);
+    if (targetDateKeyResult.isError) {
+      showErrorDialog(context, targetDateKeyResult.error.toString());
       return;
     }
 
     final rotationMembersResult = RotationMemberNames.create(
       rotationResponse.rotationMembers,
     );
-    if (rotationMembersResult.isFailure) {
-      showErrorDialog(context, rotationMembersResult.displayText);
+    if (rotationMembersResult.isError) {
+      showErrorDialog(context, rotationMembersResult.error.toString());
       return;
     }
 
     final updateSkipEvents = rotationResponse.skipEvents.incrementSkipToNext(
-      targetDateKey: targetDateKeyResult.valueOrNull!,
-      rotationMemberNames: rotationMembersResult.valueOrNull!,
+      targetDateKey: targetDateKeyResult.value,
+      rotationMemberNames: rotationMembersResult.value,
     );
 
     final rotationId = rotationResponse.rotationId;
@@ -334,13 +333,13 @@ class SelectedDayInfo extends ConsumerWidget {
       return;
     }
     final targetDateKeyResult = DateKey.create(selectedDay);
-    if (targetDateKeyResult.isFailure) {
-      showErrorDialog(context, targetDateKeyResult.displayText);
+    if (targetDateKeyResult.isError) {
+      showErrorDialog(context, targetDateKeyResult.error.toString());
       return;
     }
 
     final updateSkipEvents = rotationResponse.skipEvents.decrementSkipToNext(
-      targetDateKeyResult.valueOrNull!,
+      targetDateKeyResult.value,
     );
 
     final rotationId = rotationResponse.rotationId;

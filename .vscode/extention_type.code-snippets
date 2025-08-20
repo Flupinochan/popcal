@@ -1,5 +1,6 @@
 {
 	"Extension Type String": {
+		"scope": "dart",
 		"prefix": "exts",
 		"body": [
 			"import 'package:popcal/core/utils/failures/validation_failure.dart';",
@@ -8,9 +9,9 @@
 			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(String value) {",
 			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create(String input) {",
 			"\t\tif (input.trim().isEmpty) {",
-			"\t\t\treturn Results.failure(const ValidationFailure('バリデーションに失敗しました'));",
+			"\t\t\treturn Result.error(const ValidationException('バリデーションに失敗しました'));",
 			"\t\t}",
-			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input.trim()));",
+			"\t\treturn Result.ok(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input.trim()));",
 			"\t}$0",
 			"}",
 			""
@@ -26,9 +27,9 @@
 			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(int value) {",
 			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create(int input) {",
 			"\t\tif (input < 0) {",
-			"\t\t\treturn Results.failure(const ValidationFailure('値は0以上である必要があります'));",
+			"\t\t\treturn Result.error(const ValidationException('値は0以上である必要があります'));",
 			"\t\t}",
-			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
+			"\t\treturn Result.ok(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
 			"\t}$0",
 			"}",
 			""
@@ -44,9 +45,9 @@
 			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(double value) {",
 			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create(double input) {",
 			"\t\tif (input < 0.0) {",
-			"\t\t\treturn Results.failure(const ValidationFailure('値は0以上である必要があります'));",
+			"\t\t\treturn Result.error(const ValidationException('値は0以上である必要があります'));",
 			"\t\t}",
-			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
+			"\t\treturn Result.ok(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
 			"\t}$0",
 			"}",
 			""
@@ -60,7 +61,7 @@
 			"",
 			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(bool value) {",
 			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create(bool input) {",
-			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
+			"\t\treturn Result.ok(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
 			"\t}$0",
 			"}",
 			""
@@ -74,7 +75,7 @@
 			"",
 			"extension type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(DateTime value) {",
 			"\tstatic Result<${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}> create(DateTime input) {",
-			"\t\treturn Results.success(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
+			"\t\treturn Result.ok(${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._(input));",
 			"\t}$0",
 			"}",
 			""

@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
@@ -37,12 +36,15 @@ class RotationScreen extends HookConsumerWidget {
     );
 
     return rotationDataAsync.when(
-      data:
-          (result) => result.when(
-            success:
-                (rotationData) => _buildFormScreen(context, ref, rotationData),
-            failure: (error) => CustomErrorScreen(message: error.message),
-          ),
+      data: (result) {
+        if (result.isError) {
+          return CustomErrorScreen(message: result.error.toString());
+        }
+
+        final rotationData = result.value;
+
+        return _buildFormScreen(context, ref, rotationData);
+      },
       loading: CustomLoadingScreen.new,
       error: (error, stack) => const CustomErrorScreen(),
     );
@@ -217,11 +219,16 @@ class RotationScreen extends HookConsumerWidget {
   }
 
   String? _validateRotationMemberNames(List<String>? value) {
+    if (value == null) {
+      return 'メンバーを2人以上入力してください';
+    }
+
     final result = RotationMemberNames.create(value);
-    return result.when(
-      success: (_) => null,
-      failure: (error) => error.message,
-    );
+    if (result.isError) {
+      return result.error.toString();
+    }
+
+    return null;
   }
 
   String? _validateRotationName(String? value) {
@@ -230,9 +237,10 @@ class RotationScreen extends HookConsumerWidget {
     }
 
     final result = RotationName.create(value);
-    return result.when(
-      success: (_) => null,
-      failure: (error) => error.message,
-    );
+    if (result.isError) {
+      return result.error.toString();
+    }
+
+    return null;
   }
 }

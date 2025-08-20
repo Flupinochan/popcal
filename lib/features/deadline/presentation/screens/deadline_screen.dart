@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/presentation/dto/deadline_request.dart';
 import 'package:popcal/features/deadline/providers/deadline_handlers.dart';
 import 'package:popcal/features/deadline/providers/deadline_notifier.dart';
@@ -66,7 +65,7 @@ class DeadlineScreen extends HookConsumerWidget {
                       ),
                       deadlineState.when(
                         data: (result) {
-                          if (result.isFailure) {
+                          if (result.isError) {
                             return _buildScreen(
                               context: context,
                               ref: ref,
@@ -76,7 +75,7 @@ class DeadlineScreen extends HookConsumerWidget {
                               lastNotificationTime: lastNotificationTime,
                             );
                           }
-                          final deadlineRequest = result.valueOrNull!;
+                          final deadlineRequest = result.value;
                           lastIsEnabled.value = deadlineRequest.isEnabled;
                           lastNotificationTime.value =
                               deadlineRequest.notificationTime;
@@ -115,10 +114,10 @@ class DeadlineScreen extends HookConsumerWidget {
                     .watch(getDeadlineNotificationsProvider)
                     .when(
                       data: (result) {
-                        if (result.isFailure) {
+                        if (result.isError) {
                           return const SizedBox.shrink();
                         }
-                        final deadlineResponse = result.valueOrNull!;
+                        final deadlineResponse = result.value;
                         if (deadlineResponse.isEmpty) {
                           return const SizedBox.shrink();
                         }

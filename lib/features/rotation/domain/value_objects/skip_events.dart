@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/calendar_failure.dart';
+import 'package:popcal/core/utils/exceptions/calendar_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
@@ -19,11 +19,11 @@ sealed class SkipEvents with _$SkipEvents {
   @useResult
   Result<SkipEvents> add(SkipEvent skipEvent) {
     if (value.any((e) => e.dateKey == skipEvent.dateKey)) {
-      return Results.failure<SkipEvents>(
-        const CalendarFailure('すでにSkipEventが存在するため新規追加できません'),
+      return const Result.error(
+        CalendarException('すでにSkipEventが存在するため新規追加できません'),
       );
     }
-    return Results.success(SkipEvents([...value, skipEvent]));
+    return Result.ok(SkipEvents([...value, skipEvent]));
   }
 
   // 対象DateKeyのSkipEventのskipToNextのskipCountを1減少させる
@@ -35,14 +35,16 @@ sealed class SkipEvents with _$SkipEvents {
       if (skipEvent.dayType == DayType.skipToNext &&
           skipEvent.dateKey == targetDateKey) {
         final result = skipEvent.skipCount.decrement();
-        if (result.isSuccess) {
-          updateSkipEvents.add(
-            skipEvent.copyWith(
-              skipCount: result.valueOrNull!,
-            ),
-          );
+        if (result.isError) {
+          // skipCountが1以下の場合は追加しない = 削除
+          continue;
         }
-        // skipCountが1以下の場合は追加しない = 削除
+
+        updateSkipEvents.add(
+          skipEvent.copyWith(
+            skipCount: result.value,
+          ),
+        );
       } else {
         updateSkipEvents.add(skipEvent);
       }
@@ -71,14 +73,16 @@ sealed class SkipEvents with _$SkipEvents {
       if (skipEvent.dayType == DayType.skipToNext &&
           skipEvent.dateKey == targetDateKey) {
         final result = skipEvent.skipCount.increment(rotationMemberNames);
-        if (result.isSuccess) {
-          updateSkipEvents.add(
-            skipEvent.copyWith(
-              skipCount: result.valueOrNull!,
-            ),
-          );
-          foundTarget = true;
+        if (result.isError) {
+          continue;
         }
+
+        updateSkipEvents.add(
+          skipEvent.copyWith(
+            skipCount: result.value,
+          ),
+        );
+        foundTarget = true;
       } else {
         updateSkipEvents.add(skipEvent);
       }

@@ -14,12 +14,14 @@ Stream<Result<UserResponse?>> authStateChanges(Ref ref) {
   final entityStream = ref.watch(authRepositoryProvider).authStateChanges;
 
   return entityStream.asyncMap((entityResult) async {
-    return entityResult.when(
-      success: (entity) {
-        if (entity == null) return Results.success(null);
-        return Results.success(UserResponse.fromEntity(entity));
-      },
-      failure: Results.failure,
-    );
+    if (entityResult.isError) {
+      return Result.error(entityResult.error);
+    }
+
+    if (entityResult.value == null) {
+      return const Result.ok(null);
+    }
+
+    return Result.ok(UserResponse.fromEntity(entityResult.value!));
   });
 }

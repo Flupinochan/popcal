@@ -74,7 +74,7 @@ void main() {
             return MockNotificationGateway();
           }),
           authStateChangesProvider.overrideWith(
-            (ref) => Stream.value(Results.success(mockUser)),
+            (ref) => Stream.value(const Result.ok(mockUser)),
           ),
           syncNotificationsUseCaseProvider.overrideWith((ref) {
             return MockSyncNotificationsUseCase();
@@ -110,7 +110,7 @@ void main() {
       builder: () {
         return buildTestWidget([
           rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
-            return Stream.value(Results.success([]));
+            return Stream.value(const Result.ok([]));
           }),
         ]);
       },
@@ -130,7 +130,7 @@ void main() {
       builder: () {
         return buildTestWidget([
           rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
-            return Stream.value(Results.success(rotations));
+            return Stream.value(Result.ok(rotations));
           }),
         ]);
       },
@@ -150,7 +150,7 @@ void main() {
       builder: () {
         return buildTestWidget([
           rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
-            return Stream.value(Results.success(rotations));
+            return Stream.value(Result.ok(rotations));
           }),
           rotationRepositoryProvider.overrideWith((ref) {
             return MockRotationRepository();
@@ -179,7 +179,7 @@ void main() {
 class MockNotificationGateway extends Mock implements NotificationGateway {
   @override
   Future<Result<void>> initializeNotificationLaunch() async {
-    return Results.success(null);
+    return const Result.ok(null);
   }
 }
 
@@ -189,7 +189,7 @@ class MockRotationRepository extends Mock implements RotationRepository {
     UserId userId,
     RotationId rotationId,
   ) async {
-    return Results.success(null);
+    return const Result.ok(null);
   }
 }
 
@@ -197,6 +197,6 @@ class MockSyncNotificationsUseCase extends Mock
     implements SyncNotificationsUseCase {
   @override
   Future<Result<void>> execute(UserId userId) async {
-    return Results.success(null);
+    return const Result.ok(null);
   }
 }

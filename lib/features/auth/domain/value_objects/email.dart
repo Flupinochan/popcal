@@ -1,4 +1,4 @@
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 
 // ._にすることでプライベート化
@@ -11,14 +11,14 @@ extension type Email._(String value) {
   // extention typeは値が1つのためrequiredは不要
   static Result<Email> create(String input) {
     if (input.trim().isEmpty) {
-      return Results.failure(const ValidationFailure('メールアドレスを入力してください'));
+      return const Result.error(ValidationException('メールアドレスを入力してください'));
     }
 
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(input)) {
-      return Results.failure(const ValidationFailure('メールアドレスの形式にしてください'));
+      return const Result.error(ValidationException('メールアドレスの形式にしてください'));
     }
 
-    return Results.success(Email._(input.trim()));
+    return Result.ok(Email._(input.trim()));
   }
 }

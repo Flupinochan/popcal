@@ -1,5 +1,3 @@
-import 'package:popcal/core/utils/failures/deadline_failure.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/domain/entities/deadline.dart';
 import 'package:popcal/features/deadline/domain/repositories/deadline_repository.dart';
@@ -16,26 +14,26 @@ class DeadlineSharedPreferencesImpl extends DeadlineRepository {
   @override
   Future<Result<Deadline>> getSettings() async {
     final result = await _deadlineSharedPreferences.getSettings();
-    if (result.isFailure) {
-      return Results.failure(DeadlineFailure(result.displayText));
+    if (result.isError) {
+      return Result.error(result.error);
     }
-    final dto = result.valueOrNull!;
+    final dto = result.value;
 
     final entityResult = dto.toEntity();
-    if (entityResult.isFailure) {
-      return Results.failure(ValidationFailure(entityResult.displayText));
+    if (entityResult.isError) {
+      return Result.error(entityResult.error);
     }
 
-    return Results.success(entityResult.valueOrNull!);
+    return Result.ok(entityResult.value);
   }
 
   @override
   Future<Result<void>> saveSettings(Deadline settings) async {
     final dto = DeadlineSharedPreferencesResponse.fromEntity(settings);
     final result = await _deadlineSharedPreferences.saveSettings(dto);
-    if (result.isFailure) {
-      return Results.failure(DeadlineFailure(result.displayText));
+    if (result.isError) {
+      return Result.error(result.error);
     }
-    return Results.success(null);
+    return const Result.ok(null);
   }
 }

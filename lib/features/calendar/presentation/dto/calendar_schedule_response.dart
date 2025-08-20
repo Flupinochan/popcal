@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/enum/member_color.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
@@ -24,11 +23,11 @@ sealed class CalendarScheduleResponse with _$CalendarScheduleResponse {
   // ※全日付データ返却は重いため、Domainロジックに含めない
   ScheduleDayResponse getDayInfo(DateTime dateTime) {
     final dateKeyResult = DateKey.create(dateTime);
-    if (dateKeyResult.isFailure) {
-      throw Exception(dateKeyResult.failureOrNull);
+    if (dateKeyResult.isError) {
+      throw Exception(dateKeyResult.error);
     }
 
-    return scheduleMap[dateKeyResult.valueOrNull!] ??
+    return scheduleMap[dateKeyResult.value] ??
         ScheduleDayResponse(
           date: dateTime,
           memberName: RotationMemberName.notApplicableText,

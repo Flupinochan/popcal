@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:popcal/core/utils/failures/rotation_failure.dart';
+import 'package:popcal/core/utils/exceptions/rotation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/infrastructure/dto/create_rotation_firebase_request.dart';
 import 'package:popcal/features/rotation/infrastructure/dto/rotation_firebase_mapper.dart';
@@ -32,14 +32,14 @@ class RotationRepositoryFirebase {
       final mapperResult = RotationFirebaseMapper.fromCreateDto(
         dtoWithRotationId,
       );
-      if (mapperResult.isFailure) {
-        return Results.failure(
-          RotationFailure('ローテーショングループの作成に失敗しました: $mapperResult'),
+      if (mapperResult.isError) {
+        return Result.error(
+          RotationException('ローテーショングループの作成に失敗しました: $mapperResult'),
         );
       }
 
       // Firestoreに保存
-      await docRef.set(mapperResult.valueOrNull!.toFirestore());
+      await docRef.set(mapperResult.value.toFirestore());
 
       final result = RotationFirebaseResponse(
         rotationId: rotationId,
@@ -54,9 +54,9 @@ class RotationRepositoryFirebase {
         skipEvents: dto.skipEvents,
       );
 
-      return Results.success(result);
+      return Result.ok(result);
     } on Exception catch (error) {
-      return Results.failure(RotationFailure('ローテーショングループの作成に失敗しました: $error'));
+      return Result.error(RotationException('ローテーショングループの作成に失敗しました: $error'));
     }
   }
 
@@ -71,9 +71,9 @@ class RotationRepositoryFirebase {
 
       await docRef.delete();
 
-      return Results.success(null);
+      return const Result.ok(null);
     } on Exception catch (error) {
-      return Results.failure(RotationFailure('ローテーショングループの削除に失敗しました: $error'));
+      return Result.error(RotationException('ローテーショングループの削除に失敗しました: $error'));
     }
   }
 
@@ -96,21 +96,21 @@ class RotationRepositoryFirebase {
 
       final docSnap = await docRef.get();
       if (!docSnap.exists) {
-        return Results.failure(
-          const RotationFailure('対象IDのローテーショングループは存在しません'),
+        return const Result.error(
+          RotationException('対象IDのローテーショングループは存在しません'),
         );
       }
 
       final mapper = docSnap.data();
       if (mapper == null) {
-        return Results.failure(const RotationFailure('ローテーショングループの取得に失敗しました'));
+        return const Result.error(RotationException('ローテーショングループの取得に失敗しました'));
       }
 
       final dto = mapper.toDto();
 
-      return Results.success(dto);
+      return Result.ok(dto);
     } on Exception catch (error) {
-      return Results.failure(RotationFailure('ローテーショングループの取得に失敗しました: $error'));
+      return Result.error(RotationException('ローテーショングループの取得に失敗しました: $error'));
     }
   }
 
@@ -134,9 +134,9 @@ class RotationRepositoryFirebase {
       final mappers = docSnap.docs.map((doc) => doc.data()).toList();
       final dtos = mappers.map((mapper) => mapper.toDto()).toList();
 
-      return Results.success(dtos);
+      return Result.ok(dtos);
     } on Exception catch (error) {
-      return Results.failure(RotationFailure('ローテーショングループの取得に失敗しました: $error'));
+      return Result.error(RotationException('ローテーショングループの取得に失敗しました: $error'));
     }
   }
 
@@ -152,13 +152,13 @@ class RotationRepositoryFirebase {
           .doc(dto.rotationId);
 
       final mapperResult = RotationFirebaseMapper.fromUpdateDto(dto);
-      if (mapperResult.isFailure) {
-        return Results.failure(
-          RotationFailure('ローテーショングループの更新に失敗しました: $mapperResult'),
+      if (mapperResult.isError) {
+        return Result.error(
+          RotationException('ローテーショングループの更新に失敗しました: $mapperResult'),
         );
       }
 
-      await docRef.update(mapperResult.valueOrNull!.toFirestore());
+      await docRef.update(mapperResult.value.toFirestore());
 
       // RotationId必須のUpdate用を用意すべき
       // そもそもレスポンスはvoidでよいのでは
@@ -175,9 +175,9 @@ class RotationRepositoryFirebase {
         skipEvents: dto.skipEvents,
       );
 
-      return Results.success(result);
+      return Result.ok(result);
     } on Exception catch (error) {
-      return Results.failure(RotationFailure('ローテーショングループの更新に失敗しました: $error'));
+      return Result.error(RotationException('ローテーショングループの更新に失敗しました: $error'));
     }
   }
 
@@ -197,10 +197,10 @@ class RotationRepositoryFirebase {
           try {
             final mappers = docSnap.docs.map((doc) => doc.data()).toList();
             final dtos = mappers.map((mapper) => mapper.toDto()).toList();
-            return Results.success(dtos);
+            return Result.ok(dtos);
           } on Exception catch (error) {
-            return Results.failure(
-              RotationFailure('ローテーショングループの監視中にエラーが発生しました: $error'),
+            return Result.error(
+              RotationException('ローテーショングループの監視中にエラーが発生しました: $error'),
             );
           }
         });

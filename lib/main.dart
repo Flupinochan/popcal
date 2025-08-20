@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/logger/logger.dart';
 import 'package:popcal/core/themes/app_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/providers/deadline_providers.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 import 'package:popcal/features/notifications/providers/notification_handlers.dart';
@@ -68,18 +67,16 @@ class MainApp extends ConsumerWidget {
     // 通知初期化
     ref.listen(notificationInitializationProvider, (previous, next) {
       next.when(
-        data:
-            (result) => result.when(
-              success: (_) {
-                logger.info('通知初期化成功');
-                _checkNotificationLaunch(ref, router);
-              },
-              failure: (error) {
-                logger.severe('通知初期化失敗: ${error.message}');
-                // 通知機能無効化フラグをグローバルに設定すべき
-                // ref.read(notificationEnabledProvider.notifier).state = false;
-              },
-            ),
+        data: (result) {
+          if (result.isError) {
+            logger.severe('通知初期化失敗: ${result.error}');
+            // 通知機能無効化フラグをグローバルに設定すべき
+            // ref.read(notificationEnabledProvider.notifier).state = false;
+          }
+
+          logger.info('通知初期化成功');
+          return _checkNotificationLaunch(ref, router);
+        },
         error: (error, stack) => logger.severe('通知初期化エラー: $error'),
         loading: () => logger.severe('通知初期化中...'),
       );
@@ -95,17 +92,20 @@ class MainApp extends ConsumerWidget {
   Future<void> _checkNotificationLaunch(WidgetRef ref, GoRouter router) async {
     final notificationGateway = ref.read(notificationGatewayProvider);
     final result = await notificationGateway.isLaunchedFromNotification();
-    result.when(
-      success: (sourceId) {
-        if (sourceId != null) {
-          if (sourceId != SourceId.createDeadlineId()) {
-            router.go(CalendarRoute(id: sourceId.value).location);
-          } else {
-            router.go(const HomeRoute().location);
-          }
-        }
-      },
-      failure: (_) => logger.warning('通知チェック失敗'),
-    );
+    if (result.isError) {
+      logger.warning('通知チェック失敗');
+    }
+
+    final sourceId = result.value;
+
+    if (sourceId == null) {
+      return;
+    }
+
+    if (sourceId == SourceId.createDeadlineId()) {
+      router.go(const DeadlineRoute().location);
+    }
+
+    router.go(CalendarRoute(id: sourceId.value).location);
   }
 }

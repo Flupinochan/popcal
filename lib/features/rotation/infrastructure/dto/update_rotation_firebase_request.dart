@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/rotation_failure.dart';
+import 'package:popcal/core/utils/exceptions/rotation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
@@ -32,12 +32,12 @@ sealed class UpdateRotationFirebaseRequest
   // Create/Update共通はよくない。Create時のみrotationIdはoptional
   static Result<UpdateRotationFirebaseRequest> fromEntity(Rotation rotation) {
     if (!rotation.isRotationIdExist) {
-      return Results.failure(
-        const RotationFailure('ローテーショングループ更新時にRotationIdは必須です'),
+      return const Result.error(
+        RotationException('ローテーショングループ更新時にRotationIdは必須です'),
       );
     }
 
-    return Results.success(
+    return Result.ok(
       UpdateRotationFirebaseRequest(
         rotationId: rotation.rotationId!.value,
         userId: rotation.userId.value,

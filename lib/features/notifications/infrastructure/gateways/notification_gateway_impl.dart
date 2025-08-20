@@ -1,5 +1,3 @@
-import 'package:popcal/core/utils/failures/notification_failure.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
@@ -22,20 +20,23 @@ class NotificationGatewayImpl implements NotificationGateway {
     );
 
     final result = await _localNotificationsDatasource.createNotification(dto);
-    return result.when(
-      success: (_) => Results.success(null),
-      failure: Results.failure,
-    );
+    if (result.isError) {
+      return Result.error(result.error);
+    }
+
+    return const Result.ok(null);
   }
 
   /// 4-3. 全通知を削除
   @override
   Future<Result<void>> deleteAllNotifications() async {
     final result = await _localNotificationsDatasource.deleteNotifications();
-    return result.when(
-      success: (_) => Results.success(null),
-      failure: Results.failure,
-    );
+
+    if (result.isError) {
+      return Result.error(result.error);
+    }
+
+    return const Result.ok(null);
   }
 
   /// 4-1. 特定の通知を削除
@@ -44,10 +45,12 @@ class NotificationGatewayImpl implements NotificationGateway {
     final result = await _localNotificationsDatasource.deleteNotification(
       notificationId.value,
     );
-    return result.when(
-      success: (_) => Results.success(null),
-      failure: Results.failure,
-    );
+
+    if (result.isError) {
+      return Result.error(result.error);
+    }
+
+    return const Result.ok(null);
   }
 
   /// 4-2 特定のrotationIdの通知を削除
@@ -55,23 +58,27 @@ class NotificationGatewayImpl implements NotificationGateway {
   Future<Result<void>> deleteNotificationsBySourceId(SourceId sourceId) async {
     final result = await _localNotificationsDatasource
         .deleteNotificationsBySourceId(sourceId.value);
-    return result.when(
-      success: (_) => Results.success(null),
-      failure: Results.failure,
-    );
+
+    if (result.isError) {
+      return Result.error(result.error);
+    }
+
+    return const Result.ok(null);
   }
 
   /// 2. 通知予定のスケジュールを一覧取得
   @override
   Future<Result<List<NotificationId>>> getNotifications() async {
     final result = await _localNotificationsDatasource.getNotifications();
-    return result.when(
-      success:
-          (notificationIds) => Results.success(
-            notificationIds.map(NotificationId.createFromLocal).toList(),
-          ),
-      failure: Results.failure,
-    );
+
+    if (result.isError) {
+      return Result.error(result.error);
+    }
+
+    final notificationIds =
+        result.value.map(NotificationId.createFromLocal).toList();
+
+    return Result.ok(notificationIds);
   }
 
   @override
@@ -80,33 +87,34 @@ class NotificationGatewayImpl implements NotificationGateway {
   ) async {
     final result = await _localNotificationsDatasource
         .getNotificationsBySourceId(sourceId.value);
-    if (result.isFailure) {
-      return Results.failure(NotificationFailure(result.displayText));
+    if (result.isError) {
+      return Result.error(result.error);
     }
-    final dtos = result.valueOrNull!;
+
+    final dtos = result.value;
 
     final entities = <NotificationEntry>[];
     for (final dto in dtos) {
       final entityResult = dto.toEntity();
-      if (entityResult.isFailure) {
-        return Results.failure<List<NotificationEntry>>(
-          ValidationFailure(entityResult.displayText),
-        );
+      if (entityResult.isError) {
+        return Result.error(entityResult.error);
       }
-      entities.add(entityResult.valueOrNull!);
+
+      entities.add(entityResult.value);
     }
 
-    return Results.success(entities);
+    return Result.ok(entities);
   }
 
   /// 0-1. 初期化 ※とりあえず必要
   @override
   Future<Result<void>> initializeNotification() async {
     final result = await _localNotificationsDatasource.initializeNotification();
-    return result.when(
-      success: (_) => Results.success(null),
-      failure: Results.failure,
-    );
+    if (result.isError) {
+      return Result.error(result.error);
+    }
+
+    return const Result.ok(null);
   }
 
   /// 0-2. 通知タップからアプリを起動した場合の画面遷移
@@ -114,12 +122,14 @@ class NotificationGatewayImpl implements NotificationGateway {
   Future<Result<SourceId?>> isLaunchedFromNotification() async {
     final result =
         await _localNotificationsDatasource.isLaunchedFromNotification();
-    if (result.isFailure) {
-      return Results.failure(result.failureOrNull!);
+    if (result.isError) {
+      return Result.error(result.error);
     }
-    if (result.valueOrNull == null) {
-      return Results.success(null);
+
+    if (result.value == null) {
+      return const Result.ok(null);
     }
-    return Results.success(SourceId.create(result.valueOrNull!));
+
+    return Result.ok(SourceId.create(result.value!));
   }
 }

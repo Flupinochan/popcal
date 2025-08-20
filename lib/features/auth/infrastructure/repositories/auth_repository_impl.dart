@@ -13,36 +13,40 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Stream<Result<AppUser?>> get authStateChanges {
     return _authRepositoryFirebase.authStateChanges.asyncMap((dtoResult) async {
-      return dtoResult.when(
-        success: (dto) {
-          if (dto == null) {
-            return Results.success(null);
-          }
-          return dto.toEntity().when(
-            success: Results.success,
-            failure: Results.failure,
-          );
-        },
-        failure: Results.failure,
-      );
+      if (dtoResult.isError) {
+        return Result.error(dtoResult.error);
+      }
+
+      final dto = dtoResult.value;
+      if (dto == null) {
+        return const Result.ok(null);
+      }
+
+      final entityResult = dto.toEntity();
+      if (entityResult.isError) {
+        return Result.error(entityResult.error);
+      }
+      return Result.ok(entityResult.value);
     });
   }
 
   @override
   Future<Result<AppUser?>> getUser() async {
     final dtoResult = await _authRepositoryFirebase.getUser();
-    return dtoResult.when(
-      success: (dto) {
-        if (dto == null) {
-          return Results.success(null);
-        }
-        return dto.toEntity().when(
-          success: Results.success,
-          failure: Results.failure,
-        );
-      },
-      failure: Results.failure,
-    );
+    if (dtoResult.isError) {
+      return Result.error(dtoResult.error);
+    }
+    final dto = dtoResult.value;
+    if (dto == null) {
+      return const Result.ok(null);
+    }
+
+    final entityResult = dto.toEntity();
+    if (entityResult.isError) {
+      return Result.error(entityResult.error);
+    }
+
+    return Result.ok(entityResult.value);
   }
 
   @override
@@ -54,16 +58,17 @@ class AuthRepositoryImpl implements AuthRepository {
       email.value,
       password.value,
     );
+    if (dtoResult.isError) {
+      return Result.error(dtoResult.error);
+    }
+    final dto = dtoResult.value;
 
-    return dtoResult.when(
-      success: (dto) {
-        return dto.toEntity().when(
-          success: Results.success,
-          failure: Results.failure,
-        );
-      },
-      failure: Results.failure,
-    );
+    final entityResult = dto.toEntity();
+    if (entityResult.isError) {
+      return Result.error(entityResult.error);
+    }
+
+    return Result.ok(entityResult.value);
   }
 
   @override
@@ -80,15 +85,16 @@ class AuthRepositoryImpl implements AuthRepository {
       email.value,
       password.value,
     );
+    if (dtoResult.isError) {
+      return Result.error(dtoResult.error);
+    }
+    final dto = dtoResult.value;
 
-    return dtoResult.when(
-      success: (dto) {
-        return dto.toEntity().when(
-          success: Results.success,
-          failure: Results.failure,
-        );
-      },
-      failure: Results.failure,
-    );
+    final entityResult = dto.toEntity();
+    if (entityResult.isError) {
+      return Result.error(entityResult.error);
+    }
+
+    return Result.ok(entityResult.value);
   }
 }

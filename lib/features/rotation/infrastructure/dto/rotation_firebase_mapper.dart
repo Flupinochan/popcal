@@ -75,7 +75,7 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
     CreateRotationFirebaseRequest dto,
   ) {
     // DtoでrotationIdをnullチェックしているため不要
-    return Results.success(
+    return Result.ok(
       RotationFirebaseMapper(
         rotationId: dto.rotationId!,
         userId: dto.userId,
@@ -162,11 +162,9 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
         updatedAt: updatedAt,
         skipEvents: skipEvents,
       );
-    } catch (e, stackTrace) {
-      Error.throwWithStackTrace(
-        Exception('Failed to parse Firestore data: $e'),
-        stackTrace,
-      );
+    } catch (e) {
+      // ignore: avoid-throw-in-catch-block
+      throw Exception('Failed to parse Firestore data: $e');
     }
   }
 
@@ -174,7 +172,7 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
   static Result<RotationFirebaseMapper> fromUpdateDto(
     UpdateRotationFirebaseRequest dto,
   ) {
-    return Results.success(
+    return Result.ok(
       RotationFirebaseMapper(
         rotationId: dto.rotationId,
         userId: dto.userId,
@@ -212,10 +210,10 @@ sealed class RotationFirebaseMapper with _$RotationFirebaseMapper {
               if (type == null) return null;
 
               final dateKeyResult = DateKey.create(timestamp.toDate());
-              if (dateKeyResult.isFailure) return null;
+              if (dateKeyResult.isError) return null;
 
               return SkipEvent(
-                dateKey: dateKeyResult.valueOrNull!,
+                dateKey: dateKeyResult.value,
                 dayType: type,
                 skipCount: SkipCount(skipCount: skipCount),
               );

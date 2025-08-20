@@ -11,6 +11,6 @@ extension type NotificationTitle._(String value) {
   }
 
   static Result<NotificationTitle> createFromRotationName(RotationName input) {
-    return Results.success(NotificationTitle._(input.value));
+    return Result.ok(NotificationTitle._(input.value));
   }
 }

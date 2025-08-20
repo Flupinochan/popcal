@@ -1,4 +1,3 @@
-import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
@@ -40,8 +39,8 @@ class SyncNotificationsUseCase {
       ),
     );
     for (final createResult in createResult) {
-      if (createResult.isFailure) {
-        return Results.failure(NotificationFailure(createResult.displayText));
+      if (createResult.isError) {
+        return Result.error(createResult.error);
       }
     }
 
@@ -54,12 +53,12 @@ class SyncNotificationsUseCase {
       final updateResult = await _rotationRepository.updateRotation(
         updatedRotation,
       );
-      if (updateResult.isFailure) {
-        return Results.failure(NotificationFailure(updateResult.displayText));
+      if (updateResult.isError) {
+        return Result.error(updateResult.error);
       }
     }
 
-    return Results.success(null);
+    return const Result.ok(null);
   }
 
   // ローカル通知の削除を同期
@@ -83,31 +82,31 @@ class SyncNotificationsUseCase {
       ),
     );
     for (final deleteResult in deleteResults) {
-      if (deleteResult.isFailure) {
-        return Results.failure(NotificationFailure(deleteResult.displayText));
+      if (deleteResult.isError) {
+        return Result.error(deleteResult.error);
       }
     }
 
-    return Results.success(null);
+    return const Result.ok(null);
   }
 
   // メイン処理
   Future<Result<void>> execute(UserId userId) async {
     // 1. Firebaseからローテーショングループ一覧を取得
     final rotationsResult = await _rotationRepository.getRotations(userId);
-    if (rotationsResult.isFailure) {
-      return Results.failure(rotationsResult.failureOrNull!);
+    if (rotationsResult.isError) {
+      return Result.error(rotationsResult.error);
     }
-    final rotations = rotationsResult.valueOrNull!;
+    final rotations = rotationsResult.value;
 
     // 2. 現在設定されているローカル通知IDリストを取得
     final notificationResult = await _notificationRepository.getNotifications();
-    if (notificationResult.isFailure) {
-      return Results.failure(notificationResult.failureOrNull!);
+    if (notificationResult.isError) {
+      return Result.error(notificationResult.error);
     }
-    final currentLocalRotationIds = notificationResult.valueOrNull!.toSet();
+    final currentLocalRotationIds = notificationResult.value.toSet();
 
-    String? errorMessage;
+    Exception? exception;
     for (final rotation in rotations) {
       // update_rotation_use_case処理と重複しているため、まとめるべき
       // 処理内容としては、ローテーション情報から通知設定する処理
@@ -121,12 +120,10 @@ class SyncNotificationsUseCase {
             fromDateTime: rotation.updatedAt.value,
             toDateTime: toDateTime,
           );
-      if (notificationScheduleResult.isFailure) {
-        return Results.failure(
-          NotificationFailure(notificationScheduleResult.displayText),
-        );
+      if (notificationScheduleResult.isError) {
+        return Result.error(notificationScheduleResult.error);
       }
-      final notificationSchedule = notificationScheduleResult.valueOrNull!;
+      final notificationSchedule = notificationScheduleResult.value;
 
       // 4. 通知作成を同期
       final createResult = await createSync(
@@ -134,8 +131,8 @@ class SyncNotificationsUseCase {
         currentLocalRotationIds,
         rotation,
       );
-      if (createResult.isFailure) {
-        errorMessage = createResult.failureOrNull!.message;
+      if (createResult.isError) {
+        exception = createResult.error;
         continue;
       }
 
@@ -144,15 +141,16 @@ class SyncNotificationsUseCase {
         notificationSchedule,
         currentLocalRotationIds,
       );
-      if (deleteResult.isFailure) {
-        errorMessage = deleteResult.failureOrNull!.message;
+      if (deleteResult.isError) {
+        exception = deleteResult.error;
         continue;
       }
     }
-    if (errorMessage != null) {
-      return Results.failure(NotificationFailure(errorMessage));
+
+    if (exception != null) {
+      return Result.error(exception);
     }
 
-    return Results.success(null);
+    return const Result.ok(null);
   }
 }

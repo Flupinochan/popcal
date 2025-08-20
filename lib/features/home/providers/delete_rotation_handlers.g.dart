@@ -6,7 +6,7 @@ part of 'delete_rotation_handlers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deleteRotationHash() => r'466d98f567df4f2557964bb6e263fb6530f32d87';
+String _$deleteRotationHash() => r'4ea10a6b6b9c7391cc311894a26e68966a170055';
 
 /// Copied from Dart SDK
 class _SystemHash {

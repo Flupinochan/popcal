@@ -45,12 +45,12 @@ void main() {
     updatedAt: DateTime(2025, 8, 14, 9),
     skipEvents: SkipEvents([
       SkipEvent(
-        dateKey: DateKey.create(DateTime(2025, 8, 20)).valueOrNull!,
+        dateKey: DateKey.create(DateTime(2025, 8, 20)).value,
         dayType: DayType.holiday,
-        skipCount: const SkipCount(skipCount: 1),
+        skipCount: const SkipCount(),
       ),
       SkipEvent(
-        dateKey: DateKey.create(DateTime(2025, 8, 27)).valueOrNull!,
+        dateKey: DateKey.create(DateTime(2025, 8, 27)).value,
         dayType: DayType.skipToNext,
         skipCount: const SkipCount(skipCount: 2),
       ),
@@ -61,7 +61,7 @@ void main() {
   );
 
   final scheduleMap = <DateKey, ScheduleDayResponse>{
-    DateKey.create(DateTime(2025, 8, 15)).valueOrNull!: ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 15)).value: ScheduleDayResponse(
       date: DateTime(2025, 8, 15, 9),
       memberName: 'user1',
       scheduleDayType: DayType.rotationDay,
@@ -73,7 +73,7 @@ void main() {
       canEnableHoliday: true,
       isValidRotationDay: true,
     ),
-    DateKey.create(DateTime(2025, 8, 18)).valueOrNull!: ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 18)).value: ScheduleDayResponse(
       date: DateTime(2025, 8, 18, 9),
       memberName: 'user2',
       scheduleDayType: DayType.rotationDay,
@@ -85,7 +85,7 @@ void main() {
       canEnableHoliday: true,
       isValidRotationDay: true,
     ),
-    DateKey.create(DateTime(2025, 8, 20)).valueOrNull!: ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 20)).value: ScheduleDayResponse(
       date: DateTime(2025, 8, 20, 9),
       memberName: 'ローテーション対象外',
       scheduleDayType: DayType.holiday,
@@ -97,7 +97,7 @@ void main() {
       canEnableHoliday: false,
       isValidRotationDay: false,
     ),
-    DateKey.create(DateTime(2025, 8, 22)).valueOrNull!: ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 22)).value: ScheduleDayResponse(
       date: DateTime(2025, 8, 22, 9),
       memberName: 'user3',
       scheduleDayType: DayType.rotationDay,
@@ -109,7 +109,7 @@ void main() {
       canEnableHoliday: true,
       isValidRotationDay: true,
     ),
-    DateKey.create(DateTime(2025, 8, 25)).valueOrNull!: ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 25)).value: ScheduleDayResponse(
       date: DateTime(2025, 8, 25, 9),
       memberName: 'user4',
       scheduleDayType: DayType.rotationDay,
@@ -121,7 +121,7 @@ void main() {
       canEnableHoliday: true,
       isValidRotationDay: true,
     ),
-    DateKey.create(DateTime(2025, 8, 27)).valueOrNull!: ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 27)).value: ScheduleDayResponse(
       date: DateTime(2025, 8, 27, 9),
       memberName: 'user3',
       scheduleDayType: DayType.skipToNext,
@@ -133,7 +133,7 @@ void main() {
       canEnableHoliday: true,
       isValidRotationDay: true,
     ),
-    DateKey.create(DateTime(2025, 8, 29)).valueOrNull!: ScheduleDayResponse(
+    DateKey.create(DateTime(2025, 8, 29)).value: ScheduleDayResponse(
       date: DateTime(2025, 8, 29, 9),
       memberName: 'user4',
       scheduleDayType: DayType.rotationDay,
@@ -183,7 +183,7 @@ void main() {
         return buildTestWidget([
           timeUtilsProvider.overrideWith((ref) => MockTimeUtilsImpl()),
           calendarScheduleResponseProvider(rotationId).overrideWith((ref) {
-            return Results.success(calendarScheduleResponse);
+            return Result.ok(calendarScheduleResponse);
           }),
         ]);
       },

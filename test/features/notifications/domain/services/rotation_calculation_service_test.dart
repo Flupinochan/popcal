@@ -2,7 +2,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
@@ -63,9 +62,9 @@ void main() {
       expect(notificationScheduleResult.isSuccess, isTrue);
 
       final newCurrentRotationIndex =
-          notificationScheduleResult.valueOrNull!.newCurrentRotationIndex;
+          notificationScheduleResult.value.newCurrentRotationIndex;
       final notificationEntries =
-          notificationScheduleResult.valueOrNull!.notificationEntries;
+          notificationScheduleResult.value.notificationEntries;
 
       // indexが通知設定分+されていること
       expect(newCurrentRotationIndex.value, notificationEntries.length);
@@ -160,9 +159,9 @@ void main() {
       expect(notificationScheduleResult.isSuccess, isTrue);
 
       final newCurrentRotationIndex =
-          notificationScheduleResult.valueOrNull!.newCurrentRotationIndex;
+          notificationScheduleResult.value.newCurrentRotationIndex;
       final notificationEntries =
-          notificationScheduleResult.valueOrNull!.notificationEntries;
+          notificationScheduleResult.value.notificationEntries;
 
       // indexが通知設定分+されていること
       expect(newCurrentRotationIndex.value, notificationEntries.length);
@@ -257,9 +256,9 @@ void main() {
       expect(notificationScheduleResult.isSuccess, isTrue);
 
       final newCurrentRotationIndex =
-          notificationScheduleResult.valueOrNull!.newCurrentRotationIndex;
+          notificationScheduleResult.value.newCurrentRotationIndex;
       final notificationEntries =
-          notificationScheduleResult.valueOrNull!.notificationEntries;
+          notificationScheduleResult.value.notificationEntries;
 
       // indexが通知設定分+されていること
       expect(newCurrentRotationIndex.value, notificationEntries.length);
@@ -344,9 +343,9 @@ void main() {
         skipEvents: SkipEvents(
           [
             SkipEvent(
-              dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).valueOrNull!,
+              dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).value,
               dayType: DayType.holiday,
-              skipCount: const SkipCount(skipCount: 1),
+              skipCount: const SkipCount(),
             ),
           ],
         ),
@@ -362,9 +361,9 @@ void main() {
       expect(notificationScheduleResult.isSuccess, isTrue);
 
       final newCurrentRotationIndex =
-          notificationScheduleResult.valueOrNull!.newCurrentRotationIndex;
+          notificationScheduleResult.value.newCurrentRotationIndex;
       final notificationEntries =
-          notificationScheduleResult.valueOrNull!.notificationEntries;
+          notificationScheduleResult.value.notificationEntries;
 
       // indexが通知設定分+されていること
       expect(newCurrentRotationIndex.value, notificationEntries.length);
@@ -452,9 +451,9 @@ void main() {
         // 2回目のローテーション日のuser2をスキップする
         skipEvents: SkipEvents([
           SkipEvent(
-            dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).valueOrNull!,
+            dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).value,
             dayType: DayType.skipToNext,
-            skipCount: const SkipCount(skipCount: 1),
+            skipCount: const SkipCount(),
           ),
         ]),
       );
@@ -469,9 +468,9 @@ void main() {
       expect(notificationScheduleResult.isSuccess, isTrue);
 
       final newCurrentRotationIndex =
-          notificationScheduleResult.valueOrNull!.newCurrentRotationIndex;
+          notificationScheduleResult.value.newCurrentRotationIndex;
       final notificationEntries =
-          notificationScheduleResult.valueOrNull!.notificationEntries;
+          notificationScheduleResult.value.notificationEntries;
 
       // 1回Skipしているため、indexが通知設定分に加え、+1されていること
       expect(newCurrentRotationIndex.value, notificationEntries.length + 1);
@@ -555,21 +554,21 @@ void main() {
           [
             // 2回交代無しスキップ
             SkipEvent(
-              dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).valueOrNull!,
+              dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).value,
               dayType: DayType.skipToNext,
               skipCount: const SkipCount(skipCount: 2),
             ),
             // 休日スキップ
             SkipEvent(
-              dateKey: DateKey.create(DateTime(2025, 8, 15, 10)).valueOrNull!,
+              dateKey: DateKey.create(DateTime(2025, 8, 15, 10)).value,
               dayType: DayType.holiday,
-              skipCount: const SkipCount(skipCount: 1),
+              skipCount: const SkipCount(),
             ),
             // 1回交代無しスキップ
             SkipEvent(
-              dateKey: DateKey.create(DateTime(2025, 8, 22, 10)).valueOrNull!,
+              dateKey: DateKey.create(DateTime(2025, 8, 22, 10)).value,
               dayType: DayType.skipToNext,
-              skipCount: const SkipCount(skipCount: 1),
+              skipCount: const SkipCount(),
             ),
           ],
         ),
@@ -585,9 +584,9 @@ void main() {
       expect(notificationScheduleResult.isSuccess, isTrue);
 
       final newCurrentRotationIndex =
-          notificationScheduleResult.valueOrNull!.newCurrentRotationIndex;
+          notificationScheduleResult.value.newCurrentRotationIndex;
       final notificationEntries =
-          notificationScheduleResult.valueOrNull!.notificationEntries;
+          notificationScheduleResult.value.notificationEntries;
 
       // 計2 + 1回Skipしているため、indexが通知設定分に加え、+3されていること
       expect(newCurrentRotationIndex.value, notificationEntries.length + 3);

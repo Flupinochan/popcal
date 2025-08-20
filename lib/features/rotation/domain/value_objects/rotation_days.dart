@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 
@@ -41,15 +41,15 @@ sealed class RotationDays with _$RotationDays {
 
   static Result<RotationDays> create(List<Weekday>? input) {
     if (input == null || input.isEmpty) {
-      return Results.failure(const ValidationFailure('ローテーション曜日を1つ以上追加してください'));
+      return const Result.error(ValidationException('ローテーション曜日を1つ以上追加してください'));
     }
 
-    return Results.success(RotationDays(input));
+    return Result.ok(RotationDays(input));
   }
 
   static Result<RotationDays> createFromInt(List<int>? input) {
     if (input == null || input.isEmpty) {
-      return Results.failure(const ValidationFailure('ローテーション曜日を1つ以上追加してください'));
+      return const Result.error(ValidationException('ローテーション曜日を1つ以上追加してください'));
     }
 
     final weekdays =
@@ -59,10 +59,10 @@ sealed class RotationDays with _$RotationDays {
             .toList();
 
     if (weekdays.isEmpty) {
-      return Results.failure(const ValidationFailure('有効な曜日データがありません'));
+      return const Result.error(ValidationException('有効な曜日データがありません'));
     }
 
-    return Results.success(RotationDays(weekdays));
+    return Result.ok(RotationDays(weekdays));
   }
 
   static RotationDays empty() => const RotationDays([]);

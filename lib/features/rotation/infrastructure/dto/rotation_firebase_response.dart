@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -36,32 +35,30 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
 
   Result<Rotation> toEntity() {
     final rotationIdResult = RotationId.create(rotationId);
-    if (rotationIdResult.isFailure) {
-      return Results.failure(ValidationFailure(rotationIdResult.displayText));
+    if (rotationIdResult.isError) {
+      return Result.error(rotationIdResult.error);
     }
 
     final userIdResult = UserId.create(userId);
-    if (userIdResult.isFailure) {
-      return Results.failure(ValidationFailure(userIdResult.displayText));
+    if (userIdResult.isError) {
+      return Result.error(userIdResult.error);
     }
 
     final rotationNameResult = RotationName.create(rotationName);
-    if (rotationNameResult.isFailure) {
-      return Results.failure(ValidationFailure(rotationNameResult.displayText));
+    if (rotationNameResult.isError) {
+      return Result.error(rotationNameResult.error);
     }
 
     final rotationMemberNamesResult = RotationMemberNames.create(
       rotationMemberNames,
     );
-    if (rotationMemberNamesResult.isFailure) {
-      return Results.failure(
-        ValidationFailure(rotationMemberNamesResult.displayText),
-      );
+    if (rotationMemberNamesResult.isError) {
+      return Result.error(rotationMemberNamesResult.error);
     }
 
     final rotationDaysResult = RotationDays.create(rotationDays);
-    if (rotationDaysResult.isFailure) {
-      return Results.failure(ValidationFailure(rotationDaysResult.displayText));
+    if (rotationDaysResult.isError) {
+      return Result.error(rotationDaysResult.error);
     }
 
     final notificationTimeResult = NotificationTime.fromTimeOfDay(
@@ -71,33 +68,31 @@ sealed class RotationFirebaseResponse with _$RotationFirebaseResponse {
     final currentRotationIndexResult = RotationIndex.createFromInt(
       currentRotationIndex,
     );
-    if (currentRotationIndexResult.isFailure) {
-      return Results.failure(
-        ValidationFailure(currentRotationIndexResult.displayText),
-      );
+    if (currentRotationIndexResult.isError) {
+      return Result.error(currentRotationIndexResult.error);
     }
 
     final createdAtResult = RotationCreatedAt.create(createdAt);
-    if (createdAtResult.isFailure) {
-      return Results.failure(ValidationFailure(createdAtResult.displayText));
+    if (createdAtResult.isError) {
+      return Result.error(createdAtResult.error);
     }
 
     final updatedAtResult = RotationUpdatedAt.create(updatedAt);
-    if (updatedAtResult.isFailure) {
-      return Results.failure(ValidationFailure(updatedAtResult.displayText));
+    if (updatedAtResult.isError) {
+      return Result.error(updatedAtResult.error);
     }
 
-    return Results.success(
+    return Result.ok(
       Rotation(
-        rotationId: rotationIdResult.valueOrNull,
-        userId: userIdResult.valueOrNull!,
-        rotationName: rotationNameResult.valueOrNull!,
-        rotationMemberNames: rotationMemberNamesResult.valueOrNull!,
-        rotationDays: rotationDaysResult.valueOrNull!,
+        rotationId: rotationIdResult.value,
+        userId: userIdResult.value,
+        rotationName: rotationNameResult.value,
+        rotationMemberNames: rotationMemberNamesResult.value,
+        rotationDays: rotationDaysResult.value,
         notificationTime: notificationTimeResult,
-        currentRotationIndex: currentRotationIndexResult.valueOrNull!,
-        createdAt: createdAtResult.valueOrNull!,
-        updatedAt: updatedAtResult.valueOrNull!,
+        currentRotationIndex: currentRotationIndexResult.value,
+        createdAt: createdAtResult.value,
+        updatedAt: updatedAtResult.value,
         skipEvents: skipEvents,
       ),
     );

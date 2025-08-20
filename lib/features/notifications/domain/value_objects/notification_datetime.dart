@@ -35,13 +35,13 @@ extension type NotificationDateTime._(DateTime value) {
 
   DateKey toDateKey() {
     final dateKeyResult = DateKey.create(value);
-    if (dateKeyResult.isFailure) {
-      throw Exception(dateKeyResult.displayText);
+    if (dateKeyResult.isError) {
+      throw Exception(dateKeyResult.error);
     }
-    return dateKeyResult.valueOrNull!;
+    return dateKeyResult.value;
   }
 
   static Result<NotificationDateTime> create(DateTime input) {
-    return Results.success(NotificationDateTime._(input));
+    return Result.ok(NotificationDateTime._(input));
   }
 }

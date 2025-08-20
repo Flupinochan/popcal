@@ -1,4 +1,3 @@
-import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
@@ -20,16 +19,16 @@ class RotationRepositoryImpl implements RotationRepository {
     final firebaseResult = await _firebaseRotationDatasource.createRotation(
       dto,
     );
-    if (firebaseResult.isFailure) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    if (firebaseResult.isError) {
+      return Result.error(firebaseResult.error);
     }
 
-    final entityResult = firebaseResult.valueOrNull!.toEntity();
-    if (entityResult.isFailure) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    final entityResult = firebaseResult.value.toEntity();
+    if (entityResult.isError) {
+      return Result.error(entityResult.error);
     }
 
-    return Results.success(entityResult.valueOrNull!);
+    return Result.ok(entityResult.value);
   }
 
   // 6. ローテーショングループ削除
@@ -42,10 +41,10 @@ class RotationRepositoryImpl implements RotationRepository {
       userId.value,
       rotationId.value,
     );
-    if (result.isFailure) {
-      return Results.failure(RotationFailure(result.displayText));
+    if (result.isError) {
+      return Result.error(result.error);
     }
-    return Results.success(result.valueOrNull);
+    return const Result.ok(null);
   }
 
   // 3. 特定のローテーショングループを取得
@@ -58,16 +57,16 @@ class RotationRepositoryImpl implements RotationRepository {
       userId.value,
       rotationId.value,
     );
-    if (firebaseResult.isFailure) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    if (firebaseResult.isError) {
+      return Result.error(firebaseResult.error);
     }
 
-    final entityResult = firebaseResult.valueOrNull!.toEntity();
-    if (entityResult.isFailure) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    final entityResult = firebaseResult.value!.toEntity();
+    if (entityResult.isError) {
+      return Result.error(firebaseResult.error);
     }
 
-    return Results.success(entityResult.valueOrNull);
+    return Result.ok(entityResult.value);
   }
 
   // 2. 手動ローテーショングループ一覧取得
@@ -76,19 +75,19 @@ class RotationRepositoryImpl implements RotationRepository {
     final firebaseResult = await _firebaseRotationDatasource.getRotations(
       userId.value,
     );
-    if (firebaseResult.isFailure) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    if (firebaseResult.isError) {
+      return Result.error(firebaseResult.error);
     }
 
     final entitiesResult =
-        firebaseResult.valueOrNull!.map((dto) => dto.toEntity()).toList();
+        firebaseResult.value.map((dto) => dto.toEntity()).toList();
 
-    if (entitiesResult.any((result) => result.isFailure)) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    if (entitiesResult.any((result) => result.isError)) {
+      return Result.error(firebaseResult.error);
     }
 
-    return Results.success(
-      entitiesResult.map((result) => result.valueOrNull!).toList(),
+    return Result.ok(
+      entitiesResult.map((result) => result.value).toList(),
     );
   }
 
@@ -96,23 +95,23 @@ class RotationRepositoryImpl implements RotationRepository {
   @override
   Future<Result<Rotation>> updateRotation(Rotation rotation) async {
     final dtoResult = UpdateRotationFirebaseRequest.fromEntity(rotation);
-    if (dtoResult.isFailure) {
-      return Results.failure(RotationFailure(dtoResult.displayText));
+    if (dtoResult.isError) {
+      return Result.error(dtoResult.error);
     }
 
     final firebaseResult = await _firebaseRotationDatasource.updateRotation(
-      dtoResult.valueOrNull!,
+      dtoResult.value,
     );
-    if (firebaseResult.isFailure) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    if (firebaseResult.isError) {
+      return Result.error(firebaseResult.error);
     }
 
-    final entityResult = firebaseResult.valueOrNull!.toEntity();
-    if (entityResult.isFailure) {
-      return Results.failure(RotationFailure(firebaseResult.displayText));
+    final entityResult = firebaseResult.value.toEntity();
+    if (entityResult.isError) {
+      return Result.error(firebaseResult.error);
     }
 
-    return Results.success(entityResult.valueOrNull!);
+    return Result.ok(entityResult.value);
   }
 
   // 1. 自動ローテーショングループ一覧取得
@@ -121,20 +120,23 @@ class RotationRepositoryImpl implements RotationRepository {
     return _firebaseRotationDatasource.watchRotations(userId.value).map((
       result,
     ) {
-      return result.when(
-        success: (dtos) {
-          final entities = <Rotation>[];
-          for (final dto in dtos) {
-            final entityResult = dto.toEntity();
-            if (entityResult.isFailure) {
-              return Results.failure(RotationFailure(entityResult.displayText));
-            }
-            entities.add(entityResult.valueOrNull!);
-          }
-          return Results.success(entities);
-        },
-        failure: Results.failure,
-      );
+      if (result.isError) {
+        return Result.error(result.error);
+      }
+
+      final dtos = result.value;
+
+      final entities = <Rotation>[];
+      for (final dto in dtos) {
+        final entityResult = dto.toEntity();
+        if (entityResult.isError) {
+          return Result.error(entityResult.error);
+        }
+
+        entities.add(entityResult.value);
+      }
+
+      return Result.ok(entities);
     });
   }
 }

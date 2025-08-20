@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/presentation/widgets/calendar_container.dart';
 import 'package:popcal/features/calendar/presentation/widgets/rotation_info_card.dart';
 import 'package:popcal/features/calendar/presentation/widgets/selected_day_info.dart';
@@ -31,56 +30,59 @@ class CalendarScreen extends HookConsumerWidget {
 
     // 画面表示用データを取得して表示
     return calendarDataAsync.when(
-      data:
-          (result) => result.when(
-            success:
-                (dto) => Scaffold(
-                  backgroundColor: glassTheme.backgroundColor,
-                  extendBodyBehindAppBar: true,
-                  appBar: GlassAppBar(
-                    title: dto.rotationResponse.rotationName,
-                    leadingIcon: Icons.arrow_back_ios_new,
-                    onLeadingPressed: () => const HomeRoute().go(context),
-                  ),
-                  body: Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: glassTheme.primaryGradient,
-                    ),
-                    child: SafeArea(
+      data: (result) {
+        if (result.isError) {
+          return CustomErrorScreen(message: result.error.toString());
+        }
+
+        final dto = result.value;
+
+        return Scaffold(
+          backgroundColor: glassTheme.backgroundColor,
+          extendBodyBehindAppBar: true,
+          appBar: GlassAppBar(
+            title: dto.rotationResponse.rotationName,
+            leadingIcon: Icons.arrow_back_ios_new,
+            onLeadingPressed: () => const HomeRoute().go(context),
+          ),
+          body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: glassTheme.primaryGradient,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
                       child: Column(
+                        spacing: 16,
                         children: [
-                          Expanded(
-                            child: SingleChildScrollView(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                spacing: 16,
-                                children: [
-                                  CalendarContainer(
-                                    calendarScheduleResponse: dto,
-                                    focusedDay: focusedDay,
-                                    selectedDay: selectedDay,
-                                    now: now,
-                                  ),
-                                  SelectedDayInfo(
-                                    calendarScheduleResponse: dto,
-                                    selectedDay: selectedDay.value,
-                                  ),
-                                  RotationInfoCard(
-                                    rotationResponse: dto.rotationResponse,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          CalendarContainer(
+                            calendarScheduleResponse: dto,
+                            focusedDay: focusedDay,
+                            selectedDay: selectedDay,
+                            now: now,
+                          ),
+                          SelectedDayInfo(
+                            calendarScheduleResponse: dto,
+                            selectedDay: selectedDay.value,
+                          ),
+                          RotationInfoCard(
+                            rotationResponse: dto.rotationResponse,
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
-            failure: (error) => CustomErrorScreen(message: error.message),
+                ],
+              ),
+            ),
           ),
+        );
+      },
       loading: () => const CustomLoadingScreen(),
       error: (error, stack) => const CustomErrorScreen(),
     );

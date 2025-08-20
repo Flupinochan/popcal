@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/auth/providers/auth_handlers.dart';
@@ -45,12 +44,12 @@ class HomeScreen extends HookConsumerWidget {
         newValue.when(
           data: (result) {
             if (result == null) return;
-            if (result.isFailure) {
+            if (result.isError) {
               SnackBarUtils.showGlassSnackBar(
                 textTheme: textTheme,
                 glassTheme: glassTheme,
                 scaffoldMessenger: scaffoldMessenger,
-                flexibleMessage: '復元に失敗しました: ${result.failureOrNull}',
+                flexibleMessage: '復元に失敗しました: ${result.error}',
               );
             }
             if (previousValue?.isLoading ?? false) {
@@ -58,7 +57,7 @@ class HomeScreen extends HookConsumerWidget {
                 textTheme: textTheme,
                 glassTheme: glassTheme,
                 scaffoldMessenger: scaffoldMessenger,
-                flexibleMessage: result.valueOrNull!.rotationName,
+                flexibleMessage: result.value.rotationName,
                 fixedMessage: 'を復元しました',
               );
             }
@@ -81,29 +80,29 @@ class HomeScreen extends HookConsumerWidget {
     // ユーザ情報取得
     final authState = ref.watch(authStateChangesProvider);
     return authState.when(
-      data:
-          (dtoResult) => dtoResult.when(
-            success: (dto) {
-              if (dto == null) return const LoginScreen();
+      data: (dtoResult) {
+        if (dtoResult.isError) {
+          return CustomErrorScreen(message: dtoResult.error.toString());
+        }
 
-              // バックグラウンドで通知同期処理
-              useEffect(() {
-                // Widget構築後に実行
-                Future(() {
-                  ref
-                      .read(syncRotationNotifierProvider.notifier)
-                      .syncRotation(dto.userId);
-                });
+        final dto = dtoResult.value;
+        if (dto == null) {
+          return const LoginScreen();
+        }
 
-                return null;
-              }, [dto.userId]);
+        // バックグラウンドで通知同期処理
+        useEffect(() {
+          // Widget構築後に実行
+          Future(() {
+            ref
+                .read(syncRotationNotifierProvider.notifier)
+                .syncRotation(dto.userId);
+          });
+          return null;
+        }, [dto.userId]);
 
-              return _buildHome(context, ref, dto);
-            },
-            failure: (error) {
-              return CustomErrorScreen(message: error.message);
-            },
-          ),
+        return _buildHome(context, ref, dto);
+      },
       loading: CustomLoadingScreen.new,
       error: (error, stack) => const CustomErrorScreen(),
     );
@@ -134,22 +133,25 @@ class HomeScreen extends HookConsumerWidget {
         child: SafeArea(
           // ローテーショングループ一覧表示
           child: rotationResponsesStream.when(
-            data:
-                (result) => result.when(
-                  success:
-                      (rotationResponses) =>
-                          rotationResponses.isEmpty
-                              ? _buildRotationEmpty(context)
-                              : _buildRotations(
-                                context,
-                                ref,
-                                rotationResponses,
-                              ),
-                  failure:
-                      (error) => CustomErrorSimpleScreen(
-                        message: error.message,
-                      ),
-                ),
+            data: (result) {
+              if (result.isError) {
+                return CustomErrorSimpleScreen(
+                  message: result.error.toString(),
+                );
+              }
+
+              final rotationResponses = result.value;
+
+              if (rotationResponses.isEmpty) {
+                return _buildRotationEmpty(context);
+              }
+
+              return _buildRotations(
+                context,
+                ref,
+                rotationResponses,
+              );
+            },
             loading: () => const CustomLoadingSimpleScreen(),
             error:
                 (error, stack) => CustomErrorSimpleScreen(
@@ -249,30 +251,27 @@ class HomeScreen extends HookConsumerWidget {
       ).future,
     );
 
-    result.when(
-      success: (_) {
-        SnackBarUtils.showGlassSnackBarWithAction(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
-          flexibleMessage: rotationResponse.rotationName,
-          fixedMessage: 'を削除しました',
-          onAction:
-              () => _handleRestore(
-                ref,
-                rotationResponse,
-              ),
-          actionLabel: '元に戻す',
-        );
-      },
-      failure: (error) {
-        SnackBarUtils.showGlassSnackBar(
-          textTheme: textTheme,
-          glassTheme: glassTheme,
-          scaffoldMessenger: scaffoldMessenger,
-          flexibleMessage: '削除に失敗しました',
-        );
-      },
+    if (result.isError) {
+      SnackBarUtils.showGlassSnackBar(
+        textTheme: textTheme,
+        glassTheme: glassTheme,
+        scaffoldMessenger: scaffoldMessenger,
+        flexibleMessage: '削除に失敗しました',
+      );
+    }
+
+    SnackBarUtils.showGlassSnackBarWithAction(
+      textTheme: textTheme,
+      glassTheme: glassTheme,
+      scaffoldMessenger: scaffoldMessenger,
+      flexibleMessage: rotationResponse.rotationName,
+      fixedMessage: 'を削除しました',
+      onAction:
+          () => _handleRestore(
+            ref,
+            rotationResponse,
+          ),
+      actionLabel: '元に戻す',
     );
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 
 part 'notification_time.freezed.dart';
@@ -41,18 +41,18 @@ sealed class NotificationTime with _$NotificationTime {
     required int minute,
   }) {
     if (hour < 0 || hour > 23) {
-      Results.failure<NotificationTime>(
-        const ValidationFailure('hour must be between 0 and 23'),
+      const Result<NotificationTime>.error(
+        ValidationException('hour must be between 0 and 23'),
       );
     }
 
     if (minute < 0 || minute > 59) {
-      Results.failure<NotificationTime>(
-        const ValidationFailure('minute must be between 0 and 59'),
+      const Result<NotificationTime>.error(
+        ValidationException('minute must be between 0 and 59'),
       );
     }
 
-    return Results.success(
+    return Result.ok(
       NotificationTime(
         hour: hour,
         minute: minute,

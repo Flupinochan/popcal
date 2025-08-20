@@ -1,6 +1,5 @@
-import 'package:popcal/core/utils/failures/auth_failure.dart';
-import 'package:popcal/core/utils/failures/notification_failure.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/auth_exception.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/core/utils/time_utils.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
@@ -32,12 +31,12 @@ class GetCalendarScheduleUseCase {
   Future<Result<CalendarSchedule>> execute(RotationId rotationId) async {
     // 1. ユーザ情報を取得
     final authResult = await _authRepository.getUser();
-    if (authResult.isFailure) {
-      return Results.failure(authResult.failureOrNull!);
+    if (authResult.isError) {
+      return Result.error(authResult.error);
     }
-    final appUser = authResult.valueOrNull;
+    final appUser = authResult.value;
     if (appUser == null) {
-      return Results.failure(const AuthFailure('未認証です'));
+      return const Result.error(AuthException('未認証です'));
     }
 
     // 2. ローテーション情報取得
@@ -45,12 +44,12 @@ class GetCalendarScheduleUseCase {
       appUser.userId,
       rotationId,
     );
-    if (rotationResult.isFailure) {
-      return Results.failure(rotationResult.failureOrNull!);
+    if (rotationResult.isError) {
+      return Result.error(rotationResult.error);
     }
-    final rotation = rotationResult.valueOrNull;
+    final rotation = rotationResult.value;
     if (rotation == null) {
-      return Results.failure(const ValidationFailure('ローテーション情報が見つかりません'));
+      return const Result.error(ValidationException('ローテーション情報が見つかりません'));
     }
 
     // 3. カレンダー表示用通知情報を取得
@@ -68,18 +67,16 @@ class GetCalendarScheduleUseCase {
           fromDateTime: fromDateTime,
           toDateTime: toDateTime,
         );
-    if (scheduleMapResult.isFailure) {
-      return Results.failure(
-        NotificationFailure(scheduleMapResult.displayText),
-      );
+    if (scheduleMapResult.isError) {
+      return Result.error(scheduleMapResult.error);
     }
-    final scheduleMap = scheduleMapResult.valueOrNull!;
+    final scheduleMap = scheduleMapResult.value;
 
     final calendarData = CalendarSchedule(
       rotation: initRotation,
       scheduleMap: scheduleMap,
     );
 
-    return Results.success(calendarData);
+    return Result.ok(calendarData);
   }
 }

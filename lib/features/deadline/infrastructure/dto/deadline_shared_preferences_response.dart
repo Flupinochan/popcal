@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/domain/entities/deadline.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
@@ -37,12 +37,12 @@ sealed class DeadlineSharedPreferencesResponse
 
   Result<Deadline> toEntity() {
     final result = NotificationTime.createFromInt(hour: hour, minute: minute);
-    if (result.isFailure) {
-      return Results.failure(ValidationFailure(result.displayText));
+    if (result.isError) {
+      return Result.error(result.error);
     }
 
-    return Results.success(
-      Deadline(isEnabled: isEnabled, notificationTime: result.valueOrNull!),
+    return Result.ok(
+      Deadline(isEnabled: isEnabled, notificationTime: result.value),
     );
   }
 
@@ -52,9 +52,9 @@ sealed class DeadlineSharedPreferencesResponse
   ) {
     try {
       final dto = DeadlineSharedPreferencesResponse.fromJson(json);
-      return Results.success(dto);
+      return Result.ok(dto);
     } on Exception catch (e) {
-      return Results.failure(ValidationFailure('JSON parsing failed: $e'));
+      return Result.error(ValidationException('JSON parsing failed: $e'));
     }
   }
 }
@@ -78,8 +78,8 @@ extension DeadlineSharedPreferencesResponseJsonX
       final map = jsonDecode(jsonString) as Map<String, dynamic>;
       return DeadlineSharedPreferencesResponse.fromJsonSafe(map);
     } on Exception catch (e) {
-      return Results.failure(
-        ValidationFailure('JSON string parsing failed: $e'),
+      return Result.error(
+        ValidationException('JSON string parsing failed: $e'),
       );
     }
   }

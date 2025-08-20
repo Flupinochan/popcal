@@ -1,5 +1,3 @@
-import 'package:popcal/core/utils/failures/notification_failure.dart';
-import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
@@ -19,17 +17,15 @@ class UpdateRotationUseCase {
 
   Future<Result<Rotation>> execute(Rotation rotation) async {
     // 1. 通知設定を削除
-    final sourceId = SourceId.createFromRotationId(rotation.rotationId!);
-    if (sourceId.isFailure) {
-      return Results.failure(
-        NotificationFailure(sourceId.displayText),
-      );
+    final sourceIdResult = SourceId.createFromRotationId(rotation.rotationId!);
+    if (sourceIdResult.isError) {
+      return Result.error(sourceIdResult.error);
     }
 
     final deleteResult = await _notificationRepository
-        .deleteNotificationsBySourceId(sourceId.valueOrNull!);
-    if (deleteResult.isFailure) {
-      return Results.failure(deleteResult.failureOrNull!);
+        .deleteNotificationsBySourceId(sourceIdResult.value);
+    if (deleteResult.isError) {
+      return Result.error(deleteResult.error);
     }
 
     // 2. 通知設定計算
@@ -42,12 +38,10 @@ class UpdateRotationUseCase {
           fromDateTime: fromDateTime,
           toDateTime: toDateTime,
         );
-    if (notificationScheduleResult.isFailure) {
-      return Results.failure(
-        NotificationFailure(notificationScheduleResult.displayText),
-      );
+    if (notificationScheduleResult.isError) {
+      return Result.error(notificationScheduleResult.error);
     }
-    final notificationSchedule = notificationScheduleResult.valueOrNull!;
+    final notificationSchedule = notificationScheduleResult.value;
 
     // 3. 各通知を作成
     final createResults = await Future.wait(
@@ -56,10 +50,8 @@ class UpdateRotationUseCase {
       ),
     );
     for (final createNotificationResult in createResults) {
-      if (createNotificationResult.isFailure) {
-        return Results.failure(
-          NotificationFailure(createNotificationResult.displayText),
-        );
+      if (createNotificationResult.isError) {
+        return Result.error(createNotificationResult.error);
       }
     }
 
@@ -71,12 +63,10 @@ class UpdateRotationUseCase {
         .updateRotation(
           updatedRotation,
         );
-    if (updatedRotationNewIndexResult.isFailure) {
-      return Results.failure(
-        RotationFailure(updatedRotationNewIndexResult.displayText),
-      );
+    if (updatedRotationNewIndexResult.isError) {
+      return Result.error(updatedRotationNewIndexResult.error);
     }
-    final finalRotation = updatedRotationNewIndexResult.valueOrNull!;
-    return Results.success(finalRotation);
+    final finalRotation = updatedRotationNewIndexResult.value;
+    return Result.ok(finalRotation);
   }
 }

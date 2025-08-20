@@ -1,4 +1,3 @@
-import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/repositories/auth_repository.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
@@ -21,25 +20,25 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final emailResult = Email.create(dto.email);
-      if (emailResult.isFailure) {
-        return Results.failure(AuthFailure(emailResult.displayText));
+      if (emailResult.isError) {
+        return Result.error(emailResult.error);
       }
 
       final passwordResult = Password.create(dto.password);
-      if (passwordResult.isFailure) {
-        return Results.failure(AuthFailure(passwordResult.displayText));
+      if (passwordResult.isError) {
+        return Result.error(passwordResult.error);
       }
 
       final signInResult = await _authRepository.signInWithEmailAndPassword(
-        emailResult.valueOrNull!,
-        passwordResult.valueOrNull!,
+        emailResult.value,
+        passwordResult.value,
       );
-      if (signInResult.isFailure) {
-        return Results.failure(AuthFailure(signInResult.displayText));
+      if (signInResult.isError) {
+        return Result.error(signInResult.error);
       }
 
-      final userResponse = UserResponse.fromEntity(signInResult.valueOrNull!);
-      return Results.success(userResponse);
+      final userResponse = UserResponse.fromEntity(signInResult.value);
+      return Result.ok(userResponse);
     });
   }
 
@@ -47,25 +46,25 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final emailResult = Email.create(dto.email);
-      if (emailResult.isFailure) {
-        return Results.failure(AuthFailure(emailResult.displayText));
+      if (emailResult.isError) {
+        return Result.error(emailResult.error);
       }
 
       final passwordResult = Password.create(dto.password);
-      if (passwordResult.isFailure) {
-        return Results.failure(AuthFailure(passwordResult.displayText));
+      if (passwordResult.isError) {
+        return Result.error(passwordResult.error);
       }
 
       final signUpResult = await _authRepository.signUpWithEmailAndPassword(
-        emailResult.valueOrNull!,
-        passwordResult.valueOrNull!,
+        emailResult.value,
+        passwordResult.value,
       );
-      if (signUpResult.isFailure) {
-        return Results.failure(AuthFailure(signUpResult.displayText));
+      if (signUpResult.isError) {
+        return Result.error(signUpResult.error);
       }
 
-      final userResponse = UserResponse.fromEntity(signUpResult.valueOrNull!);
-      return Results.success(userResponse);
+      final userResponse = UserResponse.fromEntity(signUpResult.value);
+      return Result.ok(userResponse);
     });
   }
 }

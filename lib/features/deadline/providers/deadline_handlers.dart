@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:popcal/core/utils/failures/deadline_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/presentation/dto/deadline_notifications_response.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
@@ -15,10 +14,10 @@ Future<Result<List<DeadlineNotificationsResponse>>> getDeadlineNotifications(
   final result = await ref
       .watch(notificationGatewayProvider)
       .getNotificationsBySourceId(SourceId.createDeadlineId());
-  if (result.isFailure) {
-    return Results.failure(DeadlineFailure(result.displayText));
+  if (result.isError) {
+    return Result.error(result.error);
   }
-  return Results.success(
-    DeadlineNotificationsResponse.fromEntity(result.valueOrNull!),
+  return Result.ok(
+    DeadlineNotificationsResponse.fromEntity(result.value),
   );
 }

@@ -7,7 +7,7 @@ part of 'rotation_handlers.dart';
 // **************************************************************************
 
 String _$rotationDataResponseHash() =>
-    r'd5bda8e24c345fa5a5f7c991bd71050034eac859';
+    r'45b06c9e25d7c18675cc02150a389f12ddc5e0b8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -159,7 +159,7 @@ class _RotationDataResponseProviderElement
 }
 
 String _$rotationResponsesStreamHash() =>
-    r'cf47c1f4eafdc45b44f912918e8a64e0e55cdb32';
+    r'9bc51f04f574762bbe52ad3a9d875cc70fb1cbb1';
 
 /// See also [rotationResponsesStream].
 @ProviderFor(rotationResponsesStream)

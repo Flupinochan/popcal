@@ -6,7 +6,7 @@ part of 'deadline_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$deadlineNotifierHash() => r'1067897987a4d92c8bf03012055bb9385c26c805';
+String _$deadlineNotifierHash() => r'c323927bab30d4dd6bd9240741ccb3d4a253acb8';
 
 /// See also [DeadlineNotifier].
 @ProviderFor(DeadlineNotifier)

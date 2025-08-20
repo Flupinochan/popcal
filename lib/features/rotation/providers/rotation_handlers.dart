@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:popcal/core/utils/failures/auth_failure.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/auth_exception.dart';
+import 'package:popcal/core/utils/exceptions/rotation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -19,41 +19,44 @@ Future<Result<RotationDataResponse>> rotationDataResponse(
 ) async {
   // 1. ユーザ情報を取得
   final authResult = await ref.watch(authStateChangesProvider.future);
-  if (authResult.isFailure) {
-    return Results.failure(authResult.failureOrNull!);
+  if (authResult.isError) {
+    return Result.error(authResult.error);
   }
-  final userDto = authResult.valueOrNull;
+  final userDto = authResult.value;
   if (userDto == null) {
-    return Results.failure(const AuthFailure('未認証です'));
+    return const Result.error(AuthException('未認証です'));
   }
   if (rotationId == null) {
-    return Results.success(RotationDataResponse(userDto, null));
+    return Result.ok(RotationDataResponse(userDto, null));
   }
 
   // 2. ローテーショングループ情報を取得
   final userIdResult = UserId.create(userDto.userId);
-  if (userIdResult.isFailure) {
-    return Results.failure(ValidationFailure(userIdResult.displayText));
+  if (userIdResult.isError) {
+    return Result.error(userIdResult.error);
   }
 
   final rotationIdResult = RotationId.create(rotationId);
-  if (rotationIdResult.isFailure) {
-    return Results.failure(ValidationFailure(rotationIdResult.displayText));
+  if (rotationIdResult.isError) {
+    return Result.error(rotationIdResult.error);
   }
 
   final rotationRepository = ref.watch(rotationRepositoryProvider);
   final rotationResult = await rotationRepository.getRotation(
-    userIdResult.valueOrNull!,
-    rotationIdResult.valueOrNull!,
+    userIdResult.value,
+    rotationIdResult.value,
   );
-  if (rotationResult.isFailure) {
-    return Results.failure(rotationResult.failureOrNull!);
+  if (rotationResult.isError) {
+    return Result.error(rotationResult.error);
   }
 
-  final rotationResponse = RotationResponse.fromEntity(
-    rotationResult.valueOrNull!,
-  );
-  return Results.success(RotationDataResponse(userDto, rotationResponse));
+  final rotation = rotationResult.value;
+  if (rotation == null) {
+    return const Result.error(RotationException('ローテーション情報が取得できませんでした'));
+  }
+
+  final rotationResponse = RotationResponse.fromEntity(rotation);
+  return Result.ok(RotationDataResponse(userDto, rotationResponse));
 }
 
 @riverpod
@@ -62,23 +65,24 @@ Stream<Result<List<RotationResponse>>> rotationResponsesStream(
   String userId,
 ) {
   final userIdResult = UserId.create(userId);
-  if (userIdResult.isFailure) {
+  if (userIdResult.isError) {
     return Stream.value(
-      Results.failure(ValidationFailure(userIdResult.displayText)),
+      Result.error(userIdResult.error),
     );
   }
 
   final rotationRepository = ref.watch(rotationRepositoryProvider);
-  return rotationRepository.watchRotations(userIdResult.valueOrNull!).asyncMap((
+  return rotationRepository.watchRotations(userIdResult.value).asyncMap((
     entityResult,
   ) async {
-    return entityResult.when(
-      success: (rotations) {
-        final dtoList = rotations.map(RotationResponse.fromEntity).toList();
-        return Results.success(dtoList);
-      },
-      failure: Results.failure,
-    );
+    if (entityResult.isError) {
+      return Result.error(entityResult.error);
+    }
+
+    final entity = entityResult.value;
+
+    final dtoList = entity.map(RotationResponse.fromEntity).toList();
+    return Result.ok(dtoList);
   });
 }
 

@@ -1,4 +1,3 @@
-import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
@@ -15,18 +14,18 @@ class SyncRotationNotifier extends _$SyncRotationNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final userIdResult = UserId.create(userId);
-      if (userIdResult.isFailure) {
-        return Results.failure(AuthFailure(userIdResult.displayText));
+      if (userIdResult.isError) {
+        return Result.error(userIdResult.error);
       }
 
       final syncResult = await ref
           .watch(syncNotificationsUseCaseProvider)
-          .execute(userIdResult.valueOrNull!);
-      if (syncResult.isFailure) {
-        return Results.failure(AuthFailure(syncResult.displayText));
+          .execute(userIdResult.value);
+      if (syncResult.isError) {
+        return Result.error(syncResult.error);
       }
 
-      return Results.success(null);
+      return const Result.ok(null);
     });
   }
 }

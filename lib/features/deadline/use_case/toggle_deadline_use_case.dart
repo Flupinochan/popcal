@@ -1,5 +1,3 @@
-import 'package:popcal/core/utils/failures/deadline_failure.dart';
-import 'package:popcal/core/utils/failures/notification_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/domain/entities/deadline.dart';
 import 'package:popcal/features/deadline/domain/repositories/deadline_repository.dart';
@@ -21,8 +19,8 @@ class ToggleDeadlineUseCase {
   Future<Result<Deadline>> execute(Deadline deadline) async {
     // 1. 設定on/offの保存
     final settingsResult = await _deadlineRepository.saveSettings(deadline);
-    if (settingsResult.isFailure) {
-      return Results.failure(DeadlineFailure(settingsResult.displayText));
+    if (settingsResult.isError) {
+      return Result.error(settingsResult.error);
     }
 
     // 2-1. on時 通知登録
@@ -30,10 +28,10 @@ class ToggleDeadlineUseCase {
       // 通知スケジュール計算
       final calculateResult = _deadlineCalculationService
           .calculationDeadlineSchedule(deadline: deadline);
-      if (calculateResult.isFailure) {
-        return Results.failure(DeadlineFailure(calculateResult.displayText));
+      if (calculateResult.isError) {
+        return Result.error(calculateResult.error);
       }
-      final notificationEntries = calculateResult.valueOrNull!;
+      final notificationEntries = calculateResult.value;
 
       // 各通知作成
       final createResults = await Future.wait(
@@ -42,23 +40,21 @@ class ToggleDeadlineUseCase {
         ),
       );
       for (final createNotificationResult in createResults) {
-        if (createNotificationResult.isFailure) {
-          return Results.failure(
-            NotificationFailure(createNotificationResult.displayText),
-          );
+        if (createNotificationResult.isError) {
+          return Result.error(createNotificationResult.error);
         }
       }
 
-      return Results.success(deadline);
+      return Result.ok(deadline);
     }
 
     // 2-2. off時 通知削除
     final sourceId = SourceId.createDeadlineId();
     final deleteResult = await _notificationGateway
         .deleteNotificationsBySourceId(sourceId);
-    if (deleteResult.isFailure) {
-      return Results.failure(NotificationFailure(deleteResult.displayText));
+    if (deleteResult.isError) {
+      return Result.error(deleteResult.error);
     }
-    return Results.success(deadline);
+    return Result.ok(deadline);
   }
 }

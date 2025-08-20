@@ -1,4 +1,4 @@
-import 'package:popcal/core/utils/failures/deadline_failure.dart';
+import 'package:popcal/core/utils/exceptions/deadline_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/core/utils/time_utils.dart';
 import 'package:popcal/features/deadline/infrastructure/dto/deadline_shared_preferences_response.dart';
@@ -19,7 +19,7 @@ class DeadlineSharedPreferences {
       final jsonString = _sharedPreferences.getString(_key);
       final now = _timeUtils.now();
       if (jsonString == null) {
-        return Results.success(
+        return Result.ok(
           DeadlineSharedPreferencesResponse(
             isEnabled: false,
             hour: now.hour,
@@ -30,16 +30,16 @@ class DeadlineSharedPreferences {
 
       final dtoResult =
           DeadlineSharedPreferencesResponseJsonX.fromJsonStringSafe(jsonString);
-      if (dtoResult.isFailure) {
-        return Results.failure(
-          DeadlineFailure('月末営業日通知の設定取得に失敗しました: $dtoResult'),
+      if (dtoResult.isError) {
+        return Result.error(
+          DeadlineException('月末営業日通知の設定取得に失敗しました: $dtoResult'),
         );
       }
-      final dto = dtoResult.valueOrNull!;
-      return Results.success(dto);
+      final dto = dtoResult.value;
+      return Result.ok(dto);
     } on Exception catch (error) {
-      return Results.failure(
-        DeadlineFailure('月末営業日通知の設定取得に失敗しました: $error'),
+      return Result.error(
+        DeadlineException('月末営業日通知の設定取得に失敗しました: $error'),
       );
     }
   }
@@ -50,10 +50,10 @@ class DeadlineSharedPreferences {
     try {
       final jsonString = dto.toJsonString();
       await _sharedPreferences.setString(_key, jsonString);
-      return Results.success(null);
+      return const Result.ok(null);
     } on Exception catch (error) {
-      return Results.failure(
-        DeadlineFailure('月末営業日通知の設定保存に失敗しました: $error'),
+      return Result.error(
+        DeadlineException('月末営業日通知の設定保存に失敗しました: $error'),
       );
     }
   }

@@ -1,4 +1,3 @@
-import 'package:popcal/core/utils/failures/rotation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/core/utils/time_utils.dart';
 import 'package:popcal/features/rotation/presentation/dto/create_rotation_request.dart';
@@ -28,19 +27,19 @@ class RotationNotifier extends _$RotationNotifier {
       final currentTime = _timeUtils.now();
 
       final entityResult = dto.toEntity(currentTime: currentTime);
-      if (entityResult.isFailure) {
-        return Results.failure(RotationFailure(entityResult.displayText));
+      if (entityResult.isError) {
+        return Result.error(entityResult.error);
       }
 
       final useCaseResult = await ref
           .read(createRotationUseCaseProvider)
-          .execute(entityResult.valueOrNull!);
-      if (useCaseResult.isFailure) {
-        return Results.failure(RotationFailure(useCaseResult.displayText));
+          .execute(entityResult.value);
+      if (useCaseResult.isError) {
+        return Result.error(useCaseResult.error);
       }
 
-      return Results.success(
-        RotationResponse.fromEntity(useCaseResult.valueOrNull!),
+      return Result.ok(
+        RotationResponse.fromEntity(useCaseResult.value),
       );
     });
   }
@@ -53,19 +52,19 @@ class RotationNotifier extends _$RotationNotifier {
       final currentTime = _timeUtils.now();
 
       final entityResult = dto.toEntity(currentTime: currentTime);
-      if (entityResult.isFailure) {
-        return Results.failure(RotationFailure(entityResult.displayText));
+      if (entityResult.isError) {
+        return Result.error(entityResult.error);
       }
 
       final useCaseResult = await ref
           .read(updateRotationUseCaseProvider)
-          .execute(entityResult.valueOrNull!);
-      if (useCaseResult.isFailure) {
-        return Results.failure(RotationFailure(useCaseResult.displayText));
+          .execute(entityResult.value);
+      if (useCaseResult.isError) {
+        return Result.error(useCaseResult.error);
       }
 
-      return Results.success(
-        RotationResponse.fromEntity(useCaseResult.valueOrNull!),
+      return Result.ok(
+        RotationResponse.fromEntity(useCaseResult.value),
       );
     });
   }

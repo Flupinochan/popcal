@@ -35,7 +35,7 @@ void main() {
             return MockNotificationGateway();
           }),
           rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
-            return Stream.value(Results.success([]));
+            return Stream.value(const Result.ok([]));
           }),
           syncNotificationsUseCaseProvider.overrideWith((ref) {
             return MockSyncNotificationsUseCase();
@@ -78,7 +78,7 @@ void main() {
           // 1. 認証済かつ認証画面にいる => ホーム画面へ
           () => buildTestWidget([
             authStateChangesProvider.overrideWith(
-              (ref) => Stream.value(Results.success(mockUser)),
+              (ref) => Stream.value(const Result.ok(mockUser)),
             ),
           ], const LoginRoute().location),
     );
@@ -100,7 +100,7 @@ void main() {
           // 2. 未認証かつ認証画面にいない => 認証画面へ
           () => buildTestWidget([
             authStateChangesProvider.overrideWith(
-              (ref) => Stream.value(Results.success(null)),
+              (ref) => Stream.value(const Result.ok(null)),
             ),
           ], const HomeRoute().location),
     );
@@ -122,7 +122,7 @@ void main() {
           // 3. 認証済かつ認証画面にいない => 画面遷移しない
           () => buildTestWidget([
             authStateChangesProvider.overrideWith(
-              (ref) => Stream.value(Results.success(mockUser)),
+              (ref) => Stream.value(const Result.ok(mockUser)),
             ),
           ], const HomeRoute().location),
     );
@@ -144,8 +144,7 @@ void main() {
           // 4. 認証エラー時に認証画面にいない => 認証画面へ
           () => buildTestWidget([
             authStateChangesProvider.overrideWith(
-              (ref) =>
-                  Stream.value(Results.failure(const AuthFailure('認証エラー'))),
+              (ref) => Stream.value(Result.error(const AuthFailure('認証エラー'))),
             ),
           ], const HomeRoute().location),
     );
@@ -157,7 +156,7 @@ class MockAuthNotifier extends Mock implements AuthNotifier {}
 class MockNotificationGateway extends Mock implements NotificationGateway {
   @override
   Future<Result<void>> initializeNotificationLaunch() async {
-    return Results.success(null);
+    return const Result.ok(null);
   }
 }
 
@@ -165,6 +164,6 @@ class MockSyncNotificationsUseCase extends Mock
     implements SyncNotificationsUseCase {
   @override
   Future<Result<void>> execute(UserId userId) async {
-    return Results.success(null);
+    return const Result.ok(null);
   }
 }

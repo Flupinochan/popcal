@@ -1,0 +1,15 @@
+{
+	"Exception": {
+		"scope": "dart",
+		"prefix": "exc",
+		"body": [
+			"import 'package:popcal/core/utils/app_exception.dart';",
+			"",
+			"class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} extends AppException {",
+			"\tconst ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}(super.message);",
+			"}",
+			""
+		],
+		"description": "Create Custom Exception Class"
+	}
+}

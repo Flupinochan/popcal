@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:popcal/core/providers/core_provider.dart';
 import 'package:popcal/core/themes/glass_theme.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_handlers.dart';
 import 'package:popcal/features/auth/providers/auth_providers.dart';
@@ -52,15 +51,18 @@ class DrawerScreen extends HookConsumerWidget {
                       builder: (context, ref, child) {
                         final authResult = ref.watch(authStateChangesProvider);
                         return authResult.when(
-                          data:
-                              (result) => result.when(
-                                success: (userDto) {
-                                  return userDto == null
-                                      ? _buildUserInfo(textTheme, null)
-                                      : _buildUserInfo(textTheme, userDto);
-                                },
-                                failure: (_) => _buildUserInfo(textTheme, null),
-                              ),
+                          data: (result) {
+                            if (result.isError) {
+                              return _buildUserInfo(textTheme, null);
+                            }
+
+                            final userDto = result.value;
+                            if (userDto == null) {
+                              return _buildUserInfo(textTheme, null);
+                            }
+
+                            return _buildUserInfo(textTheme, userDto);
+                          },
                           loading: () => _buildUserInfo(textTheme, null),
                           error: (_, _) => _buildUserInfo(textTheme, null),
                         );

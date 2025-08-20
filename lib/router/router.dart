@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/providers/auth_handlers.dart';
 import 'package:popcal/router/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,22 +18,30 @@ GoRouter router(Ref ref, {required String initialLocation}) {
         data: (result) {
           final isAuthPage =
               state.matchedLocation == const LoginRoute().location;
-          return result.when(
-            success: (user) {
-              if (user != null && isAuthPage) {
-                // 1. 認証済かつ認証画面にいる => ホーム画面へ
-                return const HomeRoute().location;
-                // 2. 未認証かつ認証画面にいない => 認証画面へ
-              } else if (user == null && !isAuthPage) {
-                return const LoginRoute().location;
-                // 3. 認証済かつ認証画面にいない => 画面遷移しない
-              } else {
-                return null;
-              }
-            },
-            // 4. 認証エラー時に認証画面にいない => 認証画面へ
-            failure: (_) => !isAuthPage ? const LoginRoute().location : null,
-          );
+
+          // 認証エラーの場合
+          if (result.isError) {
+            // 認証画面にいる場合
+            if (isAuthPage) {
+              return null;
+            }
+            return const LoginRoute().location;
+          }
+
+          final user = result.value;
+
+          // 認証済かつ認証画面にいる => ホーム画面へ
+          if (user != null && isAuthPage) {
+            return const HomeRoute().location;
+          }
+
+          // 未認証かつ認証画面にいない => 認証画面へ
+          if (user == null && !isAuthPage) {
+            return const LoginRoute().location;
+          }
+
+          // 認証済かつ認証画面にいない => 画面遷移しない
+          return null;
         },
         loading: () => null,
         error: (_, _) => const LoginRoute().location,

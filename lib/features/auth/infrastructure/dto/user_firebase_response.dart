@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/entities/app_user.dart';
 import 'package:popcal/features/auth/domain/value_objects/email.dart';
@@ -19,19 +18,19 @@ sealed class UserFirebaseResponse with _$UserFirebaseResponse {
   // Dto => Entity
   Result<AppUser> toEntity() {
     final userIdResult = UserId.create(userId);
-    if (userIdResult.isFailure) {
-      return Results.failure(AuthFailure(userIdResult.displayText));
+    if (userIdResult.isError) {
+      return Result.error(userIdResult.error);
     }
 
     final emailResult = Email.create(email);
-    if (emailResult.isFailure) {
-      return Results.failure(AuthFailure(emailResult.displayText));
+    if (emailResult.isError) {
+      return Result.error(emailResult.error);
     }
 
-    return Results.success(
+    return Result.ok(
       AppUser(
-        userId: userIdResult.valueOrNull!,
-        email: emailResult.valueOrNull!,
+        userId: userIdResult.value,
+        email: emailResult.value,
       ),
     );
   }

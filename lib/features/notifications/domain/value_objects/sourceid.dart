@@ -11,6 +11,6 @@ extension type SourceId._(String value) {
   }
 
   static Result<SourceId> createFromRotationId(RotationId input) {
-    return Results.success(SourceId._(input.value));
+    return Result.ok(SourceId._(input.value));
   }
 }

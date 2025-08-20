@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:popcal/core/utils/failures/auth_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
@@ -16,24 +15,24 @@ Future<Result<void>> deleteRotation(
   String rotationId,
 ) async {
   final userIdResult = UserId.create(userId);
-  if (userIdResult.isFailure) {
-    return Results.failure(AuthFailure(userIdResult.displayText));
+  if (userIdResult.isError) {
+    return Result.error(userIdResult.error);
   }
 
   final rotationIdResult = RotationId.create(rotationId);
-  if (rotationIdResult.isFailure) {
-    return Results.failure(AuthFailure(rotationIdResult.displayText));
+  if (rotationIdResult.isError) {
+    return Result.error(rotationIdResult.error);
   }
 
   final syncResult = await ref
       .watch(rotationRepositoryProvider)
       .deleteRotation(
-        userIdResult.valueOrNull!,
-        rotationIdResult.valueOrNull!,
+        userIdResult.value,
+        rotationIdResult.value,
       );
-  if (syncResult.isFailure) {
-    return Results.failure(AuthFailure(syncResult.displayText));
+  if (syncResult.isError) {
+    return Result.error(syncResult.error);
   }
 
-  return Results.success(null);
+  return const Result.ok(null);
 }

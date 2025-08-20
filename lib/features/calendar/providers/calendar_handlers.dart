@@ -1,5 +1,4 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
@@ -17,23 +16,25 @@ Future<Result<CalendarScheduleResponse>> calendarScheduleResponse(
   String rotationId,
 ) async {
   final rotationIdResult = RotationId.create(rotationId);
-  if (rotationIdResult.isFailure) {
-    return Results.failure(ValidationFailure(rotationIdResult.displayText));
+  if (rotationIdResult.isError) {
+    return Result.error(rotationIdResult.error);
   }
 
   final useCase = ref.watch(getCalendarScheduleUseCaseProvider);
-  final domainResult = await useCase.execute(rotationIdResult.valueOrNull!);
+  final domainResult = await useCase.execute(rotationIdResult.value);
 
-  return domainResult.when(
-    success: (calendarData) {
-      final calendarResponseDto = CalendarScheduleResponse(
-        rotationResponse: RotationResponse.fromEntity(calendarData.rotation),
-        scheduleMap: _convertDayInfoMapToDto(calendarData.scheduleMap),
-      );
-      return Results.success(calendarResponseDto);
-    },
-    failure: Results.failure,
+  if (domainResult.isError) {
+    return Result.error(domainResult.error);
+  }
+
+  final calendarData = domainResult.value;
+
+  final calendarResponseDto = CalendarScheduleResponse(
+    rotationResponse: RotationResponse.fromEntity(calendarData.rotation),
+    scheduleMap: _convertDayInfoMapToDto(calendarData.scheduleMap),
   );
+
+  return Result.ok(calendarResponseDto);
 }
 
 // DTO変換

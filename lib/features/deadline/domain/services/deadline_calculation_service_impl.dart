@@ -1,6 +1,5 @@
 import 'package:holiday_jp/holiday_jp.dart' as holiday_jp;
 import 'package:logging/logging.dart';
-import 'package:popcal/core/utils/failures/deadline_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
@@ -46,14 +45,14 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
       final month = lastWeekdays.month;
       final title = NotificationTitle.createDeadline();
       final contentResult = NotificationContent.createForDeadline(month);
-      if (contentResult.isFailure) {
-        return Results.failure(DeadlineFailure(contentResult.displayText));
+      if (contentResult.isError) {
+        return Result.error(contentResult.error);
       }
-      final content = contentResult.valueOrNull!;
+      final content = contentResult.value;
       final descriptionResult = NotificationDescription.createForDeadline(
         month,
       );
-      final description = descriptionResult.valueOrNull!;
+      final description = descriptionResult.value;
       final sourceId = SourceId.createDeadlineId();
       final notificationId = NotificationId.create(
         sourceId,
@@ -61,12 +60,12 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
       );
 
       final dateKeyResult = DateKey.create(lastWeekdays);
-      if (dateKeyResult.isFailure) {
-        return Results.failure(DeadlineFailure(dateKeyResult.displayText));
+      if (dateKeyResult.isError) {
+        return Result.error(dateKeyResult.error);
       }
       final notificationDateTime =
           NotificationDateTime.fromDateKeyAndNotificationTime(
-            date: dateKeyResult.valueOrNull!,
+            date: dateKeyResult.value,
             notificationTime: deadline.notificationTime,
           );
 
@@ -88,7 +87,7 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
       _logger.fine(message);
     }
 
-    return Results.success(notificationEntries);
+    return Result.ok(notificationEntries);
   }
 
   DateTime _getLastWeekDaysOfMonth(int year, int month) {

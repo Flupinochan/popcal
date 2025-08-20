@@ -1,12 +1,12 @@
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 
 extension type RotationName._(String value) {
   static Result<RotationName> create(String input) {
     if (input.trim().isEmpty) {
-      return Results.failure(const ValidationFailure('バリデーションに失敗しました'));
+      return const Result.error(ValidationException('バリデーションに失敗しました'));
     }
 
-    return Results.success(RotationName._(input.trim()));
+    return Result.ok(RotationName._(input.trim()));
   }
 }

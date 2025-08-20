@@ -9,6 +9,6 @@ extension type RotationUpdatedAt._(DateTime value) {
       RotationUpdatedAt._(value.add(duration));
 
   static Result<RotationUpdatedAt> create(DateTime input) {
-    return Results.success(RotationUpdatedAt._(input));
+    return Result.ok(RotationUpdatedAt._(input));
   }
 }

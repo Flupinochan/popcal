@@ -1,7 +1,5 @@
 import 'package:logging/logging.dart';
-import 'package:popcal/core/utils/failures/notification_failure.dart';
-import 'package:popcal/core/utils/failures/rotation_failure.dart';
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/notification_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/enum/member_color.dart';
 import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
@@ -43,20 +41,18 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       fromDateTime: fromDateTime,
       toDateTime: toDateTime,
     );
-    if (rotationCalculationDataResult.isFailure) {
-      return Results.failure(
-        RotationFailure(rotationCalculationDataResult.displayText),
-      );
+    if (rotationCalculationDataResult.isError) {
+      return Result.error(rotationCalculationDataResult.error);
     }
-    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
+    final rotationCalculationData = rotationCalculationDataResult.value;
 
     // 通知設定用データに整形
     try {
       final rotationId = rotation.rotationId;
       final rotationName = rotation.rotationName;
       if (rotationId == null) {
-        return Results.failure(
-          const NotificationFailure('ローテーションIDがnullです。'),
+        return const Result.error(
+          NotificationException('ローテーションIDがnullです。'),
         );
       }
 
@@ -72,31 +68,25 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         }
 
         final sourceIdResult = SourceId.createFromRotationId(rotationId);
-        if (sourceIdResult.isFailure) {
-          return Results.failure(
-            NotificationFailure(sourceIdResult.displayText),
-          );
+        if (sourceIdResult.isError) {
+          return Result.error(sourceIdResult.error);
         }
 
         final titleResult = NotificationTitle.createFromRotationName(
           rotationName,
         );
-        if (titleResult.isFailure) {
-          return Results.failure(
-            NotificationFailure(titleResult.displayText),
-          );
+        if (titleResult.isError) {
+          return Result.error(titleResult.error);
         }
 
         final memberNameResult = rotation.rotationMemberNames.memberAt(
           memberIndex,
         );
-        if (memberNameResult.isFailure) {
-          return Results.failure(
-            ValidationFailure(memberNameResult.displayText),
-          );
+        if (memberNameResult.isError) {
+          return Result.error(memberNameResult.error);
         }
         final content = NotificationContent.createFromRotationMemberName(
-          memberNameResult.valueOrNull!,
+          memberNameResult.value,
         );
 
         final description = NotificationDescription.createForRotation(
@@ -104,16 +94,16 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
 
         final notificationId = NotificationId.create(
-          sourceIdResult.valueOrNull!,
+          sourceIdResult.value,
           notificationDateTime.value,
         );
 
         notificationEntries.add(
           NotificationEntry(
             notificationId: notificationId,
-            sourceId: sourceIdResult.valueOrNull!,
+            sourceId: sourceIdResult.value,
             userId: rotation.userId,
-            title: titleResult.valueOrNull!,
+            title: titleResult.value,
             notificationDateTime: notificationDateTime,
             content: content,
             description: description,
@@ -126,21 +116,19 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       final rotationIndexResult = RotationIndex.createFromInt(
         rotationCalculationData.newRotationIndex,
       );
-      if (rotationIndexResult.isFailure) {
-        return Results.failure(
-          ValidationFailure(rotationIndexResult.displayText),
-        );
+      if (rotationIndexResult.isError) {
+        return Result.error(rotationIndexResult.error);
       }
 
-      return Results.success(
+      return Result.ok(
         NotificationSchedule(
           notificationEntries: notificationEntries,
-          newCurrentRotationIndex: rotationIndexResult.valueOrNull!,
+          newCurrentRotationIndex: rotationIndexResult.value,
         ),
       );
     } on Exception catch (error) {
-      return Results.failure(
-        NotificationFailure('通知設定用データ整形処理でエラーが発生: $error'),
+      return Result.error(
+        NotificationException('通知設定用データ整形処理でエラーが発生: $error'),
       );
     }
   }
@@ -157,12 +145,10 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       fromDateTime: fromDateTime,
       toDateTime: toDateTime,
     );
-    if (rotationCalculationDataResult.isFailure) {
-      return Results.failure(
-        RotationFailure(rotationCalculationDataResult.displayText),
-      );
+    if (rotationCalculationDataResult.isError) {
+      return Result.error(rotationCalculationDataResult.error);
     }
-    final rotationCalculationData = rotationCalculationDataResult.valueOrNull!;
+    final rotationCalculationData = rotationCalculationDataResult.value;
 
     // カレンダー画面表示用データに整形
     try {
@@ -176,14 +162,14 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         final dateKeyResult = DateKey.create(
           dayCalculationData.notificationDateTime.value,
         );
-        final dateKey = dateKeyResult.valueOrNull!;
+        final dateKey = dateKeyResult.value;
 
         RotationMemberName? memberName;
         if (memberIndex != null) {
           final memberNameResult = rotation.rotationMemberNames.memberAt(
             memberIndex,
           );
-          memberName = memberNameResult.valueOrNull;
+          memberName = memberNameResult.value;
         } else {
           memberName = RotationMemberName.notApplicable;
         }
@@ -204,10 +190,10 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
         scheduleMap[dateKey] = scheduleDay;
       }
-      return Results.success(scheduleMap);
+      return Result.ok(scheduleMap);
     } on Exception catch (error) {
-      return Results.failure(
-        NotificationFailure('カレンダー画面表示用データ整形処理でエラーが発生: $error'),
+      return Result.error(
+        NotificationException('カレンダー画面表示用データ整形処理でエラーが発生: $error'),
       );
     }
   }
@@ -238,12 +224,10 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         // ローテーション日(checkDateTime)と通知時刻(notificationTime)から
         // NotificationDateTime(通知日時)を生成
         final dateKeyResult = DateKey.create(checkDateTime);
-        if (dateKeyResult.isFailure) {
-          return Results.failure(
-            RotationFailure(dateKeyResult.displayText),
-          );
+        if (dateKeyResult.isError) {
+          return Result.error(dateKeyResult.error);
         }
-        final dateKey = dateKeyResult.valueOrNull!;
+        final dateKey = dateKeyResult.value;
         final notificationTime = rotation.notificationTime;
         final notificationDateTime =
             NotificationDateTime.fromDateKeyAndNotificationTime(
@@ -264,7 +248,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         final rotationIndexResult = RotationIndex.createFromInt(
           newRotationIndex,
         );
-        final rotationIndex = rotationIndexResult.valueOrNull!;
+        final rotationIndex = rotationIndexResult.value;
 
         switch (dayType) {
           // ローテーション日でない場合は担当者を示すmemberIndexをnull
@@ -314,14 +298,14 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         }
       }
 
-      return Results.success(
+      return Result.ok(
         RotationCalculationData(
           dayCalculationDatas: dayCalculationResults,
           newRotationIndex: newRotationIndex,
         ),
       );
     } on Exception catch (error) {
-      return Results.failure(NotificationFailure('通知計算処理でエラーが発生: $error'));
+      return Result.error(NotificationException('通知計算処理でエラーが発生: $error'));
     }
   }
 

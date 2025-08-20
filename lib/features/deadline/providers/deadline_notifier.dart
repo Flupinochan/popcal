@@ -1,4 +1,3 @@
-import 'package:popcal/core/utils/failures/deadline_failure.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/deadline/presentation/dto/deadline_request.dart';
 import 'package:popcal/features/deadline/providers/deadline_providers.dart';
@@ -12,12 +11,12 @@ class DeadlineNotifier extends _$DeadlineNotifier {
   FutureOr<Result<DeadlineRequest>> build() async {
     final deadlineRepository = ref.watch(deadlineRepositoryProvider);
     final result = await deadlineRepository.getSettings();
-    if (result.isFailure) {
-      return Results.failure(DeadlineFailure(result.displayText));
+    if (result.isError) {
+      return Result.error(result.error);
     }
-    final entity = result.valueOrNull!;
+    final entity = result.value;
 
-    return Results.success(
+    return Result.ok(
       DeadlineRequest(
         isEnabled: entity.isEnabled,
         notificationTime: entity.notificationTime.timeOfDay,
@@ -31,11 +30,11 @@ class DeadlineNotifier extends _$DeadlineNotifier {
       final entity = dto.toEntity();
       final toggleDeadlineUseCase = ref.read(toggleDeadlineUseCaseProvider);
       final result = await toggleDeadlineUseCase.execute(entity);
-      if (result.isFailure) {
-        return Results.failure(DeadlineFailure(result.displayText));
+      if (result.isError) {
+        return Result.error(result.error);
       }
-      final finalEntity = result.valueOrNull!;
-      return Results.success(
+      final finalEntity = result.value;
+      return Result.ok(
         DeadlineRequest(
           isEnabled: finalEntity.isEnabled,
           notificationTime: finalEntity.notificationTime.timeOfDay,

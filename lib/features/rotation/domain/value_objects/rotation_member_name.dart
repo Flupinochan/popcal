@@ -1,4 +1,4 @@
-import 'package:popcal/core/utils/failures/validation_failure.dart';
+import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 
 extension type RotationMemberName._(String value) {
@@ -13,8 +13,8 @@ extension type RotationMemberName._(String value) {
 
   static Result<RotationMemberName> create(String input) {
     if (input.trim().isEmpty) {
-      return Results.failure(const ValidationFailure('バリデーションに失敗しました'));
+      return const Result.error(ValidationException('バリデーションに失敗しました'));
     }
-    return Results.success(RotationMemberName._(input.trim()));
+    return Result.ok(RotationMemberName._(input.trim()));
   }
 }

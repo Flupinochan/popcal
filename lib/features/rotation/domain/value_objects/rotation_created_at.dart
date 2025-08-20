@@ -5,6 +5,6 @@ extension type RotationCreatedAt._(DateTime value) {
       RotationCreatedAt._(value.add(duration));
 
   static Result<RotationCreatedAt> create(DateTime input) {
-    return Results.success(RotationCreatedAt._(input));
+    return Result.ok(RotationCreatedAt._(input));
   }
 }

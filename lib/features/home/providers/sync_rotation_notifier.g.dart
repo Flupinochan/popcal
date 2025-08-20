@@ -7,7 +7,7 @@ part of 'sync_rotation_notifier.dart';
 // **************************************************************************
 
 String _$syncRotationNotifierHash() =>
-    r'ddb566e01cd9388130bde688e615e0ec4e1e3654';
+    r'8bb23f509b015f246e98376c9fa078601accbe74';
 
 /// See also [SyncRotationNotifier].
 @ProviderFor(SyncRotationNotifier)
