@@ -1,0 +1,25 @@
+{
+	"Exception": {
+		"scope": "dart",
+		"prefix": "freezed",
+		"body": [
+			"import 'package:freezed_annotation/freezed_annotation.dart';",
+			"",
+			"part '${TM_FILENAME_BASE}.freezed.dart';",
+			"part '${TM_FILENAME_BASE}.g.dart';",
+			"",
+			"@freezed",
+			"sealed class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} with _$${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} {",
+			"\tconst factory ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}({",
+			"\t\t required String input,",
+			"\t}) = _${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/};",
+			"",
+			"\tfactory ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}.fromJson(Map<String, dynamic> json) => _$${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}FromJson(json);",
+			"",
+			"\tconst ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}._();",
+			"}",
+			""
+		],
+		"description": "Create Custom Freezed Class"
+	}
+}
