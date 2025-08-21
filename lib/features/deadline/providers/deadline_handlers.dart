@@ -13,7 +13,7 @@ Future<Result<List<DeadlineNotificationsResponse>>> getDeadlineNotifications(
 ) async {
   final result = await ref
       .watch(notificationGatewayProvider)
-      .getNotificationsBySourceId(SourceId.createDeadlineId());
+      .getNotificationsBySourceId(GroupId.createDeadlineId());
   if (result.isError) {
     return Result.error(result.error);
   }

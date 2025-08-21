@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 mixin _$NotificationEntryLocalResponse {
 
 // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
- int get notificationId; String get sourceId; String get userId; DateTime get notificationDateTime; String get title; String get content; String get description;
+ int get notificationId; String get sourceId; DateTime get notificationDateTime; String get title; String get content; String get description;
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $NotificationEntryLocalResponseCopyWith<NotificationEntryLocalResponse> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationEntryLocalResponse&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notificationDateTime, notificationDateTime) || other.notificationDateTime == notificationDateTime)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NotificationEntryLocalResponse&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&(identical(other.notificationDateTime, notificationDateTime) || other.notificationDateTime == notificationDateTime)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,notificationId,sourceId,userId,notificationDateTime,title,content,description);
+int get hashCode => Object.hash(runtimeType,notificationId,sourceId,notificationDateTime,title,content,description);
 
 @override
 String toString() {
-  return 'NotificationEntryLocalResponse(notificationId: $notificationId, sourceId: $sourceId, userId: $userId, notificationDateTime: $notificationDateTime, title: $title, content: $content, description: $description)';
+  return 'NotificationEntryLocalResponse(notificationId: $notificationId, sourceId: $sourceId, notificationDateTime: $notificationDateTime, title: $title, content: $content, description: $description)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $NotificationEntryLocalResponseCopyWith<$Res>  {
   factory $NotificationEntryLocalResponseCopyWith(NotificationEntryLocalResponse value, $Res Function(NotificationEntryLocalResponse) _then) = _$NotificationEntryLocalResponseCopyWithImpl;
 @useResult
 $Res call({
- int notificationId, String sourceId, String userId, DateTime notificationDateTime, String title, String content, String description
+ int notificationId, String sourceId, DateTime notificationDateTime, String title, String content, String description
 });
 
 
@@ -66,11 +66,10 @@ class _$NotificationEntryLocalResponseCopyWithImpl<$Res>
 
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? notificationId = null,Object? sourceId = null,Object? userId = null,Object? notificationDateTime = null,Object? title = null,Object? content = null,Object? description = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? notificationId = null,Object? sourceId = null,Object? notificationDateTime = null,Object? title = null,Object? content = null,Object? description = null,}) {
   return _then(_self.copyWith(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
 as int,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,notificationDateTime: null == notificationDateTime ? _self.notificationDateTime : notificationDateTime // ignore: cast_nullable_to_non_nullable
 as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
@@ -157,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int notificationId,  String sourceId,  String userId,  DateTime notificationDateTime,  String title,  String content,  String description)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int notificationId,  String sourceId,  DateTime notificationDateTime,  String title,  String content,  String description)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse() when $default != null:
-return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificationDateTime,_that.title,_that.content,_that.description);case _:
+return $default(_that.notificationId,_that.sourceId,_that.notificationDateTime,_that.title,_that.content,_that.description);case _:
   return orElse();
 
 }
@@ -178,10 +177,10 @@ return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int notificationId,  String sourceId,  String userId,  DateTime notificationDateTime,  String title,  String content,  String description)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int notificationId,  String sourceId,  DateTime notificationDateTime,  String title,  String content,  String description)  $default,) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse():
-return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificationDateTime,_that.title,_that.content,_that.description);}
+return $default(_that.notificationId,_that.sourceId,_that.notificationDateTime,_that.title,_that.content,_that.description);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -195,10 +194,10 @@ return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int notificationId,  String sourceId,  String userId,  DateTime notificationDateTime,  String title,  String content,  String description)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int notificationId,  String sourceId,  DateTime notificationDateTime,  String title,  String content,  String description)?  $default,) {final _that = this;
 switch (_that) {
 case _NotificationEntryLocalResponse() when $default != null:
-return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificationDateTime,_that.title,_that.content,_that.description);case _:
+return $default(_that.notificationId,_that.sourceId,_that.notificationDateTime,_that.title,_that.content,_that.description);case _:
   return null;
 
 }
@@ -210,13 +209,12 @@ return $default(_that.notificationId,_that.sourceId,_that.userId,_that.notificat
 @JsonSerializable()
 
 class _NotificationEntryLocalResponse extends NotificationEntryLocalResponse {
-  const _NotificationEntryLocalResponse({required this.notificationId, required this.sourceId, required this.userId, required this.notificationDateTime, required this.title, required this.content, required this.description}): super._();
+  const _NotificationEntryLocalResponse({required this.notificationId, required this.sourceId, required this.notificationDateTime, required this.title, required this.content, required this.description}): super._();
   factory _NotificationEntryLocalResponse.fromJson(Map<String, dynamic> json) => _$NotificationEntryLocalResponseFromJson(json);
 
 // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
 @override final  int notificationId;
 @override final  String sourceId;
-@override final  String userId;
 @override final  DateTime notificationDateTime;
 @override final  String title;
 @override final  String content;
@@ -235,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationEntryLocalResponse&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.notificationDateTime, notificationDateTime) || other.notificationDateTime == notificationDateTime)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NotificationEntryLocalResponse&&(identical(other.notificationId, notificationId) || other.notificationId == notificationId)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&(identical(other.notificationDateTime, notificationDateTime) || other.notificationDateTime == notificationDateTime)&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,notificationId,sourceId,userId,notificationDateTime,title,content,description);
+int get hashCode => Object.hash(runtimeType,notificationId,sourceId,notificationDateTime,title,content,description);
 
 @override
 String toString() {
-  return 'NotificationEntryLocalResponse(notificationId: $notificationId, sourceId: $sourceId, userId: $userId, notificationDateTime: $notificationDateTime, title: $title, content: $content, description: $description)';
+  return 'NotificationEntryLocalResponse(notificationId: $notificationId, sourceId: $sourceId, notificationDateTime: $notificationDateTime, title: $title, content: $content, description: $description)';
 }
 
 
@@ -255,7 +253,7 @@ abstract mixin class _$NotificationEntryLocalResponseCopyWith<$Res> implements $
   factory _$NotificationEntryLocalResponseCopyWith(_NotificationEntryLocalResponse value, $Res Function(_NotificationEntryLocalResponse) _then) = __$NotificationEntryLocalResponseCopyWithImpl;
 @override @useResult
 $Res call({
- int notificationId, String sourceId, String userId, DateTime notificationDateTime, String title, String content, String description
+ int notificationId, String sourceId, DateTime notificationDateTime, String title, String content, String description
 });
 
 
@@ -272,11 +270,10 @@ class __$NotificationEntryLocalResponseCopyWithImpl<$Res>
 
 /// Create a copy of NotificationEntryLocalResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? notificationId = null,Object? sourceId = null,Object? userId = null,Object? notificationDateTime = null,Object? title = null,Object? content = null,Object? description = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? notificationId = null,Object? sourceId = null,Object? notificationDateTime = null,Object? title = null,Object? content = null,Object? description = null,}) {
   return _then(_NotificationEntryLocalResponse(
 notificationId: null == notificationId ? _self.notificationId : notificationId // ignore: cast_nullable_to_non_nullable
 as int,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,notificationDateTime: null == notificationDateTime ? _self.notificationDateTime : notificationDateTime // ignore: cast_nullable_to_non_nullable
 as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable

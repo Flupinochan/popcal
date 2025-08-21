@@ -11,7 +11,6 @@ _NotificationEntryLocalResponse _$NotificationEntryLocalResponseFromJson(
 ) => _NotificationEntryLocalResponse(
   notificationId: (json['notificationId'] as num).toInt(),
   sourceId: json['sourceId'] as String,
-  userId: json['userId'] as String,
   notificationDateTime: DateTime.parse(json['notificationDateTime'] as String),
   title: json['title'] as String,
   content: json['content'] as String,
@@ -23,7 +22,6 @@ Map<String, dynamic> _$NotificationEntryLocalResponseToJson(
 ) => <String, dynamic>{
   'notificationId': instance.notificationId,
   'sourceId': instance.sourceId,
-  'userId': instance.userId,
   'notificationDateTime': instance.notificationDateTime.toIso8601String(),
   'title': instance.title,
   'content': instance.content,

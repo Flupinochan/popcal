@@ -102,7 +102,7 @@ class MainApp extends ConsumerWidget {
       return;
     }
 
-    if (sourceId == SourceId.createDeadlineId()) {
+    if (sourceId == GroupId.createDeadlineId()) {
       router.go(const DeadlineRoute().location);
     }
 

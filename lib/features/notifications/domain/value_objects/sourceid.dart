@@ -1,16 +1,16 @@
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 
-extension type SourceId._(String value) {
-  factory SourceId.create(String input) {
-    return SourceId._(input);
+extension type GroupId._(String value) {
+  factory GroupId.create(String input) {
+    return GroupId._(input);
   }
 
-  static SourceId createDeadlineId() {
-    return SourceId._('popcal-deadline');
+  static GroupId createDeadlineId() {
+    return GroupId._('popcal-deadline');
   }
 
-  static Result<SourceId> createFromRotationId(RotationId input) {
-    return Result.ok(SourceId._(input.value));
+  static Result<GroupId> createFromRotationId(RotationId input) {
+    return Result.ok(GroupId._(input.value));
   }
 }

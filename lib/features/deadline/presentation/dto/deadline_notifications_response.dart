@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 
 part 'deadline_notifications_response.freezed.dart';
 
@@ -13,7 +13,7 @@ sealed class DeadlineNotificationsResponse
   const DeadlineNotificationsResponse._();
 
   static List<DeadlineNotificationsResponse> fromEntity(
-    List<NotificationEntry> entity,
+    List<NotificationSetting> entity,
   ) {
     return entity
         .map(

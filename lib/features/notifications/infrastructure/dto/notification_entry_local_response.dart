@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/core/utils/exceptions/validation_exception.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_content.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_description.dart';
@@ -22,7 +21,6 @@ sealed class NotificationEntryLocalResponse
     // extentionTypeの場合は、@でJsonConverterへのマッピング定義が必要
     required int notificationId,
     required String sourceId,
-    required String userId,
     required DateTime notificationDateTime,
     required String title,
     required String content,
@@ -36,17 +34,12 @@ sealed class NotificationEntryLocalResponse
   const NotificationEntryLocalResponse._();
 
   // DTO => Entity
-  Result<NotificationEntry> toEntity() {
-    final sourceIdExt = SourceId.create(sourceId);
+  Result<NotificationSetting> toEntity() {
+    final sourceIdExt = GroupId.create(sourceId);
     final notificationIdExt = NotificationId.create(
       sourceIdExt,
       notificationDateTime,
     );
-
-    final userIdResult = UserId.create(userId);
-    if (userIdResult.isError) {
-      return Result.error(userIdResult.error);
-    }
 
     final notificationDateTimeResult = NotificationDateTime.create(
       notificationDateTime,
@@ -56,10 +49,9 @@ sealed class NotificationEntryLocalResponse
     }
 
     return Result.ok(
-      NotificationEntry(
+      NotificationSetting(
         notificationId: notificationIdExt,
-        sourceId: sourceIdExt,
-        userId: userIdResult.value,
+        groupId: sourceIdExt,
         notificationDateTime: notificationDateTimeResult.value,
         title: NotificationTitle.createFromLocal(title),
         content: NotificationContent.createFromLocal(content),
@@ -70,12 +62,11 @@ sealed class NotificationEntryLocalResponse
 
   // Entity => DTO
   static NotificationEntryLocalResponse fromEntity(
-    NotificationEntry notification,
+    NotificationSetting notification,
   ) {
     return NotificationEntryLocalResponse(
       notificationId: notification.notificationId.value,
-      sourceId: notification.sourceId.value,
-      userId: notification.userId.value,
+      sourceId: notification.groupId.value,
       notificationDateTime: notification.notificationDateTime.value,
       title: notification.title.value,
       content: notification.content.value,

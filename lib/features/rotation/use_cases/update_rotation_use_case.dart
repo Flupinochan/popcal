@@ -17,7 +17,7 @@ class UpdateRotationUseCase {
 
   Future<Result<Rotation>> execute(Rotation rotation) async {
     // 1. 通知設定を削除
-    final sourceIdResult = SourceId.createFromRotationId(rotation.rotationId!);
+    final sourceIdResult = GroupId.createFromRotationId(rotation.rotationId!);
     if (sourceIdResult.isError) {
       return Result.error(sourceIdResult.error);
     }

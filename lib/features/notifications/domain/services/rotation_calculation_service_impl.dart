@@ -2,10 +2,10 @@ import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/exceptions/notification_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/calendar/domain/enum/member_color.dart';
-import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/calendar/domain/value_objects/schedule_day.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/notifications/domain/services/result/day_calculation_data.dart';
 import 'package:popcal/features/notifications/domain/services/result/day_type_result.dart';
 import 'package:popcal/features/notifications/domain/services/result/rotation_calculation_data.dart';
@@ -56,7 +56,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
       }
 
-      final notificationEntries = <NotificationEntry>[];
+      final notificationEntries = <NotificationSetting>[];
       for (final dayCalculationData
           in rotationCalculationData.dayCalculationDatas) {
         final memberIndex = dayCalculationData.memberIndex;
@@ -67,7 +67,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
           continue;
         }
 
-        final sourceIdResult = SourceId.createFromRotationId(rotationId);
+        final sourceIdResult = GroupId.createFromRotationId(rotationId);
         if (sourceIdResult.isError) {
           return Result.error(sourceIdResult.error);
         }
@@ -99,10 +99,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
 
         notificationEntries.add(
-          NotificationEntry(
+          NotificationSetting(
             notificationId: notificationId,
-            sourceId: sourceIdResult.value,
-            userId: rotation.userId,
+            groupId: sourceIdResult.value,
             title: titleResult.value,
             notificationDateTime: notificationDateTime,
             content: content,
@@ -359,7 +358,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
 
   // ログ出力
   // ignore: unused_element
-  void _printNotifications(List<NotificationEntry> notificationEntries) {
+  void _printNotifications(List<NotificationSetting> notificationEntries) {
     _logger.fine('通知設定一覧');
     for (final notificationEntry in notificationEntries) {
       _logger.fine(

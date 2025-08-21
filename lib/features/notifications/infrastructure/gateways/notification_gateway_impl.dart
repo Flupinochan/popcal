@@ -1,5 +1,5 @@
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
@@ -13,7 +13,7 @@ class NotificationGatewayImpl implements NotificationGateway {
   /// 1 通知スケジュールを作成
   @override
   Future<Result<void>> createNotification(
-    NotificationEntry notificationEntry,
+    NotificationSetting notificationEntry,
   ) async {
     final dto = NotificationEntryLocalResponse.fromEntity(
       notificationEntry,
@@ -55,7 +55,7 @@ class NotificationGatewayImpl implements NotificationGateway {
 
   /// 4-2 特定のrotationIdの通知を削除
   @override
-  Future<Result<void>> deleteNotificationsBySourceId(SourceId sourceId) async {
+  Future<Result<void>> deleteNotificationsBySourceId(GroupId sourceId) async {
     final result = await _localNotificationsDatasource
         .deleteNotificationsBySourceId(sourceId.value);
 
@@ -82,8 +82,8 @@ class NotificationGatewayImpl implements NotificationGateway {
   }
 
   @override
-  Future<Result<List<NotificationEntry>>> getNotificationsBySourceId(
-    SourceId sourceId,
+  Future<Result<List<NotificationSetting>>> getNotificationsBySourceId(
+    GroupId sourceId,
   ) async {
     final result = await _localNotificationsDatasource
         .getNotificationsBySourceId(sourceId.value);
@@ -93,7 +93,7 @@ class NotificationGatewayImpl implements NotificationGateway {
 
     final dtos = result.value;
 
-    final entities = <NotificationEntry>[];
+    final entities = <NotificationSetting>[];
     for (final dto in dtos) {
       final entityResult = dto.toEntity();
       if (entityResult.isError) {
@@ -119,7 +119,7 @@ class NotificationGatewayImpl implements NotificationGateway {
 
   /// 0-2. 通知タップからアプリを起動した場合の画面遷移
   @override
-  Future<Result<SourceId?>> isLaunchedFromNotification() async {
+  Future<Result<GroupId?>> isLaunchedFromNotification() async {
     final result =
         await _localNotificationsDatasource.isLaunchedFromNotification();
     if (result.isError) {
@@ -130,6 +130,6 @@ class NotificationGatewayImpl implements NotificationGateway {
       return const Result.ok(null);
     }
 
-    return Result.ok(SourceId.create(result.value!));
+    return Result.ok(GroupId.create(result.value!));
   }
 }

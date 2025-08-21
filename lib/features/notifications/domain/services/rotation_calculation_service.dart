@@ -1,6 +1,6 @@
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/calendar/domain/value_objects/calendar_schedule.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
+import 'package:popcal/features/calendar/domain/value_objects/schedule_day.dart';
 import 'package:popcal/features/notifications/domain/entities/notification_schedule.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 

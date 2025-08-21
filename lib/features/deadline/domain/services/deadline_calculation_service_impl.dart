@@ -1,11 +1,10 @@
 import 'package:holiday_jp/holiday_jp.dart' as holiday_jp;
 import 'package:logging/logging.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/deadline/domain/entities/deadline.dart';
 import 'package:popcal/features/deadline/domain/services/deadline_calculation_service.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_content.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_description.dart';
@@ -19,10 +18,10 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
   final Logger _logger;
 
   @override
-  Result<List<NotificationEntry>> calculationDeadlineSchedule({
+  Result<List<NotificationSetting>> calculationDeadlineSchedule({
     required Deadline deadline,
   }) {
-    final notificationEntries = <NotificationEntry>[];
+    final notificationEntries = <NotificationSetting>[];
     final now = DateTime.now().toUtc();
 
     // 12か月分ループ
@@ -53,7 +52,7 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
         month,
       );
       final description = descriptionResult.value;
-      final sourceId = SourceId.createDeadlineId();
+      final sourceId = GroupId.createDeadlineId();
       final notificationId = NotificationId.create(
         sourceId,
         lastWeekdays,
@@ -69,10 +68,9 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
             notificationTime: deadline.notificationTime,
           );
 
-      final notificationEntry = NotificationEntry(
+      final notificationEntry = NotificationSetting(
         notificationId: notificationId,
-        sourceId: sourceId,
-        userId: UserId.empty(),
+        groupId: sourceId,
         notificationDateTime: notificationDateTime,
         title: title,
         content: content,

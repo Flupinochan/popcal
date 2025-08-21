@@ -7,7 +7,7 @@ part of 'deadline_handlers.dart';
 // **************************************************************************
 
 String _$getDeadlineNotificationsHash() =>
-    r'9371bbc5505ef246c2145b995e63c2292e492157';
+    r'887de78282fa49b172e21170a80bf4fa042a2927';
 
 /// See also [getDeadlineNotifications].
 @ProviderFor(getDeadlineNotifications)

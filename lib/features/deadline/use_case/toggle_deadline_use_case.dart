@@ -49,7 +49,7 @@ class ToggleDeadlineUseCase {
     }
 
     // 2-2. off時 通知削除
-    final sourceId = SourceId.createDeadlineId();
+    final sourceId = GroupId.createDeadlineId();
     final deleteResult = await _notificationGateway
         .deleteNotificationsBySourceId(sourceId);
     if (deleteResult.isError) {

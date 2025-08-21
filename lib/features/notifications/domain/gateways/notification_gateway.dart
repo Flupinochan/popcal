@@ -1,12 +1,14 @@
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/notifications/domain/entities/notification_entry.dart';
+import 'package:popcal/features/notifications/domain/entities/notification_setting.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_id.dart';
 import 'package:popcal/features/notifications/domain/value_objects/sourceid.dart';
 
 /// 1. CRUD操作
 abstract class NotificationGateway {
   /// 1 通知スケジュールを作成
-  Future<Result<void>> createNotification(NotificationEntry notificationEntry);
+  Future<Result<void>> createNotification(
+    NotificationSetting notificationEntry,
+  );
 
   /// 4-3. 全通知を削除
   Future<Result<void>> deleteAllNotifications();
@@ -18,14 +20,14 @@ abstract class NotificationGateway {
   Future<Result<void>> deleteNotification(NotificationId notificationId);
 
   /// 4-2 特定のSourceIdの通知を全削除
-  Future<Result<void>> deleteNotificationsBySourceId(SourceId sourceId);
+  Future<Result<void>> deleteNotificationsBySourceId(GroupId sourceId);
 
   /// 2-1. 通知予定のスケジュールを一覧取得
   Future<Result<List<NotificationId>>> getNotifications();
 
   // 2-2 特定のSourceIdの通知一覧を取得
-  Future<Result<List<NotificationEntry>>> getNotificationsBySourceId(
-    SourceId sourceId,
+  Future<Result<List<NotificationSetting>>> getNotificationsBySourceId(
+    GroupId sourceId,
   );
 
   /// 0-1. 初期化
@@ -35,5 +37,5 @@ abstract class NotificationGateway {
 
   /// 0-2. アプリが起動していない場合に、通知タップからアプリを起動した場合
   /// 通知タップからアプリを起動した場合は、Calendar画面に遷移するためのSourceIdを返す
-  Future<Result<SourceId?>> isLaunchedFromNotification();
+  Future<Result<GroupId?>> isLaunchedFromNotification();
 }

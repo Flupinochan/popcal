@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
@@ -11,33 +12,24 @@ import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
-// ローテーション設定
-class Rotation {
-  const Rotation({
-    required this.userId,
-    required this.rotationName,
-    required this.rotationMemberNames,
-    required this.rotationDays,
-    required this.notificationTime,
-    required this.currentRotationIndex,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.skipEvents,
-    this.rotationId,
-  });
+part 'rotation.freezed.dart';
 
-  // Firestoreに保存した後に付与されるためオプショナル
-  final RotationId? rotationId;
-  final UserId userId;
-  final RotationName rotationName;
-  final RotationMemberNames rotationMemberNames;
-  final RotationDays rotationDays;
-  final NotificationTime notificationTime;
-  // ローテーションした回数
-  final RotationIndex currentRotationIndex;
-  final RotationCreatedAt createdAt;
-  final RotationUpdatedAt updatedAt;
-  final SkipEvents skipEvents;
+@freezed
+sealed class Rotation with _$Rotation {
+  factory Rotation({
+    required UserId userId,
+    required RotationName rotationName,
+    required RotationMemberNames rotationMemberNames,
+    required RotationDays rotationDays,
+    required NotificationTime notificationTime,
+    required RotationIndex currentRotationIndex,
+    required RotationCreatedAt createdAt,
+    required RotationUpdatedAt updatedAt,
+    required SkipEvents skipEvents,
+    RotationId? rotationId,
+  }) = _Rotation;
+
+  const Rotation._();
 
   /// UI表示用日付
   String get displayDays => rotationDays.toString();
@@ -83,32 +75,6 @@ class Rotation {
     final skipEvent = skipEvents.getByDateKey(dateKey);
     // 1度もskipしていない場合は不可
     return skipEvent != null && skipEvent.skipCount.value > 0;
-  }
-
-  Rotation copyWith({
-    RotationId? rotationId,
-    UserId? userId,
-    RotationName? rotationName,
-    RotationMemberNames? rotationMemberNames,
-    RotationDays? rotationDays,
-    NotificationTime? notificationTime,
-    RotationIndex? currentRotationIndex,
-    RotationCreatedAt? createdAt,
-    RotationUpdatedAt? updatedAt,
-    SkipEvents? skipEvents,
-  }) {
-    return Rotation(
-      rotationId: rotationId ?? this.rotationId,
-      userId: userId ?? this.userId,
-      rotationName: rotationName ?? this.rotationName,
-      rotationMemberNames: rotationMemberNames ?? this.rotationMemberNames,
-      rotationDays: rotationDays ?? this.rotationDays,
-      notificationTime: notificationTime ?? this.notificationTime,
-      currentRotationIndex: currentRotationIndex ?? this.currentRotationIndex,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      skipEvents: skipEvents ?? this.skipEvents,
-    );
   }
 
   /// ローテーション回数からローテーションメンバーの配列Indexを取得

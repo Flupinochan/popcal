@@ -200,7 +200,7 @@ class NotificationGatewayLocal {
           if (sourceId == null) {
             _router.push(const ErrorRoute().location);
           }
-          if (sourceId != SourceId.createDeadlineId().toString()) {
+          if (sourceId != GroupId.createDeadlineId().toString()) {
             _router.go(
               CalendarRoute(
                 id: sourceId!,
