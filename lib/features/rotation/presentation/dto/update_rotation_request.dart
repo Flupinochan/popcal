@@ -8,10 +8,8 @@ import 'package:popcal/features/rotation/domain/value_objects/notification_time.
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
 part 'update_rotation_request.freezed.dart';
@@ -48,9 +46,11 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
       return Result.error(rotationNameResult.error);
     }
 
-    final rotationMembersResult = RotationMemberNames.create(rotationMembers);
-    if (rotationMembersResult.isError) {
-      return Result.error(rotationMembersResult.error);
+    final rotationMemberNamesResult = RotationMemberNames.create(
+      rotationMembers,
+    );
+    if (rotationMemberNamesResult.isError) {
+      return Result.error(rotationMemberNamesResult.error);
     }
 
     final rotationDaysResult = RotationDays.create(rotationDays);
@@ -68,19 +68,21 @@ sealed class UpdateRotationRequest with _$UpdateRotationRequest {
       return Result.error(createdAtResult.error);
     }
 
-    return Result.ok(
-      Rotation(
-        rotationId: rotationIdResult.value,
-        userId: userIdResult.value,
-        rotationName: rotationNameResult.value,
-        rotationMemberNames: rotationMembersResult.value,
-        rotationDays: rotationDaysResult.value,
-        notificationTime: notificationTimeResult,
-        currentRotationIndex: RotationIndex(),
-        createdAt: createdAtResult.value,
-        updatedAt: RotationUpdatedAt.now(),
-        skipEvents: skipEvents,
-      ),
+    final updatedRotationResult = Rotation.update(
+      rotationId: rotationIdResult.value,
+      userId: userIdResult.value,
+      rotationName: rotationNameResult.value,
+      rotationMemberNames: rotationMemberNamesResult.value,
+      rotationDays: rotationDaysResult.value,
+      notificationTime: notificationTimeResult,
+      skipEvents: skipEvents,
+      currentTime: currentTime,
+      rotationCreatedAt: createdAtResult.value,
     );
+    if (updatedRotationResult.isError) {
+      return Result.error(updatedRotationResult.error);
+    }
+
+    return Result.ok(updatedRotationResult.value);
   }
 }

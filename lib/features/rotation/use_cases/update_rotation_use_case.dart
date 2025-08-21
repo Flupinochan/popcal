@@ -67,6 +67,7 @@ class UpdateRotationUseCase {
       return Result.error(updatedRotationNewIndexResult.error);
     }
     final finalRotation = updatedRotationNewIndexResult.value;
+
     return Result.ok(finalRotation);
   }
 }

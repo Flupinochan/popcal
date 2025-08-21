@@ -133,5 +133,36 @@ sealed class Rotation with _$Rotation {
     );
   }
 
-  // updateはcopyWithで実行
+  static Result<Rotation> update({
+    required RotationId rotationId,
+    required UserId userId,
+    required RotationName rotationName,
+    required RotationMemberNames rotationMemberNames,
+    required RotationDays rotationDays,
+    required NotificationTime notificationTime,
+    required SkipEvents skipEvents,
+    required DateTime currentTime,
+    required RotationCreatedAt rotationCreatedAt,
+  }) {
+    final rotationUpdatedAtResult = RotationUpdatedAt.create(currentTime);
+    if (rotationUpdatedAtResult.isError) {
+      return Result.error(rotationUpdatedAtResult.error);
+    }
+
+    return Result.ok(
+      Rotation(
+        rotationId: rotationId,
+        userId: userId,
+        rotationName: rotationName,
+        rotationMemberNames: rotationMemberNames,
+        rotationDays: rotationDays,
+        notificationTime: notificationTime,
+        // 通知計算後にrotationIndexを更新
+        currentRotationIndex: RotationIndex(),
+        createdAt: rotationCreatedAt,
+        updatedAt: rotationUpdatedAtResult.value,
+        skipEvents: skipEvents,
+      ),
+    );
+  }
 }

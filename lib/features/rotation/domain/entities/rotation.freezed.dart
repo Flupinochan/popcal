@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Rotation {
 
- UserId get userId; RotationName get rotationName; RotationMemberNames get rotationMemberNames; RotationDays get rotationDays; NotificationTime get notificationTime; RotationIndex get currentRotationIndex; RotationCreatedAt get createdAt; RotationUpdatedAt get updatedAt; SkipEvents get skipEvents; RotationId? get rotationId;
+ UserId get userId; RotationName get rotationName; RotationMemberNames get rotationMemberNames; RotationDays get rotationDays; NotificationTime get notificationTime; RotationIndex get currentRotationIndex; RotationCreatedAt get createdAt; RotationUpdatedAt get updatedAt; SkipEvents get skipEvents;// RotationIdはfirebaseの機能によって作成されるため、作成時はoptional
+ RotationId? get rotationId;
 /// Create a copy of Rotation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -257,6 +258,7 @@ class _Rotation extends Rotation {
 @override final  RotationCreatedAt createdAt;
 @override final  RotationUpdatedAt updatedAt;
 @override final  SkipEvents skipEvents;
+// RotationIdはfirebaseの機能によって作成されるため、作成時はoptional
 @override final  RotationId? rotationId;
 
 /// Create a copy of Rotation
