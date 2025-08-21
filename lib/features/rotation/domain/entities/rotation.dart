@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
@@ -26,6 +27,7 @@ sealed class Rotation with _$Rotation {
     required RotationCreatedAt createdAt,
     required RotationUpdatedAt updatedAt,
     required SkipEvents skipEvents,
+    // RotationIdはfirebaseの機能によって作成されるため、作成時はoptional
     RotationId? rotationId,
   }) = _Rotation;
 
@@ -94,4 +96,42 @@ sealed class Rotation with _$Rotation {
   bool isValidRotationDay({required DayType dayType}) {
     return dayType == DayType.rotationDay || dayType == DayType.skipToNext;
   }
+
+  static Result<Rotation> create({
+    required UserId userId,
+    required RotationName rotationName,
+    required RotationMemberNames rotationMemberNames,
+    required RotationDays rotationDays,
+    required NotificationTime notificationTime,
+    required SkipEvents skipEvents,
+    required DateTime currentTime,
+  }) {
+    final rotationCreatedAtResult = RotationCreatedAt.create(currentTime);
+    if (rotationCreatedAtResult.isError) {
+      return Result.error(rotationCreatedAtResult.error);
+    }
+
+    final rotationUpdatedAtResult = RotationUpdatedAt.create(currentTime);
+    if (rotationUpdatedAtResult.isError) {
+      return Result.error(rotationUpdatedAtResult.error);
+    }
+
+    return Result.ok(
+      Rotation(
+        userId: userId,
+        rotationName: rotationName,
+        rotationMemberNames: rotationMemberNames,
+        rotationDays: rotationDays,
+        notificationTime: notificationTime,
+        // 作成時のIndexは0
+        currentRotationIndex: RotationIndex(),
+        // 時刻はUseCase層で生成
+        createdAt: rotationCreatedAtResult.value,
+        updatedAt: rotationUpdatedAtResult.value,
+        skipEvents: skipEvents,
+      ),
+    );
+  }
+
+  // updateはcopyWithで実行
 }
