@@ -46,6 +46,7 @@ class AuthRepositoryFirebase {
       if (dtoResult.isError) {
         return Result.error(dtoResult.error);
       }
+
       return Result.ok(dtoResult.value);
     } on FirebaseAuthException catch (error) {
       return Result.error(AuthException(_mapFirebaseError(error)));
@@ -74,6 +75,7 @@ class AuthRepositoryFirebase {
       if (dtoResult.isError) {
         return Result.error(dtoResult.error);
       }
+
       return Result.ok(dtoResult.value);
     } on FirebaseAuthException catch (error) {
       return Result.error(AuthException(_mapFirebaseError(error)));
