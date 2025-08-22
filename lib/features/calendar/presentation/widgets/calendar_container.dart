@@ -20,7 +20,7 @@ class CalendarContainer extends ConsumerWidget {
 
   final CalendarScheduleResponse calendarScheduleResponse;
   final ValueNotifier<DateTime> focusedDay;
-  final ValueNotifier<DateTime?> selectedDay;
+  final ValueNotifier<DateTime> selectedDay;
   final DateTime now;
 
   @override

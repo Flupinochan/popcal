@@ -5,6 +5,7 @@ import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 
 part 'calendar_schedule.freezed.dart';
 
+/// 配列や複数値はfreezedにする
 @freezed
 sealed class CalendarSchedule with _$CalendarSchedule {
   const factory CalendarSchedule({

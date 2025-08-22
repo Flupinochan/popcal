@@ -1,3 +1,5 @@
+**/*.g.dart
+**/*.freezed.dart
 upload-keystore.jks
 
 # Failure GoldenTest Image
