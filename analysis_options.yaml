@@ -73,7 +73,7 @@ dart_code_metrics:
     - avoid-self-compare
     - avoid-substring
     - avoid-throw-in-catch-block
-    - avoid-top-level-members-in-tests
+    # - avoid-top-level-members-in-tests
     - avoid-unnecessary-conditionals
     - avoid-unnecessary-type-assertions
     - avoid-unnecessary-type-casts

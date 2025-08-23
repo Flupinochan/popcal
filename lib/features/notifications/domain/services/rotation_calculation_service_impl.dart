@@ -189,6 +189,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         );
         scheduleMap[dateKey] = scheduleDay;
       }
+
       return Result.ok(scheduleMap);
     } on Exception catch (error) {
       return Result.error(
@@ -212,7 +213,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
   }) {
     try {
       final dayCalculationResults = <DayCalculationData>[];
-      var newRotationIndex = rotation.currentRotationIndex.value;
+      var newRotationIndex = rotation.currentRotationIndex;
 
       // fromDateからtoDateまで+1日しながらfor文で計算
       for (
@@ -244,11 +245,6 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
         final dayType = dayTypeResult.dayType;
         final skipEvent = dayTypeResult.skipEvent;
 
-        final rotationIndexResult = RotationIndex.createFromInt(
-          newRotationIndex,
-        );
-        final rotationIndex = rotationIndexResult.value;
-
         switch (dayType) {
           // ローテーション日でない場合は担当者を示すmemberIndexをnull
           // ★データを軽くするために、DayType.notRotationDayは返却しない
@@ -263,7 +259,9 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
             );
           // ローテーション日の場合はシンプルにnewRotationIndexを+1
           case DayType.rotationDay:
-            final memberIndex = rotation.getRotationMemberIndex(rotationIndex);
+            final memberIndex = rotation.getRotationMemberIndex(
+              newRotationIndex,
+            );
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,
@@ -271,14 +269,22 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
                 dayType: dayType,
               ),
             );
-            newRotationIndex++;
+            newRotationIndex = newRotationIndex.increment();
           // 次の人にスキップするローテーション日の場合は、
           // skipCount分indexを進めたmemberIndexを取得
           // 1つスキップする場合は、skipCountが1
           // 2つスキップする場合は、skipCountが2
           case DayType.skipToNext:
-            newRotationIndex += skipEvent!.skipCount.value;
-            final memberIndex = rotation.getRotationMemberIndex(rotationIndex);
+            final incrementResult = newRotationIndex.incrementBy(
+              skipEvent!.skipCount.value,
+            );
+            if (incrementResult.isError) {
+              return Result.error(incrementResult.error);
+            }
+            newRotationIndex = incrementResult.value;
+            final memberIndex = rotation.getRotationMemberIndex(
+              newRotationIndex,
+            );
             dayCalculationResults.add(
               DayCalculationData(
                 notificationDateTime: notificationDateTime,
@@ -286,7 +292,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
                 dayType: dayType,
               ),
             );
-            newRotationIndex++;
+            newRotationIndex = newRotationIndex.increment();
           // 前の人に戻すローテーション日の場合は、存在しない
           // 前の人に戻す場合は、skipToNextでskipCountを減らして再計算するため
 
@@ -300,7 +306,7 @@ class RotationCalculationServiceImpl implements RotationCalculationService {
       return Result.ok(
         RotationCalculationData(
           dayCalculationDatas: dayCalculationResults,
-          newRotationIndex: newRotationIndex,
+          newRotationIndex: newRotationIndex.value,
         ),
       );
     } on Exception catch (error) {

@@ -26,6 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (entityResult.isError) {
         return Result.error(entityResult.error);
       }
+
       return Result.ok(entityResult.value);
     });
   }

@@ -64,9 +64,9 @@ sealed class Rotation with _$Rotation {
       return false;
     }
     final skipEvent = skipEvents.getByDateKey(dateKey);
-    // 1巡するskipは不可
+
     return skipEvent == null ||
-        (rotationMemberNames.length - 1) > skipEvent.skipCount.value;
+        skipEvent.skipCount.canIncrement(rotationMemberNames);
   }
 
   /// 交代無しスキップ取り消し可能かどうか
@@ -75,8 +75,8 @@ sealed class Rotation with _$Rotation {
       return false;
     }
     final skipEvent = skipEvents.getByDateKey(dateKey);
-    // 1度もskipしていない場合は不可
-    return skipEvent != null && skipEvent.skipCount.value > 0;
+
+    return skipEvent != null && skipEvent.skipCount.canDecrementOrDelete();
   }
 
   /// ローテーション回数からローテーションメンバーの配列Indexを取得
@@ -85,6 +85,7 @@ sealed class Rotation with _$Rotation {
     if (memberCount == 0) {
       return 0;
     }
+
     return rotationIndex.value % memberCount;
   }
 
@@ -123,6 +124,7 @@ sealed class Rotation with _$Rotation {
   }) {
     return Rotation(
       userId: userId,
+      rotationId: rotationId,
       rotationName: updateRotationName,
       rotationMemberNames: updateRotationMemberNames,
       rotationDays: updateRotationDays,

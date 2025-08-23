@@ -23,6 +23,7 @@ sealed class SkipEvents with _$SkipEvents {
         CalendarException('すでにSkipEventが存在するため新規追加できません'),
       );
     }
+
     return Result.ok(SkipEvents([...value, skipEvent]));
   }
 
@@ -34,11 +35,12 @@ sealed class SkipEvents with _$SkipEvents {
     for (final skipEvent in value) {
       if (skipEvent.dayType == DayType.skipToNext &&
           skipEvent.dateKey == targetDateKey) {
-        final result = skipEvent.skipCount.decrement();
-        if (result.isError) {
-          // skipCountが1以下の場合は追加しない = 削除
+        // Decrementせずcontinue(追加)しないことで削除
+        if (!skipEvent.skipCount.canDecrement()) {
           continue;
         }
+
+        final result = skipEvent.skipCount.decrement();
 
         updateSkipEvents.add(
           skipEvent.copyWith(
@@ -70,24 +72,30 @@ sealed class SkipEvents with _$SkipEvents {
     var foundTarget = false;
 
     for (final skipEvent in value) {
+      // すでに対象日付(DateKey)のSkipEventがある場合はSkipCountをIncrement
       if (skipEvent.dayType == DayType.skipToNext &&
           skipEvent.dateKey == targetDateKey) {
-        final result = skipEvent.skipCount.increment(rotationMemberNames);
-        if (result.isError) {
+        final skipCountResult = skipEvent.skipCount.increment(
+          rotationMemberNames,
+        );
+        if (skipCountResult.isError) {
+          updateSkipEvents.add(skipEvent);
           continue;
         }
 
         updateSkipEvents.add(
           skipEvent.copyWith(
-            skipCount: result.value,
+            skipCount: skipCountResult.value,
           ),
         );
+
         foundTarget = true;
       } else {
         updateSkipEvents.add(skipEvent);
       }
     }
 
+    // なかった場合は新規追加
     if (!foundTarget) {
       updateSkipEvents.add(
         SkipEvent(
