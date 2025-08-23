@@ -113,12 +113,12 @@ class UpdateRotationUseCase {
     }
 
     // 7. RotationIndexを更新し、FirebaseのRotationを更新
-    final updatedRotationOfIndex = updatedRotation.copyWith(
+    final updatedRotationWithNewIndex = updatedRotation.copyWith(
       currentRotationIndex: notificationSchedule.newCurrentRotationIndex,
     );
     final updatedRotationNewIndexResult = await _rotationRepository
         .updateRotation(
-          updatedRotationOfIndex,
+          updatedRotationWithNewIndex,
         );
     if (updatedRotationNewIndexResult.isError) {
       return Result.error(updatedRotationNewIndexResult.error);
