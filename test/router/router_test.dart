@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:popcal/core/themes/app_theme.dart';
-import 'package:popcal/core/utils/failures/auth_failure.dart';
+import 'package:popcal/core/utils/exceptions/auth_exception.dart';
 import 'package:popcal/core/utils/results.dart';
 import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/auth/presentation/dto/user_response.dart';
@@ -144,7 +144,7 @@ void main() {
           // 4. 認証エラー時に認証画面にいない => 認証画面へ
           () => buildTestWidget([
             authStateChangesProvider.overrideWith(
-              (ref) => Stream.value(Result.error(const AuthFailure('認証エラー'))),
+              (ref) => Stream.value(const Result.error(AuthException('認証エラー'))),
             ),
           ], const HomeRoute().location),
     );

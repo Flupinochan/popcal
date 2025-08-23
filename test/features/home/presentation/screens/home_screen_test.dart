@@ -1,167 +1,76 @@
-import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:popcal/core/themes/app_theme.dart';
 import 'package:popcal/core/utils/results.dart';
-import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
-import 'package:popcal/features/auth/presentation/dto/user_response.dart';
 import 'package:popcal/features/auth/providers/auth_handlers.dart';
 import 'package:popcal/features/home/presentation/screens/home_screen.dart';
-import 'package:popcal/features/notifications/domain/gateways/notification_gateway.dart';
 import 'package:popcal/features/notifications/providers/notification_providers.dart';
-import 'package:popcal/features/notifications/use_cases/sync_notifications_use_case.dart';
-import 'package:popcal/features/rotation/domain/enums/weekday.dart';
-import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
-import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
-import 'package:popcal/features/rotation/presentation/dto/rotation_response.dart';
 import 'package:popcal/features/rotation/providers/rotation_handlers.dart';
 import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 
+import '../../../../fixtures/dto/mock_rotation_response.dart';
+import '../../../../fixtures/dto/mock_user_response.dart';
+import '../../../../fixtures/value_objects/mock_user_id.dart';
+import '../../../../helpers/golden_test_helper.dart';
+import '../../../../router/router_test.dart';
+import '../../../rotation/infrastructure/repository/mock_rotation_repository.dart';
+
 void main() {
-  const screenSize = Size(411, 914);
-  const mockUser = UserResponse(
-    userId: 'test-user-id',
-    emailLocalPart: 'test',
-    emailDomain: 'example.com',
-  );
-  final rotations = <RotationResponse>[
-    RotationResponse(
-      rotationId: 'test-rotation-id-1',
-      userId: 'test-user-id-1',
-      rotationName: 'test-rotation-name-1',
-      rotationMembers: [
-        'tester1-1',
-        'tester1-2',
-      ],
-      rotationDays: [Weekday.monday, Weekday.sunday],
-      notificationTime: const TimeOfDay(hour: 15, minute: 0),
-      currentRotationIndex: 0,
-      createdAt: DateTime(2025, 8, 31, 9),
-      updatedAt: DateTime(2025, 8, 31, 9),
-      displayDays: '月, 日',
-      displayMembers: 'tester1-1, tester1-2',
-      displayNotificationTime: '09:00',
-      skipEvents: SkipEvents.empty(),
-    ),
-    RotationResponse(
-      rotationId: 'test-rotation-id-2',
-      userId: 'test-user-id-2',
-      rotationName: 'test-rotation-name-2',
-      rotationMembers: [
-        'tester2-1',
-        'tester2-2',
-      ],
-      rotationDays: [Weekday.monday, Weekday.sunday],
-      notificationTime: const TimeOfDay(hour: 16, minute: 0),
-      currentRotationIndex: 0,
-      createdAt: DateTime(2025, 9, 1, 9),
-      updatedAt: DateTime(2025, 9, 1, 9),
-      displayDays: '月, 日',
-      displayMembers: 'tester2-1, tester2-2',
-      displayNotificationTime: '09:00',
-      skipEvents: SkipEvents.empty(),
-    ),
-  ];
-
   group('HomeScreen', () {
-    Widget buildTestWidget(List<Override> otherOverrides) {
-      final container = ProviderContainer(
-        overrides: [
-          notificationGatewayProvider.overrideWith((ref) {
-            return MockNotificationGateway();
-          }),
-          authStateChangesProvider.overrideWith(
-            (ref) => Stream.value(const Result.ok(mockUser)),
-          ),
-          syncNotificationsUseCaseProvider.overrideWith((ref) {
-            return MockSyncNotificationsUseCase();
-          }),
-          ...otherOverrides,
-        ],
-      );
-      return UncontrolledProviderScope(
-        container: container,
-        // Scaffold Messengerを利用するにはMaterialAppでWrapが必要
-        child: MaterialApp(
-          theme: AppTheme.lightTheme,
-          home: GoldenTestScenario(
-            name: 'home_screen',
-            constraints: BoxConstraints.tight(screenSize),
-            child: HomeScreen(),
-          ),
-        ),
-      );
-    }
+    final userId = MockUserId.userId.value;
 
-    goldenTest(
-      'home_screen_empty',
-      fileName: 'home_screen_empty',
-      pumpBeforeTest: (tester) async {
-        await tester.binding.setSurfaceSize(screenSize);
-        await tester.pumpAndSettle();
-      },
-      pumpWidget: (tester, builder) async {
-        await tester.pumpWidget(builder);
-        await tester.pumpAndSettle();
-      },
-      builder: () {
-        return buildTestWidget([
-          rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
-            return Stream.value(const Result.ok([]));
-          }),
-        ]);
-      },
+    final overrides = [
+      notificationGatewayProvider.overrideWith((ref) {
+        return MockNotificationGateway();
+      }),
+      authStateChangesProvider.overrideWith(
+        (ref) => Stream.value(Result.ok(MockUserResponse.userResponse)),
+      ),
+      syncNotificationsUseCaseProvider.overrideWith((ref) {
+        return MockSyncNotificationsUseCase();
+      }),
+      rotationRepositoryProvider.overrideWith((ref) {
+        return MockRotationRepository();
+      }),
+    ];
+
+    final emptyOverride = rotationResponsesStreamProvider(userId).overrideWith((
+      ref,
+    ) {
+      return Stream.value(const Result.ok([]));
+    });
+
+    final existOverride = rotationResponsesStreamProvider(userId).overrideWith((
+      ref,
+    ) {
+      return Stream.value(
+        Result.ok([
+          MockRotationResponse.rotationResponse1,
+          MockRotationResponse.rotationResponse2,
+        ]),
+      );
+    });
+
+    createGoldenTest(
+      testName: 'empty',
+      renderScreen: HomeScreen(),
+      findScreen: HomeScreen,
+      overrideRiverPod: [...overrides, emptyOverride],
     );
 
-    goldenTest(
-      'home_screen',
-      fileName: 'home_screen',
-      pumpBeforeTest: (tester) async {
-        await tester.binding.setSurfaceSize(screenSize);
-        await tester.pumpAndSettle();
-      },
-      pumpWidget: (tester, builder) async {
-        await tester.pumpWidget(builder);
-        await tester.pumpAndSettle();
-      },
-      builder: () {
-        return buildTestWidget([
-          rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
-            return Stream.value(Result.ok(rotations));
-          }),
-        ]);
-      },
+    createGoldenTest(
+      testName: 'exist',
+      renderScreen: HomeScreen(),
+      findScreen: HomeScreen,
+      overrideRiverPod: [...overrides, existOverride],
     );
 
-    goldenTest(
-      'dismissible_delete_rotation',
-      fileName: 'dismissible_delete_rotation',
-      pumpBeforeTest: (tester) async {
-        await tester.binding.setSurfaceSize(screenSize);
-        await tester.pumpAndSettle();
-      },
-      pumpWidget: (tester, builder) async {
-        await tester.pumpWidget(builder);
-        await tester.pumpAndSettle();
-      },
-      builder: () {
-        return buildTestWidget([
-          rotationResponsesStreamProvider(mockUser.userId).overrideWith((ref) {
-            return Stream.value(Result.ok(rotations));
-          }),
-          rotationRepositoryProvider.overrideWith((ref) {
-            return MockRotationRepository();
-          }),
-        ]);
-      },
-      // Golden Test前のユーザ操作
+    createGoldenTest(
+      testName: 'delete',
+      renderScreen: HomeScreen(),
+      findScreen: HomeScreen,
+      overrideRiverPod: [...overrides, existOverride],
       whilePerforming: (tester) async {
-        await tester.pumpAndSettle();
-
-        // DismissibleをスライドしてRotationを削除
+        // DismissibleスライドしてRotationを削除
         final dismissible = find.byType(Dismissible).first;
         expect(dismissible, findsOneWidget);
         await tester.drag(dismissible, const Offset(500, 0));
@@ -170,33 +79,11 @@ void main() {
         // SnackBarの存在確認
         expect(find.byType(SnackBar), findsOneWidget);
         expect(find.text('元に戻す'), findsOneWidget);
+
         return;
       },
     );
+
+    // restoreのテスト (ref.listenがトリガー) は難しいため未実装
   });
-}
-
-class MockNotificationGateway extends Mock implements NotificationGateway {
-  @override
-  Future<Result<void>> initializeNotificationLaunch() async {
-    return const Result.ok(null);
-  }
-}
-
-class MockRotationRepository extends Mock implements RotationRepository {
-  @override
-  Future<Result<void>> deleteRotation(
-    UserId userId,
-    RotationId rotationId,
-  ) async {
-    return const Result.ok(null);
-  }
-}
-
-class MockSyncNotificationsUseCase extends Mock
-    implements SyncNotificationsUseCase {
-  @override
-  Future<Result<void>> execute(UserId userId) async {
-    return const Result.ok(null);
-  }
 }

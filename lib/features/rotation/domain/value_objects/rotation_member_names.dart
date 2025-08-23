@@ -7,6 +7,7 @@ part 'rotation_member_names.freezed.dart';
 
 @freezed
 sealed class RotationMemberNames with _$RotationMemberNames {
+  // List<RotationMemberName> への移行
   const factory RotationMemberNames(List<String> value) = _RotationMemberNames;
 
   const RotationMemberNames._();
