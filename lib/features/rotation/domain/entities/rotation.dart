@@ -92,9 +92,48 @@ sealed class Rotation with _$Rotation {
     return rotationMemberNames.length;
   }
 
+  /// RotationをUpdateする際のバリデーション
+  /// 1つ以上更新対象があるかどうか
+  bool hasUpdateField({
+    required RotationName updateRotationName,
+    required RotationMemberNames updateRotationMemberNames,
+    required RotationDays updateRotationDays,
+    required NotificationTime updateNotificationTime,
+    required SkipEvents updateSkipEvents,
+  }) {
+    return rotationName != updateRotationName ||
+        rotationMemberNames != updateRotationMemberNames ||
+        rotationDays != updateRotationDays ||
+        notificationTime != updateNotificationTime ||
+        skipEvents != updateSkipEvents;
+  }
+
   /// 有効なローテーション日かどうか
   bool isValidRotationDay({required DayType dayType}) {
     return dayType == DayType.rotationDay || dayType == DayType.skipToNext;
+  }
+
+  Rotation update({
+    required RotationName updateRotationName,
+    required RotationMemberNames updateRotationMemberNames,
+    required RotationDays updateRotationDays,
+    required NotificationTime updateNotificationTime,
+    required SkipEvents updateSkipEvents,
+    required RotationUpdatedAt rotationUpdatedAt,
+  }) {
+    return Rotation(
+      userId: userId,
+      rotationName: updateRotationName,
+      rotationMemberNames: updateRotationMemberNames,
+      rotationDays: updateRotationDays,
+      notificationTime: updateNotificationTime,
+      // 更新時は、ローテーションメンバーが変わる可能性があるため
+      // RotationIndex(ローテーション順番)は初期化する
+      currentRotationIndex: RotationIndex(),
+      createdAt: createdAt,
+      updatedAt: rotationUpdatedAt,
+      skipEvents: updateSkipEvents,
+    );
   }
 
   static Result<Rotation> create({
@@ -127,39 +166,6 @@ sealed class Rotation with _$Rotation {
         currentRotationIndex: RotationIndex(),
         // 時刻はUseCase層で生成
         createdAt: rotationCreatedAtResult.value,
-        updatedAt: rotationUpdatedAtResult.value,
-        skipEvents: skipEvents,
-      ),
-    );
-  }
-
-  static Result<Rotation> update({
-    required RotationId rotationId,
-    required UserId userId,
-    required RotationName rotationName,
-    required RotationMemberNames rotationMemberNames,
-    required RotationDays rotationDays,
-    required NotificationTime notificationTime,
-    required SkipEvents skipEvents,
-    required DateTime currentTime,
-    required RotationCreatedAt rotationCreatedAt,
-  }) {
-    final rotationUpdatedAtResult = RotationUpdatedAt.create(currentTime);
-    if (rotationUpdatedAtResult.isError) {
-      return Result.error(rotationUpdatedAtResult.error);
-    }
-
-    return Result.ok(
-      Rotation(
-        rotationId: rotationId,
-        userId: userId,
-        rotationName: rotationName,
-        rotationMemberNames: rotationMemberNames,
-        rotationDays: rotationDays,
-        notificationTime: notificationTime,
-        // 通知計算後にrotationIndexを更新
-        currentRotationIndex: RotationIndex(),
-        createdAt: rotationCreatedAt,
         updatedAt: rotationUpdatedAtResult.value,
         skipEvents: skipEvents,
       ),
