@@ -42,8 +42,10 @@ sealed class SkipEvents with _$SkipEvents {
 
         final result = skipEvent.skipCount.decrement();
         if (result.isError) {
+          updateSkipEvents.add(skipEvent);
           continue;
         }
+
         updateSkipEvents.add(
           skipEvent.copyWith(
             skipCount: result.value,
@@ -81,6 +83,7 @@ sealed class SkipEvents with _$SkipEvents {
           rotationMemberNames,
         );
         if (skipCountResult.isError) {
+          updateSkipEvents.add(skipEvent);
           continue;
         }
 
@@ -89,6 +92,7 @@ sealed class SkipEvents with _$SkipEvents {
             skipCount: skipCountResult.value,
           ),
         );
+
         foundTarget = true;
       } else {
         updateSkipEvents.add(skipEvent);
