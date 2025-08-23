@@ -207,6 +207,7 @@ class SelectedDayInfo extends ConsumerWidget {
     final dateKeyResult = DateKey.create(selectedDay);
     if (dateKeyResult.isError) {
       showErrorDialog(context, dateKeyResult.error.toString());
+
       return;
     }
 
@@ -242,6 +243,7 @@ class SelectedDayInfo extends ConsumerWidget {
     final dateKeyResult = DateKey.create(selectedDay);
     if (dateKeyResult.isError) {
       showErrorDialog(context, dateKeyResult.error.toString());
+
       return;
     }
 
@@ -256,6 +258,7 @@ class SelectedDayInfo extends ConsumerWidget {
     );
     if (skipEventsResult.isError) {
       showErrorDialog(context, skipEventsResult.error.toString());
+
       return;
     }
     final skipEvents = skipEventsResult.value;
@@ -290,6 +293,7 @@ class SelectedDayInfo extends ConsumerWidget {
     final targetDateKeyResult = DateKey.create(selectedDay);
     if (targetDateKeyResult.isError) {
       showErrorDialog(context, targetDateKeyResult.error.toString());
+
       return;
     }
 
@@ -298,6 +302,7 @@ class SelectedDayInfo extends ConsumerWidget {
     );
     if (rotationMembersResult.isError) {
       showErrorDialog(context, rotationMembersResult.error.toString());
+
       return;
     }
 
@@ -335,6 +340,7 @@ class SelectedDayInfo extends ConsumerWidget {
     final targetDateKeyResult = DateKey.create(selectedDay);
     if (targetDateKeyResult.isError) {
       showErrorDialog(context, targetDateKeyResult.error.toString());
+
       return;
     }
 

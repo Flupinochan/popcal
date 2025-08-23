@@ -2,10 +2,10 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
-import 'package:popcal/features/auth/domain/value_objects/user_id.dart';
 import 'package:popcal/features/calendar/domain/value_objects/date_key.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service.dart';
 import 'package:popcal/features/notifications/domain/services/rotation_calculation_service_impl.dart';
+import 'package:popcal/features/notifications/domain/value_objects/notification_content.dart';
 import 'package:popcal/features/notifications/domain/value_objects/notification_datetime.dart';
 import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/enums/schedule_day_type.dart';
@@ -13,28 +13,29 @@ import 'package:popcal/features/rotation/domain/enums/weekday.dart';
 import 'package:popcal/features/rotation/domain/value_objects/notification_time.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_created_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_days.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_index.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_member_names.dart';
-import 'package:popcal/features/rotation/domain/value_objects/rotation_name.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_updated_at.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_count.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_event.dart';
 import 'package:popcal/features/rotation/domain/value_objects/skip_events.dart';
 
+import '../../../../fixtures/value_objects/mock_rotation_id.dart';
+import '../../../../fixtures/value_objects/mock_rotation_name.dart';
+import '../../../../fixtures/value_objects/mock_user_id.dart';
+
 void main() {
-  group('getNotificationEntry', () {
+  group('CalculationService', () {
     final RotationCalculationService rotationCalculationService =
         RotationCalculationServiceImpl(Logger('RotationCalculationService'));
 
     test('通常ローテーション', () {
-      // Mockデータ
       final createdAt = DateTime(2025, 8, 7, 9);
       final toDateTime = createdAt.add(const Duration(days: 30));
       final rotation = Rotation(
-        userId: const UserId('test-user'),
-        rotationId: RotationId('test-rotation-id'),
-        rotationName: const RotationName('test-rotation'),
+        userId: MockUserId.userId,
+        rotationId: MockRotationId.rotationId,
+        rotationName: MockRotationName.rotationName,
         rotationMemberNames: const RotationMemberNames([
           'user1',
           'user2',
@@ -45,10 +46,11 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: const NotificationTime(hour: 10, minute: 0),
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: RotationCreatedAt(createdAt),
-        updatedAt: RotationUpdatedAt(createdAt),
+        notificationTime:
+            NotificationTime.createFromInt(hour: 10, minute: 0).value,
+        currentRotationIndex: RotationIndex(),
+        createdAt: RotationCreatedAt.create(createdAt).value,
+        updatedAt: RotationUpdatedAt.create(createdAt).value,
         skipEvents: SkipEvents.empty(),
       );
 
@@ -59,7 +61,7 @@ void main() {
             fromDateTime: createdAt,
             toDateTime: toDateTime,
           );
-      expect(notificationScheduleResult.isSuccess, isTrue);
+      expect(notificationScheduleResult.isError, isFalse);
 
       final newCurrentRotationIndex =
           notificationScheduleResult.value.newCurrentRotationIndex;
@@ -72,53 +74,65 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[1].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[2].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
       expect(
         notificationEntries[3].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[4].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[5].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
 
       // 意図した通知設定日時であること
       expect(
         notificationEntries[0].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 8, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 8, 10)).value,
       );
       expect(
         notificationEntries[1].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 11, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 11, 10)).value,
       );
       expect(
         notificationEntries[2].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 13, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 13, 10)).value,
       );
       expect(
         notificationEntries[3].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 15, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 15, 10)).value,
       );
       expect(
         notificationEntries[4].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 18, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 18, 10)).value,
       );
       expect(
         notificationEntries[5].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 20, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 20, 10)).value,
       );
     });
 
@@ -128,9 +142,9 @@ void main() {
       final createdAt = DateTime(2025, 8, 8, 9);
       final toDateTime = createdAt.add(const Duration(days: 30));
       final rotation = Rotation(
-        userId: const UserId('test-user'),
-        rotationId: RotationId('test-rotation-id'),
-        rotationName: const RotationName('test-rotation'),
+        userId: MockUserId.userId,
+        rotationId: MockRotationId.rotationId,
+        rotationName: MockRotationName.rotationName,
         rotationMemberNames: const RotationMemberNames([
           'user1',
           'user2',
@@ -142,10 +156,11 @@ void main() {
           Weekday.friday,
         ]),
         // 通知時刻は10:00
-        notificationTime: const NotificationTime(hour: 10, minute: 0),
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: RotationCreatedAt(createdAt),
-        updatedAt: RotationUpdatedAt(createdAt),
+        notificationTime:
+            NotificationTime.createFromInt(hour: 10, minute: 0).value,
+        currentRotationIndex: RotationIndex(),
+        createdAt: RotationCreatedAt.create(createdAt).value,
+        updatedAt: RotationUpdatedAt.create(createdAt).value,
         skipEvents: SkipEvents.empty(),
       );
 
@@ -156,7 +171,7 @@ void main() {
             fromDateTime: createdAt,
             toDateTime: toDateTime,
           );
-      expect(notificationScheduleResult.isSuccess, isTrue);
+      expect(notificationScheduleResult.isError, isFalse);
 
       final newCurrentRotationIndex =
           notificationScheduleResult.value.newCurrentRotationIndex;
@@ -169,53 +184,65 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[1].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[2].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
       expect(
         notificationEntries[3].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[4].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[5].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
 
       // 意図した通知設定日時であること
       expect(
         notificationEntries[0].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 8, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 8, 10)).value,
       );
       expect(
         notificationEntries[1].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 11, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 11, 10)).value,
       );
       expect(
         notificationEntries[2].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 13, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 13, 10)).value,
       );
       expect(
         notificationEntries[3].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 15, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 15, 10)).value,
       );
       expect(
         notificationEntries[4].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 18, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 18, 10)).value,
       );
       expect(
         notificationEntries[5].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 20, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 20, 10)).value,
       );
     });
 
@@ -225,9 +252,9 @@ void main() {
       final createdAt = DateTime(2025, 8, 8, 11);
       final toDateTime = createdAt.add(const Duration(days: 30));
       final rotation = Rotation(
-        userId: const UserId('test-user'),
-        rotationId: RotationId('test-rotation-id'),
-        rotationName: const RotationName('test-rotation'),
+        userId: MockUserId.userId,
+        rotationId: MockRotationId.rotationId,
+        rotationName: MockRotationName.rotationName,
         rotationMemberNames: const RotationMemberNames([
           'user1',
           'user2',
@@ -239,10 +266,11 @@ void main() {
           Weekday.friday,
         ]),
         // 通知時刻は10:00のため、作成時刻11:00をすぎている
-        notificationTime: const NotificationTime(hour: 10, minute: 0),
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: RotationCreatedAt(createdAt),
-        updatedAt: RotationUpdatedAt(createdAt),
+        notificationTime:
+            NotificationTime.createFromInt(hour: 10, minute: 0).value,
+        currentRotationIndex: RotationIndex(),
+        createdAt: RotationCreatedAt.create(createdAt).value,
+        updatedAt: RotationUpdatedAt.create(createdAt).value,
         skipEvents: SkipEvents.empty(),
       );
 
@@ -253,7 +281,7 @@ void main() {
             fromDateTime: createdAt,
             toDateTime: toDateTime,
           );
-      expect(notificationScheduleResult.isSuccess, isTrue);
+      expect(notificationScheduleResult.isError, isFalse);
 
       final newCurrentRotationIndex =
           notificationScheduleResult.value.newCurrentRotationIndex;
@@ -266,54 +294,66 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[1].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[2].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
       expect(
         notificationEntries[3].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[4].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[5].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
 
       // 意図した通知設定日時であること
       // 初回は8/8ではなく8/11
       expect(
         notificationEntries[0].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 11, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 11, 10)).value,
       );
       expect(
         notificationEntries[1].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 13, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 13, 10)).value,
       );
       expect(
         notificationEntries[2].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 15, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 15, 10)).value,
       );
       expect(
         notificationEntries[3].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 18, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 18, 10)).value,
       );
       expect(
         notificationEntries[4].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 20, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 20, 10)).value,
       );
       expect(
         notificationEntries[5].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 22, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 22, 10)).value,
       );
     });
 
@@ -322,9 +362,9 @@ void main() {
       final createdAt = DateTime(2025, 8, 7, 9);
       final toDateTime = createdAt.add(const Duration(days: 30));
       final rotation = Rotation(
-        userId: const UserId('test-user'),
-        rotationId: RotationId('test-rotation-id'),
-        rotationName: const RotationName('test-rotation'),
+        userId: MockUserId.userId,
+        rotationId: MockRotationId.rotationId,
+        rotationName: MockRotationName.rotationName,
         rotationMemberNames: const RotationMemberNames([
           'user1',
           'user2',
@@ -335,17 +375,18 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: const NotificationTime(hour: 10, minute: 0),
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: RotationCreatedAt(createdAt),
-        updatedAt: RotationUpdatedAt(createdAt),
+        notificationTime:
+            NotificationTime.createFromInt(hour: 10, minute: 0).value,
+        currentRotationIndex: RotationIndex(),
+        createdAt: RotationCreatedAt.create(createdAt).value,
+        updatedAt: RotationUpdatedAt.create(createdAt).value,
         // 2回目のローテーション日を休日とする
         skipEvents: SkipEvents(
           [
             SkipEvent(
               dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).value,
               dayType: DayType.holiday,
-              skipCount: const SkipCount(),
+              skipCount: SkipCount(),
             ),
           ],
         ),
@@ -358,7 +399,7 @@ void main() {
             fromDateTime: createdAt,
             toDateTime: toDateTime,
           );
-      expect(notificationScheduleResult.isSuccess, isTrue);
+      expect(notificationScheduleResult.isError, isFalse);
 
       final newCurrentRotationIndex =
           notificationScheduleResult.value.newCurrentRotationIndex;
@@ -371,58 +412,70 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[1].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[2].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
       expect(
         notificationEntries[3].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[4].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[5].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
 
       // 意図した通知設定日時であること
       expect(
         notificationEntries[0].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 8, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 8, 10)).value,
       );
       // 8/11は休日
       // expect(
       //   notificationEntries[1].notificationDateTime,
-      //   NotificationDateTime(DateTime(2025, 8, 11, 10)),
+      //   NotificationDateTime.create(DateTime(2025, 8, 11, 10)).value,
       // );
       expect(
         notificationEntries[1].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 13, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 13, 10)).value,
       );
       expect(
         notificationEntries[2].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 15, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 15, 10)).value,
       );
       expect(
         notificationEntries[3].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 18, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 18, 10)).value,
       );
       expect(
         notificationEntries[4].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 20, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 20, 10)).value,
       );
       expect(
         notificationEntries[5].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 22, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 22, 10)).value,
       );
     });
 
@@ -431,9 +484,9 @@ void main() {
       final createdAt = DateTime(2025, 8, 7, 9);
       final toDateTime = createdAt.add(const Duration(days: 30));
       final rotation = Rotation(
-        userId: const UserId('test-user'),
-        rotationId: RotationId('test-rotation-id'),
-        rotationName: const RotationName('test-rotation'),
+        userId: MockUserId.userId,
+        rotationId: MockRotationId.rotationId,
+        rotationName: MockRotationName.rotationName,
         rotationMemberNames: const RotationMemberNames([
           'user1',
           'user2',
@@ -444,16 +497,17 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: const NotificationTime(hour: 10, minute: 0),
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: RotationCreatedAt(createdAt),
-        updatedAt: RotationUpdatedAt(createdAt),
+        notificationTime:
+            NotificationTime.createFromInt(hour: 10, minute: 0).value,
+        currentRotationIndex: RotationIndex(),
+        createdAt: RotationCreatedAt.create(createdAt).value,
+        updatedAt: RotationUpdatedAt.create(createdAt).value,
         // 2回目のローテーション日のuser2をスキップする
         skipEvents: SkipEvents([
           SkipEvent(
             dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).value,
             dayType: DayType.skipToNext,
-            skipCount: const SkipCount(),
+            skipCount: SkipCount(),
           ),
         ]),
       );
@@ -465,7 +519,7 @@ void main() {
             fromDateTime: createdAt,
             toDateTime: toDateTime,
           );
-      expect(notificationScheduleResult.isSuccess, isTrue);
+      expect(notificationScheduleResult.isError, isFalse);
 
       final newCurrentRotationIndex =
           notificationScheduleResult.value.newCurrentRotationIndex;
@@ -478,53 +532,65 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[1].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
       expect(
         notificationEntries[2].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[3].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[4].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
       expect(
         notificationEntries[5].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
 
       // 意図した通知設定日時であること
       expect(
         notificationEntries[0].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 8, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 8, 10)).value,
       );
       expect(
         notificationEntries[1].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 11, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 11, 10)).value,
       );
       expect(
         notificationEntries[2].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 13, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 13, 10)).value,
       );
       expect(
         notificationEntries[3].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 15, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 15, 10)).value,
       );
       expect(
         notificationEntries[4].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 18, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 18, 10)).value,
       );
       expect(
         notificationEntries[5].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 20, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 20, 10)).value,
       );
     });
 
@@ -533,9 +599,9 @@ void main() {
       final createdAt = DateTime(2025, 8, 7, 9);
       final toDateTime = createdAt.add(const Duration(days: 30));
       final rotation = Rotation(
-        userId: const UserId('test-user'),
-        rotationId: RotationId('test-rotation-id'),
-        rotationName: const RotationName('test-rotation'),
+        userId: MockUserId.userId,
+        rotationId: MockRotationId.rotationId,
+        rotationName: MockRotationName.rotationName,
         rotationMemberNames: const RotationMemberNames([
           'user1',
           'user2',
@@ -546,29 +612,30 @@ void main() {
           Weekday.wednesday,
           Weekday.friday,
         ]),
-        notificationTime: const NotificationTime(hour: 10, minute: 0),
-        currentRotationIndex: const RotationIndex(0),
-        createdAt: RotationCreatedAt(createdAt),
-        updatedAt: RotationUpdatedAt(createdAt),
+        notificationTime:
+            NotificationTime.createFromInt(hour: 10, minute: 0).value,
+        currentRotationIndex: RotationIndex(),
+        createdAt: RotationCreatedAt.create(createdAt).value,
+        updatedAt: RotationUpdatedAt.create(createdAt).value,
         skipEvents: SkipEvents(
           [
             // 2回交代無しスキップ
             SkipEvent(
               dateKey: DateKey.create(DateTime(2025, 8, 11, 10)).value,
               dayType: DayType.skipToNext,
-              skipCount: const SkipCount(skipCount: 2),
+              skipCount: SkipCount(skipCount: 2),
             ),
             // 休日スキップ
             SkipEvent(
               dateKey: DateKey.create(DateTime(2025, 8, 15, 10)).value,
               dayType: DayType.holiday,
-              skipCount: const SkipCount(),
+              skipCount: SkipCount(),
             ),
             // 1回交代無しスキップ
             SkipEvent(
               dateKey: DateKey.create(DateTime(2025, 8, 22, 10)).value,
               dayType: DayType.skipToNext,
-              skipCount: const SkipCount(),
+              skipCount: SkipCount(),
             ),
           ],
         ),
@@ -581,7 +648,7 @@ void main() {
             fromDateTime: createdAt,
             toDateTime: toDateTime,
           );
-      expect(notificationScheduleResult.isSuccess, isTrue);
+      expect(notificationScheduleResult.isError, isFalse);
 
       final newCurrentRotationIndex =
           notificationScheduleResult.value.newCurrentRotationIndex;
@@ -594,60 +661,72 @@ void main() {
       // 順番どおりのメンバー名であること
       expect(
         notificationEntries[0].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       // 2回交代無しスキップ
       expect(
         notificationEntries[1].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       expect(
         notificationEntries[2].content.value,
-        rotation.rotationMemberNames.memberAt(1).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(1).value,
+        ),
       );
       expect(
         notificationEntries[3].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
       expect(
         notificationEntries[4].content.value,
-        rotation.rotationMemberNames.memberAt(0).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(0).value,
+        ),
       );
       // 1回交代無しスキップ
       expect(
         notificationEntries[5].content.value,
-        rotation.rotationMemberNames.memberAt(2).getNotificationContent(),
+        NotificationContent.createFromRotationMemberName(
+          rotation.rotationMemberNames.memberAt(2).value,
+        ),
       );
 
       // 意図した通知設定日時であること
       expect(
         notificationEntries[0].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 8, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 8, 10)).value,
       );
       expect(
         notificationEntries[1].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 11, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 11, 10)).value,
       );
       expect(
         notificationEntries[2].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 13, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 13, 10)).value,
       );
       // 休日スキップ
       // expect(
       //   notificationEntries[3].notificationDateTime,
-      //   NotificationDateTime(DateTime(2025, 8, 15, 10)),
+      //   NotificationDateTime.create(DateTime(2025, 8, 15, 10)).value,
       // );
       expect(
         notificationEntries[3].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 18, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 18, 10)).value,
       );
       expect(
         notificationEntries[4].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 20, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 20, 10)).value,
       );
       expect(
         notificationEntries[5].notificationDateTime,
-        NotificationDateTime(DateTime(2025, 8, 22, 10)),
+        NotificationDateTime.create(DateTime(2025, 8, 22, 10)).value,
       );
     });
   });
