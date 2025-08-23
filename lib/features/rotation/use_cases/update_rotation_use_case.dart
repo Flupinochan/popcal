@@ -76,13 +76,13 @@ class UpdateRotationUseCase {
     }
 
     // 4. UpdateしたRotation Entityを作成
-    final updatedRotation = existingRotation.copyWith(
-      rotationName: updateRotationName,
-      rotationMemberNames: updateRotationMemberNames,
-      rotationDays: updateRotationDays,
-      notificationTime: updateNotificationTime,
-      skipEvents: updateSkipEvents,
-      updatedAt: rotationUpdatedAt,
+    final updatedRotation = existingRotation.update(
+      updateRotationName: updateRotationName,
+      updateRotationMemberNames: updateRotationMemberNames,
+      updateRotationDays: updateRotationDays,
+      updateNotificationTime: updateNotificationTime,
+      updateSkipEvents: updateSkipEvents,
+      rotationUpdatedAt: rotationUpdatedAt,
     );
 
     // 5. 通知設定を計算

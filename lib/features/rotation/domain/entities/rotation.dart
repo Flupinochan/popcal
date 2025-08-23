@@ -92,8 +92,8 @@ sealed class Rotation with _$Rotation {
     return rotationMemberNames.length;
   }
 
+  /// RotationをUpdateする際のバリデーション
   /// 1つ以上更新対象があるかどうか
-  /// UpdateはCopyWithで実施
   bool hasUpdateField({
     required RotationName updateRotationName,
     required RotationMemberNames updateRotationMemberNames,
@@ -111,6 +111,29 @@ sealed class Rotation with _$Rotation {
   /// 有効なローテーション日かどうか
   bool isValidRotationDay({required DayType dayType}) {
     return dayType == DayType.rotationDay || dayType == DayType.skipToNext;
+  }
+
+  Rotation update({
+    required RotationName updateRotationName,
+    required RotationMemberNames updateRotationMemberNames,
+    required RotationDays updateRotationDays,
+    required NotificationTime updateNotificationTime,
+    required SkipEvents updateSkipEvents,
+    required RotationUpdatedAt rotationUpdatedAt,
+  }) {
+    return Rotation(
+      userId: userId,
+      rotationName: updateRotationName,
+      rotationMemberNames: updateRotationMemberNames,
+      rotationDays: updateRotationDays,
+      notificationTime: updateNotificationTime,
+      // 更新時は、ローテーションメンバーが変わる可能性があるため
+      // RotationIndex(ローテーション順番)は初期化する
+      currentRotationIndex: RotationIndex(),
+      createdAt: createdAt,
+      updatedAt: rotationUpdatedAt,
+      skipEvents: updateSkipEvents,
+    );
   }
 
   static Result<Rotation> create({
