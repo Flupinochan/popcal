@@ -88,6 +88,7 @@ Stream<Result<List<RotationResponse>>> rotationResponsesStream(
 
 class RotationDataResponse {
   const RotationDataResponse(this.userDto, this.rotationResponse);
+
   final UserResponse userDto;
   final RotationResponse? rotationResponse;
 }
