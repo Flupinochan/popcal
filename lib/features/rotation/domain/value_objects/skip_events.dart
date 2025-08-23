@@ -41,10 +41,6 @@ sealed class SkipEvents with _$SkipEvents {
         }
 
         final result = skipEvent.skipCount.decrement();
-        if (result.isError) {
-          updateSkipEvents.add(skipEvent);
-          continue;
-        }
 
         updateSkipEvents.add(
           skipEvent.copyWith(
