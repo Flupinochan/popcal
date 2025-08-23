@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:popcal/features/auth/presentation/screens/login_screen.dart';
 import 'package:popcal/features/auth/providers/auth_notifier.dart';
 
+import '../../../../fixtures/providers/mock_auth_notifier.dart';
 import '../../../../helpers/golden_test_helper.dart';
-import '../../providers/mock_auth_notifier.dart';
 
 void main() {
   group('LoginScreen', () {

@@ -5,7 +5,7 @@ import 'package:popcal/features/rotation/domain/entities/rotation.dart';
 import 'package:popcal/features/rotation/domain/repositories/rotation_repository.dart';
 import 'package:popcal/features/rotation/domain/value_objects/rotation_id.dart';
 
-import '../../../../fixtures/entities/mock_rotation.dart';
+import '../entities/mock_rotation.dart';
 
 class MockRotationRepository extends Mock implements RotationRepository {
   @override

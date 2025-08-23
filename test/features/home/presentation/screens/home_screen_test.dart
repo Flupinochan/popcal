@@ -9,10 +9,11 @@ import 'package:popcal/features/rotation/providers/rotation_providers.dart';
 
 import '../../../../fixtures/dto/mock_rotation_response.dart';
 import '../../../../fixtures/dto/mock_user_response.dart';
+import '../../../../fixtures/gateways/mock_notification_gateway.dart';
+import '../../../../fixtures/repository/mock_rotation_repository.dart';
+import '../../../../fixtures/use_case/mock_sync_notifications_use_case.dart';
 import '../../../../fixtures/value_objects/mock_user_id.dart';
 import '../../../../helpers/golden_test_helper.dart';
-import '../../../../router/router_test.dart';
-import '../../../rotation/infrastructure/repository/mock_rotation_repository.dart';
 
 void main() {
   group('HomeScreen', () {
