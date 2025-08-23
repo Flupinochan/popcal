@@ -28,11 +28,13 @@ class InfoRowItem extends StatelessWidget {
       spacing: 8,
       children: [
         Icon(iconData, color: glassTheme.surfaceColor, size: iconSize),
-        Text(
-          infoText,
-          style: effectiveTextStyle,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        Expanded(
+          child: Text(
+            infoText,
+            style: effectiveTextStyle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );
