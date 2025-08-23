@@ -92,6 +92,22 @@ sealed class Rotation with _$Rotation {
     return rotationMemberNames.length;
   }
 
+  /// 1つ以上更新対象があるかどうか
+  /// UpdateはCopyWithで実施
+  bool hasUpdateField({
+    required RotationName updateRotationName,
+    required RotationMemberNames updateRotationMemberNames,
+    required RotationDays updateRotationDays,
+    required NotificationTime updateNotificationTime,
+    required SkipEvents updateSkipEvents,
+  }) {
+    return rotationName != updateRotationName ||
+        rotationMemberNames != updateRotationMemberNames ||
+        rotationDays != updateRotationDays ||
+        notificationTime != updateNotificationTime ||
+        skipEvents != updateSkipEvents;
+  }
+
   /// 有効なローテーション日かどうか
   bool isValidRotationDay({required DayType dayType}) {
     return dayType == DayType.rotationDay || dayType == DayType.skipToNext;
@@ -127,39 +143,6 @@ sealed class Rotation with _$Rotation {
         currentRotationIndex: RotationIndex(),
         // 時刻はUseCase層で生成
         createdAt: rotationCreatedAtResult.value,
-        updatedAt: rotationUpdatedAtResult.value,
-        skipEvents: skipEvents,
-      ),
-    );
-  }
-
-  static Result<Rotation> update({
-    required RotationId rotationId,
-    required UserId userId,
-    required RotationName rotationName,
-    required RotationMemberNames rotationMemberNames,
-    required RotationDays rotationDays,
-    required NotificationTime notificationTime,
-    required SkipEvents skipEvents,
-    required DateTime currentTime,
-    required RotationCreatedAt rotationCreatedAt,
-  }) {
-    final rotationUpdatedAtResult = RotationUpdatedAt.create(currentTime);
-    if (rotationUpdatedAtResult.isError) {
-      return Result.error(rotationUpdatedAtResult.error);
-    }
-
-    return Result.ok(
-      Rotation(
-        rotationId: rotationId,
-        userId: userId,
-        rotationName: rotationName,
-        rotationMemberNames: rotationMemberNames,
-        rotationDays: rotationDays,
-        notificationTime: notificationTime,
-        // 通知計算後にrotationIndexを更新
-        currentRotationIndex: RotationIndex(),
-        createdAt: rotationCreatedAt,
         updatedAt: rotationUpdatedAtResult.value,
         skipEvents: skipEvents,
       ),
