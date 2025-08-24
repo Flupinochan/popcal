@@ -18,6 +18,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart';
 
 void main() async {
+  // デバッグ用
+  if (kDebugMode) {
+    // debugPaintSizeEnabled = true; // ウィジェットのサイズと境界線を可視化
+    // debugRepaintRainbowEnabled = true; // 再描画部分をレインボー色で表示
+    // debugRepaintTextRainbowEnabled = true; // Text描画範囲をレインボー色で表示
+    // debugPaintLayerBordersEnabled = true; // Widgetの境界をオレンジ色で表示
+    debugHighlightDeprecatedWidgets = true; // 非推奨(@Deprecated)ウィジェット設定を可視化
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
 
   /// ロガー初期化
@@ -37,6 +46,7 @@ void main() async {
   };
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+
     return true;
   };
 
@@ -75,6 +85,7 @@ class MainApp extends ConsumerWidget {
           }
 
           logger.info('通知初期化成功');
+
           return _checkNotificationLaunch(ref, router);
         },
         error: (error, stack) => logger.severe('通知初期化エラー: $error'),
