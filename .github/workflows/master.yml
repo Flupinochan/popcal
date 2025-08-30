@@ -80,7 +80,7 @@ jobs:
           fi
 
       - name: Check coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v2
+        uses: VeryGoodOpenSource/very_good_coverage@v3
         with:
           path: './coverage/lcov_filtered.info'
           min_coverage: 0
