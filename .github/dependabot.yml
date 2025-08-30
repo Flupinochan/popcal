@@ -14,6 +14,13 @@ updates:
     labels:
       - "dependabot"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "go_router"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "flutter_riverpod"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "flutter_form_builder"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
@@ -29,3 +36,8 @@ updates:
     labels:
       - "dependabot"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "kuhnroyal/flutter-fvm-config-action"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "subosito/flutter-action"
+        update-types: ["version-update:semver-major"]
