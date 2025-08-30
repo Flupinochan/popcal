@@ -2,7 +2,6 @@
 # https://github.com/zgosalvez/github-actions-flutter-workflows
 # https://github.com/marketplace?query=flutter&type=actions
 
-# Require status checks to passのステータスチェック名 name名 / jobs名
 name: MASTER
 
 on:
@@ -15,6 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Require status checks to passのステータスチェック名となる
   build:
     # UbuntuだとGolden Testが失敗するためローカル環境のWindowsに合わせる
     # runs-on: ubuntu-latest
