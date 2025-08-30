@@ -3,15 +3,19 @@ name: RELEASE
 on:
   create:
 
+permissions:
+  contents: read
+
 jobs:
   create-release-notes:
     # Release Note作成のために必要
     permissions:
       contents: write
+      id-token: write
 
     if: github.ref_type == 'branch' && startsWith(github.ref_name, 'v')
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Clone repository
@@ -23,17 +27,21 @@ jobs:
       # Firebaseを利用する場合はSecretから情報を取得
       # textだと改行等でエラーになるためbase64で1行にして取得
       - name: Write google-services.json
-        shell: pwsh
         run: |
-          [System.IO.File]::WriteAllBytes(
-            'android/app/google-services.json',
-            [System.Convert]::FromBase64String('${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}')
-          )
+          echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > android/app/google-services.json
 
       - name: Build APK
         run: |
           flutter clean
           flutter build apk --release --split-per-abi --obfuscate --split-debug-info=./build/symbols
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.9.2
+
+      - name: Sign APK files
+        run: |
+          cosign sign-blob --yes build/app/outputs/flutter-apk/app-arm64-v8a-release.apk --output-signature build/app/outputs/flutter-apk/app-arm64-v8a-release.apk.sig
+          cosign sign-blob --yes build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk --output-signature build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk.sig
 
       - name: Create Draft Release with APKs
         uses: softprops/action-gh-release@v2
@@ -44,3 +52,5 @@ jobs:
           files: |
             build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk.sig
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk.sig
