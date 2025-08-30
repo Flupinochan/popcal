@@ -15,6 +15,8 @@ val localProperties = Properties().apply {
 val flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toInt() ?: 1
 val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0.0"
 
+val hasKeystore = keystorePropertiesFile.exists()
+
 plugins {
     // flutter local notifications
     id("com.android.application")
@@ -64,7 +66,7 @@ android {
     }
 
     signingConfigs {
-        if (keystorePropertiesFile.exists()) {
+        if (hasKeystore) {
             create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
@@ -79,7 +81,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             // signingConfig = signingConfigs.getByName("debug")
-            if (keystorePropertiesFile.exists()) {
+            if (hasKeystore) {
                 signingConfig = signingConfigs.getByName("release")
             }
         }
