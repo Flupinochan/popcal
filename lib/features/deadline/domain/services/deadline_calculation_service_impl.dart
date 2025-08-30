@@ -41,6 +41,18 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
         targetMonth,
       );
 
+      // 過去の日付の場合はスキップ
+      // 例えば8/31(日)で設定すると8月から計算され、8月の最終平日はすでに過ぎているため
+      final today = DateTime.utc(now.year, now.month, now.day);
+      final lastWeekdaysUtc = DateTime.utc(
+        lastWeekdays.year,
+        lastWeekdays.month,
+        lastWeekdays.day,
+      );
+      if (lastWeekdaysUtc.isBefore(today)) {
+        continue;
+      }
+
       final month = lastWeekdays.month;
       final title = NotificationTitle.createDeadline();
       final contentResult = NotificationContent.createForDeadline(month);
@@ -95,6 +107,7 @@ class DeadlineCalculationServiceImpl implements DeadlineCalculationService {
     while (lastDay.weekday > 5 || holiday_jp.isHoliday(lastDay)) {
       lastDay = lastDay.subtract(const Duration(days: 1));
     }
+
     return lastDay.toLocal();
   }
 }

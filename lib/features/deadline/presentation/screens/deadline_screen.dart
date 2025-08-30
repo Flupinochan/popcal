@@ -66,19 +66,15 @@ class DeadlineScreen extends HookConsumerWidget {
                       deadlineState.when(
                         data: (result) {
                           if (result.isError) {
-                            return _buildScreen(
-                              context: context,
-                              ref: ref,
-                              formKey: formKey,
-                              lastIsEnabled: lastIsEnabled,
-                              isLoading: true,
-                              lastNotificationTime: lastNotificationTime,
+                            return CustomErrorSimpleScreen(
+                              message: result.error.toString(),
                             );
                           }
                           final deadlineRequest = result.value;
                           lastIsEnabled.value = deadlineRequest.isEnabled;
                           lastNotificationTime.value =
                               deadlineRequest.notificationTime;
+
                           return _buildScreen(
                             context: context,
                             ref: ref,
@@ -98,13 +94,8 @@ class DeadlineScreen extends HookConsumerWidget {
                               lastNotificationTime: lastNotificationTime,
                             ),
                         error:
-                            (error, stackTrace) => _buildScreen(
-                              context: context,
-                              ref: ref,
-                              formKey: formKey,
-                              lastIsEnabled: lastIsEnabled,
-                              isLoading: true,
-                              lastNotificationTime: lastNotificationTime,
+                            (error, stackTrace) => CustomErrorSimpleScreen(
+                              message: error.toString(),
                             ),
                       ),
                     ],

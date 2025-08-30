@@ -52,8 +52,11 @@ sealed class DeadlineSharedPreferencesResponse
   ) {
     try {
       final dto = DeadlineSharedPreferencesResponse.fromJson(json);
+
       return Result.ok(dto);
-    } on Exception catch (e) {
+    } on Object catch (e) {
+      // ExceptionだとErrorはキャッチできない
+      // Objectであれば両方キャッチ可能もしくはon XXXを指定しない
       return Result.error(ValidationException('JSON parsing failed: $e'));
     }
   }
@@ -67,6 +70,7 @@ extension DeadlineSharedPreferencesResponseJsonX
   // String(JSON) => DTO
   static DeadlineSharedPreferencesResponse fromJsonString(String jsonString) {
     final map = jsonDecode(jsonString) as Map<String, dynamic>;
+
     return DeadlineSharedPreferencesResponse.fromJson(map);
   }
 
