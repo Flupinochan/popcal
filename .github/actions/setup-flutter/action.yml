@@ -15,6 +15,12 @@ runs:
   using: 'composite'
 
   steps:
+    # runs-on: windows-latest環境ではJava7であり古いため
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      java-version: '17'
+      distribution: 'temurin'
+
     # .fvmrcのバージョンを参照
     - name: Set up Flutter
       id: fvm-setup
@@ -31,6 +37,12 @@ runs:
         channel: 'stable'
         flutter-version: ${{ inputs.flutter-version }}
 
-    - name: Install dependencies
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: flutter pub get
+      shell: pwsh
+
+    - name: Install dependencies (Linux/macOS)
+      if: runner.os != 'Windows'
       run: flutter pub get
       shell: bash
