@@ -2,6 +2,7 @@
 # https://github.com/zgosalvez/github-actions-flutter-workflows
 # https://github.com/marketplace?query=flutter&type=actions
 
+# Require status checks to passのステータスチェック名 name名 / jobs名
 name: MASTER
 
 on:
@@ -41,9 +42,32 @@ jobs:
       - name: Run Tests
         run: flutter test --no-pub --coverage
 
+      - name: Filter coverage (remove generated files)
+        shell: bash
+        run: |
+          # Windowsでも動作するようにbashシェルを指定
+          if command -v lcov &> /dev/null; then
+            lcov --remove coverage/lcov.info \
+              "**/*.g.dart" \
+              "**/*.freezed.dart" \
+              -o coverage/lcov_filtered.info
+          else
+            # lcovがない場合は元のファイルをコピー
+            cp coverage/lcov.info coverage/lcov_filtered.info
+          fi
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
+          files: ./coverage/lcov_filtered.info
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
+
+      - name: Check coverage
+        uses: VeryGoodOpenSource/very_good_coverage@v2
+        with:
+          path: './coverage/lcov_filtered.info'
+          # 現在は0%でもOK
+          min_coverage: 0
+          exclude: '**/*.g.dart **/*.freezed.dart'
