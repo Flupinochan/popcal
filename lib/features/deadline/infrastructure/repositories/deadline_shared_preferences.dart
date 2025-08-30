@@ -31,15 +31,53 @@ class DeadlineSharedPreferences {
       final dtoResult =
           DeadlineSharedPreferencesResponseJsonX.fromJsonStringSafe(jsonString);
       if (dtoResult.isError) {
-        return Result.error(
-          DeadlineException('月末営業日通知の設定取得に失敗しました: $dtoResult'),
+        final result = await removeSettings();
+        if (result.isError) {
+          return Result.error(
+            DeadlineException('月末営業日通知の設定取得に失敗しました: $dtoResult'),
+          );
+        }
+
+        return Result.ok(
+          DeadlineSharedPreferencesResponse(
+            isEnabled: false,
+            hour: now.hour,
+            minute: now.minute,
+          ),
         );
       }
+
       final dto = dtoResult.value;
+
       return Result.ok(dto);
     } on Exception catch (error) {
+      final result = await removeSettings();
+      if (result.isError) {
+        return Result.error(
+          DeadlineException('月末営業日通知の設定取得に失敗しました: $error'),
+        );
+      }
+
+      final now = _timeUtils.now();
+
+      return Result.ok(
+        DeadlineSharedPreferencesResponse(
+          isEnabled: false,
+          hour: now.hour,
+          minute: now.minute,
+        ),
+      );
+    }
+  }
+
+  Future<Result<void>> removeSettings() async {
+    try {
+      await _sharedPreferences.remove(_key);
+
+      return const Result.ok(null);
+    } on Exception catch (error) {
       return Result.error(
-        DeadlineException('月末営業日通知の設定取得に失敗しました: $error'),
+        DeadlineException('月末営業日通知の設定削除に失敗しました: $error'),
       );
     }
   }
@@ -50,6 +88,7 @@ class DeadlineSharedPreferences {
     try {
       final jsonString = dto.toJsonString();
       await _sharedPreferences.setString(_key, jsonString);
+
       return const Result.ok(null);
     } on Exception catch (error) {
       return Result.error(
