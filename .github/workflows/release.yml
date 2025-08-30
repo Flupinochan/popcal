@@ -17,8 +17,14 @@ jobs:
         uses: ./.github/actions/setup-flutter
 
       # Firebaseを利用する場合はSecretから情報を取得
+      # textだと改行等でエラーになるためbase64で1行にして取得
       - name: Write google-services.json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
+        shell: pwsh
+        run: |
+          [System.IO.File]::WriteAllBytes(
+            'android/app/google-services.json',
+            [System.Convert]::FromBase64String('${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}')
+          )
 
       - name: Build APK
         run: |

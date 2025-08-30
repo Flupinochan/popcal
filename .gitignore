@@ -3,6 +3,7 @@
 upload-keystore.jks
 act.exe
 coverage/
+google-services.json.b64
 
 # Failure GoldenTest Image
 **/failures/*.png
