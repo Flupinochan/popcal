@@ -1,0 +1,32 @@
+name: RELEASE
+
+on:
+  create:
+
+jobs:
+  create-release-notes:
+    if: github.ref_type == 'branch' && startsWith(github.ref_name, 'v')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: ./.github/actions/setup-flutter
+
+      - name: Build APK
+        run: |
+          flutter clean
+          flutter build apk --release --split-per-abi --obfuscate --split-debug-info=./build/symbols
+
+      - name: Create Draft Release with APKs
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          draft: true
+          files: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
