@@ -34,7 +34,7 @@ class DeadlineSharedPreferencesImpl extends DeadlineRepository {
       return Result.error(result.error);
     }
 
-    return Result.ok(result.value);
+    return const Result.ok(null);
   }
 
   @override
