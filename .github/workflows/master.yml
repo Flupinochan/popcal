@@ -24,7 +24,7 @@ jobs:
       src: ${{ steps.filter.outputs.src }}
     steps:
       - name: Clone repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5.0.0
 
       - name: Need to run workflow
         uses: dorny/paths-filter@v3
@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5.0.0
 
       - name: Set up Flutter
         uses: ./.github/actions/setup-flutter
