@@ -55,6 +55,20 @@ jobs:
       - name: Run Tests
         run: flutter test --no-pub --coverage
 
+      - name: Filter coverage (remove generated files)
+        shell: bash
+        run: |
+          # Windowsでも動作するようにbashシェルを指定
+          if command -v lcov &> /dev/null; then
+            lcov --remove coverage/lcov.info \
+              "**/*.g.dart" \
+              "**/*.freezed.dart" \
+              -o coverage/lcov_filtered.info
+          else
+            # lcovがない場合は元のファイルをコピー
+            cp coverage/lcov.info coverage/lcov_filtered.info
+          fi
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
