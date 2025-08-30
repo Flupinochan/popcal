@@ -13,60 +13,20 @@ class DeadlineSharedPreferences {
 
   Future<Result<DeadlineSharedPreferencesResponse>> getSettings() async {
     try {
-      // まだ設定が存在しなくnullの場合は以下の初期値を返す
-      // 通知設定有効化: false
-      // 通知時刻: 現在時刻
       final jsonString = _sharedPreferences.getString(_key);
-      final now = _timeUtils.now();
       if (jsonString == null) {
-        return Result.ok(
-          DeadlineSharedPreferencesResponse(
-            isEnabled: false,
-            hour: now.hour,
-            minute: now.minute,
-          ),
-        );
+        return Result.ok(_createDefaultSettings());
       }
 
       final dtoResult =
           DeadlineSharedPreferencesResponseJsonX.fromJsonStringSafe(jsonString);
       if (dtoResult.isError) {
-        final result = await removeSettings();
-        if (result.isError) {
-          return Result.error(
-            DeadlineException('月末営業日通知の設定取得に失敗しました: $dtoResult'),
-          );
-        }
-
-        return Result.ok(
-          DeadlineSharedPreferencesResponse(
-            isEnabled: false,
-            hour: now.hour,
-            minute: now.minute,
-          ),
-        );
+        return await _handleSettingsError();
       }
 
-      final dto = dtoResult.value;
-
-      return Result.ok(dto);
-    } on Exception catch (error) {
-      final result = await removeSettings();
-      if (result.isError) {
-        return Result.error(
-          DeadlineException('月末営業日通知の設定取得に失敗しました: $error'),
-        );
-      }
-
-      final now = _timeUtils.now();
-
-      return Result.ok(
-        DeadlineSharedPreferencesResponse(
-          isEnabled: false,
-          hour: now.hour,
-          minute: now.minute,
-        ),
-      );
+      return Result.ok(dtoResult.value);
+    } on Exception catch (_) {
+      return _handleSettingsError();
     }
   }
 
@@ -95,5 +55,32 @@ class DeadlineSharedPreferences {
         DeadlineException('月末営業日通知の設定保存に失敗しました: $error'),
       );
     }
+  }
+
+  /// ビジネスロジックのため、初期値取得用のメソッドを定義したいところ?
+  /// まだ設定が存在しなくnullの場合は以下の初期値を返す
+  /// 通知設定有効化: false
+  /// 通知時刻: 現在時刻
+  DeadlineSharedPreferencesResponse _createDefaultSettings() {
+    final now = _timeUtils.now();
+
+    return DeadlineSharedPreferencesResponse(
+      isEnabled: false,
+      hour: now.hour,
+      minute: now.minute,
+    );
+  }
+
+  /// 値取得失敗時は既存の値を削除して初期化
+  Future<Result<DeadlineSharedPreferencesResponse>>
+  _handleSettingsError() async {
+    final removeResult = await removeSettings();
+    if (removeResult.isError) {
+      return Result.error(
+        DeadlineException('月末営業日通知の設定取得に失敗しました: ${removeResult.error}'),
+      );
+    }
+
+    return Result.ok(_createDefaultSettings());
   }
 }
