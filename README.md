@@ -1,6 +1,9 @@
 # PopCal
 
+[![MASTER](https://github.com/Flupinochan/popcal/actions/workflows/master.yml/badge.svg?branch=master)](https://github.com/Flupinochan/popcal/actions/workflows/master.yml)
 [![codecov](https://codecov.io/github/Flupinochan/popcal/graph/badge.svg?token=3EW9QK05VI)](https://codecov.io/github/Flupinochan/popcal)
+[![CodeQL](https://github.com/Flupinochan/popcal/actions/workflows/github-code-scanning/codeql/badge.svg?branch=master)](https://github.com/Flupinochan/popcal/actions/workflows/github-code-scanning/codeql)
+
 
 作成中...
 
