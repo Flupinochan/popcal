@@ -29,20 +29,15 @@ jobs:
         with:
           filters: |
             src:
-              - 'lib/**'
-              - 'test/**'
-              - '!**/*.md'
-              - '!**/*.png'
-              - '!**/*.jpg'
-              - '!**/*.json'
-              - '!**/*.yaml'
-              - '!**/*.yml'
+              - '/**/*.dart'
 
   # Require status checks to passのステータスチェック名となる
   build:
     # UbuntuだとGolden Testが失敗するためローカル環境のWindowsに合わせる
     # runs-on: ubuntu-latest
     runs-on: windows-latest
+    needs: changes
+    if: needs.changes.outputs.src == 'true'
 
     steps:
       - name: Clone repository
@@ -107,10 +102,12 @@ jobs:
     steps:
       - name: Check status
         run: |
-          if [ "${{ needs.changes.outputs.src }}" == "false" ]; then
-            echo "✅ Passed - Documentation/assets only changes"
+          if [ "${{ needs.changes.outputs.src }}" == "false" ] || [ "${{ needs.build.result }}" == "skipped" ]; then
+            echo "✅ Passed - No build needed"
             exit 0
-          elif [ "${{ needs.build.result }}" == "success" ]; then
+          fi
+
+          if [ "${{ needs.build.result }}" == "success" ]; then
             echo "✅ Passed - Build successful"
             exit 0
           else
