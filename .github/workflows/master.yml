@@ -9,9 +9,14 @@ on:
   pull_request:
     branches: [ master ]
 
+# 連続してpushした場合に実行中のworkflowをキャンセル
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-    # UbuntuだとGolden Testが失敗するため
+    # UbuntuだとGolden Testが失敗するためローカル環境のWindowsに合わせる
     # runs-on: ubuntu-latest
     runs-on: windows-latest
 
@@ -55,6 +60,5 @@ jobs:
         uses: VeryGoodOpenSource/very_good_coverage@v2
         with:
           path: './coverage/lcov_filtered.info'
-          # 現在は0%でもOK
           min_coverage: 0
           exclude: '**/*.g.dart **/*.freezed.dart'
