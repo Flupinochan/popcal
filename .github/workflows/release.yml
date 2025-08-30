@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      attestations: write
 
     if: github.ref_type == 'branch' && startsWith(github.ref_name, 'v')
 
@@ -43,6 +44,14 @@ jobs:
           cosign sign-blob --yes build/app/outputs/flutter-apk/app-arm64-v8a-release.apk --output-signature build/app/outputs/flutter-apk/app-arm64-v8a-release.apk.sig
           cosign sign-blob --yes build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk --output-signature build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk.sig
 
+      - name: Generate provenance attestation
+        id: provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+
       - name: Create Draft Release with APKs
         uses: softprops/action-gh-release@v2
         with:
@@ -54,3 +63,4 @@ jobs:
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
             build/app/outputs/flutter-apk/app-arm64-v8a-release.apk.sig
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk.sig
+            ${{ steps.provenance.outputs.bundle-path }}
