@@ -3,12 +3,12 @@ name: RELEASE
 on:
   create:
 
-# Release Note作成のために必要
-permissions:
-  contents: write
-
 jobs:
   create-release-notes:
+    # Release Note作成のために必要
+    permissions:
+      contents: write
+
     if: github.ref_type == 'branch' && startsWith(github.ref_name, 'v')
 
     runs-on: windows-latest
