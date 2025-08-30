@@ -61,4 +61,5 @@ jobs:
         with:
           path: './coverage/lcov_filtered.info'
           min_coverage: 0
+          # テストが少ないため0%でもOK
           exclude: '**/*.g.dart **/*.freezed.dart'
