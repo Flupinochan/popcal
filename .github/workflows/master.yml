@@ -46,21 +46,8 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v5
 
-        # .fvmrcのバージョンを参照
       - name: Set up Flutter
-        id: fvm-setup
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
-        continue-on-error: true
-
-      - name: Set up Flutter (fallback)
-        if: steps.fvm-setup.outcome == 'failure'
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ vars.FLUTTER_VERSION }}
-          channel: 'stable'
-
-      - name: Install dependencies
-        run: flutter pub get
+        uses: ./.github/actions/setup-flutter
 
       - name: Run build_runner
         run: flutter pub run build_runner build --delete-conflicting-outputs --build-filter="lib/**"
@@ -77,6 +64,7 @@ jobs:
       - name: Run Tests
         run: flutter test --no-pub --coverage
 
+      # 動作していないかも
       - name: Filter coverage (remove generated files)
         shell: bash
         run: |

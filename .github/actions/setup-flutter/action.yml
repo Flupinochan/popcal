@@ -1,0 +1,36 @@
+name: 'Setup Flutter Environment'
+description: 'Flutter setup with FVM support and fallback'
+
+inputs:
+  flutter-version:
+    description: 'Fallback Flutter version'
+    required: false
+    default: '3.24.0'
+  cache:
+    description: 'Enable caching for Flutter SDK and pub dependencies'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+
+  steps:
+    # .fvmrcのバージョンを参照
+    - name: Set up Flutter
+      id: fvm-setup
+      uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+      with:
+        cache: ${{ inputs.cache }}
+      continue-on-error: true
+
+    - name: Set up Flutter (fallback)
+      if: steps.fvm-setup.outcome == 'failure'
+      uses: subosito/flutter-action@v2
+      with:
+        cache: ${{ inputs.cache }}
+        channel: 'stable'
+        flutter-version: ${{ inputs.flutter-version }}
+
+    - name: Install dependencies
+      run: flutter pub get
+      shell: bash
