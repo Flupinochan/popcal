@@ -1,5 +1,7 @@
 # PopCal
 
+[![codecov](https://codecov.io/github/Flupinochan/popcal/graph/badge.svg?token=3EW9QK05VI)](https://codecov.io/github/Flupinochan/popcal)
+
 作成中...
 
 ## Architecture Overview
