@@ -29,14 +29,7 @@ jobs:
         with:
           filters: |
             src:
-              - 'lib/**'
-              - 'test/**'
-              - '!**/*.md'
-              - '!**/*.png'
-              - '!**/*.jpg'
-              - '!**/*.json'
-              - '!**/*.yaml'
-              - '!**/*.yml'
+              - '/**/*.dart'
 
   # Require status checks to passのステータスチェック名となる
   build:
