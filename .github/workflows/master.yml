@@ -14,6 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # codeに関係しないファイル変更時はbuild実行しない
   changes:
     runs-on: ubuntu-latest
     outputs:
@@ -108,6 +109,7 @@ jobs:
           exclude: '**/*.g.dart,**/*.freezed.dart'
 
   # ブランチ保護ルール用の最終チェック
+  # workflow自体は実行し結果を成功/失敗にする必要がある
   status-check:
     runs-on: ubuntu-latest
     needs: [changes, build]
