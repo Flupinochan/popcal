@@ -102,10 +102,12 @@ jobs:
     steps:
       - name: Check status
         run: |
-          if [ "${{ needs.changes.outputs.src }}" == "false" ]; then
-            echo "✅ Passed - Documentation/assets only changes"
+          if [ "${{ needs.changes.outputs.src }}" == "false" ] || [ "${{ needs.build.result }}" == "skipped" ]; then
+            echo "✅ Passed - No build needed"
             exit 0
-          elif [ "${{ needs.build.result }}" == "success" ]; then
+          fi
+
+          if [ "${{ needs.build.result }}" == "success" ]; then
             echo "✅ Passed - Build successful"
             exit 0
           else
