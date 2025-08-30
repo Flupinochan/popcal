@@ -7,7 +7,7 @@ jobs:
   create-release-notes:
     if: github.ref_type == 'branch' && startsWith(github.ref_name, 'v')
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Clone repository
@@ -19,7 +19,7 @@ jobs:
       - name: Build APK
         run: |
           flutter clean
-          flutter build apk --debug --split-per-abi --obfuscate --split-debug-info=./build/symbols
+          flutter build apk --release --split-per-abi --obfuscate --split-debug-info=./build/symbols
 
       - name: Create Draft Release with APKs
         uses: softprops/action-gh-release@v2
