@@ -7,6 +7,13 @@ name: MASTER
 on:
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - '**/*.md'
+      - 'assets/**'
+      - 'fonts/**'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '.vscode/**'
 
 # 連続してpushした場合に実行中のworkflowをキャンセル
 concurrency:
