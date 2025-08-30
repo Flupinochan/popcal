@@ -29,15 +29,14 @@ jobs:
         with:
           filters: |
             src:
+              - 'lib/**'
+              - 'test/**'
               - '!**/*.md'
-              - '!assets/**'
-              - '!fonts/**'
               - '!**/*.png'
               - '!**/*.jpg'
               - '!**/*.json'
               - '!**/*.yaml'
               - '!**/*.yml'
-              - '!.vscode/**'
 
   # Require status checks to passのステータスチェック名となる
   build:
