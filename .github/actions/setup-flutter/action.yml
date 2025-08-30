@@ -5,7 +5,7 @@ inputs:
   flutter-version:
     description: 'Fallback Flutter version'
     required: false
-    default: '3.24.0'
+    default: '3.32.8'
   cache:
     description: 'Enable caching for Flutter SDK and pub dependencies'
     required: false
