@@ -59,5 +59,4 @@ class DefaultFirebaseOptions {
     projectId: 'popcal-e709a',
     storageBucket: 'popcal-e709a.firebasestorage.app',
   );
-
 }
