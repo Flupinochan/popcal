@@ -18,8 +18,9 @@ runs:
     # runs-on: windows-latest環境ではJava7であり古いため
     - name: Set up Java
       uses: actions/setup-java@v4
-      java-version: '17'
-      distribution: 'temurin'
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
     # .fvmrcのバージョンを参照
     - name: Set up Flutter
