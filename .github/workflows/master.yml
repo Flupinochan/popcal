@@ -1,0 +1,49 @@
+# 参考:
+# https://github.com/zgosalvez/github-actions-flutter-workflows
+# https://github.com/marketplace?query=flutter&type=actions
+
+name: MASTER
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    # UbuntuだとGolden Testが失敗するため
+    # runs-on: ubuntu-latest
+    runs-on: windows-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v5
+
+        # .fvmrcのバージョンを参照
+      - name: Set up Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        # uses: subosito/flutter-action@v2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run build_runner
+        run: flutter pub run build_runner build --delete-conflicting-outputs --build-filter="lib/**"
+
+      # Format発生時にExit 1でエラーが発生
+      # flutter formatコマンドは存在しなくdart formatのため注意
+      - name: Check format
+        run: dart format -o show --set-exit-if-changed .
+
+      # infoはエラー扱いにしない
+      - name: Check analyze
+        run: flutter analyze --no-fatal-infos --no-pub
+
+      - name: Run Tests
+        run: flutter test --no-pub --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true

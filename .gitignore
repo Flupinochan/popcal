@@ -2,7 +2,7 @@
 **/*.freezed.dart
 upload-keystore.jks
 act.exe
-!.fvm/fvm_config.json
+coverage/
 
 # Failure GoldenTest Image
 **/failures/*.png
