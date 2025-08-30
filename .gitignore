@@ -1,6 +1,8 @@
 **/*.g.dart
 **/*.freezed.dart
 upload-keystore.jks
+act.exe
+coverage/
 
 # Failure GoldenTest Image
 **/failures/*.png

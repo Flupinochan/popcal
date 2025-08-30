@@ -1,0 +1,87 @@
+# 参考:
+# https://github.com/zgosalvez/github-actions-flutter-workflows
+# https://github.com/marketplace?query=flutter&type=actions
+
+name: MASTER
+
+on:
+  pull_request:
+    branches: [ master ]
+
+# 連続してpushした場合に実行中のworkflowをキャンセル
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Require status checks to passのステータスチェック名となる
+  build:
+    # UbuntuだとGolden Testが失敗するためローカル環境のWindowsに合わせる
+    # runs-on: ubuntu-latest
+    runs-on: windows-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v5
+
+        # .fvmrcのバージョンを参照
+      - name: Set up Flutter
+        id: fvm-setup
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        continue-on-error: true
+
+      - name: Set up Flutter (fallback)
+        if: steps.fvm-setup.outcome == 'failure'
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ vars.FLUTTER_VERSION }}
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run build_runner
+        run: flutter pub run build_runner build --delete-conflicting-outputs --build-filter="lib/**"
+
+      # Format発生時にExit 1でエラーが発生
+      # flutter formatコマンドは存在しなくdart formatのため注意
+      - name: Check format
+        run: dart format -o show --set-exit-if-changed .
+
+      # infoはエラー扱いにしない
+      - name: Check analyze
+        run: flutter analyze --no-fatal-infos --no-pub
+
+      - name: Run Tests
+        run: flutter test --no-pub --coverage
+
+      - name: Filter coverage (remove generated files)
+        shell: bash
+        run: |
+          # Windowsでも動作するようにbashシェルを指定
+          if command -v lcov &> /dev/null; then
+            lcov --remove coverage/lcov.info \
+              "**/*.g.dart" \
+              "**/*.freezed.dart" \
+              -o coverage/lcov_filtered.info
+          else
+            # lcovがない場合は元のファイルをコピー
+            cp coverage/lcov.info coverage/lcov_filtered.info
+          fi
+
+      - name: Check coverage
+        uses: VeryGoodOpenSource/very_good_coverage@v2
+        with:
+          path: './coverage/lcov_filtered.info'
+          min_coverage: 0
+          # テストが少ないため0%でもOK
+          exclude: '**/*.g.dart **/*.freezed.dart'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage/lcov_filtered.info
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+          exclude: '**/*.g.dart,**/*.freezed.dart'
