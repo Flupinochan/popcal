@@ -4,6 +4,7 @@
 
 # usesのバージョンはハッシュ化する
 # https://app.stepsecurity.io/secureworkflow
+# https://app.stepsecurity.io/scorecard/securerepo/Flupinochan/popcal/master.yml/master?repo=Flupinochan/popcal&enable=pin
 
 name: MASTER
 
