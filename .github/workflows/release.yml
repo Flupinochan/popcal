@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SIGNING_STORE_FILE: android/app/upload-keystore.jks
+      SIGNING_STORE_FILE: ${{ github.workspace }}/android/app/upload-keystore.jks
       SIGNING_KEY_B64: ${{ secrets.SIGNING_KEY_B64 }}
       KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
