@@ -44,13 +44,14 @@ jobs:
           cosign sign-blob --yes build/app/outputs/flutter-apk/app-arm64-v8a-release.apk --output-signature build/app/outputs/flutter-apk/app-arm64-v8a-release.apk.sig
           cosign sign-blob --yes build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk --output-signature build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk.sig
 
-      - name: Generate provenance attestation
-        id: provenance
-        uses: actions/attest-build-provenance@v3
+      - name: Generate SLSA provenance (.intoto.jsonl)
+        uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v2.1.0
+        id: slsa
         with:
-          subject-path: |
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+          base64-subjects: |
+            $(base64 build/app/outputs/flutter-apk/app-arm64-v8a-release.apk)
+            $(base64 build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk)
+          upload-assets: false
 
       - name: Create Draft Release with APKs
         uses: softprops/action-gh-release@v2
