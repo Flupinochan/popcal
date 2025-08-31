@@ -66,6 +66,7 @@ android {
     }
 
     signingConfigs {
+        // ローカルの場合はkey.propertiesを使用
         if (hasKeystore) {
             create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String
@@ -73,6 +74,12 @@ android {
                 storeFile = keystoreProperties["storeFile"]?.let { file(it) }
                 storePassword = keystoreProperties["storePassword"] as String
             }
+        // GitHub Workflowの場合はsecretsをenvに設定し復元して取得
+        } else {
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+            storeFile = file(System.getenv("SIGNING_STORE_FILE"))
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
         }
     }
 
@@ -81,9 +88,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             // signingConfig = signingConfigs.getByName("debug")
-            if (hasKeystore) {
-                signingConfig = signingConfigs.getByName("release")
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
