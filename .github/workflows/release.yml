@@ -17,6 +17,14 @@ jobs:
     if: github.ref_type == 'branch' && startsWith(github.ref_name, 'v')
 
     runs-on: ubuntu-latest
+
+    env:
+      SIGNING_STORE_FILE: my-release-key.jks
+      SIGNING_KEY_B64: ${{ secrets.SIGNING_KEY_B64 }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
 
@@ -37,6 +45,12 @@ jobs:
       - name: Write google-services.json
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > android/app/google-services.json
+
+      # keystoreをsecretsから復元
+      - name: Decode keystore
+        run: |
+          echo "$SIGNING_KEY_B64" | base64 --decode > "$SIGNING_STORE_FILE"
+          ls -l "$SIGNING_STORE_FILE"
 
       - name: Build APK
         run: |
