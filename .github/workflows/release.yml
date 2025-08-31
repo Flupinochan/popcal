@@ -49,7 +49,7 @@ jobs:
       # keystoreをsecretsから復元
       - name: Decode keystore
         run: |
-          echo "$SIGNING_KEY_B64" | base64 --decode > "$SIGNING_STORE_FILE"
+          echo "$SIGNING_KEY_B64" | base64 -d > "$SIGNING_STORE_FILE"
           ls -l "$SIGNING_STORE_FILE"
 
       - name: Build APK
